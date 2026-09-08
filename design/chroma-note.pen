@@ -358,7 +358,7 @@
                   "type": "text",
                   "id": "cJSgg",
                   "name": "Cedar label",
-                  "fill": "$ink",
+                  "fill": "#FFFFFF",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
                   "content": "시더 / Cedar",
@@ -4892,19 +4892,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "TDvkZ",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -5199,19 +5186,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "UpgEA",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -5533,19 +5507,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "gp33V",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -6066,19 +6027,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "LujoE",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -6468,19 +6416,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "J5sqnp",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -6827,19 +6762,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "ZM2SY",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -7161,19 +7083,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "M7ZW0b",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -7707,19 +7616,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "b1Ae6",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -8473,19 +8369,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "hYXtA",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -8700,19 +8583,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "lKFOX",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -9056,19 +8926,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "tp2nt",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -9843,19 +9700,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "kN6JZ",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -10160,19 +10004,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "JxaqV",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -10554,19 +10385,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "Dt5wi",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -10848,19 +10666,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "mV40v",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -11200,19 +11005,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "IgNf7",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -11519,19 +11311,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "mYjO4",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -11663,7 +11442,7 @@
                           "content": "지금의 기록은 그대로예요"
                         },
                         "x9ToD": {
-                          "content": "이미 저장된 기록 6개는 건너뛰어요. 지금의 색과 메모는 바뀌지 않아요."
+                          "content": "같은 기록 6개는 건너뛰어요. 현재 기기의 기록은 그대로 유지해요."
                         }
                       }
                     },
@@ -11867,19 +11646,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "V0lvi",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -12144,19 +11910,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "j3EBy",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -12465,19 +12218,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "YjZAe",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -12817,19 +12557,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "QAmPv",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -13151,19 +12878,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "BwJgf",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -13293,7 +13007,7 @@
                           "content": "지금의 기록은 그대로예요"
                         },
                         "x9ToD": {
-                          "content": "이미 저장된 기록 6개는 건너뛰어요. 지금의 색과 메모는 바뀌지 않아요."
+                          "content": "같은 기록 6개는 건너뛰어요. 현재 기기의 기록은 그대로 유지해요."
                         }
                       }
                     },
@@ -13497,19 +13211,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "FjhZc",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -13795,19 +13496,6 @@
                       "fontFamily": "$font-display",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "asc6y",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -14735,7 +14423,7 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "이미 저장된 기록 6개는 건너뛰었어요. 기존 색과 메모는 그대로예요.",
+                  "content": "같은 기록 6개는 건너뛰어요. 현재 기기의 기록은 그대로 유지해요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 15,
@@ -14970,7 +14658,7 @@
                   "fill": "$muted",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "색·날짜·메모는 그대로 남아 있어요. 잠시 후 다시 시도해 주세요.",
+                  "content": "색·날짜·메모는 그대로예요.\n잠시 후 다시 시도해 주세요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 15,
@@ -15132,19 +14820,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "lkSBa",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -15406,19 +15081,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "KkD7D",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -15685,19 +15347,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "H5TJ2",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -15959,19 +15608,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "j31QF",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -16164,19 +15800,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "WO4Iw",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -16697,19 +16320,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 22,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "Jav9w",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },
@@ -18253,19 +17863,6 @@
                       "fontFamily": "$font-body",
                       "fontSize": 26,
                       "fontWeight": "500"
-                    },
-                    {
-                      "id": "x4MRm",
-                      "type": "ref",
-                      "ref": "k1NVa7",
-                      "name": "더 보기",
-                      "width": 48,
-                      "height": 48,
-                      "descendants": {
-                        "BiVWT": {
-                          "icon": "ellipsis"
-                        }
-                      }
                     }
                   ]
                 },

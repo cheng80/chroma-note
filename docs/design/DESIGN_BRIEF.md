@@ -2,7 +2,7 @@
 
 ## 1. 목적과 현재 상태
 
-이 문서는 부모 작업자가 `design/chroma-note.pen`을 수정할 때 따를 V1 디자인 방향이다. 현재 `.pen`의 token을 정본으로 삼고, 초기 화면에서 약했던 **Pantone index book의 물성**과 **촘촘한 post-it diary 밀도**를 강화한다.
+이 문서는 구현 작업자가 `design/chroma-note.pen`을 수정할 때 따를 V1 디자인 방향이다. 현재 `.pen`의 token을 정본으로 삼고, 초기 화면에서 약했던 **Pantone index book의 물성**과 **촘촘한 post-it diary 밀도**를 강화한다.
 
 산출물은 정적 디자인이다. 화면 전환, scroll, drag, focus 이동, 권한 요청, 저장, 백업·복원은 실제로 동작하거나 검증된 상태가 아니다. 아래 interaction과 접근성 항목은 구현 의도와 정적 상태 표현을 지정할 뿐이며 앱 검증 결과로 해석하지 않는다.
 
@@ -89,7 +89,7 @@ Navigation brand는 `Find`, `Book`, `Ideas`, `Diary`, `Colors`를 그대로 유�
 | `muted` | `#6B655B` | 보조 문구, metadata |
 | `line` | `#D9D2C6` | 종이·field 경계 |
 | `soft` | `#EDE7DB` | neutral chrome, notice 배경 |
-| `accent` | `#56694C` | primary action, focus/selected 강조 |
+| `accent` | `#56694C` | focus/selected 강조; 현재 primary button은 ink 사용 |
 | `danger` | `#A03D32` | 삭제·폐기·오류 |
 
 `muted #6B655B`는 `soft #EDE7DB` 위에서 WCAG 대비 `4.69:1`로 계산됐다. 최종 렌더의 실제 조합은 다시 확인한다.
@@ -99,7 +99,7 @@ Navigation brand는 `Find`, `Book`, `Ideas`, `Diary`, `Colors`를 그대로 유�
 ### 4.2 Typography
 
 - Body: `Noto Sans KR`.
-- Display: `Cormorant Garamond`; 월·page 제목과 짧은 editorial heading에만 사용한다.
+- Display: `Cormorant Garamond`; 영문 브랜드와 짧은 Latin display에만 사용한다.
 - 본문 `16/24`, button `15/22`, 보조 문구 `13/20`.
 - 화면 text는 최소 `12px`; 기존 `11px` text는 `12px`로 올린다.
 - 한국어 heading은 `Noto Sans KR`를 사용해 Latin display font fallback에 기대지 않는다. `Cormorant Garamond`는 Latin display에 제한한다.
@@ -142,7 +142,7 @@ Navigation brand는 `Find`, `Book`, `Ideas`, `Diary`, `Colors`를 그대로 유�
 | Component | 실제 방향 | 필수 정적 variants |
 |---|---|---|
 | `PaperPageStack` | 2~3겹 page, 얇은 line, 약한 shadow | single, layered, open-left, open-right |
-| `MonthHeader` | 높이 48, 월 제목과 이전/다음 | default, pressed, focused |
+| `MonthHeader` | 높이 48, 월 제목과 선택 chevron | default, pressed, focused |
 | `MonthEdgeTabs` | page edge의 paper hint | 1~5 tabs, decorative/selected hint |
 | `PhotoEntry` | photo, 날짜, memo, 0~5 labels | default, zero-color, selected, missing-photo |
 | `ColorIndexLabel` | compact, radius `[1,3,3,1]` | default, selected, duplicate, saving, error, removable |
@@ -179,7 +179,7 @@ Main pair로 세지 않고 별도 Pick screen의 **3 candidates**, action, text 
 - 기본 화면은 `NavRailStandard` width `176`을 사용한다.
 - Book만 `NavRailBookCompact` width `112`, icon-over-label로 paper 면적을 확보한다.
 - Book은 open 2 pages/4 photo entries/11 labels를 보여 준다.
-- Pick/Place는 photo와 controls를 나누고, Colors/Settings는 list와 선택 detail을 함께 보여 준다. Phone 화면을 단순 확대하지 않는다.
+- Pick/Place는 photo와 controls를 나누고, Colors는 두 열의 strip 목록, Settings는 목록과 안내를 나눈다. Phone 화면을 단순 확대하지 않는다.
 
 ### Tablet landscape `1194×834`
 
@@ -198,14 +198,14 @@ Book 대표 adaptive frame을 만든다. Compact 112 rail + open two-page spread
 ### 02. Empty
 
 - 빈 Book도 page stack을 유지한다.
-- `아직 모은 색이 없어요` / `첫 색 찾기` / `사진 가져오기`.
+- `눈길이 머문 색으로 첫 페이지를 채워보세요`와 촬영·사진 가져오기 진입.
 - 읽기 실패는 Empty와 섞지 않고 `03 States`에서 따로 표현한다.
 
 ### 03. Detail
 
 - 선택 photo, 채집색/기준색, labels, 날짜, memo, `편집`과 `사진 기록 삭제` 진입.
 - 0색과 missing photo는 별도 main/state에서 다루며 Detail에는 저장된 정상 기록을 보여 준다.
-- Tablet은 176 rail + 관련 기록 list/detail.
+- Tablet은 176 rail + 사진과 색·메모 inspector.
 
 ### 04. Find
 
@@ -235,15 +235,15 @@ Book 대표 adaptive frame을 만든다. Compact 112 rail + open two-page spread
 
 ### 08. Color Detail
 
-- 기준색 strip/header와 연결 photos를 보여 준다. 각 photo에는 실제 채집색의 작은 swatch를 함께 둔다.
+- 기준색 strip/header와 연결 photos를 보여 준다. 현재 정적 화면에는 photo별 채집색 swatch를 따로 그리지 않았다. 실제 구현에서 색 상세를 열면 보존된 채집색을 확인할 수 있어야 한다.
 - 연결 photo 없음과 조회 실패를 구분한다.
-- Tablet은 176 rail + color strip master + related photo detail.
+- Tablet은 176 rail + 선택색 정보와 연결된 사진 목록.
 
 ### 09. Ideas
 
 - 관찰 문장과 `색 찾으러 가기`. 완료, score, reward, streak는 없다.
 - Empty일 때도 자유로운 Find 진입을 유지한다.
-- Tablet은 176 rail + idea list/detail.
+- Tablet은 176 rail + 세 개의 관찰 제안 카드.
 
 ### 10. Settings
 
@@ -285,7 +285,7 @@ Book 대표 adaptive frame을 만든다. Compact 112 rail + open two-page spread
 
 - 첫 label 부착 직후의 저장 완료 screen pair다.
 - `Book에 저장했어요`와 `다른 색도 같은 사진에 붙여 보세요.`를 text로 보여 준다.
-- `색 하나 더 찾기`와 `Book 열기`는 다음 이동이며 별도 최종 저장이 아니다.
+- `다른 색 붙이기`와 `Book 열기`는 다음 이동이며 별도 최종 저장이 아니다.
 
 ### 17. Zero Color
 
@@ -361,6 +361,8 @@ Layered Book entry, raw-vs-selected color, attach-save, 삭제 확인 등 반복
 원본 HTML의 Color Collect 공유 image `https://is1-ssl.mzstatic.com/image/thumb/Purple124/v4/a4/9f/4a/a49f4a1c-e1b9-3385-1c3d-88a7c617f5c2/pr_source.jpg/471x1024.webp`는 V1 제외 기능인 공유용이므로 이번 화면 제작에 사용하지 않는다.
 
 ## 11. 정적 디자인 QA와 현재 확인 범위
+
+아래는 구현 시에도 유지할 체크리스트다. 실제 수행한 검증과 승인 범위는 [인터페이스 검토](INTERFACE_REVIEW.md)를 따른다.
 
 - [ ] 17 main 항목에 phone/tablet pair가 모두 있어 34 screens다.
 - [ ] Extras 4개를 더해 38 screen frames이며 system/state boards는 별도 4개다.

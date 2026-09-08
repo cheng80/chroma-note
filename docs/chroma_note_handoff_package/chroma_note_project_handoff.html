@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chroma Note — Project Handoff</title>
+<style>
+:root{
+ --paper:#f4f0e7; --ink:#24211e; --muted:#746e65; --line:rgba(36,33,30,.14);
+ --panel:rgba(255,255,255,.54); --shadow:0 12px 35px rgba(60,50,40,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:var(--paper);color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Segoe UI",sans-serif;
+ line-height:1.72;
+ background-image:radial-gradient(rgba(70,60,50,.035) .7px,transparent .7px);
+ background-size:6px 6px;
+}
+main{max-width:1040px;margin:0 auto;padding:58px 32px 120px}
+header{
+ padding:28px 0 48px;border-bottom:1px solid var(--line);margin-bottom:42px
+}
+.eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+header h1{font-size:4rem;margin:.08em 0;letter-spacing:-.055em;line-height:1}
+header .sub{font-size:1.1rem;color:var(--muted);max-width:730px}
+.quick{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}
+.quick span{border:1px solid var(--line);padding:7px 11px;border-radius:99px;background:rgba(255,255,255,.4);font-size:.85rem}
+h1,h2,h3,h4{letter-spacing:-.025em;line-height:1.27}
+#content>h1{font-size:2rem;margin-top:3em}
+h2{font-size:1.5rem;margin:3.2em 0 1em;padding-top:24px;border-top:1px solid var(--line)}
+h3{font-size:1.16rem;margin:2.1em 0 .7em}
+p{margin:.85em 0}
+blockquote{
+ margin:20px 0;padding:14px 18px;border-left:3px solid #3c3934;
+ background:rgba(255,255,255,.38);font-size:1.03rem
+}
+pre{
+ background:#26231f;color:#f5f1e8;padding:18px 20px;border-radius:13px;
+ overflow:auto;line-height:1.55;box-shadow:var(--shadow)
+}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+p code,li code{background:rgba(0,0,0,.06);padding:.1em .35em;border-radius:4px}
+ul,ol{padding-left:1.5em}
+.table-wrap{overflow:auto;margin:18px 0 32px}
+table{width:100%;border-collapse:collapse;background:rgba(255,255,255,.3)}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.86rem;color:var(--muted);font-weight:700}
+.figure{
+ margin:28px 0;padding:12px;background:rgba(255,255,255,.48);
+ border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px
+}
+.figure img{display:block;width:100%;max-height:560px;object-fit:contain;border-radius:11px;background:white}
+.figure figcaption{font-size:.88rem;color:var(--muted);padding:10px 3px 2px}
+.figure figcaption span{display:block;margin-top:5px}
+.figure a{color:inherit}
+.figure.wide img{max-height:650px}
+.compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.compare-grid .figure{margin:0}
+.reference-callout{
+ border:1px dashed rgba(36,33,30,.27);padding:17px 19px;border-radius:13px;
+ background:rgba(255,255,255,.4);margin:18px 0
+}
+.ref-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.ref-links a{color:#403c36;font-weight:650}
+.visual-thesis{
+ display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;
+ margin:28px 0;padding:22px;border-radius:16px;background:rgba(255,255,255,.5);border:1px solid var(--line)
+}
+.visual-thesis div:not(.plus){padding:13px;text-align:center}
+.visual-thesis b{display:block;margin-bottom:5px}
+.visual-thesis span{display:block;font-size:.82rem;color:var(--muted)}
+.plus{font-size:1.5rem;color:var(--muted)}
+.footer-note{
+ margin-top:70px;padding:20px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem
+}
+@media(max-width:720px){
+ main{padding:34px 18px 80px}
+ header h1{font-size:3rem}
+ .compare-grid{grid-template-columns:1fr}
+ .visual-thesis{grid-template-columns:1fr}
+ .plus{display:none}
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="eyebrow">Codex Project Handoff · React Native + Expo</div>
+  <h1>Chroma Note</h1>
+  <div class="sub">초기 Color Hunter 아이디어에서 현재의 컬러 다이어리 컨셉에 이르기까지, 결정 과정·비주얼 레퍼런스·V1 구현 경계를 한 문서 안에서 연결한 핸드오프.</div>
+  <div class="quick">
+    <span>Local-first</span><span>Camera</span><span>Color Index</span><span>Diary / Scrapbook</span><span>Expo</span>
+  </div>
+</header>
+
+<section class="reference-callout">
+<strong>이미지 사용 방식</strong><br>
+이 문서의 레퍼런스 이미지는 별도 갤러리에 몰아두지 않고,
+각 결정이 논의되는 바로 그 위치에 배치했다.
+이미지를 클릭하면 원본/출처 페이지로 이동한다.
+</section>
+
+<section id="content">
+<h1>Chroma Note — Project Handoff</h1><h2>0. 문서 목적</h2><p>이 문서는 <strong>Chroma Note 프로젝트를 Codex 또는 다른 개발 AI/개발자에게 넘기기 위한 핸드오프 문서</strong>다.</p><p>단순 기능 목록이 아니라 다음을 모두 전달하는 것을 목표로 한다.</p><ul><li>아이디어가 어떤 출발점에서 시작됐는지</li><li>어떤 논의와 판단을 거치며 방향이 바뀌었는지</li><li>어떤 아이디어가 폐기되거나 후순위로 밀렸는지</li><li>현재 확정된 제품 컨셉이 무엇인지</li><li>V1에서 무엇을 만들고 무엇을 만들지 않을지</li><li>UI/UX와 기술 구현에서 반드시 지켜야 할 원칙</li><li>이후 구현 과정에서 Codex가 임의로 원래의 게임 중심 기획으로 되돌리지 않도록 하기 위한 결정 근거</li></ul><p>이 문서는 현재 프로젝트의 기준 문서다.  </p><p>특별한 이유가 없는 한 이후 구현은 이 문서를 우선 기준으로 한다.</p><p>---</p><h1>1. 프로젝트 기본 정보</h1><h2>프로젝트명</h2><p><strong>Chroma Note</strong></p><h2>한 줄 정의</h2><blockquote>일상에서 발견한 색을 사진과 컬러 인덱스로 기록하는 컬러 다이어리.</blockquote><h2>영문 카피 후보</h2><ul><li><strong>Collect the colors you notice.</strong></li><li><strong>Colors from everyday moments.</strong></li><li><strong>A color diary made from everyday moments.</strong></li></ul><p>현재 제품 성격에는 <code>Collect the colors you notice.</code>가 가장 잘 맞는다.</p><p>---</p><h1>2. 아이디어의 출발점</h1><p>초기 목표는 다음 조건을 만족하는 React Native + Expo 모바일 앱 아이디어를 찾는 것이었다.</p><ul><li>구현이 너무 복잡하지 않을 것</li><li>흔한 CRUD 앱이나 커뮤니티 앱이 아닐 것</li><li>짧게 설명해도 “특이하다”는 느낌이 있을 것</li><li>스마트폰의 카메라, 햅틱, 알림 같은 모바일 특성을 활용할 것</li><li>서버 없이도 MVP가 가능한 방향이면 좋을 것</li></ul><p>여러 후보 중 초기에 가장 유망했던 아이디어는 <strong>Color Hunter</strong>였다.</p><p>초기 Color Hunter는 다음 구조였다.</p><pre><code>오늘의 색 제시
+→ 현실에서 비슷한 색 찾기
+→ 카메라 촬영
+→ 색 유사도 계산
+→ 점수
+→ 하루 컬렉션 / 스트릭</code></pre><p>예:</p><pre><code>TODAY&#x27;S COLOR
+
+#E86A5A
+Coral Red
+
+오늘 이 색을 찾아보세요.</code></pre><p>촬영 후:</p><pre><code>Target
+#E86A5A
+
+Captured
+#E56D60
+
+MATCH
+94%</code></pre><p>이 단계에서는 다음 요소가 중심이었다.</p><ul><li>Daily Color</li><li>색 유사도 점수</li><li>Streak</li><li>ColorDex</li><li>희귀도</li><li>XP</li><li>Combo</li><li>Daily/Weekly Challenge</li><li>Target Color Hunt</li><li>현실 세계에서 색을 찾는 scavenger hunt 성격</li></ul><p>---</p><h1>3. 유사 서비스 조사 후의 판단</h1>
+      <div class="reference-callout">
+        <strong>기능 레퍼런스:</strong>
+        초기 Color Hunter와 가까운 앱들은 현실의 색을 찾거나 사진에서 팔레트를 추출하는 경험을 이미 제공한다.
+        따라서 Chroma Note는 기능 자체보다 <em>기록 방식과 물리적 문구 메타포</em>에서 차별화해야 한다.
+        <div class="ref-links">
+          <a href="https://apps.apple.com/us/app/color-hunt-photo-scrapbook/id6791556079" target="_blank">Color Hunt: Photo Scrapbook ↗</a>
+          <a href="https://colorcollect.cc/" target="_blank">Color Collect ↗</a>
+        </div>
+      </div>
+
+    <div class="compare-grid">
+
+    <figure class="figure">
+      <a href="https://colorcollect.cc/" target="_blank" rel="noopener">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple124/v4/b2/5b/09/b25b0942-5e55-6615-3a3d-fad8e7087c20/pr_source.jpg/471x1024.webp" alt="Color Collect의 사진 기반 팔레트 UI. ‘현실의 사진에서 색을 추출한다’는 기능적 레퍼런스." loading="lazy">
+      </a>
+      <figcaption>Color Collect의 사진 기반 팔레트 UI. ‘현실의 사진에서 색을 추출한다’는 기능적 레퍼런스.
+      <span><a href="https://colorcollect.cc/" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+
+
+    <figure class="figure">
+      <a href="https://colorcollect.cc/" target="_blank" rel="noopener">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple114/v4/6e/6d/05/6e6d05c7-d3a3-6d1b-f87a-580eb71686be/pr_source.jpg/471x1024.webp" alt="사진별 색 팔레트가 함께 보이는 컬렉션 예시. Chroma Note에서는 단순 팔레트 관리보다 Diary/Book 문맥을 강화한다." loading="lazy">
+      </a>
+      <figcaption>사진별 색 팔레트가 함께 보이는 컬렉션 예시. Chroma Note에서는 단순 팔레트 관리보다 Diary/Book 문맥을 강화한다.
+      <span><a href="https://colorcollect.cc/" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+
+    </div>
+
+    <p>비슷한 레퍼런스를 조사하면서 다음 유형의 앱들이 이미 존재한다는 점을 확인했다.</p><ul><li>Daily Color를 제시하고 현실에서 찾는 앱</li><li>카메라로 실시간 색 근접도를 보여주는 앱</li><li>색을 수집하고 streak를 제공하는 앱</li><li>Palette Hunt</li><li>사진 기반 컬러 스크랩북</li><li>색 유사도를 게임 점수로 사용하는 앱</li></ul><p>따라서 단순히:</p><blockquote>“오늘의 색을 찾아 촬영하고 점수를 받는 앱”</blockquote><p>으로 가면 차별화가 약하다는 판단이 나왔다.</p><p>이후 기획을 <strong>단순 Color Hunt → 색 수집/기록 경험</strong> 쪽으로 확장하기 시작했다.</p><p>---</p><h1>4. 첫 번째 큰 방향 전환 — 하루 1회 제약 제거</h1><p>초기에는 하루에 하나의 색만 찾도록 제한하는 구조가 있었다.</p><p>하지만 다음 문제를 확인했다.</p><blockquote>하루에 한 번밖에 못 쓰는 앱은 쉽게 잊힌다.</blockquote><p>따라서 <strong>Daily 1회 사용 제약은 제거</strong>하기로 했다.</p><h2>변경 전</h2><pre><code>오늘의 색
+→ 한 번 수행
+→ 오늘 사용 종료</code></pre><h2>변경 후</h2><pre><code>원할 때 언제든 앱 실행
+→ 색 발견
+→ 촬영
+→ 색 선택
+→ 기록
+→ 다시 발견</code></pre><p>핵심 사용 트리거도 바뀌었다.</p><h3>이전</h3><blockquote>“오늘 아직 미션을 안 했다.”</blockquote><h3>현재</h3><blockquote>“저 색 예쁜데?”</blockquote><p>이 변화는 현재 Chroma Note의 핵심 방향을 결정한 중요한 지점이다.</p><p>---</p><h1>5. 두 번째 방향 전환 — 앱이 정답을 판정하지 않는다</h1><p>초기에는 목표색과 촬영색의 유사도를 계산해:</p><pre><code>94% MATCH
+SUCCESS</code></pre><p>처럼 앱이 사용자를 채점하는 구조였다.</p><p>그러나 현실의 색은 다음 요소의 영향을 많이 받는다.</p><ul><li>조명</li><li>그림자</li><li>반사광</li><li>카메라 센서</li><li>White Balance</li><li>Exposure</li><li>촬영 위치</li></ul><p>따라서 앱이 하나의 색을 “정답”으로 강제하는 것은 UX와 기술 양쪽에서 불필요하게 딱딱해진다.</p><p>현재 방향은 다음과 같다.</p><h2>앱의 역할</h2><blockquote>정답 판정기가 아니라 <strong>색 추천 도구</strong>.</blockquote><p>예:</p><pre><code>이 색과 가까워요
+
+● Coral Red        94%
+● Terra Cotta      89%
+● Salmon           86%
+● Burnt Sienna     78%</code></pre><p>최종 선택은 사용자가 한다.</p><p>즉:</p><pre><code>카메라 / 이미지 분석
+→ 유사 색 후보 제시
+→ 사용자가 의미 있는 색을 선택</code></pre><p>이 원칙은 유지한다.</p><p>---</p><h1>6. 세 번째 방향 전환 — 사진에서 색을 “채집”한다</h1>
+    <figure class="figure wide">
+      <a href="https://colorcollect.cc/" target="_blank" rel="noopener">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple114/v4/6e/6d/05/6e6d05c7-d3a3-6d1b-f87a-580eb71686be/pr_source.jpg/471x1024.webp" alt="사진별 색 팔레트가 함께 보이는 컬렉션 예시. Chroma Note에서는 단순 팔레트 관리보다 Diary/Book 문맥을 강화한다." loading="lazy">
+      </a>
+      <figcaption>사진별 색 팔레트가 함께 보이는 컬렉션 예시. Chroma Note에서는 단순 팔레트 관리보다 Diary/Book 문맥을 강화한다.
+      <span><a href="https://colorcollect.cc/" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    <p>단순 촬영 후 자동 분석으로 끝내지 않고, 사용자가 사진 안에서 원하는 위치를 직접 선택하는 방향으로 발전했다.</p><h2>기본 흐름</h2><pre><code>사진 촬영
+→ 촬영 결과 표시
+→ 사용자가 사진의 특정 지점 터치
+→ 해당 지점 주변 색 샘플링
+→ 유사 색 후보 추천
+→ 사용자 선택</code></pre><p>예:</p><pre><code>┌─────────────────────────┐
+│                         │
+│       🪴                │
+│          ●              │
+│                         │
+└─────────────────────────┘
+
+        ● #587A52
+
+        Olive Green</code></pre><p>다른 지점을 선택하면 다른 색을 얻을 수 있다.</p><p>이후 더 발전해 <strong>한 장의 사진에서 여러 색을 채집할 수 있도록</strong> 한다.</p><p>예:</p><pre><code>              CREAM ━━━━━
+┌──────────────────────┐
+│      ☕              │
+│                      │━━━━ BROWN
+│          🪴          │
+│                      │━━━━ MOSS
+└──────────────────────┘</code></pre><p>이 기능은 현재 Chroma Note의 중요한 차별 요소다.</p><p>---</p><h1>7. 초기 게임화 방향과 폐기된 요소</h1><p>한때 ColorDex를 중심으로 다음 게임 시스템을 검토했다.</p><ul><li>256색 ColorDex</li><li>희귀도</li><li>Common / Rare / Epic / Legendary</li><li>XP</li><li>Level</li><li>Combo</li><li>Personal Best</li><li>Daily Hunt</li><li>Weekly Quest</li><li>Rainbow Set</li><li>Gradient Hunt</li><li>Speed Hunt</li><li>Leaderboard</li></ul><p>그러나 UI/UX를 구체화하면서 이러한 요소들이 제품을 다음처럼 보이게 할 위험이 있다는 판단이 나왔다.</p><blockquote>색상 측정 도구 + 모바일 RPG UI</blockquote><p>현재 제품의 목표 감성과 맞지 않는다.</p><p>따라서 아래 요소는 제거하거나 후순위로 밀렸다.</p><div class='table-wrap'><table><thead><tr><th>요소</th><th>현재 결정</th></tr></thead><tbody><tr><td>XP</td><td>제거</td></tr><tr><td>Level</td><td>제거</td></tr><tr><td>Rarity</td><td>제거 또는 매우 약한 메타 정보</td></tr><tr><td>Combo</td><td>제거</td></tr><tr><td>Leaderboard</td><td>제거</td></tr><tr><td>Daily 1회 제한</td><td>제거</td></tr><tr><td>ColorDex 명칭</td><td>사용자 UI에서 제거</td></tr><tr><td>강한 Match 성공/실패 판정</td><td>제거</td></tr><tr><td>Streak 중심 리텐션</td><td>제거</td></tr><tr><td>Personal Best</td><td>기본 기능에서는 제거 또는 Target 모드 보조 기능</td></tr><tr><td>Challenge</td><td><code>Ideas</code> 형태로 부드럽게 변경</td></tr></tbody></table></div><p>---</p><h1>8. UI/UX에 대한 핵심 문제 인식</h1><p>이 앱은 기능만 구현하면 쉽게 다음과 같이 딱딱해질 수 있다.</p><pre><code>COLORDEX
+137 / 256
+
+Similarity 96.7%
+Rarity ★★★
+XP +120
+
+DAILY QUEST</code></pre><p>이런 UI는 현재 제품 방향과 맞지 않는다.</p><p>이 앱에서 중요한 것은:</p><blockquote><strong>기능은 디지털이지만, 경험은 아날로그 문구/다이어리처럼 느껴져야 한다.</strong></blockquote><p>UI가 딱딱하면 이 앱의 매력이 크게 떨어진다.</p><p>---</p><h1>9. 최종 비주얼 컨셉</h1>
+      <div class="visual-thesis">
+        <div><b>Color Fan Deck</b><span>펼치고 · 고르고 · 대조한다</span></div>
+        <div class="plus">+</div>
+        <div><b>Index Sticky Notes</b><span>붙이고 · 분류하고 · 쌓는다</span></div>
+        <div class="plus">+</div>
+        <div><b>Diary / Scrapbook</b><span>사진과 기억을 한 페이지에 남긴다</span></div>
+      </div>
+    <p>현재 가장 중요한 시각적 레퍼런스는 다음 세 가지다.</p><h2>9.1 컬러 팬덱 / 색상 견본집</h2>
+    <figure class="figure wide">
+      <a href="https://tecwoodoutdoorfloor.com/blog/mau-pantone-la-gi.html" target="_blank" rel="noopener">
+        <img src="https://tecwoodoutdoorfloor.com/upload/images/Blog/bang-mau-pentone.jpg" alt="컬러 팬덱의 핵심 레퍼런스. 여러 색을 한 축에서 펼쳐 보고, 하나를 골라 실제 물체와 대조하는 물리적 경험을 참고한다." loading="lazy">
+      </a>
+      <figcaption>컬러 팬덱의 핵심 레퍼런스. 여러 색을 한 축에서 펼쳐 보고, 하나를 골라 실제 물체와 대조하는 물리적 경험을 참고한다.
+      <span><a href="https://tecwoodoutdoorfloor.com/blog/mau-pantone-la-gi.html" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    <p>Pantone Formula Guide 같은:</p><ul><li>색 견본 카드</li><li>팬 형태로 펼쳐지는 색</li><li>색 하나를 꺼내 보는 느낌</li><li>실제 사물 옆에 견본을 대보는 경험</li></ul><p>단, 특정 브랜드를 직접 모방하는 것이 아니라 <strong>컬러 팬덱의 물리적 경험</strong>을 차용한다.</p><h2>9.2 컬러 인덱스 포스트잇</h2><div class="compare-grid">
+    <figure class="figure">
+      <a href="https://shop.mochithings.com/products/98805" target="_blank" rel="noopener">
+        <img src="https://assets-production.mochi.media/products/98805/photos/square_thumbnail_215934-pastel-index-sticky-note-5c6273.jpg" alt="다이어리 페이지에 파스텔 인덱스가 겹쳐 붙는 모습. Chroma Note의 Color Index가 정보이면서 장식이 되는 방향의 직접적인 참고." loading="lazy">
+      </a>
+      <figcaption>다이어리 페이지에 파스텔 인덱스가 겹쳐 붙는 모습. Chroma Note의 Color Index가 정보이면서 장식이 되는 방향의 직접적인 참고.
+      <span><a href="https://shop.mochithings.com/products/98805" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+
+    <figure class="figure">
+      <a href="https://plannersavenue.com/collections/index-tabs-page-flags" target="_blank" rel="noopener">
+        <img src="https://plannersavenue.com/cdn/shop/collections/Index_Tabs_and_Page_Flags.png?v=1727742828" alt="페이지 가장자리에서 색 인덱스가 튀어나오는 구조. Book이 쌓일수록 외곽이 알록달록해지는 경험을 참고한다." loading="lazy">
+      </a>
+      <figcaption>페이지 가장자리에서 색 인덱스가 튀어나오는 구조. Book이 쌓일수록 외곽이 알록달록해지는 경험을 참고한다.
+      <span><a href="https://plannersavenue.com/collections/index-tabs-page-flags" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    </div><p>다이어리 가장자리에 붙어 있는:</p><ul><li>색색의 인덱스</li><li>페이지 밖으로 살짝 튀어나오는 탭</li><li>분류와 장식이 동시에 되는 문구</li><li>색이 많아질수록 책이 알록달록해지는 경험</li></ul><h2>9.3 다꾸 / 스크랩북</h2>
+    <figure class="figure wide">
+      <a href="https://www.archerandolive.com/blogs/news/how-to-create-a-washi-tape-sample-book" target="_blank" rel="noopener">
+        <img src="https://cdn.shopify.com/s/files/1/1201/4358/files/Image_2_2cce2808-5491-4250-a592-d3a23e994582.jpg?v=1655902505" alt="견본을 실제 노트에 붙여 모으는 스와치북. 사진 + 색 + 작은 장식이 결과물 자체가 되는 감성의 참고." loading="lazy">
+      </a>
+      <figcaption>견본을 실제 노트에 붙여 모으는 스와치북. 사진 + 색 + 작은 장식이 결과물 자체가 되는 감성의 참고.
+      <span><a href="https://www.archerandolive.com/blogs/news/how-to-create-a-washi-tape-sample-book" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    <ul><li>사진</li><li>색 인덱스</li><li>마스킹 테이프</li><li>날짜</li><li>약간의 불규칙한 배치</li><li>종이 질감</li><li>작은 메모</li><li>스와치</li></ul><p>이 세 가지를 조합한다.</p><pre><code>Color Fan Deck
++
+Index Sticky Notes
++
+Diary / Scrapbook
+=
+Chroma Note</code></pre><p>---</p><h1>10. Chroma Note의 현재 제품 정의</h1><h2>핵심 컨셉</h2><blockquote>주변에서 발견한 색을 사진으로 남기고, 사진 속에서 원하는 색을 골라 컬러 인덱스처럼 붙이며 나만의 컬러 다이어리를 만든다.</blockquote><p>중요한 것은 “정확한 색을 측정하는 도구”가 아니라는 점이다.</p><p>또한 “색을 사냥해서 도감을 완성하는 게임”도 아니다.</p><p>현재의 제품 정체성은:</p><blockquote><strong>색을 발견하고, 골라서, 기록하고, 쌓아가는 감성 컬러 다이어리</strong></blockquote><p>다.</p><p>---</p><h1>11. 핵심 사용자 경험</h1><p>현재 권장하는 전체 흐름:</p><pre><code>발견
+ ↓
+사진 촬영
+ ↓
+사진에서 원하는 색 영역 터치
+ ↓
+색상 샘플링
+ ↓
+유사 색 후보 추천
+ ↓
+사용자가 색 선택
+ ↓
+Color Index 생성
+ ↓
+사진에 인덱스 붙이기
+ ↓
+Book에 저장</code></pre><p>이 흐름이 제품의 가장 중요한 핵심 루프다.</p><p>---</p><h1>12. 앱 구조</h1><p>현재 하단 내비게이션은 3개 정도로 단순화한다.</p><pre><code>Find      Book      Ideas</code></pre><p>---</p><h2>12.1 Find</h2><p>색을 발견하고 기록하는 기본 진입점.</p><p>기본 흐름:</p><pre><code>Camera
+ ↓
+Capture
+ ↓
+Photo
+ ↓
+Tap color
+ ↓
+Recommend colors
+ ↓
+Select color
+ ↓
+Attach Color Index
+ ↓
+Save to Book</code></pre><p>---</p><h2>12.2 Book</h2><p>사용자의 컬러 기록 결과물.</p><p>Book에는 여러 보기 방식이 있을 수 있다.</p><h3>Diary</h3><p>날짜 기준.</p><p>예:</p><pre><code>SEP 07
+
+colors I noticed today
+
+
+ [photo]━━ CORAL
+
+      MOSS ━━[photo]
+
+ [photo]
+    ┗ SKY</code></pre><h3>Colors</h3><p>색상 기준.</p><pre><code>● ● ● ● ● ●
+● ● ● ● ● ●
+● ● ● ● ● ●
+● ● ● ● ● ●</code></pre><p>Hue 기준으로 자연스럽게 정렬할 수 있다.</p><h3>Swatches</h3><p>수집한 색을 컬러 팬덱 / 견본집처럼 보는 모드.</p><p>---</p><h2>12.3 Ideas</h2><p>게임형 Daily Quest가 아니라 <strong>관찰을 유도하는 제안</strong>.</p><p>예:</p><pre><code>Try noticing
+
+a blue
+that isn&#x27;t the sky.</code></pre><p>또는:</p><pre><code>Find three greens
+that don&#x27;t look alike.</code></pre><p>또는:</p><pre><code>Find a color
+you don&#x27;t know the name of.</code></pre><p>중요:</p><ul><li>사용 횟수를 제한하지 않는다.</li><li>완료 여부가 앱 사용의 필수 조건이 아니다.</li><li>XP를 주는 퀘스트처럼 보이지 않는다.</li><li>앱을 다시 열게 만드는 작은 영감 역할만 한다.</li></ul><p>---</p><h1>13. Color Index</h1><div class="compare-grid">
+    <figure class="figure">
+      <a href="https://shop.mochithings.com/products/98805" target="_blank" rel="noopener">
+        <img src="https://assets-production.mochi.media/products/98805/photos/square_thumbnail_215934-pastel-index-sticky-note-5c6273.jpg" alt="다이어리 페이지에 파스텔 인덱스가 겹쳐 붙는 모습. Chroma Note의 Color Index가 정보이면서 장식이 되는 방향의 직접적인 참고." loading="lazy">
+      </a>
+      <figcaption>다이어리 페이지에 파스텔 인덱스가 겹쳐 붙는 모습. Chroma Note의 Color Index가 정보이면서 장식이 되는 방향의 직접적인 참고.
+      <span><a href="https://shop.mochithings.com/products/98805" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+
+    <figure class="figure">
+      <a href="https://plannersavenue.com/collections/index-tabs-page-flags" target="_blank" rel="noopener">
+        <img src="https://plannersavenue.com/cdn/shop/collections/Index_Tabs_and_Page_Flags.png?v=1727742828" alt="페이지 가장자리에서 색 인덱스가 튀어나오는 구조. Book이 쌓일수록 외곽이 알록달록해지는 경험을 참고한다." loading="lazy">
+      </a>
+      <figcaption>페이지 가장자리에서 색 인덱스가 튀어나오는 구조. Book이 쌓일수록 외곽이 알록달록해지는 경험을 참고한다.
+      <span><a href="https://plannersavenue.com/collections/index-tabs-page-flags" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    </div><p>Chroma Note에서 가장 중요한 시각적 오브젝트 중 하나.</p><p>사진에서 색을 선택하면 작은 컬러 인덱스가 만들어진다.</p><p>예:</p><pre><code>┌──────────────────────┐
+│                      │
+│        PHOTO         │━━━━ CORAL
+│                      │
+└──────────────────────┘</code></pre><p>인덱스는:</p><ul><li>사진 옆</li><li>사진 아래</li><li>페이지 가장자리</li></ul><p>등에 붙을 수 있다.</p><h2>중요한 UX 원칙</h2><p>일반적인 <code>Save</code> 버튼을 강조하지 않는다.</p><p>가능하다면:</p><blockquote><strong>인덱스를 붙이는 행위 = 저장</strong></blockquote><p>이라는 메타포를 사용한다.</p><p>즉 물리적인 스티커를 붙이는 느낌을 디지털 저장 행동으로 치환한다.</p><p>---</p><h1>14. 한 사진에 여러 Color Index</h1><p>한 장의 사진에서 여러 색을 선택할 수 있다.</p><p>예:</p><pre><code>              CREAM ━━━━━
+┌──────────────────────┐
+│      ☕              │
+│                      │━━━━ BROWN
+│          🪴          │
+│                      │━━━━ MOSS
+└──────────────────────┘</code></pre><p>각 색은 독립적인 기록이면서 동시에 하나의 사진에 연결된다.</p><p>데이터 모델 설계 시:</p><pre><code>Photo
+ ├─ ColorSample 1
+ ├─ ColorSample 2
+ └─ ColorSample 3</code></pre><p>형태를 고려한다.</p><p>---</p><h1>15. 카메라 UX — V1 원칙</h1><p>카메라 커스텀과 관련해 중요한 기술적 결정을 내렸다.</p><h2>V1에서는 실시간 카메라 프레임 색 분석을 하지 않는다.</h2><p>즉 아래 기능은 V1에서 제외한다.</p><pre><code>카메라 이동
+→ 실시간 pixel buffer 분석
+→ 실시간 RGB
+→ 실시간 Delta E
+→ 72%, 81%, 93% 계속 변화</code></pre><p>이 방식은 Expo Managed 영역에서 난도가 크게 올라가고, 네이티브 frame processor까지 필요할 가능성이 높다.</p><p>또한 현재의 다이어리 감성에도 반드시 필요한 기능은 아니다.</p><p>---</p><h1>16. 카메라에서 가능한 커스텀 UI</h1><p>카메라 위에 React Native View를 overlay하는 수준은 적극 사용 가능하다.</p><p>예:</p><pre><code>┌────────────────────────┐
+│                        │
+│        CAMERA          │
+│                        │
+│          ○             │
+│                        │
+│    [ selected swatch ] │
+│                        │
+│           ◯            │
+└────────────────────────┘</code></pre><p>가능한 요소:</p><ul><li>커스텀 셔터</li><li>중앙 가이드</li><li>견본 Color Swatch</li><li>안내 텍스트</li><li>드래그 가능한 컬러칩</li><li>촬영 후 애니메이션</li></ul><p>중요:</p><blockquote>카메라 프리뷰를 직접 복잡하게 뜯어고치는 것이 아니라, 카메라 프리뷰 위에 RN UI를 배치한다.</blockquote><p>---</p><h1>17. 촬영 후 색 추출</h1><p>V1의 실제 색 분석은 촬영 후 수행한다.</p><p>권장 흐름:</p><pre><code>takePicture
+ ↓
+촬영 이미지
+ ↓
+사용자 touch position
+ ↓
+화면 좌표 → 이미지 좌표 변환
+ ↓
+작은 영역 sample/crop
+ ↓
+RGB 계산
+ ↓
+색 비교</code></pre><p>한 픽셀보다는 작은 영역의 평균 또는 robust average를 사용하는 것이 좋다.</p><p>이유:</p><ul><li>센서 노이즈</li><li>jpeg artifact</li><li>작은 highlight</li><li>edge pixel</li></ul><p>영향을 줄일 수 있기 때문이다.</p><p>---</p><h1>18. 색 비교 방식</h1><p>단순 RGB Euclidean distance는 피한다.</p><p>권장:</p><pre><code>RGB
+ ↓
+sRGB linearization
+ ↓
+XYZ
+ ↓
+CIELAB
+ ↓
+Delta E</code></pre><p>Delta E는 색 후보 추천에 사용한다.</p><p>그러나 사용자 UI에서는 반드시 숫자를 전면에 노출할 필요는 없다.</p><p>예:</p><pre><code>very close
+close
+a little warmer
+a little softer</code></pre><p>필요한 경우 상세 화면에서:</p><pre><code>92% alike</code></pre><p>정도로 노출할 수 있다.</p><p>---</p><h1>19. 색 이름 추천</h1><p>사용자가 특정 색을 찍으면 하나의 결과로 고정하지 않는다.</p><p>예:</p><pre><code>Captured
+#D96B62</code></pre><p>추천:</p><pre><code>● Coral
+● Clay
+● Salmon
+● Sienna</code></pre><p>사용자가 최종 선택한다.</p><p>이 원칙을 구현에서 바꾸지 않는다.</p><p>---</p><h1>20. Swatch / Fan Deck</h1>
+    <figure class="figure wide">
+      <a href="https://tecwoodoutdoorfloor.com/blog/mau-pantone-la-gi.html" target="_blank" rel="noopener">
+        <img src="https://tecwoodoutdoorfloor.com/upload/images/Blog/bang-mau-pentone.jpg" alt="컬러 팬덱의 핵심 레퍼런스. 여러 색을 한 축에서 펼쳐 보고, 하나를 골라 실제 물체와 대조하는 물리적 경험을 참고한다." loading="lazy">
+      </a>
+      <figcaption>컬러 팬덱의 핵심 레퍼런스. 여러 색을 한 축에서 펼쳐 보고, 하나를 골라 실제 물체와 대조하는 물리적 경험을 참고한다.
+      <span><a href="https://tecwoodoutdoorfloor.com/blog/mau-pantone-la-gi.html" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    <p>수집한 색 또는 탐색 가능한 색을 실제 컬러 팬덱 같은 인터랙션으로 보여줄 수 있다.</p><p>개념 예:</p><pre><code>          ┌───────────┐
+         / Sky       /
+        /───────────/
+       / Azure     /
+      /───────────/
+     / Cerulean  /
+    /───────────/
+   / Cobalt    /
+  └───────────┘
+       ●</code></pre><p>이 UI는 브랜드 경험을 강화하는 기능이다.</p><p>하지만 V1 MVP 구현이 무거워지면 단순 Swatch 리스트 / 카드 구조로 먼저 구현하고 팬 애니메이션은 이후 단계로 미뤄도 된다.</p><p>---</p><h1>21. Target Color 기능</h1><p>초기 Color Hunt의 흔적 중 하나로 유지할 수 있지만 <strong>보조 기능</strong>이다.</p><p>예:</p><pre><code>Try finding
+
+   COBALT
+
+ ███████████
+
+somewhere around you.</code></pre><p>목표색을 미리 선택한 뒤 실제 환경에서 찾아보는 모드.</p><p>그러나 기본 사용 흐름은:</p><pre><code>현실에서 먼저 발견
+→ 촬영
+→ 색 선택</code></pre><p>이다.</p><p>Target 모드가 메인 내비게이션이 되어서는 안 된다.</p><p>---</p><h1>22. Monthly Palette</h1>
+    <figure class="figure wide">
+      <a href="https://colorcollect.cc/" target="_blank" rel="noopener">
+        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple124/v4/a4/9f/4a/a49f4a1c-e1b9-3385-1c3d-88a7c617f5c2/pr_source.jpg/471x1024.webp" alt="사진과 색을 함께 결과물로 구성하는 공유 레이아웃 참고. Monthly Palette 및 공유 카드 방향에 활용 가능." loading="lazy">
+      </a>
+      <figcaption>사진과 색을 함께 결과물로 구성하는 공유 레이아웃 참고. Monthly Palette 및 공유 카드 방향에 활용 가능.
+      <span><a href="https://colorcollect.cc/" target="_blank" rel="noopener">원본 페이지 ↗</a></span></figcaption>
+    </figure>
+    <p>사용자가 일정 기간 Chroma Note를 사용하면 기록 자체가 자연스럽게 시각적 결과물이 된다.</p><p>예:</p><pre><code>MY
+SEPTEMBER
+2026
+
+
+█ █ █ █ █ █
+█ █ █ █ █ █
+█ █ █ █ █ █
+█ █ █ █ █ █
+
+
+27 colors
+I noticed this month.</code></pre><p>또는 사진을 섞은 다꾸형 결과물도 가능하다.</p><p>Monthly Palette는:</p><ul><li>회고</li><li>공유</li><li>장기 사용 동기</li></ul><p>역할을 할 수 있다.</p><p>V1 핵심은 아니지만 높은 우선순위의 후속 기능이다.</p><p>---</p><h1>23. 시각 디자인 원칙</h1><h2>기본 배경</h2><ul><li>따뜻한 off-white</li><li>pure white보다 종이 같은 느낌</li><li>과한 texture는 금지</li><li>texture가 필요하면 매우 약하게</li></ul><h2>UI 자체</h2><ul><li>무채색 중심</li><li>사용자가 수집한 색이 화면의 주인공</li><li>과한 gradient / rainbow UI 금지</li><li>게임 UI처럼 보이지 않게 한다</li></ul><h2>Typography</h2><ul><li>얇고 깔끔한 본문</li><li>적절한 serif 또는 handwritten accent는 선택 가능</li><li>손글씨 폰트를 전체 UI에 사용하지 않는다</li><li>날짜 / 작은 메모 등에만 제한적으로 사용할 수 있다</li></ul><h2>Layout</h2><p>완벽한 grid만 사용하지 않는다.</p><p>의도적으로:</p><ul><li>1~3도 정도의 작은 회전</li><li>살짝 어긋난 카드</li><li>사진 옆으로 나온 index</li><li>마스킹 테이프</li><li>종이 여백</li></ul><p>등을 활용할 수 있다.</p><p>단, 실제 usability를 해칠 정도로 랜덤하게 만들지는 않는다.</p><p>---</p><h1>24. 디지털 UI를 물리적 문구 메타포로 변환</h1><p>Chroma Note의 핵심 디자인 언어.</p><div class='table-wrap'><table><thead><tr><th>일반 앱 UI</th><th>Chroma Note</th></tr></thead><tbody><tr><td>Card</td><td>종이 조각</td></tr><tr><td>Tab</td><td>컬러 인덱스</td></tr><tr><td>Category</td><td>색 인덱스</td></tr><tr><td>Save</td><td>붙이기</td></tr><tr><td>Delete</td><td>떼어내기</td></tr><tr><td>Collection</td><td>Book</td></tr><tr><td>History</td><td>Diary</td></tr><tr><td>Color picker</td><td>Swatch</td></tr><tr><td>Filter</td><td>Index / Color tabs</td></tr><tr><td>Share</td><td>페이지 / Palette</td></tr><tr><td>Target</td><td>견본 골라보기</td></tr></tbody></table></div><p>이 원칙은 UI를 설계할 때 적극 활용한다.</p><p>---</p><h1>25. 브랜드명 결정 과정</h1><p>초기에 검토했던 이름:</p><ul><li>Color Hunter</li><li>ColorDex</li><li>HueDex</li><li>Hue Index</li><li>Color Index</li><li>Hue Note</li><li>Swatch Book</li><li>Palette Note</li></ul><p>그러나 다음 문제가 있었다.</p><h3>Color Hunter / HueDex</h3><ul><li>게임 느낌이 너무 강함</li><li>현재 제품 방향과 불일치</li></ul><h3>Hue Index / Color Index</h3><ul><li>기능 의미는 좋음</li><li>너무 일반 명사 조합</li><li>앱스토어에서 브랜드 구분력이 약할 가능성</li></ul><p>최종적으로:</p><h1><strong>Chroma Note</strong></h1><p>를 선택했다.</p><p>이후 프로젝트 내 명칭은 Chroma Note로 통일한다.</p><p><code>Color Index</code>는 앱 이름이 아니라 내부 시각 오브젝트 명칭으로 활용한다.</p><p>---</p><h1>26. 용어 정의</h1><p>현재 권장 용어:</p><div class='table-wrap'><table><thead><tr><th>개념</th><th>사용자 노출 명칭</th></tr></thead><tbody><tr><td>앱</td><td>Chroma Note</td></tr><tr><td>촬영/색 발견</td><td>Find</td></tr><tr><td>전체 기록</td><td>Book</td></tr><tr><td>날짜별 기록</td><td>Diary</td></tr><tr><td>색상별 보기</td><td>Colors</td></tr><tr><td>색 견본</td><td>Swatch</td></tr><tr><td>사진에 붙이는 색 라벨</td><td>Color Index</td></tr><tr><td>관찰 아이디어</td><td>Ideas</td></tr><tr><td>월간 색 모음</td><td>Monthly Palette</td></tr></tbody></table></div><p>초기의 <code>ColorDex</code>, <code>Quest</code>, <code>XP</code>, <code>Hunter Rank</code> 등의 표현은 사용하지 않는다.</p><p>---</p><h1>27. V1 권장 화면</h1><h2>27.1 Find</h2><ul><li>CameraView</li><li>Custom shutter</li><li>Gallery import 여부는 선택</li><li>Capture</li></ul><h2>27.2 Photo Color Pick</h2><ul><li>촬영 이미지</li><li>사용자 tap</li><li>샘플 위치 marker</li><li>후보 색 swatches</li><li>여러 색 추가 가능</li></ul><h2>27.3 Index Placement</h2><ul><li>선택한 색 인덱스 생성</li><li>사진 주위에 배치</li><li>간단한 위치 조정</li><li>필요하면 삭제 / 변경</li></ul><h2>27.4 Book</h2><ul><li>날짜별 Diary</li><li>날짜별 여러 사진</li><li>각 사진의 Color Index</li></ul><h2>27.5 Colors</h2><ul><li>수집된 색 목록</li><li>hue 정렬</li><li>색을 선택하면 관련 사진 확인</li></ul><h2>27.6 Ideas</h2><ul><li>관찰 문장</li><li>선택적으로 Target color</li><li>완료 강제 없음</li></ul><p>---</p><h1>28. V1 기술 스택</h1><p>기본 기준:</p><ul><li>React Native</li><li>Expo</li><li>TypeScript</li></ul><p>권장 패키지 후보:</p><pre><code>expo-camera
+expo-image-manipulator
+expo-haptics
+expo-sqlite
+expo-sharing
+react-native-reanimated</code></pre><p>필요 시 패키지는 최신 Expo SDK 호환성을 확인해서 선택한다.</p><p>---</p><h1>29. 데이터 저장</h1><p>V1은 <strong>Local-first</strong>로 간다.</p><p>서버:</p><ul><li>없음</li></ul><p>계정:</p><ul><li>없음</li></ul><p>로그인:</p><ul><li>없음</li></ul><p>기본 저장소:</p><ul><li>SQLite</li></ul><p>사진 파일은 로컬 파일 시스템에 저장하고 SQLite에는 메타데이터 및 경로를 저장하는 구조를 고려한다.</p><p>---</p><h1>30. 권장 데이터 모델 초안</h1><p>예시이며 구현 시 조정 가능하다.</p><pre><code>PhotoEntry
+- id
+- imageUri
+- createdAt
+- width
+- height
+- note?
+- layoutStyle?
+
+ColorSample
+- id
+- photoEntryId
+- sourceX
+- sourceY
+- sampledHex
+- sampledRgb
+- sampledLab
+- selectedColorId
+- createdAt
+
+ColorReference
+- id
+- name
+- hex
+- lab
+- family
+- order
+
+ColorIndexPlacement
+- id
+- colorSampleId
+- positionX
+- positionY
+- rotation
+- style
+
+Idea
+- id
+- text
+- targetColorId?
+- type</code></pre><p>PhotoEntry 하나에 ColorSample 여러 개를 연결할 수 있어야 한다.</p><p>---</p><h1>31. 색 레퍼런스 데이터</h1><p>앱에는 사용자에게 추천할 <strong>내부 기준 색 목록</strong>이 필요하다.</p><p>중요:</p><p>특정 상용 색상 시스템의 데이터 또는 이름을 그대로 무단 복제하지 않는다.</p><p>자체적인:</p><ul><li>색 이름</li><li>HEX</li><li>Lab</li><li>family</li></ul><p>데이터셋을 구성한다.</p><p>초기에는 약 100~300색 정도로 충분하다.</p><p>너무 많은 색을 시작부터 넣어 UX를 복잡하게 만들 필요는 없다.</p><p>---</p><h1>32. 구현 난이도 관리 원칙</h1><p>이 프로젝트의 목표는:</p><blockquote>복잡한 컴퓨터 비전 앱을 만드는 것이 아니라, 구현 난도 대비 감성이 강한 앱을 만드는 것.</blockquote><p>따라서 다음 원칙을 따른다.</p><h2>V1에서 하지 않는다</h2><ul><li>실시간 frame processor</li><li>실시간 pixel RGB sampling</li><li>실시간 object detection</li><li>AI image recognition</li><li>서버</li><li>계정</li><li>SNS</li><li>친구</li><li>랭킹</li><li>클라우드 동기화</li><li>복잡한 자유형 다꾸 에디터</li><li>완전한 WYSIWYG scrapbook 편집기</li></ul><p>---</p><h1>33. 다꾸 편집 기능 범위</h1><p>완전한 자유형 다꾸 편집기를 만들면 구현 범위가 급격히 커진다.</p><p>따라서 V1에서는 제한한다.</p><p>권장:</p><ul><li>Color Index 위치 조정</li><li>2~3개의 페이지 레이아웃</li><li>작은 회전 정도</li><li>자동 날짜</li><li>선택적 마스킹 테이프 decoration</li></ul><p>사용자가 모든 오브젝트를 자유롭게 resize/rotate/layer하는 구조는 V1에서 제외한다.</p><p>---</p><h1>34. 인터랙션 / 애니메이션</h1><p>과한 게임 애니메이션 금지.</p><p>권장하는 micro interaction:</p><ul><li>색 선택 시 작은 햅틱</li><li>Color Index가 사진에 “붙는” 애니메이션</li><li>Book 페이지 이동</li><li>Swatch를 꺼내는 느낌</li><li>Index 탭이 살짝 튀어나오는 모션</li></ul><p>애니메이션은:</p><ul><li>빠르고 튀는 게임 UI보다</li><li>약간의 관성과 물리감</li><li>종이/스티커 느낌</li></ul><p>을 지향한다.</p><p>---</p><h1>35. 제품의 리텐션 구조</h1><p>초기에는 다음을 리텐션으로 생각했다.</p><pre><code>Daily challenge
+Streak
+XP
+Collection progress</code></pre><p>현재는 다르다.</p><p>Chroma Note의 핵심 리텐션은:</p><blockquote><strong>사용할수록 내 Book이 점점 예뻐진다.</strong></blockquote><p>즉:</p><pre><code>매일의 실제 경험
+→ 사진
+→ 색
+→ 페이지
+→ 나만의 시각 기록</code></pre><p>이 결과물이 다시 앱을 열게 하는 이유가 되어야 한다.</p><p>---</p><h1>36. 가장 중요한 UX 판단</h1><p>개발 중 기능을 추가할 때 다음 질문을 먼저 한다.</p><blockquote>이 기능이 사용자를 “색을 측정하게” 만드는가, 아니면 “색을 발견하게” 만드는가?</blockquote><p>Chroma Note는 후자를 선택한다.</p><p>또한:</p><blockquote>이 기능이 앱을 게임처럼 보이게 하는가, 아니면 나만의 컬러 다이어리를 만드는 경험을 강화하는가?</blockquote><p>후자를 우선한다.</p><p>---</p><h1>37. 구현 시 우선순위</h1><h2>Phase 1 — Core</h2><ol><li>Expo 프로젝트 구성</li><li>Camera 촬영</li><li>촬영 이미지 저장</li><li>Photo Entry 모델</li><li>사진 화면 터치 좌표 처리</li><li>색 샘플 추출</li><li>RGB / Lab 변환</li><li>유사 색 추천</li><li>사용자 색 선택</li><li>한 사진에 여러 색 연결</li><li>SQLite 저장</li></ol><h2>Phase 2 — Chroma Note UX</h2><ol><li>Color Index UI</li><li>Index placement</li><li>Book / Diary</li><li>Colors 보기</li><li>기본 Paper / Index visual system</li><li>Reanimated micro interactions</li><li>Haptics</li></ol><h2>Phase 3 — Product polish</h2><ol><li>Ideas</li><li>Swatches</li><li>Monthly Palette</li><li>Sharing</li><li>여러 page layout</li><li>Target Color mode</li></ol><h2>이후 검토</h2><ul><li>Fan Deck 고급 애니메이션</li><li>Widget</li><li>Backup/export</li><li>Cloud sync</li><li>AI 기반 object label</li><li>실시간 frame color processing</li></ul><p>---</p><h1>38. Codex 구현 지침</h1><p>Codex가 작업을 시작할 때 다음을 지킨다.</p><h2>먼저 확인할 것</h2><ul><li>현재 Expo SDK</li><li>React Native 버전</li><li>기존 프로젝트 구조</li><li>기존 package.json</li><li>사용 중인 navigation 방식</li><li>상태관리 방식</li><li>SQLite 사용 여부</li><li>사용자 변경사항</li></ul><p>기존 프로젝트가 있다면 새 프레임워크나 라이브러리를 불필요하게 추가하지 않는다.</p><p>---</p><h2>변경 원칙</h2><ul><li>작은 단위로 구현한다.</li><li>기존 사용자 코드를 임의로 덮어쓰지 않는다.</li><li>디자인 시스템을 초기에 단순하게 만든다.</li><li>복잡한 abstraction을 먼저 만들지 않는다.</li><li>V1에 필요 없는 서버 구조를 추가하지 않는다.</li><li>앱이 동작하기 전부터 과도한 architecture를 만들지 않는다.</li></ul><p>---</p><h1>39. Codex가 임의로 바꾸면 안 되는 결정</h1><p>다음 항목은 현재 기획상 의도적인 결정이다.</p><h3>1. 하루 1회 제한 없음</h3><p>촬영 횟수 제한을 도입하지 않는다.</p><h3>2. 앱이 색 정답을 강제하지 않음</h3><p>후보를 추천하고 사용자가 선택한다.</p><h3>3. 한 사진에서 여러 색 선택 가능</h3><p>1 Photo = 1 Color 구조로 제한하지 않는다.</p><h3>4. 실시간 프레임 분석은 V1에서 제외</h3><p>성능 최적화를 이유로 먼저 네이티브 frame processor를 만드는 방향으로 가지 않는다.</p><h3>5. 게임화 최소화</h3><p>XP / Level / Rarity / Leaderboard를 임의로 추가하지 않는다.</p><h3>6. Local-first</h3><p>초기부터 계정/백엔드를 만들지 않는다.</p><h3>7. UI는 도구가 아니라 다이어리</h3><p>Analytics/dashboard 형태로 만들지 않는다.</p><h3>8. Color Index 메타포 유지</h3><p>색 라벨은 단순 chip UI가 아니라 앱의 핵심 시각 언어다.</p><p>---</p><h1>40. 비기능적 목표</h1><h2>성능</h2><ul><li>촬영 후 색 분석은 체감상 즉시 또는 매우 짧게 완료되어야 한다.</li><li>이미지를 전체 해상도로 JS 처리하지 않도록 주의한다.</li><li>필요한 영역을 작게 crop/resize 후 분석하는 방식을 우선 검토한다.</li></ul><h2>접근성</h2><ul><li>색만으로 상태를 전달하지 않는다.</li><li>색 이름 / 텍스트 보조를 제공한다.</li><li>충분한 contrast를 유지한다.</li></ul><h2>개인정보</h2><p>V1은 Local-first.</p><ul><li>사진을 외부 서버로 보내지 않는다.</li><li>AI API를 기본 호출하지 않는다.</li><li>위치정보는 필수 기능으로 사용하지 않는다.</li></ul><p>---</p><h1>41. 현재의 제품 중심 문장</h1><p>개발 도중 방향이 흔들릴 경우 다음 문장으로 돌아간다.</p><blockquote><strong>Chroma Note는 일상에서 발견한 색을 사진과 컬러 인덱스로 기록하고, 시간이 지날수록 나만의 컬러 다이어리를 만들어가는 앱이다.</strong></blockquote><p>그리고 제품 경험의 핵심 순서는:</p><blockquote><strong>발견 → 찍기 → 고르기 → 붙이기 → 쌓이기</strong></blockquote><p>다.</p><pre><code>DISCOVER
+   ↓
+CAPTURE
+   ↓
+PICK
+   ↓
+INDEX
+   ↓
+BOOK</code></pre><p>---</p><h1>42. 최종 요약</h1><h2>시작점</h2><p>색을 찾아 점수를 얻는 <strong>Color Hunter 게임</strong>.</p><h2>중간 발전</h2><ul><li>ColorDex</li><li>수집</li><li>유사도</li><li>Target Hunt</li><li>반복 촬영</li><li>Challenge</li></ul><h2>문제 인식</h2><ul><li>하루 1회 앱은 리텐션이 약함</li><li>게임 UI는 감성을 해침</li><li>색 정답 판정은 현실 환경에서 경직됨</li><li>실시간 카메라 분석은 구현 난도가 불필요하게 높음</li></ul><h2>최종 방향</h2><h1>Chroma Note</h1><p><strong>컬러 팬덱 + 인덱스 포스트잇 + 다이어리/스크랩북의 감성을 결합한 색 기록 앱.</strong></p><p>주변에서 발견한 색을 사진으로 찍고,</p><p>사진 속 원하는 색을 직접 골라,</p><p>컬러 인덱스로 붙이고,</p><p>그 결과가 Book에 계속 쌓인다.</p><p>게임 시스템은 제품의 중심이 아니다.</p><p>수집률을 올리는 것이 목적이 아니라:</p><blockquote><strong>내가 지나친 일상의 색을 다시 보게 만드는 것</strong></blockquote><p>이 제품의 핵심 가치다.</p><p>---</p><h1>43. 다음 구현 시 첫 번째 목표</h1><p>Codex가 실제 구현을 시작한다면 첫 번째 milestone은 아래가 적절하다.</p><pre><code>Camera 촬영
+→ 사진 결과 화면
+→ 사진 특정 지점 터치
+→ 해당 영역 대표색 추출
+→ 유사 색 3~5개 추천
+→ 사용자 선택
+→ PhotoEntry + ColorSample SQLite 저장</code></pre><p>이 기능이 먼저 안정적으로 동작해야 한다.</p><p>UI 다꾸, Fan Deck, Monthly Palette 등의 감성 레이어는 <strong>이 핵심 플로우가 작동한 후</strong> 위에 올린다.</p><p>단, 구조를 만들 때 Color Index와 한 사진 다중 색 구조를 고려해 데이터 모델을 설계한다.</p><p>---</p><h1>44. 현재 상태</h1><ul><li>프로젝트명: <strong>Chroma Note</strong></li><li>플랫폼: 모바일</li><li>프레임워크: <strong>React Native + Expo</strong></li><li>언어: TypeScript</li><li>저장 방식: Local-first / SQLite</li><li>서버: V1 없음</li><li>로그인: V1 없음</li><li>AI: V1 없음</li><li>핵심 입력: Camera</li><li>핵심 데이터: Photo + Color Samples</li><li>핵심 결과물: Color Diary / Book</li><li>핵심 디자인 메타포: Color Swatch + Index Sticky + Diary</li><li>핵심 구현 우선순위: 촬영 후 색 선택 및 추천</li></ul>
+</section>
+
+<div class="footer-note">
+외부 레퍼런스 이미지와 링크의 목록은 패키지의 <code>REFERENCE_SOURCES.md</code>에도 별도로 정리되어 있다.
+이 자료는 UI 복제용이 아니라 제품 방향과 물리적 인터랙션 메타포를 전달하기 위한 리서치 참고 자료다.
+</div>
+</main>
+</body>
+</html>
