@@ -6,7 +6,7 @@
 
 - `docs/AGENTS.md`: 기존 제품·기술 명세와 현황의 읽기·갱신 경로를 따른다.
 - `CONTEXT.md`: 도메인 용어와 정의를 읽는다.
-- `docs/adr/`: 작업 영역과 관련된 결정 기록을 읽는다.
+- `docs/adr/ADR-003-stamp-record-direction.md`: 현재 Stamp 설계의 선택 이유·제약을 읽는다.
 
 `CONTEXT.md`나 ADR이 없으면 조용히 진행한다. `/domain-modeling`이 용어를 확정하거나 중요한 결정을 기록할 때 필요한 파일만 생성한다.
 
@@ -18,4 +18,4 @@
 
 ## ADR 충돌
 
-제안이 기존 ADR과 충돌하면 해당 ADR과 재검토 이유를 명시한다. 새 ADR은 `docs/adr/`에 작성하며 기록 항목은 `docs/04_WORKFLOW.md`를 따른다.
+제안이 유효한 ADR과 충돌하면 해당 ADR과 재검토 이유를 명시한다. [문서 목록](../README.md#전체-문서-갱신-범위)에 따라 현재 유효한 결정만 관리한다. 새 ADR이 필요한지는 변경 비용과 실제 대안을 기준으로 판단하며 기록 항목은 `docs/04_WORKFLOW.md`를 따른다.

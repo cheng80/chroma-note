@@ -1,56 +1,15 @@
-# Welcome to your Expo app 👋
+# Chroma Note
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+사진을 가져와 원본 장면을 보존한 Rubber Stamp로 바꾸고, 대표색·AI 글·내 메모와 함께 모으는 개인 기록 앱입니다.
 
-## Get started
+현재 앱은 빈 Expo 화면이며 Stamp 방향의 상세 설계 단계입니다. **사진 임포트 전용**, Phase 1 핵심 기능 기준입니다. 스토어 출시 준비는 이번 범위 밖이며 실제 결제 정책·연동 문서는 Phase 2에서 별도로 다룹니다.
 
-1. Install dependencies
+- [문서 안내](docs/README.md)
+- [제품 명세](docs/01_PRODUCT_SPEC.md)
+- [기술 명세](docs/02_TECH_SPEC.md)
+- [현재 상태와 구현 순서](docs/03_PROJECT_STATUS.md)
+- [AI·대표색 검증 계획](docs/05_AI_VALIDATION_PLAN.md)
 
-   ```bash
-   npm install
-   ```
+저장소에는 최신 기획과 디자인만 유지합니다. [설계 결정](docs/adr/ADR-003-stamp-record-direction.md)과 [화면 설계](docs/design/DESIGN_BRIEF.md)를 기준으로 새 [Pen 디자인·미리보기](design/README.md)를 작성했습니다. 앱 구현·모델 품질·실기기 검증은 남아 있습니다.
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+개발 명령은 package.json, 적용 지침은 [AGENTS.md](AGENTS.md)에서 확인합니다. 모델/네이티브 기능은 Development Build를 목표로 하며 모델 선정과 실기기 검증이 남아 있습니다.

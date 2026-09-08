@@ -1,6 +1,6 @@
 # Issue tracker: GitHub
 
-이 저장소의 이슈와 작업 명세는 `cheng80/chroma-note`의 GitHub Issues에 기록한다. 저장소 안에서 `gh` CLI를 사용하며 대상 저장소는 Git remote에서 확인한다.
+이 저장소의 실행 티켓은 `cheng80/chroma-note`의 GitHub Issues에서 관리한다. 제품·기술 계약의 정본은 [문서 목록](../README.md)의 명세이고, 실행 현황은 [프로젝트 현황](../03_PROJECT_STATUS.md)이다. 티켓에는 관련 SR-FR/SR-BR·PLAN ID와 정본 링크를 연결하고 현재 명세와 일치하는지 확인한다. 저장소 안에서 `gh` CLI를 사용하며 대상 저장소는 Git remote에서 확인한다.
 
 ## 기본 작업
 
@@ -11,7 +11,7 @@
 - 라벨 추가·제거: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
 - 종료: `gh issue close <number>`
 
-여러 줄 본문은 파일에 작성하고 `--body-file`로 전달한다. 스킬이 “publish to the issue tracker”를 지시하면 이슈를 생성하고, “fetch the relevant ticket”을 지시하면 해당 이슈와 댓글을 조회한다.
+여러 줄 본문은 파일에 작성하고 `--body-file`로 전달한다. “fetch the relevant ticket”은 해당 이슈와 댓글 조회다. 생성·댓글·라벨·담당자·종료 등 원격 변경은 현재 사용자 요청에 포함된 경우에 수행한다. 스킬의 “publish” 문구나 문서 갱신만으로 게시 권한을 추정하지 않는다.
 
 ## Pull requests as a triage surface
 

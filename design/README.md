@@ -1,62 +1,47 @@
-# Chroma Note 디자인 파일
+# Chroma Note · Stamp 디자인
 
-편집 원본은 [chroma-note.pen](chroma-note.pen), 열람본은 [42페이지 PDF](export.pdf)다. 사진은 상대 경로 `assets/`를 사용하므로 원본과 함께 유지한다.
+2026-09-09 · [편집 가능한 Pen](chroma-note.pen) · 동작 정본은 [제품 명세](../docs/01_PRODUCT_SPEC.md), 화면 원칙은 [디자인 brief](../docs/design/DESIGN_BRIEF.md).
 
-Pen CLI `0.3.6`으로 저장·재열기·내보내기를 확인했다. 첫 실행에서는 사진·아이콘 로딩이 끝난 뒤 렌더한다.
+사진 임포트 전용 Stamp Record의 새 디자인이다. 현재 파운데이션·컴포넌트·화면만 유지하며 카메라, 지도, 공유, 결제, 출시 화면은 포함하지 않는다. 앱 구현이나 클릭 가능한 네이티브 프로토타입은 아니다.
 
-```sh
-npx --yes @pen.dev/cli@0.3.6 interactive --in design/chroma-note.pen --out design/chroma-note.pen
-```
+## Pen 구성
 
-38개 화면과 4개 시스템 보드, 17개 재사용 컴포넌트가 있다. [디자인 기준](../docs/design/DESIGN_BRIEF.md)과 [검토 기록](../docs/design/INTERFACE_REVIEW.md)을 함께 읽는다. 정적 디자인이며 앱 구현 완료를 뜻하지 않는다.
-
-| 화면 / 보드 | PNG |
+| 영역 | 내용 |
 |---|---|
-| 00 · Foundations / 파운데이션 | [RdQ0I](previews/RdQ0I.png) |
-| 01 · Components / 컴포넌트 | [WBjSO](previews/WBjSO.png) |
-| 02 · Patterns / 기록과 상태 | [cqSDl](previews/cqSDl.png) |
-| Phone / 04-book / Book | [f8bzpF](previews/f8bzpF.png) |
-| Phone / 04-empty / Book | [oHGpq](previews/oHGpq.png) |
-| Tablet / 04-book / Book | [u0aWmC](previews/u0aWmC.png) |
-| Tablet / 04-empty / Book | [p6gCoP](previews/p6gCoP.png) |
-| Phone / 05-detail / 골목의 오후 | [xBtfm](previews/xBtfm.png) |
-| Phone / 01-find / Find | [VZnia](previews/VZnia.png) |
-| Phone / 02-pick / 색 고르기 | [Z14Qa](previews/Z14Qa.png) |
-| Phone / 03-place / 인덱스 붙이기 | [cVJOb](previews/cVJOb.png) |
-| Tablet / 05-detail / 골목의 오후 | [BsWf2](previews/BsWf2.png) |
-| Tablet / 01-find / Find | [YZXpr](previews/YZXpr.png) |
-| Tablet / 02-pick / 색 고르기 | [uElKT](previews/uElKT.png) |
-| Tablet / 03-place / 인덱스 붙이기 | [QT1qD](previews/QT1qD.png) |
-| Phone / 06-colors / Book | [Qq64N](previews/Qq64N.png) |
-| Phone / 07-color-detail / 코랄 | [c0T4QK](previews/c0T4QK.png) |
-| Phone / 08-ideas / Ideas | [oPAKP](previews/oPAKP.png) |
-| Phone / 09-settings / 설정 | [kV2NG](previews/kV2NG.png) |
-| Tablet / 06-colors / Book | [y1jla](previews/y1jla.png) |
-| Tablet / 07-color-detail / 코랄 | [sorAp](previews/sorAp.png) |
-| Tablet / 08-ideas / Ideas | [afMEp](previews/afMEp.png) |
-| Tablet / 09-settings / 설정 | [cPboY](previews/cPboY.png) |
-| Phone / 10-language / 언어 / Language | [zXxbF](previews/zXxbF.png) |
-| Phone / 11-backup / 백업 파일 만들기 | [Ndj04](previews/Ndj04.png) |
-| Phone / 12-restore / 백업에서 복원 | [HlPVH](previews/HlPVH.png) |
-| Phone / 13-edit / 기록 편집 | [VDDtU](previews/VDDtU.png) |
-| Phone / 14-permission / Find | [NHo8u](previews/NHo8u.png) |
-| Tablet / 10-language / 언어 / Language | [kGkox](previews/kGkox.png) |
-| Tablet / 11-backup / 백업 파일 만들기 | [QF6AU](previews/QF6AU.png) |
-| Tablet / 12-restore / 백업에서 복원 | [LlIYZ](previews/LlIYZ.png) |
-| Tablet / 13-edit / 기록 편집 | [TrNHZ](previews/TrNHZ.png) |
-| Tablet / 14-permission / Find | [VhC4n](previews/VhC4n.png) |
-| 03 · States / 저장 · 권한 · 백업 | [Hftdd](previews/Hftdd.png) |
-| Phone / 15-saved / 골목의 오후 | [e11F83](previews/e11F83.png) |
-| Phone / 16-zero-color / 색을 기다리는 사진 | [q4p6q](previews/q4p6q.png) |
-| Tablet / 15-saved / 골목의 오후 | [C6X5Y](previews/C6X5Y.png) |
-| Tablet / 16-zero-color / 색을 기다리는 사진 | [B0M6uk](previews/B0M6uk.png) |
-| Phone 360 / Color Pick | [UjRSb](previews/UjRSb.png) |
-| Phone EN / Choose a color | [F2KDH](previews/F2KDH.png) |
-| Tablet landscape / Book | [bQD0n](previews/bQD0n.png) |
-| Phone 320 / Color Pick | [rvPRh](previews/rvPRh.png) |
+| 00 Foundations | 종이/잉크/행동/상태 색, 역할별 글자, 간격, 터치·확대 원칙 |
+| 01 Components | 버튼, 입력, 아이콘 버튼, 필터 칩, 기록 카드, 팔레트, 안내, 확인 선택, 글 영역, 시스템 상태바, 처리 단계, 확인 대화상자, 이미지 비교 — 재사용 컴포넌트 13개 |
+| 02 Image fixtures | 디자인용 사진·스탬프와 품질 근거로 사용하지 않는다는 안내 |
+| 03 States | 인증·사진·모델·Book·저장·삭제의 오류/복구 카드 18개 |
+| 04 Confirmations | 초안 폐기, 사진 교체, 새 후보 채택, 재인증 후 계정 영구 삭제 |
+| 05 Interaction states | 기본·초점·눌림·비활성·처리 중, 입력 오류 |
 
-## 사진 출처
+화면 변형은 총 28개다. Pen 캔버스의 번호와 다음 순서가 일치한다.
 
-- `assets/terracotta.jpg`: [Martins Cardoso / Unsplash](https://unsplash.com/@martinscardoso_unsplash), [사용 이미지](https://images.unsplash.com/photo-1767978690630-83bfeb382bac?w=1080&q=85&fit=max).
-- `assets/leaves.jpg`: [Abdullah Aslam / Unsplash](https://unsplash.com/@abdullahaslam_11575630_sink), [사용 이미지](https://images.unsplash.com/photo-1672219286179-8925a7306d62?w=1080&q=85&fit=max).
-- 원본 HTML의 팬덱·포스트잇·페이지 탭 이미지는 방향 참고용이며 제품 자산으로 재배포하지 않는다. 기준색 번호는 디자인 예시이며 Pantone 공식 목록이 아니다.
+| 번호 | 화면 |
+|---|---|
+| 01–07 | 이메일 인증, 코드 확인, Book, 빈 Book, 사진 입력 확인, 모델 준비, 로컬 처리 |
+| 08–11 | 결과 비교·메모, 저장된 기록 상세, 기록 편집, 설정 |
+| 12–16 | 초안 재개, AI 설명 실패, Stamp 실패, 저장 대기, 편집 충돌 |
+| 17–20 | 기록 삭제, 오프라인 로그아웃, 계정 삭제 재인증, 필터 |
+| 21–24 | 태블릿 Book 834, 가로 비교 1194, 영문 인증·Book |
+| 25–28 | 좁은 폭 320, 글씨 200%, 원본 보기 360, 확인 완료·저장 가능 |
+
+폰 기본 폭은 390이다. 세로로 긴 화면은 스크롤 전체 콘텐츠이며 한 viewport에 축소해서 넣는 레이아웃이 아니다. 비활성 저장과 확인 후 저장, 로컬 보관과 서버 완료, AI 글과 내 메모를 구별한다.
+
+## 공통 규칙과 이미지
+
+색은 primitive → semantic 변수로 연결하며 화면과 컴포넌트는 의미 변수로 참조한다. 본문 16, 보조 14, 작은 글 12, 제목 20/28, 줄 높이 1.5, 조작 최소 48×48을 사용한다. `better-*` 디자인 스킬의 대비·그룹화·가독성·접근성 원칙을 이 공통 규칙에 반영했다.
+
+Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이다. 이는 디자인 도구의 표현용 글꼴이며 앱의 시스템 글꼴 우선 원칙을 바꾸거나 폰트 패키지 설치를 요구하지 않는다. 초점과 오류는 색만으로 구분하지 않는다.
+
+`images/`의 두 이미지는 각각 생성한 **디자인 fixture**다. 동일 사진을 실제 후보 모델로 변환한 결과가 아니며 사물 배치에도 차이가 있다. 확인 완료 화면은 상태 표현일 뿐 이 예시가 원본 보존 심사를 통과했다는 뜻이 아니다. 팔레트 비중·AI 글·날짜·장소도 예시다. 실제 모델 출력으로 교체한 뒤 보존성과 가독성을 다시 확인해야 한다.
+
+## 미리보기와 검증
+
+- [파운데이션](previews/VqCCu.png) · [컴포넌트](previews/wlBIi.png)
+- [Book](previews/ePGw7.png) · [결과 확인](previews/yhiki.png)
+- [태블릿 비교](previews/H4nbI.png) · [영문 인증](previews/Op9oz.png)
+
+Pen 정적 검사: 루트 34개(보드 6+화면 28), 재사용 컴포넌트 13개, 단색 배경에서 계산 가능한 텍스트/배경 599쌍의 최저 대비 5.57:1. 검사 대상의 대비 미달·클리핑·48px 미만 조작 표적·루트 겹침·미완성 placeholder는 0개다. 이미지 배경 대비나 실제 보조기기 동작까지 자동 검증한 것은 아니다.
+
+핵심 화면과 상태·폭/글자 변형을 렌더링해 확인했고, 대표 화면 6개를 PNG로 내보냈다. 실제 키보드 가림, safe area, 스크린리더, 플랫폼 글꼴·다국어 전체 화면, 모델/네트워크 동작 검증은 앱 구현 후 필요하다. 현재 실행·검증 상태의 정본은 [프로젝트 현황](../docs/03_PROJECT_STATUS.md)이다.

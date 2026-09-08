@@ -4,7 +4,7 @@
 
 ### Issue tracker
 
-이슈·명세를 조회하거나 게시할 때 GitHub Issues를 사용한다. `docs/agents/issue-tracker.md`를 읽는다.
+실행 티켓을 조회하거나 승인된 범위에서 게시할 때 `docs/agents/issue-tracker.md`를 읽는다. 제품·기술 명세의 정본은 `docs/README.md`, 현재 현황은 `docs/03_PROJECT_STATUS.md`다.
 
 ### Triage labels
 
