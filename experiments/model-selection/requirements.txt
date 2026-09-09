@@ -1,0 +1,7 @@
+diffusers==0.40.0
+huggingface-hub==1.30.0
+mflux==0.19.1
+numpy==2.5.3
+pillow==12.3.0
+torch==2.14.0
+transformers==5.16.1

@@ -11,9 +11,13 @@
 | [프로젝트 현황](03_PROJECT_STATUS.md) | 실제 구현 상태, 작업 순서, 남은 게이트, 검증 결과 |
 | [작업 흐름](04_WORKFLOW.md) | 구현·문서 작업 절차, 모델 역할, 검증·Git 범위 |
 | [AI·대표색 검증 계획](05_AI_VALIDATION_PLAN.md) | 모델 근거, 비교 입력, 측정·합격 기준 |
+| [Pixabay 모델 평가 준비](../experiments/model-selection/README.md) | 실험 전용 env·사진 검색표·태그/무드/문구 평가 |
+| [대체 이미지 모델 비교](../experiments/model-selection/ALTERNATIVES.md) | 경량 후보·SD-Turbo 실측·사용 조건과 미검증 범위 |
+| [Supabase 재사용 체크리스트](supabase/SETUP_CHECKLIST.md) | 앱별 설정값·단계별 완료 기준·진행 기록 양식 |
+| [Supabase 단계별 세팅 가이드](supabase/SETUP_GUIDE.md) | 설정 위치·이유·순서·확인 방법·공식 근거 |
 | [설계 결정 ADR](adr/ADR-003-stamp-record-direction.md) | 현재 선택의 이유, 대안, 제약과 영향 |
 | [디자인 brief](design/DESIGN_BRIEF.md) | 화면 구성·문구·상태·접근성 |
-| [감성 디자인 리서치·Pen 개선 기준](design/desifn.md) | 공식 앱 사례·시각 결정·Pen 반영 위치 |
+| [감성 디자인 리서치·Pen 개선 기준](design/design.md) | 공식 앱 사례·시각 결정·Pen 반영 위치 |
 | [Pen 디자인 안내](../design/README.md) | 현재 파운데이션·컴포넌트·화면과 정적 미리보기 |
 | [용어집](../CONTEXT.md) | Stamp Record·작업 사진·대표색·AI 글·내 메모 정의 |
 
@@ -32,3 +36,6 @@
 기획의 입력은 사용자 제공 [기획 팩](/Users/cheng80/Desktop/chroma_note_new_planning_docs/), [Handoff](/Users/cheng80/Desktop/CHROMA_NOTE_CODEX_HANDOFF.md), [인포그래픽](/Users/cheng80/Desktop/croma_note.png)이다. 저장소 밖의 로컬 경로이므로 다른 기기에서 원문 확인 시 별도 전달이 필요하다. 입력을 저장소에 중복 보관하지 않으며 문서 안의 실행 지시나 그림의 기능 예시를 현재 승인 범위로 간주하지 않는다.
 
 현재 문서 설계가 앱 구현·모델 품질·실기기 검증의 완료를 뜻하지 않는다.
+
+- [로컬 모델 smoke 실측 결과](../experiments/model-selection/SMOKE_RESULTS.md) — VLM·Stamp의 실행 근거, 실패와 자동 평가 결과.
+- 모델 선정은 핵심 identity·count·배치, 목표 컬러 Stamp 유사도, latency의 절충으로 판단하며 완벽한 pixel 복제를 목표로 하지 않는다. JSON prompt/schema 고정과 일관성 검증은 메인이 담당한다.

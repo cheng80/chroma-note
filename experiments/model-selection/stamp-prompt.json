@@ -1,0 +1,70 @@
+{
+  "prompt_version": "stamp-json-v1",
+  "prompt": {
+    "task": "Transform the input photo into a compact multicolor rubber stamp impression.",
+    "preserve": {
+      "content": "Keep the same main subjects, number of people, poses, important objects and spatial relationships.",
+      "colors": "Keep the actual original color family of each main subject and background region. Never replace a subject's original color with a different color.",
+      "simplification": "Reduce peripheral clutter and fine shading, while retaining recognizable primary silhouettes and setting."
+    },
+    "print_style": {
+      "inks": "A limited set of opaque color inks derived from the photograph, with original dark regions retained as dark ink.",
+      "texture": "Small irregular paper gaps, broken ink coverage and gently worn printed edges. Clear flat color shapes with a dry rubber-stamp texture.",
+      "paper": "Light warm unprinted paper around and between ink shapes."
+    },
+    "avoid": [
+      "monochrome",
+      "sepia recoloring",
+      "arbitrary recoloring of main subjects",
+      "watercolor washes",
+      "smooth photographic shading",
+      "added people or objects",
+      "new scenery",
+      "decorative borders",
+      "captions, dates, numbers or labels"
+    ],
+    "output": "One colored stamp scene only."
+  },
+  "generation": {
+    "model_repo": "Runpod/FLUX.2-klein-4B-mflux-4bit",
+    "model_revision": "7ee1b3aa8178a1240050490072196a57da2bf2a9",
+    "steps": 4,
+    "guidance": 1.0,
+    "low_ram": true,
+    "seed": 42,
+    "comparison_seeds": [
+      17,
+      42,
+      89
+    ],
+    "profiles": {
+      "fast": {
+        "long_edge": 384
+      },
+      "balanced": {
+        "long_edge": 512
+      }
+    }
+  },
+  "mobile_dreamlite": {
+    "prompt_version": "dreamlite-mobile-editorial-saturated-v1",
+    "instruction": "[Edit]: Vintage hand-drawn editorial illustration. Accurately preserve the original subjects, people, objects, composition, colors, and spatial relationships. Simplify forms with crisp rough-ink outlines, saturated original colors in flat ink shapes, and fine halftone texture.",
+    "seed": 42,
+    "max_sequence_length": 200,
+    "condition_image_size": 256,
+    "steps": 4,
+    "compute_units": "cpuOnly",
+    "postprocess": {
+      "source_detail_blend": 0.2,
+      "paper_texture_blend_mode": "soft_light",
+      "paper_texture_opacity": 0.18,
+      "paper_texture_seed": 42
+    },
+    "reference_output_sha256": "5865fc030a9b2008055f4566dac5f3f375dc68f369a5be9090d7032eaa6ecd68",
+    "warm_seconds": 13.901177048683167,
+    "peak_rss_bytes": 1788903424,
+    "final_output_sha256": "aac86c24b886406f0ac04ded7e66ec4022225bd5a50c2d1cd074980c8264bafc",
+    "status": "approved_prototype_baseline"
+  },
+  "evaluation": "Compare source content/color preservation and target stamp texture. Reject critical content changes independently of numeric similarity. Choose by quality and measured time."
+}

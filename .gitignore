@@ -51,3 +51,22 @@ example
 # Isolated local model runtime
 /experiments/model-selection/.venv/
 /experiments/model-selection/__pycache__/
+
+# Downloaded weights and generated model builds
+/experiments/model-selection/**/*.bin
+/experiments/model-selection/**/*.ckpt
+/experiments/model-selection/**/*.gguf
+/experiments/model-selection/**/*.mlmodel
+/experiments/model-selection/**/*.mlmodelc/
+/experiments/model-selection/**/*.mlpackage/
+/experiments/model-selection/**/*.npy
+/experiments/model-selection/**/*.npz
+/experiments/model-selection/**/*.onnx
+/experiments/model-selection/**/*.pth
+/experiments/model-selection/**/*.pt
+/experiments/model-selection/**/*.safetensors
+/experiments/model-selection/**/*.tflite
+/experiments/model-selection/**/DerivedData/
+/experiments/model-selection/**/build/
+/experiments/model-selection/**/checkpoints/
+/experiments/model-selection/**/models/
