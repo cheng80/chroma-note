@@ -693,6 +693,16 @@
                   "width": "fill_container",
                   "fill": "$accent-solid",
                   "cornerRadius": 12,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#29282324",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 8
+                  },
                   "gap": 8,
                   "padding": [
                     14,
@@ -895,6 +905,16 @@
                   "cornerRadius": 12,
                   "stroke": "$border-control",
                   "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#29282324",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 8
+                  },
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
@@ -950,7 +970,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 즐겨찾기"
+                      "content": "즐겨찾기"
                     }
                   }
                 },
@@ -998,9 +1018,21 @@
                     "minTarget": 48
                   },
                   "width": "fill_container",
-                  "fill": "#00000000",
+                  "fill": "$bg-surface",
+                  "cornerRadius": 16,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#29282324",
+                    "offset": {
+                      "x": 0,
+                      "y": 2
+                    },
+                    "blur": 8
+                  },
                   "layout": "vertical",
                   "gap": 8,
+                  "padding": 8,
                   "children": [
                     {
                       "type": "rectangle",
@@ -1595,6 +1627,16 @@
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 20,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282338",
+                "offset": {
+                  "x": 0,
+                  "y": 12
+                },
+                "blur": 28
+              },
               "layout": "vertical",
               "gap": 16,
               "padding": 24,
@@ -1685,7 +1727,7 @@
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "✓ 원본"
+                          "content": "원본"
                         }
                       }
                     },
@@ -2308,7 +2350,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 전체"
+                      "content": "전체"
                     }
                   }
                 },
@@ -2561,6 +2603,16 @@
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 4,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
               "layout": "vertical",
               "gap": 12,
               "padding": [
@@ -2594,7 +2646,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "이런 모습으로 남아요 · 디자인 예시",
+                  "content": "이런 모습으로 남아요",
                   "lineHeight": 1.5,
                   "textAlign": "center",
                   "fontFamily": "$font-body",
@@ -2867,7 +2919,7 @@
       "id": "uSu5R",
       "x": 2250,
       "y": 1500,
-      "name": "Phone / 06 · 모델 준비",
+      "name": "Phone / 06 · 스탬프 준비",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-004",
@@ -2929,7 +2981,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "모델 준비",
+                  "content": "스탬프 준비",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -2940,21 +2992,21 @@
             {
               "type": "icon",
               "id": "oh6gU",
-              "name": "Local model icon",
+              "name": "Stamp preparation icon",
               "width": 48,
               "height": 48,
-              "icon": "cpu",
+              "icon": "stamp",
               "library": "lucide",
               "fill": "$accent-solid"
             },
             {
               "type": "text",
               "id": "RCTM8",
-              "name": "Model heading",
+              "name": "Stamp preparation heading",
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "사진은 기기 안에서\n스탬프가 돼요",
+              "content": "스탬프로 변환할\n준비 중이에요",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -2963,11 +3015,11 @@
             {
               "type": "text",
               "id": "tNjpA",
-              "name": "처음 한 번 모델 다운로드가 필요해요.\n다운로드 후에는 오프라인에서도 만들 수 있어요.",
+              "name": "Stamp file preparation description",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "처음 한 번 모델 다운로드가 필요해요.\n다운로드 후에는 오프라인에서도 만들 수 있어요.",
+              "content": "처음 한 번 변환에 필요한 파일을 받아요.\n준비가 끝나면 사진을 스탬프로 만들 수 있어요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -2977,7 +3029,7 @@
               "id": "jIP4r",
               "type": "ref",
               "ref": "DOjki",
-              "name": "Notice / 기기와 저장공간 확인",
+              "name": "Notice / 필요한 파일과 저장공간 확인",
               "width": "fill_container",
               "fill": "$accent-subtle",
               "descendants": {
@@ -2986,11 +3038,11 @@
                   "fill": "$accent-solid"
                 },
                 "HZd7j": {
-                  "content": "기기와 저장공간 확인",
+                  "content": "필요한 파일과 저장공간 확인",
                   "fill": "$accent-solid"
                 },
                 "t3y1jD": {
-                  "content": "지원 여부와 필요한 용량을 확인한 뒤 다운로드할 수 있어요.",
+                  "content": "파일 이름·용량·예상 시간을 받은 뒤 진행해요.",
                   "fill": "$accent-solid"
                 }
               }
@@ -2999,14 +3051,14 @@
               "id": "nIsa8",
               "type": "ref",
               "ref": "q0QhL",
-              "name": "다운로드 안내",
+              "name": "스탬프 변환 파일 안내",
               "width": "fill_container",
               "descendants": {
                 "G0mYoF": {
                   "content": "다운로드 안내"
                 },
                 "FC5B2": {
-                  "content": "사진 읽기 모델과 스탬프 모델을 준비해요.\n모델명 · 용량 · 사용조건은 다운로드 전에 표시해요."
+                  "content": "스탬프 변환에 필요한 파일 이름·용량·사용 조건을 받기 전에 확인해요.\n받는 중에는 진행률과 취소를 계속 보여줘요."
                 }
               }
             },
@@ -3014,13 +3066,13 @@
               "id": "gflvS",
               "type": "ref",
               "ref": "okVIz",
-              "name": "Button / 다운로드 정보 확인",
+              "name": "Button / 필요한 파일 확인",
               "width": "fill_container",
               "fill": "$accent-solid",
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "다운로드 정보 확인",
+                  "content": "필요한 파일 확인",
                   "fill": "$text-inverse"
                 }
               }
@@ -3385,7 +3437,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 스탬프"
+                      "content": "스탬프"
                     }
                   }
                 },
@@ -3593,81 +3645,81 @@
               }
             },
             {
-              "type": "rectangle",
-              "cornerRadius": 4,
-              "id": "A3X02F",
-              "name": "Saved stamp",
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "images/generated-1788887279815.png",
-                "mode": "fit"
-              },
-              "width": "fill_container",
-              "height": 250,
-              "stroke": "#0000001A"
-            },
-            {
-              "type": "text",
-              "id": "OSiHM",
-              "name": "2026. 09. 09  ·  작은 골목의 카페",
-              "fill": "$text-primary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "2026. 09. 09  ·  작은 골목의 카페",
-              "lineHeight": 1.5,
-              "fontFamily": "$font-body",
-              "fontSize": "$type-small",
-              "fontWeight": "normal"
-            },
-            {
               "type": "frame",
-              "id": "y0Zwy",
-              "name": "Favorite action",
+              "id": "ChTsK",
+              "name": "Scroll viewport / 저장된 전체 기록",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "showsFullRecord": true,
+                "longText": true,
+                "tagWrap": true
+              },
+              "clip": true,
               "width": "fill_container",
-              "gap": 12,
-              "alignItems": "center",
+              "height": "fill_container",
+              "layout": "none",
               "children": [
                 {
-                  "id": "D1lpzj",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "즐겨찾기 추가",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "heart"
+                  "type": "frame",
+                  "id": "I837ki",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Scroll content / 저장된 전체 기록",
+                  "width": 350,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "L58EuF",
+                      "type": "ref",
+                      "ref": "u5MzP4",
+                      "name": "RecordArtwork / 저장된 상세 전체 읽기",
+                      "width": "fill_container"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eiMxW",
+                      "name": "Favorite action / 전체 기록 아래",
+                      "metadata": {
+                        "type": "interaction",
+                        "role": "button",
+                        "action": "toggle-favorite",
+                        "minTarget": 48
+                      },
+                      "width": "fill_container",
+                      "height": 48,
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ZjIrb",
+                          "name": "Favorite icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "heart",
+                          "library": "lucide",
+                          "fill": "$text-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "N8Zak",
+                          "name": "Favorite label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "즐겨찾기",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": "$type-small",
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
-                  }
-                },
-                {
-                  "type": "text",
-                  "id": "mssXi",
-                  "name": "즐겨찾기",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "즐겨찾기",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-small",
-                  "fontWeight": "normal"
+                  ]
                 }
               ]
-            },
-            {
-              "id": "KlYRd",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "내 메모와 전체 기록 보기",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "내 메모 · 전체 기록 보기"
-                },
-                "GxQU9": {
-                  "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다."
-                }
-              }
             }
           ]
         },
@@ -3832,7 +3884,7 @@
                     {
                       "type": "text",
                       "id": "Mixsb",
-                      "name": "✓ 원본과 비교했어요",
+                      "name": "원본과 비교했어요",
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
@@ -4104,7 +4156,7 @@
             {
               "type": "frame",
               "id": "bgjYI",
-              "name": "모델 관리",
+              "name": "스탬프 변환 파일",
               "width": "fill_container",
               "gap": 12,
               "alignItems": "center",
@@ -4112,7 +4164,7 @@
                 {
                   "type": "frame",
                   "id": "VfDlS",
-                  "name": "모델 관리 labels",
+                  "name": "스탬프 변환 파일 labels",
                   "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
@@ -4120,11 +4172,11 @@
                     {
                       "type": "text",
                       "id": "DSFir",
-                      "name": "모델 관리",
+                      "name": "스탬프 변환 파일",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "모델 관리",
+                      "content": "스탬프 변환 파일",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-body",
@@ -4133,11 +4185,11 @@
                     {
                       "type": "text",
                       "id": "hY1Yv",
-                      "name": "지원 여부 · 다운로드 · 저장공간",
+                      "name": "파일 · 용량 · 저장공간",
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "지원 여부 · 다운로드 · 저장공간",
+                      "content": "파일 · 용량 · 저장공간",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-small",
@@ -4149,7 +4201,7 @@
                   "id": "u9Gus",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "모델 관리 열기",
+                  "name": "스탬프 변환 파일 열기",
                   "descendants": {
                     "QbEcD": {
                       "icon": "chevron-right"
@@ -4427,7 +4479,7 @@
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "✓ 전체"
+                          "content": "전체"
                         }
                       }
                     },
@@ -4623,6 +4675,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "gap": 12,
           "padding": [
@@ -5416,7 +5478,7 @@
                         {
                           "type": "text",
                           "id": "lgGrg",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
@@ -5565,6 +5627,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "gap": 12,
           "padding": [
@@ -6145,7 +6217,7 @@
                 {
                   "type": "frame",
                   "id": "EArQb",
-                  "name": "모델 관리",
+                  "name": "스탬프 변환 파일",
                   "width": "fill_container",
                   "gap": 12,
                   "alignItems": "center",
@@ -6153,7 +6225,7 @@
                     {
                       "type": "frame",
                       "id": "mVqE6",
-                      "name": "모델 관리 labels",
+                      "name": "스탬프 변환 파일 labels",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 4,
@@ -6161,11 +6233,11 @@
                         {
                           "type": "text",
                           "id": "FTwT4",
-                          "name": "모델 관리",
+                          "name": "스탬프 변환 파일",
                           "fill": "$text-primary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "모델 관리",
+                          "content": "스탬프 변환 파일",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": "$type-body",
@@ -6174,11 +6246,11 @@
                         {
                           "type": "text",
                           "id": "PO4LJ",
-                          "name": "지원 여부 · 다운로드 · 저장공간",
+                          "name": "파일 · 용량 · 저장공간",
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "지원 여부 · 다운로드 · 저장공간",
+                          "content": "파일 · 용량 · 저장공간",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": "$type-small",
@@ -6190,7 +6262,7 @@
                       "id": "kvLOH",
                       "type": "ref",
                       "ref": "OYxj6",
-                      "name": "모델 관리 열기",
+                      "name": "스탬프 변환 파일 열기",
                       "descendants": {
                         "QbEcD": {
                           "icon": "chevron-right"
@@ -6812,7 +6884,7 @@
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "✓ 전체"
+                          "content": "전체"
                         }
                       }
                     },
@@ -6987,6 +7059,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "gap": 12,
           "padding": [
@@ -7109,7 +7191,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 전체"
+                      "content": "전체"
                     }
                   }
                 },
@@ -7642,7 +7724,7 @@
             {
               "type": "frame",
               "id": "szVDx",
-              "name": "모델을 준비하고 있어요",
+              "name": "스탬프 변환을 준비하고 있어요",
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 16,
@@ -7667,7 +7749,7 @@
                   "id": "DF6MR",
                   "type": "ref",
                   "ref": "DOjki",
-                  "name": "Notice / 모델을 준비하고 있어요",
+                  "name": "Notice / 스탬프 변환을 준비하고 있어요",
                   "width": "fill_container",
                   "fill": "$accent-subtle",
                   "descendants": {
@@ -7676,7 +7758,7 @@
                       "fill": "$accent-solid"
                     },
                     "HZd7j": {
-                      "content": "모델을 준비하고 있어요",
+                      "content": "스탬프 변환을 준비하고 있어요",
                       "fill": "$accent-solid"
                     },
                     "t3y1jD": {
@@ -7744,7 +7826,7 @@
                       "fill": "$warning-text"
                     },
                     "t3y1jD": {
-                      "content": "현재 모델을 지원하지 않아요. 초안은 보관하고 Book으로 돌아갈 수 있어요.",
+                      "content": "이 기기에서는 스탬프로 변환할 수 없어요. 초안은 보관하고 Book으로 돌아갈 수 있어요.",
                       "fill": "$warning-text"
                     }
                   }
@@ -7770,7 +7852,7 @@
             {
               "type": "frame",
               "id": "kCV5w",
-              "name": "모델 파일을 확인하지 못했어요",
+              "name": "변환 파일을 확인하지 못했어요",
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 16,
@@ -7795,7 +7877,7 @@
                   "id": "z5hn1",
                   "type": "ref",
                   "ref": "DOjki",
-                  "name": "Notice / 모델 파일을 확인하지 못했어요",
+                  "name": "Notice / 변환 파일을 확인하지 못했어요",
                   "width": "fill_container",
                   "fill": "$danger-subtle",
                   "descendants": {
@@ -7804,7 +7886,7 @@
                       "fill": "$danger-solid"
                     },
                     "HZd7j": {
-                      "content": "모델 파일을 확인하지 못했어요",
+                      "content": "변환 파일을 확인하지 못했어요",
                       "fill": "$danger-solid"
                     },
                     "t3y1jD": {
@@ -7817,14 +7899,14 @@
                   "id": "slaUt",
                   "type": "ref",
                   "ref": "okVIz",
-                  "name": "Button / 모델 다시 받기",
+                  "name": "Button / 변환 파일 다시 받기",
                   "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
                   "descendants": {
                     "uTrwf": {
-                      "content": "모델 다시 받기",
+                      "content": "변환 파일 다시 받기",
                       "fill": "$text-primary"
                     }
                   }
@@ -8782,7 +8864,7 @@
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "✓ 전체"
+                          "content": "전체"
                         }
                       }
                     },
@@ -9533,7 +9615,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ All"
+                      "content": "All"
                     }
                   }
                 },
@@ -9824,7 +9906,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 스탬프"
+                      "content": "스탬프"
                     }
                   }
                 },
@@ -10041,7 +10123,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 스탬프",
+                      "content": "스탬프",
                       "fontSize": 28
                     }
                   }
@@ -10346,12 +10428,13 @@
                       "ref": "okVIz",
                       "name": "Button / 저장하기",
                       "width": "fill_container",
-                      "fill": "$bg-sunken",
-                      "strokeWidth": 0,
+                      "fill": "$bg-disabled",
+                      "strokeWidth": 1,
+                      "stroke": "$border-control",
                       "descendants": {
                         "uTrwf": {
                           "content": "저장하기",
-                          "fill": "$text-primary"
+                          "fill": "$ink-disabled"
                         }
                       }
                     }
@@ -10591,7 +10674,7 @@
                   "name": "Filter / 원본",
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 원본"
+                      "content": "원본"
                     }
                   }
                 },
@@ -10816,7 +10899,7 @@
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "✓ 스탬프"
+                      "content": "스탬프"
                     }
                   }
                 },
@@ -11374,126 +11457,56 @@
             },
             {
               "type": "frame",
-              "id": "Z2dpr",
-              "name": "Confirmed stamp summary",
+              "id": "b9KAMl",
+              "name": "Scroll viewport / 저장 전 전체 기록",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "showsFullRecord": true,
+                "longText": true,
+                "tagWrap": true
+              },
+              "clip": true,
               "width": "fill_container",
-              "gap": 16,
-              "padding": [
-                8,
-                0
-              ],
-              "alignItems": "center",
+              "height": "fill_container",
+              "layout": "none",
               "children": [
                 {
-                  "type": "rectangle",
-                  "id": "cM5uS",
-                  "name": "Confirmed stamp thumbnail",
-                  "fill": {
-                    "type": "image",
-                    "enabled": true,
-                    "url": "images/generated-1788887279815.png",
-                    "mode": "fit"
-                  },
-                  "width": 96,
-                  "height": 72
-                },
-                {
                   "type": "frame",
-                  "id": "WpfYj",
-                  "name": "Result status",
-                  "width": "fill_container",
+                  "id": "ZD2Y9",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Scroll content / 저장 전 전체 기록",
+                  "width": 350,
                   "layout": "vertical",
-                  "gap": 6,
+                  "gap": 12,
                   "children": [
                     {
-                      "type": "text",
-                      "id": "IRFO2",
-                      "name": "한 장의 순간, 한 편의 기록",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "한 장의 순간, 한 편의 기록",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
+                      "id": "anJSP",
+                      "type": "ref",
+                      "ref": "u5MzP4",
+                      "name": "RecordArtwork / 저장 전 전체 읽기",
+                      "width": "fill_container"
                     },
                     {
-                      "type": "text",
-                      "id": "uKe0G",
-                      "name": "✓ 원본과 비교했어요",
-                      "fill": "$success-text",
-                      "textGrowth": "fixed-width",
+                      "id": "Xwg3w",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 기록 내용 편집",
                       "width": "fill_container",
-                      "content": "✓ 원본과 비교했어요",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 14,
-                      "fontWeight": "normal"
+                      "fill": "$bg-surface",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "기록 내용 편집",
+                          "fill": "$text-primary"
+                        }
+                      }
                     }
                   ]
                 }
               ]
-            },
-            {
-              "id": "Co4Md",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "Open / AI가 쓴 글 · 태그",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "AI가 쓴 글 · 태그"
-                },
-                "GxQU9": {
-                  "content": "낮은 지붕 아래 초록 문이…"
-                }
-              }
-            },
-            {
-              "id": "h6U3A",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "Open / 내 메모 · 선택",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "내 메모 · 선택"
-                },
-                "GxQU9": {
-                  "content": "햇살이 머문 작은 카페."
-                }
-              }
-            },
-            {
-              "id": "yTg3O",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "Open / 날짜 · 장소",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "날짜 · 장소"
-                },
-                "GxQU9": {
-                  "content": "2026. 09. 09 · 작은 골목의 카페"
-                }
-              }
-            },
-            {
-              "id": "z978s",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "Open / 사진에서 찾은 색",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "사진에서 찾은 색"
-                },
-                "GxQU9": {
-                  "content": "대표색 5개 · 색과 비중 보기"
-                }
-              }
             }
           ]
         },
@@ -11692,11 +11705,11 @@
                         {
                           "type": "text",
                           "id": "FhsFf",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$success-text",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "✓ 원본과 비교했어요",
+                          "content": "원본과 비교했어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -11852,6 +11865,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -11912,14 +11935,82 @@
               ],
               "children": [
                 {
+                  "type": "frame",
+                  "id": "bMxxv",
+                  "name": "AI 글 제안 시작",
+                  "metadata": {
+                    "type": "ai-assist",
+                    "action": "generate-suggestion",
+                    "target": "ai-suggestion-only",
+                    "autoOverwrite": false
+                  },
+                  "width": "fill_container",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "gap": 12,
+                  "padding": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "A0xoYv",
+                      "name": "AI 제안 안내",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "tMSSF",
+                          "name": "AI 제안 제목",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "AI가 글 초안을 제안해요",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": "$type-small",
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "V8fe7",
+                          "name": "AI 제안 설명",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "따로 미리 본 뒤 원할 때만 가져와요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": "$type-caption",
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "oqyT0",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / AI 글 만들기",
+                      "width": 132,
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "제안 만들기",
+                          "fontSize": "$type-small"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
                   "id": "S3IkV",
                   "type": "ref",
                   "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 선택",
+                  "name": "Field / 내 메모 · 직접 작성",
                   "width": "fill_container",
                   "descendants": {
                     "DeUAO": {
-                      "content": "내 메모 · 선택"
+                      "content": "내 메모"
                     },
                     "tux95": {
                       "height": 240
@@ -11935,17 +12026,42 @@
                   }
                 },
                 {
-                  "type": "text",
-                  "id": "IzYTb",
-                  "name": "Draft hint",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
+                  "type": "frame",
+                  "id": "nUMWX",
+                  "name": "Button / 비우고 직접 작성",
+                  "metadata": {
+                    "type": "interaction",
+                    "role": "button",
+                    "action": "clear-user-memo",
+                    "confirmWhenNonEmpty": true,
+                    "minTarget": 48
+                  },
                   "width": "fill_container",
-                  "content": "완성된 기록은 요약 화면에서 저장해요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
+                  "height": 48,
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "gw6bS",
+                      "name": "비우기 아이콘",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "eraser",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "q1yJBI",
+                      "name": "비우고 직접 작성 라벨",
+                      "fill": "$text-secondary",
+                      "content": "비우고 직접 작성",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "600"
+                    }
+                  ]
                 }
               ]
             },
@@ -12149,11 +12265,11 @@
                         {
                           "type": "text",
                           "id": "LV41F",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$success-text",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "✓ 원본과 비교했어요",
+                          "content": "원본과 비교했어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -12309,6 +12425,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -12611,11 +12737,11 @@
                         {
                           "type": "text",
                           "id": "smfGT",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$success-text",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "✓ 원본과 비교했어요",
+                          "content": "원본과 비교했어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -12771,6 +12897,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -13108,11 +13244,11 @@
                         {
                           "type": "text",
                           "id": "c8EhbW",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$success-text",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "✓ 원본과 비교했어요",
+                          "content": "원본과 비교했어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -13268,6 +13404,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -13539,7 +13685,7 @@
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "✓ 스탬프"
+                          "content": "스탬프"
                         }
                       }
                     },
@@ -13668,6 +13814,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -14091,6 +14247,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -14500,7 +14666,7 @@
           "type": "frame",
           "id": "DtFS5",
           "x": 0,
-          "y": 524,
+          "y": 472,
           "name": "Sheet / 기록 더보기",
           "metadata": {
             "type": "dialog",
@@ -14511,7 +14677,7 @@
             "safeBottom": 34
           },
           "width": 390,
-          "height": 320,
+          "height": 372,
           "fill": "$bg-surface",
           "cornerRadius": [
             24,
@@ -14519,6 +14685,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -14578,6 +14754,18 @@
                 20
               ],
               "children": [
+                {
+                  "id": "qkD3P",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 기록 이미지로 저장",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "기록 이미지로 저장"
+                    }
+                  }
+                },
                 {
                   "id": "ZVFnm",
                   "type": "ref",
@@ -14790,11 +14978,11 @@
                         {
                           "type": "text",
                           "id": "JZ4LV",
-                          "name": "✓ 원본과 비교했어요",
+                          "name": "원본과 비교했어요",
                           "fill": "$success-text",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "✓ 원본과 비교했어요",
+                          "content": "원본과 비교했어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -14950,6 +15138,16 @@
             0,
             0
           ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
           "layout": "vertical",
           "children": [
             {
@@ -15010,14 +15208,61 @@
               ],
               "children": [
                 {
+                  "type": "frame",
+                  "id": "HHrSJ",
+                  "name": "AI 글 제안 바로가기",
+                  "metadata": {
+                    "type": "ai-assist",
+                    "action": "generate-suggestion",
+                    "target": "ai-suggestion-only",
+                    "autoOverwrite": false
+                  },
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 12,
+                  "gap": 8,
+                  "padding": [
+                    2,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QBbpi",
+                      "name": "AI 제안 별도 안내",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 글은 별도 제안으로 만들어요",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "rrMgT",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "AI 글 제안 만들기",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "wand-sparkles"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
                   "id": "Be05i",
                   "type": "ref",
                   "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 선택",
+                  "name": "Field / 내 메모 · 편집 중",
                   "width": "fill_container",
                   "descendants": {
                     "DeUAO": {
-                      "content": "내 메모 · 선택"
+                      "content": "내 메모 · 편집 중"
                     },
                     "tux95": {
                       "height": 132
@@ -15031,19 +15276,6 @@
                       "enabled": true
                     }
                   }
-                },
-                {
-                  "type": "text",
-                  "id": "M0QMg",
-                  "name": "Draft hint",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "작성 중인 내용은 이 기기에 보관해요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
                 }
               ]
             },
@@ -15276,6 +15508,4652 @@
           "fontWeight": "normal"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "LkfBx",
+      "x": 2250,
+      "y": 11000,
+      "name": "Phone / 40 · AI 글 제안 미리보기",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-005",
+        "surface": "sheet",
+        "fixture": true,
+        "key": "memo-ai-preview",
+        "flow": "generate-suggestion-then-explicit-import",
+        "autoOverwrite": false
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ImAcd",
+          "x": 0,
+          "y": 0,
+          "name": "Context / 기록 요약 · 비활성",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-005",
+            "fixture": true,
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "kOZgm",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "qjl6F",
+              "name": "Screen content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                8,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LOhXJ",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "VvViG",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "비교 화면으로",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "arrow-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "TxfDv",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기록 요약 · 2/2",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yBpYf",
+                  "name": "Confirmed stamp summary",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "cRYXR",
+                      "name": "Confirmed stamp thumbnail",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/generated-1788887279815.png",
+                        "mode": "fit"
+                      },
+                      "width": 96,
+                      "height": 72
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pefgX",
+                      "name": "Result status",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "p4CGQO",
+                          "name": "한 장의 순간, 한 편의 기록",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "한 장의 순간, 한 편의 기록",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "i8TUK",
+                          "name": "원본과 비교했어요",
+                          "fill": "$success-text",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "원본과 비교했어요",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "QVHQM",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / AI가 쓴 글 · 태그",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "AI가 쓴 글 · 태그"
+                    },
+                    "GxQU9": {
+                      "content": "낮은 지붕 아래 초록 문이…"
+                    }
+                  }
+                },
+                {
+                  "id": "ImgXR",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 내 메모 · 선택",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "내 메모 · 선택"
+                    },
+                    "GxQU9": {
+                      "content": "햇살이 머문 작은 카페."
+                    }
+                  }
+                },
+                {
+                  "id": "Q8YxWk",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 날짜 · 장소",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "날짜 · 장소"
+                    },
+                    "GxQU9": {
+                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                    }
+                  }
+                },
+                {
+                  "id": "He59U",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 사진에서 찾은 색",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "사진에서 찾은 색"
+                    },
+                    "GxQU9": {
+                      "content": "대표색 5개 · 색과 비중 보기"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l8nEGl",
+              "name": "Safe footer / 저장",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "V1qwb",
+                  "name": "Original lifetime before saving",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "VPeJV",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 저장하기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "저장하기"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "e3PbF",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim / AI 제안",
+          "metadata": {
+            "type": "decoration"
+          },
+          "fill": "#29282366",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "q03mX",
+          "x": 0,
+          "y": 62,
+          "name": "Sheet / AI 글 제안 미리보기",
+          "metadata": {
+            "type": "dialog",
+            "modal": true,
+            "restoreFocus": true,
+            "dismiss": "keep-user-memo-unchanged",
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "width": 390,
+          "height": 782,
+          "fill": "$bg-surface",
+          "cornerRadius": [
+            24,
+            24,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "nC5ou",
+              "name": "Sheet header / AI 글 제안",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                12,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "u3O7QB",
+                  "name": "Sheet title / AI 글 제안",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "AI 글 제안",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "SYFEf",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "제안 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Jj0D1",
+              "name": "Sheet content / 분리된 AI 제안과 내 메모",
+              "metadata": {
+                "type": "content",
+                "scroll": "only-if-content-exceeds-available-height"
+              },
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                0,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "x85LOA",
+                  "name": "AI 제안 준비 완료",
+                  "width": "fill_container",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 12,
+                  "gap": 8,
+                  "padding": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "MLyd6",
+                      "name": "AI 제안 아이콘",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "sparkles",
+                      "library": "lucide",
+                      "fill": "$accent-solid"
+                    },
+                    {
+                      "type": "text",
+                      "id": "l0PJw",
+                      "name": "AI 제안 상태",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "제안을 만들었어요 · 아직 내 메모와 분리됨",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "Y76V1",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / AI 글 제안 · 읽기 전용",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "AI 글 제안 · 미리보기"
+                    },
+                    "tux95": {
+                      "height": 116,
+                      "fill": "$bg-sunken"
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "제안 · 아직 내 메모에 반영되지 않음",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "gDGD9",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 내 메모 · 변경 전",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "내 메모 · 그대로 유지 중"
+                    },
+                    "tux95": {
+                      "height": 100
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "가져오기를 누르기 전에는 바뀌지 않아요.",
+                      "enabled": true
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mwiqb",
+              "name": "Safe footer / AI 제안",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "id": "nqH0E",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 내 메모로 가져오기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "내 메모로 가져오기"
+                    }
+                  }
+                },
+                {
+                  "id": "FndwA",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 비우고 직접 작성",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "비우고 직접 작성",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "njOQC",
+      "x": 2700,
+      "y": 11000,
+      "name": "Phone / 41 · 기존 메모 대체 인라인 확인",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-005",
+        "surface": "sheet",
+        "fixture": true,
+        "key": "memo-ai-preview",
+        "flow": "generate-suggestion-then-explicit-import",
+        "autoOverwrite": false
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uI08M",
+          "x": 0,
+          "y": 0,
+          "name": "Context / 기록 요약 · 비활성",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-005",
+            "fixture": true,
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "KiQDF",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "InT0e",
+              "name": "Screen content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                8,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "s0P5T",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "Y0hyqj",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "비교 화면으로",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "arrow-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "TeVCR",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기록 요약 · 2/2",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SjwTR",
+                  "name": "Confirmed stamp summary",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "R3pnj",
+                      "name": "Confirmed stamp thumbnail",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/generated-1788887279815.png",
+                        "mode": "fit"
+                      },
+                      "width": 96,
+                      "height": 72
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bwD6w",
+                      "name": "Result status",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "thVeb",
+                          "name": "한 장의 순간, 한 편의 기록",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "한 장의 순간, 한 편의 기록",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mcvqU",
+                          "name": "원본과 비교했어요",
+                          "fill": "$success-text",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "원본과 비교했어요",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "L4ek8",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / AI가 쓴 글 · 태그",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "AI가 쓴 글 · 태그"
+                    },
+                    "GxQU9": {
+                      "content": "낮은 지붕 아래 초록 문이…"
+                    }
+                  }
+                },
+                {
+                  "id": "V5cDXV",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 내 메모 · 선택",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "내 메모 · 선택"
+                    },
+                    "GxQU9": {
+                      "content": "햇살이 머문 작은 카페."
+                    }
+                  }
+                },
+                {
+                  "id": "D13Qy",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 날짜 · 장소",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "날짜 · 장소"
+                    },
+                    "GxQU9": {
+                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                    }
+                  }
+                },
+                {
+                  "id": "iWzxp",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 사진에서 찾은 색",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "사진에서 찾은 색"
+                    },
+                    "GxQU9": {
+                      "content": "대표색 5개 · 색과 비중 보기"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VuLDK",
+              "name": "Safe footer / 저장",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d19qD",
+                  "name": "Original lifetime before saving",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "rT1g7",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 저장하기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "저장하기"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "e9xmx",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim / AI 제안",
+          "metadata": {
+            "type": "decoration"
+          },
+          "fill": "#29282366",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "txoqn",
+          "x": 0,
+          "y": 62,
+          "name": "Sheet / AI 글 제안 미리보기",
+          "metadata": {
+            "type": "dialog",
+            "modal": true,
+            "restoreFocus": true,
+            "dismiss": "keep-user-memo-unchanged",
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "width": 390,
+          "height": 782,
+          "fill": "$bg-surface",
+          "cornerRadius": [
+            24,
+            24,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "qbyRU",
+              "name": "Sheet header / AI 글 제안",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                12,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eB1Ef",
+                  "name": "Sheet title / AI 글 제안",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "AI 글 제안",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "kZwn2",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "제안 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tZf20",
+              "name": "Sheet content / 분리된 AI 제안과 내 메모",
+              "metadata": {
+                "type": "content",
+                "scroll": "only-if-content-exceeds-available-height"
+              },
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                0,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "id": "nSvvI",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / AI 글 제안 · 읽기 전용",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "AI 글 제안 · 미리보기"
+                    },
+                    "tux95": {
+                      "height": 116,
+                      "fill": "$bg-sunken"
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "제안 · 아직 내 메모에 반영되지 않음",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "Fhiq7",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 내 메모 · 변경 전",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "내 메모 · 그대로 유지 중"
+                    },
+                    "tux95": {
+                      "height": 100
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "가져오기를 누르기 전에는 바뀌지 않아요.",
+                      "enabled": true
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "r5AAR",
+              "name": "Safe footer / AI 제안",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "id": "pXCGG",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 내 메모로 가져오기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "내 메모로 가져오기"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "YQZMu",
+                  "name": "Inline confirm / 기존 메모 대체",
+                  "metadata": {
+                    "type": "confirmation",
+                    "placement": "immediately-after-import-action",
+                    "workingMemoUnchangedUntilConfirm": true,
+                    "undoAvailableAfterConfirm": true,
+                    "autoOverwrite": false
+                  },
+                  "width": "fill_container",
+                  "fill": "$warning-subtle",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "a1q9Ds",
+                      "name": "Inline confirm title",
+                      "fill": "$warning-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기존 메모가 있어요",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "n5aZGV",
+                      "name": "Inline confirm body",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 제안으로 바꿀까요? 바꾼 뒤 되돌릴 수 있어요.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ekwGs",
+                      "name": "Inline confirm actions",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "JdWcX",
+                          "type": "ref",
+                          "ref": "okVIz",
+                          "name": "Button / 기존 메모 바꾸기 · 인라인",
+                          "width": "fill_container",
+                          "descendants": {
+                            "uTrwf": {
+                              "content": "바꾸기"
+                            }
+                          }
+                        },
+                        {
+                          "id": "GXZZZ",
+                          "type": "ref",
+                          "ref": "okVIz",
+                          "name": "Button / 대체 취소 · 인라인",
+                          "width": "fill_container",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "uTrwf": {
+                              "content": "취소",
+                              "fill": "$text-primary"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "hgxfI",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 비우고 직접 작성",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "비우고 직접 작성",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "p0vvTv",
+      "x": 3150,
+      "y": 11000,
+      "name": "Phone / 42 · AI 글 가져온 내 메모 편집",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-005",
+        "surface": "sheet",
+        "fixture": true,
+        "key": "memo-ai-preview",
+        "flow": "generate-suggestion-then-explicit-import",
+        "autoOverwrite": false
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "s9Nps",
+          "x": 0,
+          "y": 0,
+          "name": "Context / 기록 요약 · 비활성",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-005",
+            "fixture": true,
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "b4Qf8s",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "eJVqQ",
+              "name": "Screen content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                8,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XR6Sd",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "J8uld",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "비교 화면으로",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "arrow-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "zKOFr",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기록 요약 · 2/2",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 20,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "po8DT",
+                  "name": "Confirmed stamp summary",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "T0ePgN",
+                      "name": "Confirmed stamp thumbnail",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/generated-1788887279815.png",
+                        "mode": "fit"
+                      },
+                      "width": 96,
+                      "height": 72
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O1bbK",
+                      "name": "Result status",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZiPyT",
+                          "name": "한 장의 순간, 한 편의 기록",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "한 장의 순간, 한 편의 기록",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "eM0XI",
+                          "name": "원본과 비교했어요",
+                          "fill": "$success-text",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "원본과 비교했어요",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "mlXNp",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / AI가 쓴 글 · 태그",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "AI가 쓴 글 · 태그"
+                    },
+                    "GxQU9": {
+                      "content": "낮은 지붕 아래 초록 문이…"
+                    }
+                  }
+                },
+                {
+                  "id": "a58TT",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 내 메모 · 선택",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "내 메모 · 선택"
+                    },
+                    "GxQU9": {
+                      "content": "햇살이 머문 작은 카페."
+                    }
+                  }
+                },
+                {
+                  "id": "Get8a",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 날짜 · 장소",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "날짜 · 장소"
+                    },
+                    "GxQU9": {
+                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                    }
+                  }
+                },
+                {
+                  "id": "TXrb6",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "Open / 사진에서 찾은 색",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "사진에서 찾은 색"
+                    },
+                    "GxQU9": {
+                      "content": "대표색 5개 · 색과 비중 보기"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "HsCnT",
+              "name": "Safe footer / 저장",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EniHy",
+                  "name": "Original lifetime before saving",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "fi1wl",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 저장하기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "저장하기"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "YgzHk",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim / AI 제안",
+          "metadata": {
+            "type": "decoration"
+          },
+          "fill": "#29282366",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "QEtfE",
+          "x": 0,
+          "y": 62,
+          "name": "Sheet / AI 글 제안 미리보기",
+          "metadata": {
+            "type": "dialog",
+            "modal": true,
+            "restoreFocus": true,
+            "dismiss": "keep-user-memo-unchanged",
+            "safeTop": 62,
+            "safeBottom": 34
+          },
+          "width": 390,
+          "height": 782,
+          "fill": "$bg-surface",
+          "cornerRadius": [
+            24,
+            24,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "imdXD",
+              "name": "Sheet header / AI 글 제안",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                12,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "sOhaB",
+                  "name": "Sheet title / AI 글 제안",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "내 메모 편집",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "opKP9",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "제안 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "aCo2V",
+              "name": "Sheet content / 분리된 AI 제안과 내 메모",
+              "metadata": {
+                "type": "content",
+                "scroll": "only-if-content-exceeds-available-height"
+              },
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                0,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "d9JGRh",
+                  "name": "가져오기 완료 · 되돌리기 가능",
+                  "width": "fill_container",
+                  "fill": "$success-subtle",
+                  "cornerRadius": 12,
+                  "gap": 8,
+                  "padding": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ItgXc",
+                      "name": "AI 제안 아이콘",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "undo-2",
+                      "library": "lucide",
+                      "fill": "$success-text"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lwLTm",
+                      "name": "AI 제안 상태",
+                      "fill": "$success-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 제안을 가져왔어요 · 이전 메모는 되돌릴 수 있어요.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "bvKrd",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / AI 글 제안 · 참고용",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "AI 글 제안 · 참고용"
+                    },
+                    "tux95": {
+                      "height": 100,
+                      "fill": "$bg-sunken"
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "제안 원문은 내 메모와 별도로 유지돼요.",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "dyAwW",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 내 메모 · 수정 가능",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "내 메모 · 수정하거나 덧붙이기"
+                    },
+                    "tux95": {
+                      "height": 148
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "48 / 2,000자 · 자유롭게 수정할 수 있어요.",
+                      "enabled": true
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "YKKcH",
+              "name": "Safe footer / AI 제안",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "id": "d2f6f",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 수정한 메모 적용",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "수정한 메모 적용"
+                    }
+                  }
+                },
+                {
+                  "id": "RYd2v",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 가져오기 되돌리기",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "가져오기 되돌리기",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "BOKUT",
+      "x": 3600,
+      "y": 11000,
+      "name": "Phone narrow / 43 · 메모 대체 인라인 확인 · 320",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-005",
+        "surface": "dialog-over-sheet",
+        "fixture": true,
+        "key": "memo-ai-replace-confirm",
+        "viewportWidth": 320,
+        "autoOverwrite": false
+      },
+      "clip": true,
+      "width": 320,
+      "height": 640,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "jiWqM",
+          "x": 0,
+          "y": 0,
+          "name": "Context / AI 글 제안 · 320",
+          "width": 320,
+          "height": 640,
+          "fill": "$bg-page",
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "xiW1I",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar / 320",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "cDUZR",
+              "name": "Sheet / AI 글 제안 · 320",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$bg-surface",
+              "cornerRadius": [
+                24,
+                24,
+                0,
+                0
+              ],
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                12,
+                16,
+                20,
+                16
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "UNR06",
+                  "name": "Sheet header / AI 글 제안 · 320",
+                  "width": "fill_container",
+                  "height": 48,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UaXBX",
+                      "name": "Sheet title / AI 글 제안 · 320",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 글 제안",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-heading",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "l9znel",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "제안 닫기 / 320",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "x"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kvNFC",
+                  "name": "AI 글 제안 미리보기 / 320",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "cornerRadius": 12,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PxgGU",
+                      "name": "AI 글 제안 라벨 / 320",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 글 제안 · 미리보기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cr799",
+                      "name": "AI 글 제안 본문 / 320",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "h5Vr0",
+                  "name": "내 메모 유지 안내 / 320",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "내 메모는 가져오기 전까지 그대로예요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "q1arIP",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 내 메모로 가져오기 · 320",
+                  "width": "fill_container",
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "내 메모로 가져오기"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "OGm2t",
+                  "name": "Inline confirm / 기존 메모 대체 · 320",
+                  "metadata": {
+                    "type": "confirmation",
+                    "placement": "immediately-after-import-action",
+                    "workingMemoUnchangedUntilConfirm": true,
+                    "undoAvailableAfterConfirm": true,
+                    "autoOverwrite": false
+                  },
+                  "width": "fill_container",
+                  "fill": "$warning-subtle",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o7Voq1",
+                      "name": "Inline confirm title / 320",
+                      "fill": "$warning-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기존 메모가 있어요",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FPUjD",
+                      "name": "Inline confirm body / 320",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "AI 제안으로 바꿀까요? 되돌릴 수 있어요.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Lx9pQ",
+                      "name": "Inline confirm actions / 320",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "nn8ip",
+                          "type": "ref",
+                          "ref": "okVIz",
+                          "name": "Button / 바꾸기 · 320",
+                          "width": "fill_container",
+                          "descendants": {
+                            "uTrwf": {
+                              "content": "바꾸기"
+                            }
+                          }
+                        },
+                        {
+                          "id": "VMeYw",
+                          "type": "ref",
+                          "ref": "okVIz",
+                          "name": "Button / 취소 · 320",
+                          "width": "fill_container",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "uTrwf": {
+                              "content": "취소",
+                              "fill": "$text-primary"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "KTBBh",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 비우고 직접 작성 · 320",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "비우고 직접 작성",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "V7aTM4",
+      "x": 3980,
+      "y": 11000,
+      "name": "Phone / 44 · 스탬프 확대 · 1×",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "surface": "image-zoom-dialog",
+        "fixture": true,
+        "key": "stamp-zoom-1x",
+        "trigger": "A3X02F",
+        "returnsTo": "saved-record-detail",
+        "minScale": 1,
+        "maxScale": 4,
+        "pinch": true,
+        "pan": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "AS3TR",
+          "x": 0,
+          "y": 0,
+          "name": "Context / 저장된 기록 상세",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-006",
+            "locale": "ko",
+            "fixture": true
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "ytZ3Q",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "tIa7F",
+              "name": "Screen content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                8,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WpXHW",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "K8MCRM",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "뒤로",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "arrow-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "hqgwG",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기록",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-heading",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "id": "G6T7S",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "기록 더보기",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "ellipsis"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "Up4vN",
+                  "type": "ref",
+                  "ref": "DOjki",
+                  "name": "Notice / Book에 저장했어요",
+                  "width": "fill_container",
+                  "fill": "$success-subtle",
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "descendants": {
+                    "h4vaXF": {
+                      "icon": "check",
+                      "fill": "$success-text"
+                    },
+                    "HZd7j": {
+                      "content": "Book에 저장했어요",
+                      "fill": "$success-text"
+                    },
+                    "t3y1jD": {
+                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "fill": "$success-text",
+                      "enabled": false,
+                      "width": 280
+                    }
+                  }
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "WRouW",
+                  "name": "Saved stamp",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/generated-1788887279815.png",
+                    "mode": "fit"
+                  },
+                  "width": "fill_container",
+                  "height": 250,
+                  "stroke": "#0000001A"
+                },
+                {
+                  "type": "text",
+                  "id": "uvBH0",
+                  "name": "2026. 09. 09  ·  작은 골목의 카페",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2026. 09. 09  ·  작은 골목의 카페",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "MUyHb",
+                  "name": "Favorite action",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "U9tWp",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "즐겨찾기 추가",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "heart"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "Pr2mz",
+                      "name": "즐겨찾기",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "즐겨찾기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "pSeEI",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "내 메모와 전체 기록 보기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "내 메모 · 전체 기록 보기"
+                    },
+                    "GxQU9": {
+                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다."
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QWlH9",
+              "name": "Safe footer / 기록 편집",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "id": "evdOr",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 기록 편집",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "기록 편집",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "tCNc7",
+          "x": 0,
+          "y": 0,
+          "name": "Zoom modal scrim",
+          "metadata": {
+            "type": "decoration"
+          },
+          "fill": "#11110FF2",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "vxJv3",
+          "x": 16,
+          "y": 62,
+          "name": "Zoom header",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "top",
+            "inset": 62
+          },
+          "width": 358,
+          "height": 56,
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "dIJx7",
+              "name": "Zoom title",
+              "fill": "#FFFDFA",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "스탬프 크게 보기",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "600"
+            },
+            {
+              "id": "JugBo",
+              "type": "ref",
+              "ref": "OYxj6",
+              "name": "닫기 / 상세로 돌아가기",
+              "fill": "#FFFDFA14",
+              "stroke": "#FFFDFA52",
+              "strokeWidth": 1,
+              "descendants": {
+                "QbEcD": {
+                  "icon": "x",
+                  "fill": "#FFFDFA"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZEEI2",
+          "x": 16,
+          "y": 130,
+          "name": "Zoom viewport / 1× contain center",
+          "metadata": {
+            "type": "image-viewport",
+            "scale": 1,
+            "minScale": 1,
+            "maxScale": 4,
+            "fit": "contain",
+            "alignment": "center",
+            "gestures": [
+              "pinch",
+              "pan"
+            ],
+            "panEnabledAboveScale": 1,
+            "doubleTap": "toggle-1x-2x"
+          },
+          "clip": true,
+          "width": 358,
+          "height": 548,
+          "fill": "#090908",
+          "cornerRadius": 12,
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "YRGGH",
+              "x": 0,
+              "y": 0,
+              "name": "Zoom image / 1× contain centered",
+              "metadata": {
+                "type": "image",
+                "scale": 1,
+                "fit": "contain",
+                "alignment": "center"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/generated-1788887279815.png",
+                "mode": "fit"
+              },
+              "width": 358,
+              "height": 548
+            },
+            {
+              "type": "frame",
+              "id": "bsG7J",
+              "x": 12,
+              "y": 12,
+              "name": "Scale badge / 1×",
+              "fill": "#11110FCC",
+              "cornerRadius": 12,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NFKpN",
+                  "name": "Scale value / 1×",
+                  "fill": "#FFFDFA",
+                  "content": "1×",
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "R9NBc3",
+          "x": 16,
+          "y": 694,
+          "name": "Zoom controls / 48px targets",
+          "metadata": {
+            "type": "toolbar",
+            "label": "사진 확대·축소"
+          },
+          "width": 358,
+          "height": 104,
+          "layout": "vertical",
+          "gap": 8,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "wZX1m",
+              "name": "Zoom button row",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "dakoH",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "축소 / 48px",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-out",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "dqhIl",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "원래 크기 / 48px",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "maximize-2",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "bPVGl",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "확대 / 48px",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-in",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "DATJf",
+              "name": "Zoom gesture hint",
+              "fill": "#FFFDFAA6",
+              "content": "두 손가락으로 확대 · 확대 후 드래그로 이동",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Gczgk",
+      "x": 4430,
+      "y": 11000,
+      "name": "Phone / 45 · 스탬프 확대 · 4× 이동",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "surface": "image-zoom-dialog",
+        "fixture": true,
+        "key": "stamp-zoom-1x",
+        "trigger": "A3X02F",
+        "returnsTo": "saved-record-detail",
+        "minScale": 1,
+        "maxScale": 4,
+        "pinch": true,
+        "pan": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Y04iJ",
+          "x": 0,
+          "y": 0,
+          "name": "Context / 저장된 기록 상세",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-006",
+            "locale": "ko",
+            "fixture": true
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "TrpkJ",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "K2lzms",
+              "name": "Screen content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                8,
+                20,
+                12,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yyOtf",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "QPpHt",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "뒤로",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "arrow-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "Kq6fP",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기록",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-heading",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "id": "n6wFQ",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "기록 더보기",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "ellipsis"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "bV5tK",
+                  "type": "ref",
+                  "ref": "DOjki",
+                  "name": "Notice / Book에 저장했어요",
+                  "width": "fill_container",
+                  "fill": "$success-subtle",
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "descendants": {
+                    "h4vaXF": {
+                      "icon": "check",
+                      "fill": "$success-text"
+                    },
+                    "HZd7j": {
+                      "content": "Book에 저장했어요",
+                      "fill": "$success-text"
+                    },
+                    "t3y1jD": {
+                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "fill": "$success-text",
+                      "enabled": false,
+                      "width": 280
+                    }
+                  }
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "DgNQ1",
+                  "name": "Saved stamp",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "images/generated-1788887279815.png",
+                    "mode": "fit"
+                  },
+                  "width": "fill_container",
+                  "height": 250,
+                  "stroke": "#0000001A"
+                },
+                {
+                  "type": "text",
+                  "id": "YnTVK",
+                  "name": "2026. 09. 09  ·  작은 골목의 카페",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2026. 09. 09  ·  작은 골목의 카페",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "sTOyt",
+                  "name": "Favorite action",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "A9wEdL",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "즐겨찾기 추가",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "heart"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "Aw4Ox",
+                      "name": "즐겨찾기",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "즐겨찾기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "id": "NTfVz",
+                  "type": "ref",
+                  "ref": "OEjV6",
+                  "name": "내 메모와 전체 기록 보기",
+                  "width": "fill_container",
+                  "descendants": {
+                    "GmGUS": {
+                      "content": "내 메모 · 전체 기록 보기"
+                    },
+                    "GxQU9": {
+                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다."
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "h03kYg",
+              "name": "Safe footer / 기록 편집",
+              "metadata": {
+                "type": "safe-area",
+                "edge": "bottom",
+                "inset": 34
+              },
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                12,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "id": "DYcLu",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 기록 편집",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "기록 편집",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "uhvQa",
+          "x": 0,
+          "y": 0,
+          "name": "Zoom modal scrim",
+          "metadata": {
+            "type": "decoration"
+          },
+          "fill": "#11110FF2",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "D4aMp",
+          "x": 16,
+          "y": 62,
+          "name": "Zoom header",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "top",
+            "inset": 62
+          },
+          "width": 358,
+          "height": 56,
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "lkGhh",
+              "name": "Zoom title",
+              "fill": "#FFFDFA",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "스탬프 크게 보기",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "600"
+            },
+            {
+              "id": "j9FAHd",
+              "type": "ref",
+              "ref": "OYxj6",
+              "name": "닫기 / 상세로 돌아가기",
+              "fill": "#FFFDFA14",
+              "stroke": "#FFFDFA52",
+              "strokeWidth": 1,
+              "descendants": {
+                "QbEcD": {
+                  "icon": "x",
+                  "fill": "#FFFDFA"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "N9hn92",
+          "x": 16,
+          "y": 130,
+          "name": "Zoom viewport / 4× panned",
+          "metadata": {
+            "type": "image-viewport",
+            "scale": 1,
+            "minScale": 1,
+            "maxScale": 4,
+            "fit": "contain",
+            "alignment": "center",
+            "gestures": [
+              "pinch",
+              "pan"
+            ],
+            "panEnabledAboveScale": 1,
+            "doubleTap": "toggle-1x-2x"
+          },
+          "clip": true,
+          "width": 358,
+          "height": 548,
+          "fill": "#090908",
+          "cornerRadius": 12,
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "N9EjN",
+              "x": -620,
+              "y": -220,
+              "name": "Zoom image / 4× panned",
+              "metadata": {
+                "type": "image",
+                "scale": 1,
+                "fit": "contain",
+                "alignment": "center"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/generated-1788887279815.png",
+                "mode": "fit"
+              },
+              "width": 1432,
+              "height": 1024
+            },
+            {
+              "type": "frame",
+              "id": "oxNrx",
+              "x": 12,
+              "y": 12,
+              "name": "Scale badge / 4×",
+              "fill": "#11110FCC",
+              "cornerRadius": 12,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "JIdWF",
+                  "name": "Scale value / 4×",
+                  "fill": "#FFFDFA",
+                  "content": "4×",
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "l4bOIa",
+          "x": 16,
+          "y": 694,
+          "name": "Zoom controls / 48px targets",
+          "metadata": {
+            "type": "toolbar",
+            "label": "사진 확대·축소"
+          },
+          "width": 358,
+          "height": 104,
+          "layout": "vertical",
+          "gap": 8,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "LQ7Vk",
+              "name": "Zoom button row",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "jUvR9",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "축소 / 48px",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-out",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "pqgRT",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "원래 크기 / 48px",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "maximize-2",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "w4x2P",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "opacity": 1,
+                  "name": "확대 / 48px",
+                  "fill": "$bg-disabled",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-in",
+                      "fill": "$ink-disabled"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "MxVHt",
+              "name": "Zoom gesture hint",
+              "fill": "#FFFDFAA6",
+              "content": "4× · 드래그로 사진 안을 이동할 수 있어요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "sZ5fQ",
+      "x": 4880,
+      "y": 11000,
+      "name": "Phone narrow / 46 · 스탬프 확대 · 320",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "surface": "image-zoom-dialog",
+        "fixture": true,
+        "key": "stamp-zoom-1x-narrow",
+        "viewportWidth": 320,
+        "immersive": true,
+        "trigger": "A3X02F",
+        "returnsTo": "saved-record-detail",
+        "scale": 1,
+        "minScale": 1,
+        "maxScale": 4,
+        "pinch": true,
+        "pan": true
+      },
+      "clip": true,
+      "width": 320,
+      "height": 640,
+      "fill": "#11110F",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "c296r",
+          "x": 16,
+          "y": 16,
+          "name": "Zoom header / 320",
+          "width": 288,
+          "height": 48,
+          "gap": 8,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "fOuZH",
+              "name": "Zoom title / 320",
+              "fill": "#FFFDFA",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "스탬프 크게 보기",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            },
+            {
+              "id": "yyY4D",
+              "type": "ref",
+              "ref": "OYxj6",
+              "name": "닫기 / 상세로 돌아가기 · 320",
+              "fill": "#FFFDFA14",
+              "stroke": "#FFFDFA52",
+              "strokeWidth": 1,
+              "descendants": {
+                "QbEcD": {
+                  "icon": "x",
+                  "fill": "#FFFDFA"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "A9VFtJ",
+          "x": 16,
+          "y": 76,
+          "name": "Zoom viewport / 1× contain center · 320",
+          "metadata": {
+            "type": "image-viewport",
+            "scale": 1,
+            "minScale": 1,
+            "maxScale": 4,
+            "fit": "contain",
+            "alignment": "center",
+            "gestures": [
+              "pinch",
+              "pan"
+            ]
+          },
+          "clip": true,
+          "width": 288,
+          "height": 430,
+          "fill": "#090908",
+          "cornerRadius": 12,
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "piSPD",
+              "x": 0,
+              "y": 0,
+              "name": "Zoom image / 1× contain centered · 320",
+              "metadata": {
+                "type": "image",
+                "scale": 1,
+                "fit": "contain",
+                "alignment": "center"
+              },
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/generated-1788887279815.png",
+                "mode": "fit"
+              },
+              "width": 288,
+              "height": 430
+            },
+            {
+              "type": "frame",
+              "id": "hJi3L",
+              "x": 12,
+              "y": 12,
+              "name": "Scale badge / 1× · 320",
+              "fill": "#11110FCC",
+              "cornerRadius": 12,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZvWu1",
+                  "name": "Scale value / 1× · 320",
+                  "fill": "#FFFDFA",
+                  "content": "1×",
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "p4wlTk",
+          "x": 16,
+          "y": 514,
+          "name": "Zoom controls / 48px targets · 320",
+          "metadata": {
+            "type": "toolbar",
+            "label": "사진 확대·축소"
+          },
+          "width": 288,
+          "height": 110,
+          "layout": "vertical",
+          "gap": 8,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "lJYVH",
+              "name": "Zoom button row / 320",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "opWr3",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "축소 / 48px · 320",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-out",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "f2XLnE",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "원래 크기 / 48px · 320",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "maximize-2",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                },
+                {
+                  "id": "dMH8S",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "확대 / 48px · 320",
+                  "fill": "#FFFDFA14",
+                  "stroke": "#FFFDFA52",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "zoom-in",
+                      "fill": "#FFFDFA"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "YWi3P",
+              "name": "Zoom gesture hint / 320",
+              "fill": "#FFFDFAA6",
+              "content": "핀치로 확대 · 확대 후 드래그",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u5MzP4",
+      "x": 6530,
+      "y": 0,
+      "name": "RecordArtwork / 전체 기록 읽기·내보내기",
+      "reusable": true,
+      "metadata": {
+        "type": "record-artwork",
+        "content": [
+          "stamp",
+          "place",
+          "date",
+          "user-note",
+          "ai-note",
+          "tags"
+        ],
+        "exclude": [
+          "record-number",
+          "watermark",
+          "original-photo"
+        ],
+        "tagLayout": "wrap"
+      },
+      "width": 350,
+      "fill": "$bg-surface",
+      "cornerRadius": 16,
+      "effect": {
+        "type": "shadow",
+        "shadowType": "outer",
+        "color": "#29282324",
+        "offset": {
+          "x": 0,
+          "y": 2
+        },
+        "blur": 8
+      },
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 20,
+      "children": [
+        {
+          "type": "rectangle",
+          "cornerRadius": 4,
+          "id": "u77MqE",
+          "name": "RecordArtwork stamp / large contain center",
+          "metadata": {
+            "type": "record-stamp",
+            "fit": "contain",
+            "alignment": "center",
+            "actionInApp": "open-stamp-zoom"
+          },
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/generated-1788887279815.png",
+            "mode": "fit"
+          },
+          "width": "fill_container",
+          "height": 220,
+          "stroke": "$border-subtle",
+          "strokeWidth": 1
+        },
+        {
+          "type": "frame",
+          "id": "bgJR9",
+          "name": "RecordArtwork place and date",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 4,
+          "children": [
+            {
+              "type": "text",
+              "id": "y6IMki",
+              "name": "RecordArtwork place",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "작은 골목의 카페",
+              "lineHeight": 1.4,
+              "fontFamily": "$font-display",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "ABY43",
+              "name": "RecordArtwork date and location",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "서울 성수동 · 2026. 09. 09",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "vJXir",
+          "name": "RecordArtwork 내 메모",
+          "metadata": {
+            "type": "record-section",
+            "key": "user-note",
+            "fullText": true
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "mrXQR",
+              "name": "RecordArtwork 내 메모 제목",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "내 메모",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "diVY1",
+              "name": "RecordArtwork 내 메모 본문",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "햇살이 머문 작은 카페.\n다음에는 창가에 조금 더 오래 앉아 있고 싶다.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gAwvH",
+          "name": "RecordArtwork AI 글",
+          "metadata": {
+            "type": "record-section",
+            "key": "ai-note",
+            "fullText": true
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "lsLGG",
+              "name": "RecordArtwork AI 글 제목",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "AI가 쓴 글",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "k7gsnv",
+              "name": "RecordArtwork AI 글 본문",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 스탬프에 고요하게 남았다.",
+              "lineHeight": 1.6,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "k3b8Q",
+          "name": "RecordArtwork tags / 11 wrap",
+          "metadata": {
+            "type": "record-section",
+            "key": "tags",
+            "count": 11,
+            "layout": "wrap"
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "PywXB",
+              "name": "RecordArtwork 태그 제목",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "태그",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "qNZzt",
+              "name": "RecordArtwork 태그 행 1",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "P0HMXt",
+                  "name": "Tag / 카페",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "svAoy",
+                      "name": "Tag label / 카페",
+                      "fill": "$accent-solid",
+                      "content": "#카페",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uU2gy",
+                  "name": "Tag / 골목",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Bqfby",
+                      "name": "Tag label / 골목",
+                      "fill": "$accent-solid",
+                      "content": "#골목",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GsYal",
+                  "name": "Tag / 햇살",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "m22XK",
+                      "name": "Tag label / 햇살",
+                      "fill": "$accent-solid",
+                      "content": "#햇살",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OMDEy",
+              "name": "RecordArtwork 태그 행 2",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Cy7Iz",
+                  "name": "Tag / 고요",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "z2KK01",
+                      "name": "Tag label / 고요",
+                      "fill": "$accent-solid",
+                      "content": "#고요",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XfWoY",
+                  "name": "Tag / 초록문",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lR1yF",
+                      "name": "Tag label / 초록문",
+                      "fill": "$accent-solid",
+                      "content": "#초록문",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "H5Hx5",
+                  "name": "Tag / 오후",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S9iDZZ",
+                      "name": "Tag label / 오후",
+                      "fill": "$accent-solid",
+                      "content": "#오후",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JosZK",
+              "name": "RecordArtwork 태그 행 3",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "g1MSLt",
+                  "name": "Tag / 산책",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Y6nCQH",
+                      "name": "Tag label / 산책",
+                      "fill": "$accent-solid",
+                      "content": "#산책",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TW7A2",
+                  "name": "Tag / 나무",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t3bWo",
+                      "name": "Tag label / 나무",
+                      "fill": "$accent-solid",
+                      "content": "#나무",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "inOAG",
+                  "name": "Tag / 따뜻함",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AFhah",
+                      "name": "Tag label / 따뜻함",
+                      "fill": "$accent-solid",
+                      "content": "#따뜻함",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "i7aM4n",
+              "name": "RecordArtwork 태그 행 4",
+              "width": "fill_container",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HETWw",
+                  "name": "Tag / 오래된",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "jr577",
+                      "name": "Tag label / 오래된",
+                      "fill": "$accent-solid",
+                      "content": "#오래된",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "GyJBy",
+                  "name": "Tag / 여유",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Y022eg",
+                      "name": "Tag label / 여유",
+                      "fill": "$accent-solid",
+                      "content": "#여유",
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-caption",
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "BL40U",
+      "x": 5260,
+      "y": 11000,
+      "name": "Phone narrow / 47 · 기록 전체 읽기 · 320",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "fixture": true,
+        "viewportWidth": 320,
+        "contentPolicy": "full-readable-scroll",
+        "scrollOffset": 360,
+        "longText": true,
+        "tagCount": 11,
+        "tagLayout": "wrap"
+      },
+      "clip": true,
+      "width": 320,
+      "height": 640,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "yal6D",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar / 기록 전체 읽기 · 320",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "v2wIoB",
+          "name": "Screen content / 기록 전체 읽기 · 320",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            8,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "L9XFj",
+              "name": "App header / 기록 전체 읽기 · 320",
+              "width": "fill_container",
+              "height": 48,
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "zTMta",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "뒤로 / 기록 전체 읽기 · 320",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "arrow-left"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "QSZD9",
+                  "name": "Screen title / 기록 전체 읽기 · 320",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록 전체 읽기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qSJ7U",
+              "name": "Scroll viewport / 긴 글과 11태그 · 320",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "scrollOffset": 360,
+                "longText": true,
+                "tagCount": 11,
+                "tagLayout": "wrap"
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "id": "B9wwt6",
+                  "type": "ref",
+                  "ref": "u5MzP4",
+                  "name": "RecordArtwork / 긴 글과 11태그 · 320",
+                  "x": 0,
+                  "y": -360,
+                  "width": 288
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SAxfQ",
+          "name": "Safe footer / 기록 편집 · 320",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 20
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            10,
+            16,
+            20,
+            16
+          ],
+          "children": [
+            {
+              "id": "sZ4h2",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 기록 편집 · 320",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "기록 편집"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pkZSW",
+      "x": 5640,
+      "y": 11000,
+      "name": "Phone / 48 · 기록 이미지 미리보기",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "fixture": true,
+        "key": "record-export-preview",
+        "flow": "more-menu-preview-gallery-save",
+        "artwork": "u5MzP4",
+        "exclude": [
+          "record-number",
+          "watermark",
+          "original-photo"
+        ]
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "dHUWi",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar / 기록 이미지 미리보기",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "CspSb",
+          "name": "Screen content / 기록 이미지 미리보기",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "qfmQI",
+              "name": "App header / 기록 이미지 미리보기",
+              "width": "fill_container",
+              "height": 48,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jyV8e",
+                  "name": "Screen title / 기록 이미지 미리보기",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록 이미지 미리보기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "vitJB",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "기록 이미지 미리보기 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "n3BKR",
+              "name": "Scroll viewport / 저장될 기록 이미지",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "previewOf": "gallery-png",
+                "showsFullArtwork": true
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "id": "Ek6aq",
+                  "type": "ref",
+                  "ref": "u5MzP4",
+                  "name": "RecordArtwork / 갤러리 저장 미리보기",
+                  "x": 0,
+                  "y": 0,
+                  "width": 350
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "I8JjW",
+          "name": "Safe footer / 갤러리에 저장",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "G1uyz8",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 갤러리에 저장",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "갤러리에 저장"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "M8Y69T",
+      "x": 6090,
+      "y": 11000,
+      "name": "Phone / 49 · 갤러리 권한 거부",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "fixture": true,
+        "key": "record-export-preview",
+        "flow": "more-menu-preview-gallery-save",
+        "artwork": "u5MzP4",
+        "exclude": [
+          "record-number",
+          "watermark",
+          "original-photo"
+        ]
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "mRMBi",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar / 기록 이미지 미리보기",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "CG7oB",
+          "name": "Screen content / 기록 이미지 미리보기",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "zvYoj",
+              "name": "App header / 기록 이미지 미리보기",
+              "width": "fill_container",
+              "height": 48,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "zmp3r",
+                  "name": "Screen title / 기록 이미지 미리보기",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록 이미지 미리보기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "TBD7d",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "기록 이미지 미리보기 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AfVd4",
+              "name": "Scroll viewport / 저장될 기록 이미지",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "previewOf": "gallery-png",
+                "showsFullArtwork": true
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "id": "cXXFz",
+                  "type": "ref",
+                  "ref": "u5MzP4",
+                  "name": "RecordArtwork / 갤러리 저장 미리보기",
+                  "x": 0,
+                  "y": 0,
+                  "width": 350
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kwtHV",
+          "name": "Safe footer / 갤러리에 저장",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "iv1Ql",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 갤러리에 저장",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "갤러리에 저장"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "rqSxN",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim / 갤러리 권한 거부",
+          "fill": "#29282380",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "id": "Dvs68",
+          "type": "ref",
+          "ref": "T8O0U",
+          "name": "Dialog / 갤러리 권한 필요",
+          "x": 20,
+          "y": 218,
+          "width": 350,
+          "layoutPosition": "absolute",
+          "descendants": {
+            "P7TJHS": {
+              "content": "사진 보관함 권한이 필요해요"
+            },
+            "eqgjm": {
+              "content": "기록 이미지를 갤러리에 저장하려면\n사진 보관함 접근을 허용해 주세요."
+            },
+            "NLSvX": {
+              "name": "Button / 설정 열기",
+              "fill": "$accent-solid",
+              "strokeWidth": 0
+            },
+            "NLSvX/uTrwf": {
+              "content": "설정 열기",
+              "fill": "$text-inverse"
+            },
+            "JtvoD": {
+              "name": "Button / 취소"
+            },
+            "JtvoD/uTrwf": {
+              "content": "취소",
+              "fill": "$text-primary"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "zrtUV",
+      "x": 6540,
+      "y": 11000,
+      "name": "Phone / 50 · 기록 이미지 저장 중",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "fixture": true,
+        "key": "record-export-preview",
+        "flow": "more-menu-preview-gallery-save",
+        "artwork": "u5MzP4",
+        "exclude": [
+          "record-number",
+          "watermark",
+          "original-photo"
+        ]
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "K35Hf",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar / 기록 이미지 미리보기",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "RykvC",
+          "name": "Screen content / 기록 이미지 미리보기",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "C2lsF",
+              "name": "App header / 기록 이미지 미리보기",
+              "width": "fill_container",
+              "height": 48,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Di5ya",
+                  "name": "Screen title / 기록 이미지 미리보기",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록 이미지 미리보기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "uUcEu",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "기록 이미지 미리보기 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lqeDO",
+              "name": "Scroll viewport / 저장될 기록 이미지",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "previewOf": "gallery-png",
+                "showsFullArtwork": true
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "id": "QX8Hd",
+                  "type": "ref",
+                  "ref": "u5MzP4",
+                  "name": "RecordArtwork / 갤러리 저장 미리보기",
+                  "x": 0,
+                  "y": 0,
+                  "width": 350
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x7dWuH",
+          "name": "Safe footer / 갤러리에 저장",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "PWhr8",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 갤러리에 저장 중",
+              "fill": "$bg-disabled",
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "갤러리에 저장 중…",
+                  "fill": "$ink-disabled"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "LG7iy",
+          "layoutPosition": "absolute",
+          "x": 20,
+          "y": 684,
+          "name": "Status / 기록 이미지 저장 중",
+          "metadata": {
+            "type": "status",
+            "state": "saving",
+            "progress": "indeterminate"
+          },
+          "width": 350,
+          "height": 50,
+          "fill": "$accent-subtle",
+          "cornerRadius": 12,
+          "gap": 8,
+          "padding": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "TzWkc",
+              "name": "Saving spinner",
+              "width": 20,
+              "height": 20,
+              "icon": "loader-circle",
+              "library": "lucide",
+              "fill": "$accent-solid"
+            },
+            {
+              "type": "text",
+              "id": "reRpf",
+              "name": "Saving status text",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "기록 이미지를 저장하고 있어요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "A6cw5F",
+      "x": 6990,
+      "y": 11000,
+      "name": "Phone / 51 · 기록 이미지 저장 완료",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "fixture": true,
+        "key": "record-export-preview",
+        "flow": "more-menu-preview-gallery-save",
+        "artwork": "u5MzP4",
+        "exclude": [
+          "record-number",
+          "watermark",
+          "original-photo"
+        ]
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "YSOOa",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar / 기록 이미지 미리보기",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "FCPI2",
+          "name": "Screen content / 기록 이미지 미리보기",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "uK4Xc",
+              "name": "App header / 기록 이미지 미리보기",
+              "width": "fill_container",
+              "height": 48,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lwd6B",
+                  "name": "Screen title / 기록 이미지 미리보기",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록 이미지 미리보기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "qAhFk",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "기록 이미지 미리보기 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y5wNjN",
+              "name": "Scroll viewport / 저장될 기록 이미지",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "previewOf": "gallery-png",
+                "showsFullArtwork": true
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "id": "FzfVm",
+                  "type": "ref",
+                  "ref": "u5MzP4",
+                  "name": "RecordArtwork / 갤러리 저장 미리보기",
+                  "x": 0,
+                  "y": 0,
+                  "width": 350
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "F0o4EA",
+          "name": "Safe footer / 갤러리에 저장",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "kWIoe",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 완료",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "완료",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tbbwt",
+          "layoutPosition": "absolute",
+          "x": 20,
+          "y": 684,
+          "name": "Status / 갤러리에 저장 완료",
+          "metadata": {
+            "type": "status",
+            "state": "success",
+            "next": "close-to-record-detail"
+          },
+          "width": 350,
+          "height": 50,
+          "fill": "$success-subtle",
+          "cornerRadius": 12,
+          "gap": 8,
+          "padding": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "Ll9r3",
+              "name": "Save success icon",
+              "width": 20,
+              "height": 20,
+              "icon": "circle-check",
+              "library": "lucide",
+              "fill": "$success-text"
+            },
+            {
+              "type": "text",
+              "id": "FAvMr",
+              "name": "Save success text",
+              "fill": "$success-text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "갤러리에 저장했어요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Fv6dH",
+      "x": 4950,
+      "y": 1500,
+      "name": "Phone / 06b · 스탬프 변환 파일 받는 중",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "sYkRO",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "b7ZAm",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            8,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "R1TcB",
+              "name": "App header",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "smnr2",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "뒤로",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "arrow-left"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "L4N1U",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "스탬프 준비",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "vvkXH",
+              "name": "Download progress icon",
+              "width": 48,
+              "height": 48,
+              "icon": "download",
+              "library": "lucide",
+              "fill": "$accent-solid"
+            },
+            {
+              "type": "text",
+              "id": "vAEcX",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "스탬프 변환 파일을\n받고 있어요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "Tqv7X",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "전체 184MB 중 72MB · 39%\n남은 시간 약 40초",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "l0qN6",
+              "name": "Download progress / 39%",
+              "metadata": {
+                "type": "progress",
+                "value": 39,
+                "min": 0,
+                "max": 100,
+                "label": "전체 다운로드 39%"
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": 8,
+              "fill": "$bg-disabled",
+              "cornerRadius": 4,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "OFtaW",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Download progress value / 39%",
+                  "fill": "$accent-solid",
+                  "width": 137,
+                  "height": 8
+                }
+              ]
+            },
+            {
+              "id": "R9es2p",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 현재 받는 파일",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid"
+                },
+                "t3y1jD": {
+                  "content": "스탬프 변환 파일 · 52MB 중 20MB",
+                  "fill": "$accent-solid"
+                }
+              }
+            },
+            {
+              "id": "U97Ixi",
+              "type": "ref",
+              "ref": "q0QhL",
+              "name": "스탬프 변환 파일 목록",
+              "width": "fill_container",
+              "descendants": {
+                "G0mYoF": {
+                  "content": "파일 목록"
+                },
+                "FC5B2": {
+                  "content": "사진 읽기 파일 132MB · 완료\n스탬프 변환 파일 52MB · 39%"
+                }
+              }
+            },
+            {
+              "id": "p1XuG",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 받는 중 · 39%",
+              "fill": "$bg-disabled",
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "받는 중 · 39%",
+                  "fill": "$ink-disabled"
+                }
+              }
+            },
+            {
+              "id": "EpQBv",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 다운로드 취소",
+              "fill": "$bg-surface",
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "다운로드 취소",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "ceFWM",
+              "name": "Download cancellation note",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "취소하면 받은 파일은 안전하게 정리해요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {
@@ -15357,7 +20235,7 @@
     },
     "text-disabled": {
       "type": "color",
-      "value": "$ink-400"
+      "value": "$ink-disabled"
     },
     "text-inverse": {
       "type": "color",
@@ -15365,7 +20243,7 @@
     },
     "border-control": {
       "type": "color",
-      "value": "$ink-400"
+      "value": "#7F776A"
     },
     "border-subtle": {
       "type": "color",
@@ -15486,6 +20364,14 @@
     "accent-pressed": {
       "type": "color",
       "value": "$blue-900"
+    },
+    "bg-disabled": {
+      "type": "color",
+      "value": "#DDD6C9"
+    },
+    "ink-disabled": {
+      "type": "color",
+      "value": "#59564F"
     }
   },
   "fileToken": "86340261-019e-4da0-a687-5bf51771ebb3"
