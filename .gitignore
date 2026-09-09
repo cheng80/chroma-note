@@ -31,6 +31,9 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
+.env.server
+.env_server
 .env*.local
 
 # typescript
@@ -41,3 +44,10 @@ example
 # generated native folders
 /ios
 /android
+
+# Local model-evaluation photos, API cache, annotations and results
+/experiments/model-selection/data/
+
+# Isolated local model runtime
+/experiments/model-selection/.venv/
+/experiments/model-selection/__pycache__/
