@@ -1,6 +1,6 @@
 # Chroma Note · Stamp 디자인
 
-2026-09-09 · [편집 가능한 Pen](chroma-note.pen) · 동작 정본은 [제품 명세](../docs/01_PRODUCT_SPEC.md), 화면 원칙은 [디자인 brief](../docs/design/DESIGN_BRIEF.md), 조사·개선 근거는 [desifn.md](../docs/design/desifn.md).
+2026-09-09 · [편집 가능한 Pen](chroma-note.pen) · 동작 정본은 [제품 명세](../docs/01_PRODUCT_SPEC.md), 화면 원칙은 [디자인 brief](../docs/design/DESIGN_BRIEF.md), 조사·개선 근거는 [design.md](../docs/design/design.md).
 
 사진 임포트 전용 Stamp Record의 새 디자인이다. 현재 파운데이션·컴포넌트·화면만 유지하며 카메라, 지도, 공유, 결제, 출시 화면은 포함하지 않는다. 앱 구현이나 클릭 가능한 네이티브 프로토타입은 아니다.
 

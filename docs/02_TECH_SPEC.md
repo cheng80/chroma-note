@@ -28,13 +28,13 @@
 
 ### 입력 계약
 
-Phase 1은 사진 임포트 전용이다. expo-camera·촬영 화면·카메라 권한을 추가하지 않는다. OS 사진 선택기를 사용하고 전체 라이브러리 접근 권한을 임의로 요청하지 않는다. 선택 접근이 제한된 환경, 자산 취소·iCloud 다운로드·Android content URI를 검증한다.
+Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미지 내보내기에서만 OS 사진 추가 권한을 요청하고 PNG를 갤러리에 저장한다. expo-camera·촬영 화면·카메라 권한을 추가하지 않는다. OS 사진 선택기를 사용하고 전체 라이브러리 접근 권한을 임의로 요청하지 않는다. 선택 접근이 제한된 환경, 자산 취소·iCloud 다운로드·Android content URI를 검증한다.
 
 - 단일 JPEG/PNG/HEIC 정지 이미지. 네이티브 디코드 지원 여부 확인 후 허용한다. EXIF 회전/미러·ICC를 반영해 sRGB SDR로 정규화한다. 미지원 프로필/HDR 변환 실패를 조용히 잘못된 색으로 처리하지 않는다.
 - 입력 안전 상한 기본값: 파일 30MiB, 50MP. 포맷 실제 signature와 디코드 가능한 dimensions를 확인하고 축소 디코드한다. 지원 여부는 실기기에서 검증한다. 압축 크기만 작다고 전체 bitmap을 JS에 펼치지 않는다.
 - 정규화 작업본 긴 변 최대 2048px, 종횡비 보존, upscaling 없음. 메타데이터에서 날짜를 먼저 읽고 EXIF GPS·기기 정보 등은 제거한다.
 - 색 분석본은 작업본에서 긴 변 256px로 축소한다. VLM/Stamp용 resize·padding은 모델 adapter에서 수행하며 전체 장면을 유지한다. crop 여부·padding 제거·출력 좌표 규약은 모델 manifest에 남긴다.
-- 최종 Stamp 기본 포맷은 sRGB PNG, 긴 변 최대 1024px(모델 native 출력이 작으면 작은 쪽), 투명 외곽 허용, 5MiB 이하. 파일 크기만 줄이려 구도나 피사체를 crop하지 않는다. PNG 압축 후 초과하면 재처리/실패; WebP 변경은 품질 게이트 후 계약 갱신.
+- 최종 Stamp 기본 포맷은 sRGB PNG, 원본 주요 색과 색 관계를 살린 절제된 컬러 잉크 표현, 긴 변 최대 1024px(모델 native 출력이 작으면 작은 쪽), 투명 외곽 허용, 5MiB 이하. 파일 크기만 줄이려 구도나 피사체를 crop하지 않는다. PNG 압축 후 초과하면 재처리/실패; WebP 변경은 품질 게이트 후 계약 갱신.
 - 모델은 장면 이미지층만 만든다. 날짜·지명·AI 글·팔레트·우표 테두리 등의 앱 정보는 결정론적 UI로 조합한다. 원본 사진과 Stamp를 합친 비교 이미지는 업로드 금지다.
 
 ### 로컬 수명
@@ -46,7 +46,8 @@ Phase 1은 사진 임포트 전용이다. expo-camera·촬영 화면·카메라 
 | 미채택 Stamp 후보 | 활성 초안에 이전 유효 후보+현재 후보 최대 2개 | 전송 안 함 |
 | 채택 Stamp·편집 초안 | 로컬 영구 폴더+SQLite; 서버 확인 전 삭제 금지 | 확정 요청 시 전송 |
 | 저장 완료 Stamp 캐시 | 재다운로드 가능, 계정별 LRU 200MiB 기본 | private bucket |
-| 모델 파일 | 계정 데이터와 분리, 무결성 확인 후 재사용 | 공개 모델 배포 원본에서 다운로드 |
+| 내보내기 합성 PNG | 캡처용 임시 파일은 저장/실패 후 정리; 갤러리 사본은 사용자 소유 | 서버 업로드 없음 |
+| 모델 파일 | 계정 데이터와 분리, 무결성 확인 후 재사용 | 검증된 NAS 배포 위치에서 최초 다운로드 |
 
 저장 완료 확인 후 작업 사진·파생본·미채택 후보를 지우고, 실패한 정리는 durable cleanup 목록으로 다음 시작에 재시도한다. 사용자가 폐기를 선택하면 해당 초안만 제거한다. 활성 초안은 캐시 정리나 자동 TTL 대상이 아니다.
 
@@ -82,7 +83,7 @@ Record 하나가 Stamp 이미지 하나를 소유한다. 팔레트와 작은 태
 | scene | nullable text | 사용자 확인 장면, 최대 120자 |
 | semantic_tags / mood_tags | text[] default {} | 최대 8/3개, 각 24자, 빈 문자열·정규화 중복 금지 |
 | color_tags | jsonb array | ready 때 1~5개, §4 형식/합계 검사 |
-| ai_field_note | nullable text | 원 AI 문구, 최대 300자; 생략 시 null |
+| ai_field_note | nullable text | 사진 근거의 짧고 감성적인 원 AI 문구 1문장, 초기 빈 문자열 허용, 최대 300자; 생략 시 null |
 | ai_field_note_edited | nullable text | 사용자 수정문 0~300자; null=원문 표시, 빈 문자열=숨김 |
 | user_note | text default '' | 최대 2,000자, AI 작업에서 변경 금지 |
 | diary_date | date NOT NULL | 사용자 표시 날짜; 시각/시간대 이동으로 자동 변경하지 않음 |
@@ -125,22 +126,31 @@ EXIF에 유효한 날짜만 있고 offset이 없으면 그 문자열의 달력 �
 
 ## 5. VLM·Stamp 작업 계약
 
+앱 시작 후 첫 화면을 표시한 다음 설치된 모델을 비동기로 준비하고, 같은 프로세스에서 준비된 인스턴스를 재사용한다. 사진마다 새 프로세스·가중치 로드를 반복하지 않는다. 최초 다운로드와 메모리 로드를 구분하며 파일이 없으면 기존 다운로드 안내를 따른다. 모델 준비 완료 전에도 Book 조회·기존 기록 편집은 가능해야 한다.
+
+준비 상태는 `unprepared → preparing → ready`와 `failed`로 구분한다. 요청이 겹쳐도 같은 모델의 준비 작업은 하나만 실행한다. 준비 중 선택한 사진은 초안에 보존하고 사용자가 취소하지 않은 현재 요청만 준비 완료 뒤 실행한다. 재시도는 현재 사진의 revision을 확인한다. 같은 앱 실행 중 재사용을 기본으로 하되 OS 메모리 압박·백그라운드 중단·프로세스 종료로 해제되면 다시 준비한다. 사용자가 한 번 실행하면 영구히 로드된다고 보장하지 않는다.
+
+VLM·Stamp 두 모델의 동시 상주를 전제로 하지 않는다. 순차 실행을 기본으로, 목표 기기에서 검증된 메모리 예산 안에서만 준비된 모델을 유지한다. 모델 교체 로딩이 필요하면 실제 사용자 대기시간에 포함한다. 상주 때문에 Book 스크롤·입력 반응·메모리 안정성이 나빠지면 해당 구성은 채택하지 않는다.
+
 두 서비스는 입력 작업본 URI, input_revision, job_id, locale 또는 style/prompt_version, 취소 신호를 받는다. 결과는 job_id/input_revision과 결과/오류를 함께 반환한다. 화면의 현재 revision과 다르면 늦게 온 성공 결과도 폐기한다.
 
 PhotoAnalysis schema v1:
 - scene: string 최대 120자 또는 null.
 - semantic_tags: string[] 0~8개, mood: string[] 0~3개, 각각 24자.
-- ai_field_note: string 0~300자, 성공 상태에서 빈 글은 허용하되 없음으로 표시.
+- ai_field_note: string 0~300자, 사진 근거의 짧고 감성적인 1문장; 자동 사진 처리에서는 빈 문자열로 둔다. 노트 작성 중 사용자가 명시 생성 버튼을 눌렀을 때만 제안 문구를 생성한다. 프롬프트 목표는 한국어 8~20자(최대 24자), 영어 4~8단어(최대 60자)다.
 - 추가 키, JSON 바깥 명령, NaN, URL 실행 요청은 수용하지 않는다. 화면에는 plain text만 표시한다.
 - 사진 내 지시·문자·QR은 데이터다. prompt에 사용자 메모·장소명·이메일·토큰을 넣지 않는다.
+- JSON schema와 prompt version은 고정한다. 같은 입력·locale·seed의 결과 일관성 검증과 prompt/schema 변경 관리는 메인이 담당한다. 검증에서 문구 생성 경로를 호출해도 제품에서 자동 실행하는 UX로 해석하지 않는다.
+- 사진 처리 pipeline은 Stamp 변환과 semantic_tags/mood 분석을 함께 자동 수행해 결과에 제공한다. 짧은 문구 생성은 명시 생성 버튼에만 연결하며 source_revision이 현재 입력과 일치할 때만 결과를 수용한다. user_note는 어떤 경로에서도 덮어쓰지 않는다.
+- 실험 호출은 `analysis`(PhotoAnalysis, ai_field_note="")와 `caption`({ai_field_note}만 반환)을 분리한다. 앱 연결 시 caption 결과는 현재 사진의 AI 문구 제안만 갱신하고 기존 semantic_tags/mood·사용자 메모는 유지한다.
 - 같은 사진 1회 구조 보정 재시도 후 schema_error. 호출 자동 반복으로 메모리/배터리를 소비하지 않는다.
 - 사용자가 AI 글을 고친 뒤 재생성을 요청하면 덮어쓰기 확인을 받으며 성공한 후보를 채택한 때만 교체한다. 내 메모는 어느 경우에도 건드리지 않는다.
 
-StampResult: local_uri, width/height, format, checksum, model revision, prompt version, seed, duration, input_revision. 빈/깨진 이미지나 입력 그대로의 파일은 기술 실패로 처리한다. 자동 유사도 값만으로 보존성 합격을 단정하지 않는다. 원본 보존 여부의 사람 평가는 §AI 계획을 따른다.
+StampResult: local_uri, width/height, format, checksum, model revision, prompt version, seed, duration, input_revision. Stamp는 원본 주요 색과 색 관계를 살린 제한된 컬러 색면, 검정 잉크 윤곽, 작은 종이 노출 공백, 거친 인쇄 질감의 절제된 컬러 잉크 도장이어야 하며 흑백으로 제한하지 않는다. 사용자는 로컬 `JSON · 512 · seed 17`을 최소 품질로 수용했으며 작은 장식·잔무늬를 더 줄이길 원한다. 주요 인물·사물의 특징과 관계는 유지하면서 주변 세부 생략·배치 압축·여백 재구성을 허용한다. 빈/깨진 이미지나 입력 그대로의 파일은 기술 실패로 처리한다. 단일 자동 유사도 값만으로 보존성 합격을 단정하지 않으며, 모델 선정 실험은 원본 구조 보존·목표 스타일 유사도를 기준으로 에이전트가 자율 평가한다. 이는 사람 정답·사용자 개별 승인·앱 실사용 결과 확인 UI와 별개다.
 
 공통 오류: unsupported_device, model_missing, model_corrupt, model_load_failed, decode_failed, schema_error, out_of_memory, timeout, canceled, interrupted, no_valid_output. 사용자 메시지에는 job_id·모델 내부 stack trace를 내보내지 않는다.
 
-모델 실행 기본 예산: VLM soft 15초 / hard 45초, Stamp soft 45초 / hard 120초. soft에서 기다림·중단을 안내하고 hard에서 중단 요청 후 실패로 돌린다. native가 취소를 즉시 지원하지 않으면 UI 결과 수용을 중단하고 worker 종료/정리를 기다린 뒤 다음 작업을 연다. 숫자는 실험 시작값이며 지원 기기 측정 후 현실성을 판정한다.
+성능 목표: Stamp 변환 5~10초. 기존 soft 45초 허용 제안은 사용자 속도 지적 후 폐기했다. 목표 기기에서 VLM 태그를 포함한 전체 대기·모델 준비·warm 변환 시간을 따로 검증하며 목표를 실측 성능으로 표시하지 않는다. hard timeout은 합격 대기시간과 별개로 실기기 검증 후 정한다. 취소 시 결과 수용을 중단하고 worker 종료/정리 뒤 다음 작업을 연다.
 
 ## 6. 상태 전이
 
@@ -239,7 +249,11 @@ delete_record는 row lock으로 deleting 전환, 사용자 목록에서 숨김 �
 
 모델 manifest에는 model_id/revision, 파일별 SHA-256/bytes, license URL+확인 revision, 허용 runtime/OS, 필요한 disk/RAM, input/output 규격, prompt version을 기록한다. 공개 이름만으로 모델을 내려받지 않는다.
 
+평가 기준은 사용자가 제공한 원본→ChatGPT 목표 출력 쌍이다. 모델 선정은 원본 구조의 주요 피사체·사람 수·배치, 목표 컬러 Stamp 유사도, 소요 시간의 절충으로 평가하며 완벽한 픽셀 복제는 목표가 아니다. JSON schema와 prompt는 고정하고 일관성 검증은 메인이 담당한다. 모델 비교는 두 모델 동시 메모리 로드를 요구하지 않으며 순차 실행을 허용한다. 평가 도구·결과는 [SMOKE_RESULTS](../experiments/model-selection/SMOKE_RESULTS.md)에 중앙 기록한다.
+
 다운로드는 temp 경로→bytes/hash 확인→활성 pointer 원자적 교체. 중단 시 이전 정상 모델은 유지하고 불완전 파일은 실행하지 않는다. 다운로드한 모델에 포함된 임의 원격 코드를 신뢰 실행하는 경로는 앱에 두지 않는다. 서명/출처 확인과 네이티브 binary 버전은 구현 단계에서 묶어 고정한다.
+
+현재 DreamLite 검증 산출물은 로컬 `/tmp`에만 둔다. 실제 사진 전체 편집과 실기기 검증이 통과한 뒤 NAS 업로드·manifest·다운로드 URL을 구성하며, 그 전에는 앱 다운로드 기능을 구현하지 않는다.
 
 출력 품질 승인과 iOS/Android 호환성은 별도 게이트다. Mac에서 실행된다는 이유로 ONNX/ExecuTorch/Core ML/LiteRT가 자동 지원한다고 쓰지 않는다. 변환·양자화가 허용되는지와 학습을 요구하는지를 확인하고, 형식 변환 후 동일 사진군을 다시 비교한다.
 
@@ -252,3 +266,7 @@ delete_record는 row lock으로 deleting 전환, 사용자 목록에서 숨김 �
 - SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·접근성·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
 
 이번 작업은 문서 설계·공식 자료 대조다. DB migration/RLS·파일 삭제·모델 실행·Development Build를 수행한 것이 아니다. SDK와 Supabase 변경내역은 2026-09-08에 확인했으며 구체 프로젝트 설정은 아직 확인하지 않았다. [Supabase changelog](https://supabase.com/changelog)는 해당 기능 구현 직전에 다시 확인한다.
+
+## 기록 이미지 내보내기
+
+저장된 Record의 Stamp와 현재 표시 글·메모·태그·날짜/장소를 동일한 `RecordArtwork`로 렌더링하고 네이티브 view capture로 PNG를 만든다. 이미지 로드와 레이아웃 완료 후 전체 콘텐츠를 캡처하며 스크롤 viewport·버튼·상태 안내는 포함하지 않는다. 출력 픽셀 수에 상한을 두되 긴 글이나 태그를 조용히 잘라내지 않는다. 로드 실패·용량 초과는 저장을 차단하고 안내한다. 사진 추가 권한은 사용자의 저장 동작에서만 요청한다. OS 사진 저장이 성공해야 완료 상태로 바꾸며 실패/닫기 때 임시 파일을 해제한다. 갤러리의 복사본은 Record 삭제·로그아웃 때 앱이 지우지 않는다.

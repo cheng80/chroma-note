@@ -1,5 +1,5 @@
-import { View } from 'react-native';
+import AppDemo from '../ui/AppDemo';
 
 export default function HomeScreen() {
-  return <View style={{ flex: 1 }} />;
+  return <AppDemo />;
 }

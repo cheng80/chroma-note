@@ -1,0 +1,43 @@
+import React from 'react';
+import { StyleSheet, Text } from 'react-native';
+
+import type { ProcessStep, ProcessingScreenProps } from '../contract';
+import { ProcessingStep, type ProcessingStepStatus } from '../components/ProcessingStep';
+import { Button, Notice, Screen, StampImage } from '../primitives';
+import { imageSource, recordCopy } from '../record-copy';
+import { theme } from '../theme';
+
+const steps: ProcessStep[] = ['prepare', 'colors', 'analysis', 'stamp'];
+
+export function ProcessingScreen({ locale, images, draft, active_job, model_status, onCancel, onRetry, onSkipAnalysis, onChangePhoto }: ProcessingScreenProps) {
+  const t = recordCopy[locale];
+  const failed = active_job?.status === 'failed' || Boolean(draft.error_code);
+  const analysisFailed = draft.error_code === 'analysis_failed';
+  const preparing = active_job?.step === 'prepare' && model_status === 'preparing' && !failed;
+  const activeIndex = active_job ? steps.indexOf(active_job.step) : -1;
+  const source = imageSource(draft.photo.local_uri, images.photo);
+  const statusFor = (step: ProcessStep, index: number): ProcessingStepStatus => {
+    if (failed && active_job?.step === step) return 'error';
+    if (index < activeIndex || !active_job) return 'done';
+    if (index === activeIndex) return 'active';
+    return 'waiting';
+  };
+  const footer = failed ? <><Button label={t.retry} onPress={onRetry} />{analysisFailed ? <Button label={t.skip} onPress={onSkipAnalysis} tone="secondary" /> : null}<Button label={t.changePhoto} onPress={onChangePhoto} tone="secondary" /><Button label={t.stop} onPress={onCancel} tone="subtle" /></> : <Button label={t.stop} onPress={onCancel} tone="subtle" />;
+
+  return (
+    <Screen title={preparing ? t.preparingHeader : t.processingHeader} onBack={onCancel} backLabel={t.back} footer={footer} contentStyle={styles.content}>
+      <StampImage source={source} accessibilityLabel={locale === 'ko' ? '처리 중인 원본 사진' : 'Photo being processed'} resizeMode="contain" style={styles.photo} />
+      <Text accessibilityRole="header" style={styles.title}>{preparing ? t.preparingTitle : t.processingTitle}</Text>
+      <Text style={styles.body}>{preparing ? t.preparingBody : t.processingBody}</Text>
+      {preparing ? <Notice message={t.preparingNotice} tone="info" /> : <>{steps.map((step, index) => { const status = statusFor(step, index); return <ProcessingStep key={step} label={t.steps[step]} status={status} statusLabel={t.stepStatus[status]} />; })}</>}
+      {failed ? <Notice message={t.error} tone="error" /> : null}
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: { paddingTop: theme.spacing.sm, gap: theme.spacing.lg },
+  photo: { height: 230, backgroundColor: theme.colors.bgPage },
+  title: { color: theme.colors.ink, fontFamily: theme.typography.fontFamily, fontSize: 28, lineHeight: 42, fontWeight: '600' },
+  body: { color: theme.colors.inkSecondary, fontFamily: theme.typography.fontFamily, fontSize: 14, lineHeight: 21 },
+});

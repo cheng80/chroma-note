@@ -17,6 +17,10 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -31,6 +35,14 @@
           "backgroundColor": "#208AEF",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": false,
+          "savePhotosPermission": "완성한 Chroma Note 기록 이미지를 사진 보관함에 저장합니다.",
+          "granularPermissions": []
         }
       ]
     ],
