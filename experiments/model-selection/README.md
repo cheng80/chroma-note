@@ -1,8 +1,8 @@
-# Pixabay 사진으로 AI 모델 선정하기
+# Pixabay 사진으로 로컬 AI·선화 방식 선정하기
 
-> 현재 이미지 방향(2026-09-10)은 [스타일 1 원본색 컬러 선화](LINE_ART_RESEARCH.md)다. 아래 확산 모델 실행법과 과거 비교는 이력이며 재다운로드·재개 지시가 아니다. 태그·메모용 VLM은 계속 별도 평가한다.
+> 현재 이미지 방향(2026-09-10)은 [스타일 1 원본색 컬러 선화](LINE_ART_RESEARCH.md)다. 컬러 선화와 태그·메모용 VLM은 서로 독립적으로 평가한다.
 
-**AI 모델 선정 실험 전용**이다. Pixabay 검색·API 키·사진·응답 캐시는 앱과 Supabase에 연결하지 않는다. VLM과 Stamp 모델은 같은 고정 사진을 로컬에서 처리한다. 실제 모델·품질 게이트는 [AI 검증 계획](../../docs/05_AI_VALIDATION_PLAN.md)이 정본이다.
+**AI 모델 선정 실험 전용**이다. Pixabay 검색·API 키·사진·응답 캐시는 앱과 Supabase에 연결하지 않는다. VLM과 컬러 선화는 같은 고정 사진을 기준으로 각각 로컬 평가한다. 실제 모델·품질 게이트는 [AI 검증 계획](../../docs/05_AI_VALIDATION_PLAN.md)이 정본이다.
 
 ## 재생성 가능한 로컬 환경
 
@@ -12,6 +12,12 @@
 python3.12 -m venv experiments/model-selection/.venv
 experiments/model-selection/.venv/bin/pip install -r experiments/model-selection/requirements.txt
 experiments/model-selection/.venv/bin/python -m unittest discover -s experiments/model-selection -p 'test_*.py'
+```
+
+SmolVLM2의 영어 설명을 고정 ontology로 제한한 `PhotoAnalysis`로 바꾸는 어댑터는 [smolvlm2_ontology_adapter.py](smolvlm2_ontology_adapter.py)다. 표준 입력 한 줄을 받아 JSON 한 줄을 출력하며 원문 설명은 결과에 보존하지 않는다. 50장 품질 판정은 `QUALITY_FAIL`이므로 제품 모델 채택이 아니라 수정 가능한 보조 제안 실험으로만 보존한다.
+
+```sh
+printf '%s\n' 'A cup on a wooden table.' | python3 experiments/model-selection/smolvlm2_ontology_adapter.py
 ```
 
 각 모델은 문서에 기록한 저장소와 revision에서 다시 받아 `data/` 아래에 준비한다. 라이선스 확인 없이 가중치를 자동 배포하지 않는다.
@@ -32,9 +38,9 @@ xcrun simctl bootstatus 690514C8-D269-4B41-82C2-1DCBA643C8C6 -b
 이미 Booted이면 첫 명령은 생략한다. 모델 시험은 다음 체크를 별도로 완료해야 한다.
 
 - [ ] Simulator 대상 네이티브 빌드·설치·앱 실행.
-- [ ] 해당 프로세스 내부에서 가중치 로드와 실제 사진→Stamp/태그 추론. 모델 revision·실행 위치 기록.
+- [ ] 해당 프로세스 내부에서 가중치 로드와 실제 사진→VLM 추론. 모델 revision·실행 위치 기록.
 - [ ] 앱 시작 준비·재사용·취소·재준비와 원본/메모 보존.
-- [ ] 태그는 Stamp와 함께 표시, 문구는 명시 요청 때만 생성.
+- [ ] 태그는 선화 기록과 함께 표시, 문구는 명시 요청 때만 생성.
 - [ ] safe area·시트·키보드와 작은 화면 조작.
 - [ ] 실기기에서 속도·메모리·발열 별도 확인. 시뮬레이터 시간으로 10초 성능을 주장하지 않음.
 
@@ -89,9 +95,9 @@ xcrun simctl bootstatus 690514C8-D269-4B41-82C2-1DCBA643C8C6 -b
 | VLM 무드 | 사진의 빛·구도·상황으로 설명할 수 있는가 | 가능한 복수 표현과 근거로 1~5점 평가; 검색 단어와의 완전 일치로 채점하지 않음 |
 | VLM 문구 | 사진에 맞고 한/영이 자연스러운가 | 1~5점 평가; 인물 이름·정확한 장소·사건·사용자의 기억을 지어내면 별도 실패 |
 | 대표색 | 픽셀과 색·비중이 맞는가 | 독립된 색 알고리즘과 합성 입력으로 검증; VLM이 색을 맞췄다고 대신하지 않음 |
-| Stamp | 동일 장면을 보존하면서 Ink로 바꾸는가 | 원본과 나란히 비교해 객체·사람 수·배치·구도를 먼저 검사하고 스타일은 별도 채점 |
+| 컬러 선화 | 동일 장면과 원본색 선 구조를 보존하는가 | [선화 연구](LINE_ART_RESEARCH.md)의 구조·색·실측 기준으로 별도 채점 |
 
-문구의 예시는 정답 문장이 아니다. 같은 의미의 다른 표현을 인정하며 한/영을 따로 평가한다. VLM 태그 precision ≥90%, 언어·사진 적합성 평균 ≥4/5 등 기존 기준을 유지하고, 무드 적합성도 1~5점·평균 ≥4·2점 이하 ≤5%를 사전 제안 기준으로 추가한다. AI 평가임을 명시하며 애매한 후보는 독립 에이전트가 재검토한다. 사용자에게 사진별 검수를 요청하지 않는다.
+문구의 예시는 정답 문장이 아니다. 같은 의미의 다른 표현을 인정하며 한/영을 따로 평가한다. 태그 precision ≥90%, 언어·사진 적합성 평균 ≥4/5, 무드 평균 ≥4·2점 이하 ≤5%는 후보 비교 목표다. AI 평가임을 명시하고 애매한 후보는 독립 에이전트가 재검토하며 사용자에게 사진별 검수를 요청하지 않는다. 목표 미달은 수치와 제한을 남기며, 수정·삭제 가능한 보조 제안으로만 사용한다. 태그와 AI 메모는 오류 가능성을 표시하고 사용자가 확인한 값만 저장한다.
 
 결과는 `photo_id / model revision / locale / 생성 태그·무드·문구 / 원본 관찰 기준과의 비교 / 점수·실패 이유 / 실행 시간·메모리 / run_id`로 기록한다. 검색과 다운로드 시간은 로컬 추론 시간과 분리한다. 선택 사진의 hash와 prompt version을 고정한 뒤 비교하며, 좋은 결과만 보고서에 골라 넣지 않는다.
 
@@ -115,22 +121,11 @@ python3 experiments/model-selection/run_vlm.py \
 
 사진은 먼저 직접 확인해 선정한다. 위 `data/photos/`는 이 Mac에만 있으며 Git 복제에 포함되지 않는다. `--out`은 새 경로를 사용하며 기존 결과를 덮어쓰지 않는다. 기본 seed는 17/42/89, 언어는 ko/en이다. smoke에서는 먼저 seed 42 한 번으로 명백한 실패를 확인한다.
 
-기본 `--task analysis`는 태그·무드를 분석하며 문구는 빈 문자열로 검증한다. 스탬프 변환 결과와 태그는 함께 제공한다. 사용자 요청에 해당하는 실험만 `--task caption`으로 실행하며 이 응답은 `ai_field_note` 하나만 포함한다. 문구 제안은 메모·태그를 덮어쓰지 않는다. v4의 한국어 문구 목표는 8~20자(최대 24자), 영어는 4~8단어(최대 60자)이며 저장 계약은 300자를 유지한다. 기존 v1~v3의 동시 문구 생성은 과거 능력 비교 결과다.
+기본 `--task analysis`는 태그·무드를 분석하며 문구는 빈 문자열로 검증한다. 컬러 선화와 VLM 태그는 독립적으로 판정한다. 사용자 요청에 해당하는 실험만 `--task caption`으로 실행하며 이 응답은 `ai_field_note` 하나만 포함한다. 문구 제안은 메모·태그를 덮어쓰지 않는다. v4의 한국어 문구 목표는 8~20자(최대 24자), 영어는 4~8단어(최대 60자)이며 저장 계약은 300자를 유지한다. 기존 v1~v3의 동시 문구 생성은 과거 능력 비교 결과다.
 
 JSON schema와 사후 검증을 함께 적용하며 형식 오류만 한 번 재요청한다. 출력·시간·digest·사진 hash·프롬프트·작업 모드를 보존한다. 빈 값의 구조 통과를 품질 합격으로 간주하지 않는다. 120초는 Mac 실험 대기 상한이며 앱 취소 검증을 대신하지 않는다.
 
-Stamp는 Ollama와 별도 프로세스에서 `mflux==0.19.1`로 실행한다. 두 추론을 동시에 실행하지 않는다. 실험 전용 환경을 사용하며 이미 있으면 다시 만들지 않는다.
-
-이미 준비된 실험 `.venv`와 로컬 가중치를 재사용한다. 현재 요청문은 [stamp-prompt.json](stamp-prompt.json)의 JSON 객체이며 실제 모델 입력과 설정을 출력 폴더에 보존한다.
-
-```sh
-experiments/model-selection/.venv/bin/python experiments/model-selection/run_stamp.py \
-  --image experiments/model-selection/data/reference-cafe/input-640.png \
-  --profile balanced --seeds 42 42 17 89 \
-  --out experiments/model-selection/data/stamp-new-run
-```
-
-`fast`는 긴 변 384, `balanced`는 512를 사용한다. 모델 revision·4 steps·guidance 1·low-RAM은 JSON에 고정한다. 같은 seed의 반복 결과와 다른 seed의 장면/색/질감 변화를 모두 기록한다. JSON 형식과 seed만으로 품질 일관성을 보증하지 않는다. 과거 텍스트 요청문 결과는 별도 탐색군으로 남긴다.
+이미지 생성형 Stamp 실험과 관련 실행기는 현재 방향에서 제거했다. 선화 실행·실패·실측은 [선화 연구](LINE_ART_RESEARCH.md)에 기록하고, VLM 태그·문구 결과는 [smoke 결과](SMOKE_RESULTS.md)에 기록한다.
 
 결과는 HTML 소스 파일 대신 **브라우저**로 연다. 데이터 폴더만 localhost에 제공하며 env가 있는 상위 폴더는 제공하지 않는다.
 
@@ -138,22 +133,10 @@ experiments/model-selection/.venv/bin/python experiments/model-selection/run_sta
 python3 -m http.server 8765 --bind 127.0.0.1 --directory experiments/model-selection/data
 ```
 
-브라우저 주소: `http://127.0.0.1:8765/reference-cafe/review.html` (카페 기준 비교), `http://127.0.0.1:8765/review.html` (초기 Pixabay 비교). 자산은 이 Mac에만 있으므로 복제한 저장소에서는 실험을 먼저 실행해야 한다.
+브라우저 주소는 실행 결과에 기록된 VLM·선화 전용 경로만 사용한다. 과거 이미지 생성 비교 페이지와 출력은 삭제했다.
 
 ## 현재 상태와 다음 단계
 
 Pixabay 키 작성·API 연결과 Mac smoke 실행을 마쳤다. [결과 문서](SMOKE_RESULTS.md)에서 사진별 실패·한계와 에이전트 평가와 남은 항목을 확인한다. 원본/결과/캐시/모델 런타임은 Git에서 제외된다.
 
-현재 5장은 실행 가능성과 명백한 품질 문제를 찾기 위한 탐색용이며, 정식 frozen 40장·holdout 10장·에이전트의 사전 annotation·3 seeds·모바일 검증은 완료하지 않았다. 모델 최종 선정과 앱/Supabase 구축의 선행 조건은 아직 충족하지 않았다.
-
-## 대체 모델 SD-Turbo 재현
-
-[대체 후보 조사](ALTERNATIVES.md)와 사용 조건을 확인한다. 기존 실험 환경의 Diffusers0.40.0 / Accelerate1.14.0을 사용한다. 가중치가 이미 로컬에 있어야 하며 실행 중 추가 다운로드하지 않는다.
-
-```sh
-experiments/model-selection/.venv/bin/python experiments/model-selection/run_turbo.py \
-  --image experiments/model-selection/data/reference-cafe/input-640.png \
-  --out experiments/model-selection/data/turbo-new-run
-```
-
-`--cases '[[8,0.25,17],[8,0.25,17]]'`은 낮은 변형 강도 반복 비교다. 실제 생성 단계는 steps×strength의 정수 부분이며 최소1이어야 한다. JSON 요청문은 실행기에 고정되어 있고 실제 문자열·토큰 수·사진 hash·설정·로드/추론 시간이 결과에 저장된다. 사진은 모델 내부에서 재해석하므로 높은 강도에서 핵심 특징이 사라지는지 검사한다. 상주 로딩은 Mac 실험에서만 확인했으며 모바일 앱 구현이 아니다.
+2026-09-10에 frozen 40장·holdout 10장과 사전 annotation을 고정했다. SmolVLM2 ontology 태그는 품질 목표에 미달했지만 수정·삭제 가능한 보조 제안 후보로만 유지한다. 현재 제품 방향은 컬러 선화이며, 과거 이미지 생성형 Stamp 실험과 로컬 출력은 정리했다.
