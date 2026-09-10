@@ -15,7 +15,7 @@
 | [작업 흐름](04_WORKFLOW.md) | 구현·문서 작업 절차, 모델 역할, 검증·Git 범위 |
 | [AI·대표색 검증 계획](05_AI_VALIDATION_PLAN.md) | 모델 근거, 비교 입력, 측정·합격 기준 |
 | [Pixabay 모델 평가 준비](../experiments/model-selection/README.md) | 실험 전용 env·사진 검색표·태그/무드/문구 평가 |
-| [대체 이미지 모델 비교](../experiments/model-selection/ALTERNATIVES.md) | 경량 후보·SD-Turbo 실측·사용 조건과 미검증 범위 |
+| [선화 실험 결과](../experiments/model-selection/LINE_ART_RESEARCH.md) | 현재 컬러 선화의 실행 조건·실측·품질 한계 |
 | [Supabase 재사용 체크리스트](supabase/SETUP_CHECKLIST.md) | 앱별 설정값·단계별 완료 기준·진행 기록 양식 |
 | [Supabase 단계별 세팅 가이드](supabase/SETUP_GUIDE.md) | 설정 위치·이유·순서·확인 방법·공식 근거 |
 | [설계 결정 ADR](adr/ADR-003-stamp-record-direction.md) | 현재 선택의 이유, 대안, 제약과 영향 |
@@ -40,5 +40,5 @@
 
 현재 문서 설계가 앱 구현·모델 품질·실기기 검증의 완료를 뜻하지 않는다.
 
-- [로컬 모델 smoke 실측 결과](../experiments/model-selection/SMOKE_RESULTS.md) — VLM·Stamp의 실행 근거, 실패와 자동 평가 결과.
+- [VLM 로컬 smoke 실측 결과](../experiments/model-selection/SMOKE_RESULTS.md) — 태그·무드·문구 보조 분석의 실행 근거와 품질 한계.
 - 모델 선정은 핵심 identity·count·배치, 현재 컬러 선화 기준 적합성, latency의 절충으로 판단하며 완벽한 pixel 복제를 목표로 하지 않는다. JSON prompt/schema 고정과 일관성 검증은 메인이 담당한다.
