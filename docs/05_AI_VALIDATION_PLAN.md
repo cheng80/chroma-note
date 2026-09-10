@@ -1,6 +1,6 @@
 # AI·대표색 검증 계획
 
-> 2026-09-10 · 현재 선화·VLM·대표색의 검증 계획과 확인된 실측을 구분한다. 제품 기준은 [제품 명세](01_PRODUCT_SPEC.md), 앱 계약은 [기술 명세](02_TECH_SPEC.md)다.
+> 2026-09-11 · 현재 선화·VLM·대표색의 검증 계획과 확인된 실측을 구분한다. 제품 기준은 [제품 명세](01_PRODUCT_SPEC.md), 앱 계약은 [기술 명세](02_TECH_SPEC.md)다.
 
 2026-09-10 최신 사용자 지시: **이후 실제 기기 테스트는 iPad mini 6를 기준으로 수행한다.** 기존 iPhone 14 Pro Max 실측은 과거 비교 자료로 보존하며 새 iPad 결과와 동일 조건의 수치로 섞지 않는다. 현재 실행·검증 범위는 [프로젝트 현황](03_PROJECT_STATUS.md)을 따른다.
 
@@ -28,12 +28,14 @@
 |---|---|---|
 | Apple FastVLM 0.5B | Apple 공식 iOS 18.2+ 앱과 모바일 우선 가중치. [공식 저장소](https://github.com/apple/ml-fastVLM), [모델 약관](https://github.com/apple/ml-fastVLM/blob/main/LICENSE_MODEL) | 가중치 약관이 연구만 허용하고 제품 개발을 제외하므로 성능 기준점에만 사용 |
 | HuggingFaceTB/SmolVLM-500M-Instruct | 0.5B 이미지 이해, Apache-2.0. 작은 VLM 기준 후보. [모델 카드](https://huggingface.co/HuggingFaceTB/SmolVLM-500M-Instruct) | 한국어·구조 JSON·앱 메모리/속도 |
-| HuggingFaceTB/SmolVLM2-500M-Video-Instruct | 이미지/비디오→텍스트, Apache-2.0. [모델 카드](https://huggingface.co/HuggingFaceTB/SmolVLM2-500M-Video-Instruct), [공식 MLX Swift 지원](https://github.com/ml-explore/mlx-swift-lm/tree/main/Libraries/MLXVLM) | 고정 ontology의 frozen·holdout 정확도, Android 경로 |
+| HuggingFaceTB/SmolVLM2-500M-Video-Instruct | 이미지/비디오→텍스트, Apache-2.0. [모델 카드](https://huggingface.co/HuggingFaceTB/SmolVLM2-500M-Video-Instruct), [공식 MLX Swift 지원](https://github.com/ml-explore/mlx-swift-lm/tree/main/Libraries/MLXVLM) | 고정 ontology 실행은 50/50 PASS였으나 태그 precision 90/115(78.26%), frozen core 27/40(67.5%), holdout core 4/10(40%)으로 `QUALITY_FAIL`. peak RSS·대표색·Android는 미측정/미검증 |
 | Qwen/Qwen3-VL-2B-Instruct | Apache-2.0. Mac 품질 기준점. [모델 카드](https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct), [Ollama 경로](https://ollama.com/library/qwen3-vl) | 실제 Mac/모바일 시간·메모리와 환각 |
 | Qwen/Qwen3-VL-4B-Instruct | 2B가 품질 부족할 때 추가 비교. [모델 카드](https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct) | 2B 대비 개선량이 비용을 정당화하는지 |
 | Gemma 3n E2B/E4B | 모바일 지향 멀티모달 후보, E 표기는 유효 규모. [공식 개요](https://ai.google.dev/gemma/docs/gemma-3n), [사용 약관](https://ai.google.dev/gemma/terms) | 목표 단말의 메모리·영상 입력 포함 성능·한/영 품질 |
 
-SmolVLM2 500M과 고정 ontology 어댑터를 iPhone 태그 분석의 1차 제품 후보로 둔다. FastVLM 0.5B는 연구 전용 성능 기준점, Qwen3-VL 4B는 품질 우선 대안이다. 처음부터 모든 모델을 설치하지 않는다. 외부 속도 수치는 실행 환경·입력 조건이 다르므로 합격 근거로 사용하지 않는다.
+SmolVLM2 500M과 고정 ontology 어댑터를 iPad mini 6 태그 분석의 1차 제품 후보로 평가했으나, 현재 50장 결과는 `QUALITY_FAIL`이므로 제품 채택 후보로 확정하지 않는다. 해당 실행은 수정·삭제 가능한 보조 제안 실험으로만 유지한다. FastVLM 0.5B는 연구 전용 성능 기준점, Qwen3-VL 4B는 품질 우선 대안이다. 처음부터 모든 모델을 설치하지 않는다. 외부 속도 수치는 실행 환경·입력 조건이 다르므로 합격 근거로 사용하지 않는다.
+
+2026-09-10 SmolVLM2 고정 ontology 결과는 [실험 결과](../experiments/model-selection/SMOKE_RESULTS.md)와 [summary.json](../experiments/model-selection/data/plan01-vlm-smolvlm2-20260910T025411Z/summary.json)을 따른다. 총 50건(실행 50/50 PASS)에서 태그 precision은 0.7826으로 0.9 게이트에 미달했고, frozen core는 0.675, holdout core는 0.4였다. peak RSS와 대표색은 각각 `NOT_RUN`이다. 후속 `plan01-vlm-smolvlm2-20260910T113000Z`·`plan01-vlm-smolvlm2-20260910T113500Z`는 전 건 모델 로드 실패로 품질을 평가하지 못했으며 위 품질 결과와 합산하지 않는다.
 
 ### 선화 모델
 
@@ -45,13 +47,9 @@ RubberStamp와 DreamLite/FLUX/Qwen-Image-Edit 등 확산 편집 후보는 현재
 
 ## 3. 벤치마크 입력과 기준 자산
 
-제공된 [croma_note.png](/Users/cheng80/Desktop/croma_note.png)는 저장소 밖의 앱 기획 인포그래픽이다. 카페 원본은 현재 선화의 세부·속도 비교 입력이다. 과거 ChatGPT 생성 결과는 RubberStamp 방향의 참고 기록이며 현재 `style1` 선화의 정답 이미지로 사용하지 않는다.
-
-과거 카페 원본·ChatGPT 결과·프롬프트는 로컬 실험 기록으로 보존하되 현재 판정에 합산하지 않는다. 현재 선화 입력 hash·출력·실측·관찰은 [선화 연구](../experiments/model-selection/LINE_ART_RESEARCH.md)에 기록한다. 사진의 지명·번호·연도·검색 태그를 VLM 정답으로 주입하지 않는다.
+제공된 [croma_note.png](/Users/cheng80/Desktop/croma_note.png)는 저장소 밖의 앱 기획 인포그래픽이며 현재 VLM 품질 benchmark나 선화 정답 이미지로 사용하지 않는다. 현재 선화 입력 hash·출력·실측·관찰은 [선화 연구](../experiments/model-selection/LINE_ART_RESEARCH.md)에 기록한다. 사진의 지명·번호·연도·검색 태그를 VLM 정답으로 주입하지 않는다.
 
 2026-09-09 사용자 요청에 따라 **Pixabay API로 장면·태그·무드·색 톤에 맞는 사진을 검색해 모델 선정 평가에 사용한다.** 앱 기능과 Supabase에는 Pixabay를 연결하지 않는다. [실험 전용 env·검색·평가 절차](../experiments/model-selection/README.md)에 따라 키를 설정하고 선택 사진의 출처·이용조건·hash를 기록한다. 검색 의도와 Pixabay 태그를 정답으로 간주하거나 모델에 미리 알려 주지 않는다.
-
-BENCH-INPUT-001은 사용자 확인을 마친 카페 원본→ChatGPT 목표 결과 쌍의 로컬 재현 자산을 관리한다. 현재 Pixabay 평가 세트의 수집·선정 테스트를 막지 않으며, 새 사진을 과거 카페 원본의 재현 증거로 표시하지 않는다. 원본·캐시·annotation·출력은 실험 폴더의 Git 제외 `data/`에 로컬 보관한다.
 
 ### 평가 세트
 

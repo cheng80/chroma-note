@@ -1,12 +1,12 @@
 # Chroma Note 기술 명세
 
-> 2026-09-08 · 설계 기본값이며 구현 완료가 아니다. [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
+> 2026-09-11 · [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 목표 계약과 적용된 DB 제약을 구분하며, 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
 
 ## 1. 현재 코드와 목표 구조
 
 현재 앱은 src/ui/AppDemo.tsx의 화면과 메모리 기반 데모 상태로 동작한다. 실제 사진 임포트·대표색 분석·AI·SQLite 초안·Supabase 인증/저장은 앱에 통합되지 않았다. 선화의 별도 실기기 실험과 Supabase 초기 설정은 앱 통합과 구별한다. [시스템 다이어그램](system-diagram.html)은 완성품의 데이터 흐름과 기기·서버의 역할을 보여준다.
 
-기존 Expo ~57.0.20, React Native 0.86.3, React 19.2.3, TypeScript ~6.0.3, Expo Router ~57.0.19를 출발점으로 한다. 실제 버전은 package.json/lockfile을 확인한다. 네이티브 모델 연결 목표는 Development Build이며 Expo Go 통과를 요구하지 않는다. SDK별 구현 전 [Expo SDK 57](https://docs.expo.dev/versions/v57.0.0/)과 [로컬 개발 빌드](https://docs.expo.dev/guides/local-app-development/)를 확인한다.
+Expo SDK 57·React Native·React·TypeScript·Expo Router를 사용한다. 정확한 버전은 package.json/lockfile을 확인한다. 네이티브 모델 연결 목표는 Development Build이며 Expo Go 통과를 요구하지 않는다. SDK별 구현 전 [Expo SDK 57](https://docs.expo.dev/versions/v57.0.0/)과 [로컬 개발 빌드](https://docs.expo.dev/guides/local-app-development/)를 확인한다.
 
 목표 의존성은 필요 시 직접 추가한다: 사진 입력/변환, 실제 픽셀 디코더, 파일/SQLite, 보안 세션 저장, Supabase client, 선정 모델 런타임. 현재 설치된 패키지로 오인하지 않는다. Zustand·React Query·Mapbox·Sentry는 인포그래픽 예시이며 이번 설계의 필수 의존성이 아니다.
 
@@ -102,14 +102,14 @@ analysis_meta: schema_version, status(success/skipped), ai_scene/ai_tags/ai_mood
 model_meta: VLM/선화 각각 model_id, revision, runtime_version, quantization, prompt_version(VLM), inference_duration_ms. 경로·장치 식별자·원본 hash·인증정보는 제외한다.
 style_meta: 호환 `style_id=ink-v1`, `line_model_style=style1`, `mask_gain=1.8`, `background=white`, postprocess_version, input/output_dimensions, fit/padding 처리값. AI가 만든 가상의 위치·이름은 metadata로 보존하지 않는다.
 
-### 라이브 Supabase audit와 목표 계약의 차이
+### 적용된 DB 계약과 남은 서버 경계
 
-2026-09-10 `/tmp/chroma-note-schema-audit.json`을 기준으로 실제 원격에는 `public.stamp_records` 1개와 `app_private` 테이블 2개가 있고 Record는 0행이다. `stamp-images`는 private PNG bucket이며 RPC와 Edge Function은 없다. 이는 위 표의 목표 계약이 배포됐다는 뜻이 아니다. 상세 ERD 검토는 [데이터 모델 리뷰](06_DATA_MODEL_REVIEW.md)를 따른다.
+`public.stamp_records` 1개와 내부 관리 테이블 2개를 유지한다. [마이그레이션](../supabase/migrations/20260910152811_align_record_contract.sql)에 `ai_field_note_edited`·태그 항목·팔레트 검증과 계정 잠금 RLS를 기록했다. 전체 컬럼·CHECK는 [DBML](chroma-note.dbml), 적용·검증 상태는 [데이터 모델 리뷰](06_DATA_MODEL_REVIEW.md)와 현황에서 확인한다.
 
-- 실제 `stamp_records`에는 `ai_field_note_edited`가 없다.
-- `semantic_tags`/`mood_tags`는 배열 개수만 제한하며 각 항목의 문자열 여부·길이·빈 값·정규화 중복을 검증하지 않는다.
-- `color_tags`는 JSON 배열 여부와 5개 상한만 확인한다. 각 항목의 `hex`/`rgb`/`weight`, 허용 키, 값 범위·일치, weight 합계는 검증하지 않는다.
-- 이번 문서 갱신은 차이를 기록할 뿐 SQL 원격 변경, RPC/Edge 배포, 앱 코드 수정을 수행하지 않는다.
+- 태그는 1차원 배열·개수 8/3개·항목 24 code point 이하·비어 있거나 공백뿐인 값 금지·NFC·중복 금지를 CHECK로 강제한다. DB가 내용을 자동 수정하지 않으며 쓰기 서버가 먼저 정규화해야 한다.
+- 팔레트는 §4의 허용 키·필수 자료형·HEX/RGB 일치·weight 범위와 합계를 CHECK로 강제한다. `color_name_key`는 있으면 비어 있지 않은 NFC 문자열이다. `uploading`의 빈 배열은 허용하되 `ready`에는 1~5개가 필요하다.
+- `ai_field_note_edited`는 nullable text, 최대 300 code point다. null=원문 표시, 빈 문자열=숨김이며 원 AI 문구를 덮어쓰지 않는다.
+- 서버 mutation API는 미구현이다. 다른 text의 NFC 정규화, metadata allowlist, 파일 실물 검증, 서버 시각/version·불변 열·멱등성은 앞으로 구현할 서버 경계에서 보장해야 한다. DB 설정만으로 저장 수명 전체를 구현했다고 보지 않는다.
 
 source_revision은 이 초안의 비식별 증가 정수다. 색·VLM(또는 skipped 결정)·선화 후보·사용자 확인에 같은 revision을 연결하고, 저장 전에 현재 input_revision과 전부 일치하는지 검사한다. 서버에는 정수 revision만 model_meta에 기록하며 원본 hash/URI는 보내지 않는다. 생성이 성공해도 사용자가 아직 확인하지 않은 새 후보는 저장 대상으로 승격하지 않는다.
 
@@ -198,7 +198,9 @@ uploading/finalizing 중 payload는 불변 snapshot이다. 수정하려면 진�
 
 [RLS 공식 문서](https://supabase.com/docs/guides/database/postgres/row-level-security)에 따라 grants와 RLS를 함께 구성한다. 모든 노출 테이블 RLS, 소유자 조건 auth.uid()=user_id, UPDATE의 기존 행 USING/새 행 WITH CHECK, 소유자 변경 금지를 검사한다. 클라이언트의 user_metadata를 권한으로 쓰지 않는다. 익명 Auth 가입은 Phase 1 사용하지 않는다.
 
-일반 클라이언트에는 읽기와 제한된 mutation RPC만 부여한다. ready/status/version/path를 Data API 직접 UPDATE해서 finalize나 CAS를 우회하지 못하게 한다. RPC는 명시적 UID 검증·허용 필드 검증·row lock을 수행한다. 권한상 SECURITY DEFINER가 필요한 경우 search_path 고정, PUBLIC/anon EXECUTE 회수, 최소 권한 함수 소유자, 호출자 UID/account 상태 검증을 필수로 한다. 직접 쓰기 권한이 없는 invoker 함수로 우연히 동작할 것이라 가정하지 않는다.
+일반 클라이언트에는 현재 Record SELECT만 부여한다. mutation API 구현 때 필요한 호출 권한만 추가하며 ready/status/version/path를 Data API 직접 UPDATE해서 finalize나 CAS를 우회하지 못하게 한다. RPC는 명시적 UID 검증·허용 필드 검증·row lock을 수행한다. 권한상 SECURITY DEFINER가 필요한 경우 비노출 schema, search_path 고정, PUBLIC/anon EXECUTE 회수, 최소 권한 함수 소유자, 호출자 UID/account 상태 검증을 필수로 한다. 직접 쓰기 권한이 없는 invoker 함수로 우연히 동작할 것이라 가정하지 않는다.
+
+현재 소유자 RLS는 `app_private.current_account_is_active()`로 Auth 사용자 존재와 계정 삭제 작업 부재를 함께 확인한다. 이 함수는 전달받은 UID 없이 현재 JWT의 `auth.uid()`만 조회한다. 내부 두 테이블은 RLS·클라이언트 grants 회수로 차단하며 서버 역할만 관리한다. `authenticated`의 내부 schema USAGE는 이 RLS 함수 호출용이고 내부 테이블 조회·수정 권한을 뜻하지 않는다. 삭제 작업은 상태와 관계없이 잠금이며, 완료 job 제거 뒤에도 Auth 행이 없는 기존 토큰은 거부한다. 탈퇴 접수 API·세션 해제·비동기 정리 자체는 아직 미구현이다.
 
 Storage는 private bucket stamp-images다. [Storage 접근 제어](https://supabase.com/docs/guides/storage/security/access-control)에 따라 객체 경로 첫 segment와 UID만 비교하는 데서 끝내지 않고 해당 Record의 경로/상태도 검사한다. 클라이언트 upsert=false, 기존 이미지 덮어쓰기·직접 삭제는 허용하지 않는다. 공개 URL을 저장하거나 private 데이터를 public bucket으로 옮기지 않는다.
 
@@ -274,7 +276,7 @@ Informative Drawings `style1`의 배포 manifest·다운로드 위치는 사용�
 - SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체·계정 삭제 재시도.
 - SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·접근성·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
 
-이번 작업은 문서 설계·공식 자료 대조다. DB migration/RLS·파일 삭제·모델 실행·Development Build를 수행한 것이 아니다. SDK와 Supabase 변경내역은 2026-09-08에 확인했으며 구체 프로젝트 설정은 아직 확인하지 않았다. [Supabase changelog](https://supabase.com/changelog)는 해당 기능 구현 직전에 다시 확인한다.
+2026-09-11 실제 개발 DB의 migration·RLS·Storage를 적용/대조하고 SQL 제약 및 A/B/미인증 Storage·Data API 테스트를 수행했다. SDK 57 문서와 [Supabase changelog](https://supabase.com/changelog)를 다시 확인했다. 서버 저장 API, 앱 OTP/DB 연결, 복구·CAS·탈퇴 전체 흐름과 원본 비유출 검증은 남아 있다. 개별 결과와 재실행 방법은 현황에 기록한다.
 
 ## 기록 이미지 내보내기
 

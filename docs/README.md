@@ -1,6 +1,6 @@
 # Chroma Note 문서
 
-2026-09-10 · 사진 임포트 → 대표색·로컬 AI → 원본 색을 선에 입힌 컬러 선화 → 메모 → 계정별 Book.
+2026-09-11 · 사진 임포트 → 대표색·로컬 AI → 원본 색을 선에 입힌 컬러 선화 → 메모 → 계정별 Book.
 
 ## 읽기와 책임
 
@@ -10,6 +10,7 @@
 | [ERD](record-erd.html) · [시스템 다이어그램](system-diagram.html) | 이메일 사용자·기록 관계와 기기/서버 처리 경계 |
 | [현행 DBML](chroma-note.dbml) | 이메일 기반 사용자·기록 관계, 전체 앱 컬럼·제약과 한글 설명 |
 | [데이터 모델·ERD 재검토](06_DATA_MODEL_REVIEW.md) | 적용된 DB와 명세 차이, 단일 테이블 판단, 물리 ERD |
+| [Supabase migration](../supabase/migrations/) · [SQL 검사](../supabase/tests/record_contract.sql) · [API 검사](../supabase/tests/record_access.mjs) | 실제 DB 변경과 계정별 접근·입력 제약의 재검증 |
 | [기술 명세](02_TECH_SPEC.md) | 데이터·인증·권한, 입력/출력, 저장·복구·충돌·삭제 |
 | [프로젝트 현황](03_PROJECT_STATUS.md) | 실제 구현 상태, 작업 순서, 남은 게이트, 검증 결과 |
 | [작업 흐름](04_WORKFLOW.md) | 구현·문서 작업 절차, 모델 역할, 검증·Git 범위 |

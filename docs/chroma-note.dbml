@@ -1,5 +1,5 @@
-// Chroma Note 현행 데이터 모델 · 2026-09-10 점검 스냅샷
-// 기준 migration: 20260910082557 initial_record_schema
+// Chroma Note 현행 데이터 모델 · 2026-09-11 점검 스냅샷
+// 기준 migration: 20260910152811 align_record_contract (초기 20260910082557 이후)
 // 용도: 스키마 검토와 ERD 작성. 운영 DB 재구축용 마이그레이션이 아니다.
 // 실제 사용자 데이터·비밀정보는 포함하지 않는다.
 // DBML 문법: https://dbml.dbdiagram.io/docs/
@@ -9,8 +9,8 @@ Project chroma_note {
   Note: '''
 컬러 선화 기록 앱의 실제 적용 구조: 앱 테이블 3개와 참조용 Auth 테이블 일부.
 Supabase 관리 스키마 전체, RLS, grants, Storage 정책, 함수는 DBML로 재현하지 않는다.
-현재 ai_field_note_edited는 미적용이므로 컬럼으로 추가하지 않았다.
-태그·대표색 항목 검증과 저장·편집·삭제 API도 보완 대상이다.
+ai_field_note_edited와 태그·대표색 항목 CHECK를 적용했다.
+내부 테이블 RLS와 계정 잠금 조회 함수도 적용했다. 저장·편집·삭제 API는 미구현이다.
 상세 근거와 개선안은 06_DATA_MODEL_REVIEW.md를 따른다.
 '''
 }
@@ -33,10 +33,11 @@ Table public.stamp_records {
   width integer [null, note: '완성 PNG 가로 픽셀 수. 1~4096, ready 상태에서 필수다.']
   height integer [null, note: '완성 PNG 세로 픽셀 수. 1~4096, ready 상태에서 필수다.']
   scene text [null, note: '사진에서 분석한 장면 설명. 최대 120자.']
-  semantic_tags text[] [not null, default: `'{}'::text[]`, note: '의미 태그 배열. 최대 8개. 현재 DB에는 항목별 24자·빈값·중복 검증이 없다.']
+  semantic_tags text[] [not null, default: `'{}'::text[]`, note: '의미 태그 1차원 배열. 최대 8개, 항목 1~24 code point·NFC·비공백·중복 금지 CHECK.']
   mood_tags text[] [not null, default: `'{}'::text[]`, note: '분위기 태그 배열. 최대 3개. 실제 감정의 사실 확인을 뜻하지 않는다.']
-  color_tags jsonb [not null, default: `'[]'::jsonb`, note: '대표색 메타데이터 배열. 최대 5개, ready에서는 1~5개. 선화 색 수 제한이 아니며 현재 항목 구조·비중 합 검증은 없다.']
+  color_tags jsonb [not null, default: `'[]'::jsonb`, note: '대표색 메타데이터 배열. 최대 5개, ready에서는 1~5개. 허용 키·HEX/RGB 일치·weight 범위와 합 1±0.001 CHECK. 선화 색 수 제한은 아니다.']
   ai_field_note text [null, note: '사용자가 명시적으로 생성 요청한 AI 메모 초안. 최대 300자. 자동 태그 분석과 별개다.']
+  ai_field_note_edited text [null, note: 'AI 메모 사용자 수정문. 최대 300 code point. NULL은 원문 표시, 빈 문자열은 숨김. 물리 컬럼 순서는 테이블 마지막이다.']
   user_note text [not null, default: `''::text`, note: '사용자가 작성하거나 제안을 가져와 편집한 메모. 최대 2000자. AI 생성으로 자동 덮어쓰지 않는다.']
   diary_date date [not null, note: 'Book에서 기록을 분류하는 날짜. 서버 저장 시각과 구별한다.']
   captured_at "timestamp with time zone" [null, note: '사진 촬영 시각. 확인할 수 없으면 NULL.']
@@ -65,6 +66,7 @@ Table public.stamp_records {
   // 실제 PostgreSQL에 적용된 CHECK 조건을 그대로 기록한다.
   checks {
     `((ai_field_note IS NULL) OR (char_length(ai_field_note) <= 300))` [name: 'stamp_records_ai_field_note_check']
+    `((ai_field_note_edited IS NULL) OR (char_length(ai_field_note_edited) <= 300))` [name: 'stamp_records_ai_field_note_edited_check']
     `((bytes >= 1) AND (bytes <= 5242880))` [name: 'stamp_records_bytes_check']
     `((captured_offset_minutes >= '-840'::integer) AND (captured_offset_minutes <= 840))` [name: 'stamp_records_captured_offset_minutes_check']
     `((jsonb_typeof(color_tags) = 'array'::text) AND (jsonb_array_length(color_tags) <= 5))` [name: 'stamp_records_color_shape']
@@ -78,12 +80,14 @@ Table public.stamp_records {
     `(stamp_sha256 ~ '^[0-9a-f]{64}$'::text)` [name: 'stamp_records_stamp_sha256_check']
     `(status = ANY (ARRAY['uploading'::text, 'ready'::text, 'deleting'::text]))` [name: 'stamp_records_status_check']
     `((cardinality(semantic_tags) <= 8) AND (cardinality(mood_tags) <= 3))` [name: 'stamp_records_tag_counts']
+    `(app_private.valid_record_tags(semantic_tags, 8) AND app_private.valid_record_tags(mood_tags, 3))` [name: 'stamp_records_tag_items']
+    `app_private.valid_record_colors(color_tags)` [name: 'stamp_records_color_items']
     `(char_length(user_note) <= 2000)` [name: 'stamp_records_user_note_check']
     `(version >= 1)` [name: 'stamp_records_version_check']
     `((width >= 1) AND (width <= 4096))` [name: 'stamp_records_width_check']
   }
 
-  Note: '선화 이미지·메모·태그·날짜를 하나의 기록으로 관리한다. 기존 stamp 명칭은 호환 식별자다. RLS 활성화, authenticated는 소유자 행 SELECT만 가능하다. 쓰기용 서버 API는 아직 미구현이다.'
+  Note: '선화 이미지·메모·태그·날짜를 하나의 기록으로 관리한다. 기존 stamp 명칭은 호환 식별자다. RLS 활성화, authenticated는 Auth에 존재하고 탈퇴 작업이 없는 소유자 행 SELECT만 가능하다. 쓰기용 서버 API는 아직 미구현이다.'
 }
 
 Table app_private.record_tombstones {
@@ -95,7 +99,7 @@ Table app_private.record_tombstones {
     (user_id, record_id) [pk, name: 'record_tombstones_pkey']
   }
 
-  Note: '삭제한 기록 ID를 기억하여 늦은 재시도가 기록을 되살리지 못하게 하는 내부 표식이다. 해당 방어를 수행할 서버 처리 경로는 아직 미구현이다.'
+  Note: '삭제한 기록 ID를 기억하는 내부 표식. RLS 활성화·클라이언트 접근 차단·service_role 관리. 재생성 방어를 수행할 서버 처리 경로는 아직 미구현이다.'
 }
 
 Table app_private.account_deletion_jobs {
@@ -115,7 +119,7 @@ Table app_private.account_deletion_jobs {
     `(status = ANY (ARRAY['requested'::text, 'processing'::text, 'failed'::text, 'complete'::text]))` [name: 'account_deletion_jobs_status_check']
   }
 
-  Note: '계정 탈퇴 후 남은 파일·데이터 정리를 추적하는 내부 작업이다. Auth 사용자 삭제 이후에도 살아 있어야 한다.'
+  Note: '계정 탈퇴 후 남은 파일·데이터 정리를 추적하는 내부 작업이다. RLS 활성화·클라이언트 접근 차단·service_role 관리. 행 존재 자체가 상태와 관계없이 계정을 잠그며 Auth 사용자 삭제 이후에도 살아 있어야 한다.'
 }
 
 // 실제 FK만 Ref로 표현한다. 기록 소유자는 삭제되어도 자동 CASCADE되지 않는다.
