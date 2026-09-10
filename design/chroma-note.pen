@@ -44,7 +44,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "화면은 미니멀하게, 감성은 스탬프에.\n비교 → 기록 요약 → 저장 / 영역별 시트 / 모든 조작은 OS 안전영역 안에.",
+          "content": "화면은 간결하게, 사진의 색은 선에.\n비교 → 기록 요약 → 저장 / 영역별 시트 / 모든 조작은 OS 안전영역 안에.",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": 18,
@@ -507,7 +507,7 @@
       "id": "OnSk3",
       "x": 2700,
       "y": 0,
-      "name": "02 · Image fixtures / 디자인 예시, 모델 결과 아님",
+      "name": "02 · Image fixtures / 생성 사진 → 실제 선화 변환",
       "width": 1000,
       "fill": "$bg-page",
       "layout": "vertical",
@@ -521,7 +521,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "Photos to stamps",
+          "content": "Photos to colored lines",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": "$type-title",
@@ -534,7 +534,7 @@
           "fill": "$text-secondary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "디자인 레이아웃용 생성 예시입니다. 실제 모델의 원본 보존성·성능 검증 결과가 아닙니다.",
+          "content": "디자인용 생성 사진을 실제 스타일 1로 변환했습니다. 사용자 사진·실기기 성능 검증 자료는 아닙니다.",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": "$type-small",
@@ -543,7 +543,7 @@
         {
           "type": "frame",
           "id": "yRgEr",
-          "name": "Original and stamp examples",
+          "name": "Original and line art examples",
           "width": "fill_container",
           "gap": 24,
           "children": [
@@ -588,7 +588,7 @@
             {
               "type": "frame",
               "id": "nToam",
-              "name": "Stamp column",
+              "name": "Line art column",
               "width": "fill_container",
               "layout": "vertical",
               "gap": 12,
@@ -596,11 +596,11 @@
                 {
                   "type": "text",
                   "id": "qOfjO",
-                  "name": "Stamp label",
+                  "name": "Line art label",
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Ink · 스탬프 예시",
+                  "content": "Line art · 실제 변환",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-small",
@@ -616,7 +616,7 @@
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "cornerRadius": 4
@@ -1009,7 +1009,7 @@
                 {
                   "type": "frame",
                   "id": "oYbGg",
-                  "name": "Record / Stamp card",
+                  "name": "Record / Line art card",
                   "reusable": true,
                   "metadata": {
                     "type": "interaction",
@@ -1037,11 +1037,11 @@
                     {
                       "type": "rectangle",
                       "id": "sLdCL",
-                      "name": "Stamp image",
+                      "name": "Line art image",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": "fill_container",
@@ -1359,7 +1359,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프를 다시 볼 수 있어요.",
+                      "content": "완성된 선화를 다시 볼 수 있어요.",
                       "fill": "$success-text"
                     }
                   }
@@ -1661,7 +1661,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "스탬프와 메모가 삭제돼요.\n삭제한 기록은 되돌릴 수 없어요.",
+                  "content": "선화와 메모가 삭제돼요.\n삭제한 기록은 되돌릴 수 없어요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-body",
@@ -1703,7 +1703,7 @@
             {
               "type": "frame",
               "id": "ZryRp",
-              "name": "Compare / Original and stamp",
+              "name": "Compare / Original and line art",
               "reusable": true,
               "width": "fill_container",
               "layout": "vertical",
@@ -1735,13 +1735,13 @@
                       "id": "rD4RA",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 스탬프",
+                      "name": "Filter / 선화",
                       "fill": "$bg-surface",
                       "stroke": "$border-control",
                       "strokeWidth": 1,
                       "descendants": {
                         "R1feeN": {
-                          "content": "스탬프"
+                          "content": "선화"
                         }
                       }
                     },
@@ -1932,11 +1932,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "ri9Qy",
-              "name": "Welcome stamp",
+              "name": "Welcome line art",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -1950,7 +1950,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "사진 한 장,\n오래 남길 이야기.",
+              "content": "그날의 색을,\n선으로 남기다.",
               "lineHeight": 1.35,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -1959,11 +1959,11 @@
             {
               "type": "text",
               "id": "SuHUi",
-              "name": "원본 사진은 이 기기에서만 처리해요.\n완성된 스탬프와 기록은 계정에 보관해요.",
+              "name": "원본 사진은 이 기기에서만 처리해요.\n완성된 선화와 기록은 계정에 보관해요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본 사진은 이 기기에서만 처리해요.\n완성된 스탬프와 기록은 계정에 보관해요.",
+              "content": "원본 사진은 이 기기에서만 처리해요.\n완성된 선화와 기록은 계정에 보관해요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -2400,7 +2400,7 @@
             {
               "type": "frame",
               "id": "b5m0pZ",
-              "name": "Stamp grid",
+              "name": "Line art grid",
               "width": "fill_container",
               "gap": 12,
               "alignItems": "center",
@@ -2414,7 +2414,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 162
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 09"
@@ -2434,7 +2441,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 162
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 07"
@@ -2498,7 +2512,7 @@
               ],
               "descendants": {
                 "uTrwf": {
-                  "content": "만들던 스탬프 1개 · 이어서 만들기",
+                  "content": "만들던 선화 1개 · 이어서 만들기",
                   "fill": "$text-primary",
                   "fontSize": "$type-small"
                 }
@@ -2599,7 +2613,7 @@
             {
               "type": "frame",
               "id": "Foe0c",
-              "name": "First stamp / 디자인 예시",
+              "name": "First line art / 디자인 예시",
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 4,
@@ -2624,7 +2638,7 @@
                 {
                   "type": "rectangle",
                   "id": "Zbr5r",
-                  "name": "Example ink stamp",
+                  "name": "Example ink line art",
                   "metadata": {
                     "type": "image",
                     "fixture": true,
@@ -2633,7 +2647,7 @@
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -2662,7 +2676,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "첫 순간을\n스탬프로 남겨보세요",
+              "content": "첫 순간을\n선화로 남겨보세요",
               "lineHeight": 1.35,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -2833,11 +2847,11 @@
             {
               "type": "text",
               "id": "eqyJF",
-              "name": "사진 전체를 기준으로 스탬프를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
+              "name": "사진 전체를 기준으로 선화를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "사진 전체를 기준으로 스탬프를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
+              "content": "사진 전체를 기준으로 선화를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -2919,7 +2933,7 @@
       "id": "uSu5R",
       "x": 2250,
       "y": 1500,
-      "name": "Phone / 06 · 스탬프 준비",
+      "name": "Phone / 06 · 선화 준비",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-004",
@@ -2981,7 +2995,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "스탬프 준비",
+                  "content": "선화 준비",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -2992,7 +3006,7 @@
             {
               "type": "icon",
               "id": "oh6gU",
-              "name": "Stamp preparation icon",
+              "name": "Line art preparation icon",
               "width": 48,
               "height": 48,
               "icon": "stamp",
@@ -3002,11 +3016,11 @@
             {
               "type": "text",
               "id": "RCTM8",
-              "name": "Stamp preparation heading",
+              "name": "Line art preparation heading",
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프로 변환할\n준비 중이에요",
+              "content": "선화로 변환할\n준비 중이에요",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -3015,11 +3029,11 @@
             {
               "type": "text",
               "id": "tNjpA",
-              "name": "Stamp file preparation description",
+              "name": "Line art file preparation description",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "처음 한 번 변환에 필요한 파일을 받아요.\n준비가 끝나면 사진을 스탬프로 만들 수 있어요.",
+              "content": "처음 한 번 변환에 필요한 파일을 받아요.\n준비가 끝나면 사진을 선화로 만들 수 있어요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -3051,14 +3065,14 @@
               "id": "nIsa8",
               "type": "ref",
               "ref": "q0QhL",
-              "name": "스탬프 변환 파일 안내",
+              "name": "선화 변환 파일 안내",
               "width": "fill_container",
               "descendants": {
                 "G0mYoF": {
                   "content": "다운로드 안내"
                 },
                 "FC5B2": {
-                  "content": "스탬프 변환에 필요한 파일 이름·용량·사용 조건을 받기 전에 확인해요.\n받는 중에는 진행률과 취소를 계속 보여줘요."
+                  "content": "선화 변환에 필요한 파일 이름·용량·사용 조건을 받기 전에 확인해요.\n받는 중에는 진행률과 취소를 계속 보여줘요."
                 }
               }
             },
@@ -3177,7 +3191,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "스탬프 만들기",
+                  "content": "선화 만들기",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -3208,7 +3222,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "순간을 잉크로 남기는 중",
+              "content": "사진의 색을 선으로 남기는 중",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -3272,14 +3286,14 @@
               "id": "pIi6g",
               "type": "ref",
               "ref": "u0Amud",
-              "name": "스탬프 만들기",
+              "name": "선화 만들기",
               "descendants": {
                 "oBmZT": {
                   "icon": "loader-circle",
                   "fill": "$accent-solid"
                 },
                 "N12OW": {
-                  "content": "스탬프 만들기"
+                  "content": "선화 만들기"
                 },
                 "l33ky": {
                   "content": "진행 중"
@@ -3324,7 +3338,7 @@
       "id": "yhiki",
       "x": 3150,
       "y": 1500,
-      "name": "Phone / 08 · 스탬프 비교 · 1/2",
+      "name": "Phone / 08 · 선화 비교 · 1/2",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-005",
@@ -3431,13 +3445,13 @@
                   "id": "d8wSW4",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 스탬프",
+                  "name": "Filter / 선화",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "스탬프"
+                      "content": "선화"
                     }
                   }
                 },
@@ -3458,11 +3472,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "jYABz",
-              "name": "Preview stamp candidate",
+              "name": "Preview line art candidate",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -3637,7 +3651,7 @@
                   "fill": "$success-text"
                 },
                 "t3y1jD": {
-                  "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                  "content": "완성된 선화와 기록을 계정에 보관했어요.",
                   "fill": "$success-text",
                   "enabled": false,
                   "width": 280
@@ -3675,7 +3689,21 @@
                       "type": "ref",
                       "ref": "u5MzP4",
                       "name": "RecordArtwork / 저장된 상세 전체 읽기",
-                      "width": "fill_container"
+                      "width": "fill_container",
+                      "descendants": {
+                        "u77MqE": {
+                          "name": "RecordArtwork line art / large contain center",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "k7gsnv": {
+                          "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                        }
+                      }
                     },
                     {
                       "type": "frame",
@@ -3838,7 +3866,7 @@
             {
               "type": "frame",
               "id": "aopSR",
-              "name": "Confirmed stamp summary",
+              "name": "Confirmed line art summary",
               "width": "fill_container",
               "gap": 16,
               "padding": [
@@ -3850,11 +3878,11 @@
                 {
                   "type": "rectangle",
                   "id": "T4FJR",
-                  "name": "Confirmed stamp thumbnail",
+                  "name": "Confirmed line art thumbnail",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": 96,
@@ -3888,7 +3916,7 @@
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "스탬프·대표색은 변경할 수 없어요",
+                      "content": "선화·대표색은 변경할 수 없어요",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 14,
@@ -4156,7 +4184,7 @@
             {
               "type": "frame",
               "id": "bgjYI",
-              "name": "스탬프 변환 파일",
+              "name": "선화 변환 파일",
               "width": "fill_container",
               "gap": 12,
               "alignItems": "center",
@@ -4164,7 +4192,7 @@
                 {
                   "type": "frame",
                   "id": "VfDlS",
-                  "name": "스탬프 변환 파일 labels",
+                  "name": "선화 변환 파일 labels",
                   "width": "fill_container",
                   "layout": "vertical",
                   "gap": 4,
@@ -4172,11 +4200,11 @@
                     {
                       "type": "text",
                       "id": "DSFir",
-                      "name": "스탬프 변환 파일",
+                      "name": "선화 변환 파일",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "스탬프 변환 파일",
+                      "content": "선화 변환 파일",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-body",
@@ -4201,7 +4229,7 @@
                   "id": "u9Gus",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "스탬프 변환 파일 열기",
+                  "name": "선화 변환 파일 열기",
                   "descendants": {
                     "QbEcD": {
                       "icon": "chevron-right"
@@ -4278,7 +4306,7 @@
                   "content": "원본과 기록"
                 },
                 "FC5B2": {
-                  "content": "원본 작업본은 저장이 끝나면 정리해요.\n완성된 스탬프와 메모는 계정에 남아요."
+                  "content": "원본 작업본은 저장이 끝나면 정리해요.\n완성된 선화와 메모는 계정에 남아요."
                 }
               }
             },
@@ -4529,7 +4557,7 @@
                 {
                   "type": "frame",
                   "id": "CFjqV",
-                  "name": "Stamp grid",
+                  "name": "Line art grid",
                   "width": "fill_container",
                   "gap": 12,
                   "alignItems": "center",
@@ -4543,7 +4571,14 @@
                       "padding": 0,
                       "descendants": {
                         "sLdCL": {
-                          "height": 162
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
                         },
                         "GNWKu": {
                           "content": "09. 09"
@@ -4563,7 +4598,14 @@
                       "padding": 0,
                       "descendants": {
                         "sLdCL": {
-                          "height": 162
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
                         },
                         "GNWKu": {
                           "content": "09. 07"
@@ -4627,7 +4669,7 @@
                   ],
                   "descendants": {
                     "uTrwf": {
-                      "content": "만들던 스탬프 1개 · 이어서 만들기",
+                      "content": "만들던 선화 1개 · 이어서 만들기",
                       "fill": "$text-primary",
                       "fontSize": "$type-small"
                     }
@@ -4968,11 +5010,11 @@
             {
               "type": "text",
               "id": "u8jfRt",
-              "name": "설명을 생략해도 스탬프와 내 메모는 남길 수 있어요.",
+              "name": "설명을 생략해도 선화와 내 메모는 남길 수 있어요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "설명을 생략해도 스탬프와 내 메모는 남길 수 있어요.",
+              "content": "설명을 생략해도 선화와 내 메모는 남길 수 있어요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-caption",
@@ -4987,7 +5029,7 @@
       "id": "Itx6R",
       "x": 900,
       "y": 3300,
-      "name": "Phone / 14 · 스탬프 실패",
+      "name": "Phone / 14 · 선화 실패",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-004",
@@ -5049,7 +5091,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "스탬프 만들기",
+                  "content": "선화 만들기",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -5077,7 +5119,7 @@
               "id": "jVbQ9",
               "type": "ref",
               "ref": "DOjki",
-              "name": "Notice / 스탬프를 만들지 못했어요",
+              "name": "Notice / 선화를 만들지 못했어요",
               "width": "fill_container",
               "fill": "$danger-subtle",
               "descendants": {
@@ -5086,7 +5128,7 @@
                   "fill": "$danger-solid"
                 },
                 "HZd7j": {
-                  "content": "스탬프를 만들지 못했어요",
+                  "content": "선화를 만들지 못했어요",
                   "fill": "$danger-solid"
                 },
                 "t3y1jD": {
@@ -5145,11 +5187,11 @@
             {
               "type": "text",
               "id": "RhpJA",
-              "name": "유효한 스탬프가 있어야 기록을 저장할 수 있어요.",
+              "name": "유효한 선화가 있어야 기록을 저장할 수 있어요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "유효한 스탬프가 있어야 기록을 저장할 수 있어요.",
+              "content": "유효한 선화가 있어야 기록을 저장할 수 있어요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-caption",
@@ -5238,11 +5280,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "iJhzQ",
-              "name": "Pending stamp",
+              "name": "Pending line art",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -5432,7 +5474,7 @@
                 {
                   "type": "frame",
                   "id": "CAT67",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -5444,11 +5486,11 @@
                     {
                       "type": "rectangle",
                       "id": "c6w3N",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -5482,7 +5524,7 @@
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "스탬프·대표색은 변경할 수 없어요",
+                          "content": "선화·대표색은 변경할 수 없어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -5906,7 +5948,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "content": "완성된 선화와 기록을 계정에 보관했어요.",
                       "fill": "$success-text",
                       "enabled": false,
                       "width": 280
@@ -5917,11 +5959,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "f2aLa4",
-                  "name": "Saved stamp",
+                  "name": "Saved line art",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -6046,7 +6088,12 @@
           "name": "Delete record confirmation",
           "width": 342,
           "x": 24,
-          "y": 276
+          "y": 276,
+          "descendants": {
+            "eqgjm": {
+              "content": "선화와 메모가 삭제돼요.\n삭제한 기록은 되돌릴 수 없어요."
+            }
+          }
         }
       ]
     },
@@ -6217,7 +6264,7 @@
                 {
                   "type": "frame",
                   "id": "EArQb",
-                  "name": "스탬프 변환 파일",
+                  "name": "선화 변환 파일",
                   "width": "fill_container",
                   "gap": 12,
                   "alignItems": "center",
@@ -6225,7 +6272,7 @@
                     {
                       "type": "frame",
                       "id": "mVqE6",
-                      "name": "스탬프 변환 파일 labels",
+                      "name": "선화 변환 파일 labels",
                       "width": "fill_container",
                       "layout": "vertical",
                       "gap": 4,
@@ -6233,11 +6280,11 @@
                         {
                           "type": "text",
                           "id": "FTwT4",
-                          "name": "스탬프 변환 파일",
+                          "name": "선화 변환 파일",
                           "fill": "$text-primary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "스탬프 변환 파일",
+                          "content": "선화 변환 파일",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": "$type-body",
@@ -6262,7 +6309,7 @@
                       "id": "kvLOH",
                       "type": "ref",
                       "ref": "OYxj6",
-                      "name": "스탬프 변환 파일 열기",
+                      "name": "선화 변환 파일 열기",
                       "descendants": {
                         "QbEcD": {
                           "icon": "chevron-right"
@@ -6339,7 +6386,7 @@
                       "content": "원본과 기록"
                     },
                     "FC5B2": {
-                      "content": "원본 작업본은 저장이 끝나면 정리해요.\n완성된 스탬프와 메모는 계정에 남아요."
+                      "content": "원본 작업본은 저장이 끝나면 정리해요.\n완성된 선화와 메모는 계정에 남아요."
                     }
                   }
                 },
@@ -6647,7 +6694,7 @@
                   "fill": "$danger-solid"
                 },
                 "t3y1jD": {
-                  "content": "계정의 스탬프와 메모가 삭제돼요. 되돌릴 수 없어요.",
+                  "content": "계정의 선화와 메모가 삭제돼요. 되돌릴 수 없어요.",
                   "fill": "$danger-solid"
                 }
               }
@@ -6934,7 +6981,7 @@
                 {
                   "type": "frame",
                   "id": "s3QENZ",
-                  "name": "Stamp grid",
+                  "name": "Line art grid",
                   "width": "fill_container",
                   "gap": 12,
                   "alignItems": "center",
@@ -6948,7 +6995,14 @@
                       "padding": 0,
                       "descendants": {
                         "sLdCL": {
-                          "height": 162
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
                         },
                         "GNWKu": {
                           "content": "09. 09"
@@ -6968,7 +7022,14 @@
                       "padding": 0,
                       "descendants": {
                         "sLdCL": {
-                          "height": 162
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
                         },
                         "GNWKu": {
                           "content": "09. 07"
@@ -7011,7 +7072,7 @@
                   ],
                   "descendants": {
                     "uTrwf": {
-                      "content": "만들던 스탬프 1개 · 이어서 만들기",
+                      "content": "만들던 선화 1개 · 이어서 만들기",
                       "fill": "$text-primary",
                       "fontSize": "$type-small"
                     }
@@ -7724,7 +7785,7 @@
             {
               "type": "frame",
               "id": "szVDx",
-              "name": "스탬프 변환을 준비하고 있어요",
+              "name": "선화 변환을 준비하고 있어요",
               "width": "fill_container",
               "fill": "$bg-surface",
               "cornerRadius": 16,
@@ -7749,7 +7810,7 @@
                   "id": "DF6MR",
                   "type": "ref",
                   "ref": "DOjki",
-                  "name": "Notice / 스탬프 변환을 준비하고 있어요",
+                  "name": "Notice / 선화 변환을 준비하고 있어요",
                   "width": "fill_container",
                   "fill": "$accent-subtle",
                   "descendants": {
@@ -7758,7 +7819,7 @@
                       "fill": "$accent-solid"
                     },
                     "HZd7j": {
-                      "content": "스탬프 변환을 준비하고 있어요",
+                      "content": "선화 변환을 준비하고 있어요",
                       "fill": "$accent-solid"
                     },
                     "t3y1jD": {
@@ -7826,7 +7887,7 @@
                       "fill": "$warning-text"
                     },
                     "t3y1jD": {
-                      "content": "이 기기에서는 스탬프로 변환할 수 없어요. 초안은 보관하고 Book으로 돌아갈 수 있어요.",
+                      "content": "이 기기에서는 선화로 변환할 수 없어요. 초안은 보관하고 Book으로 돌아갈 수 있어요.",
                       "fill": "$warning-text"
                     }
                   }
@@ -8166,7 +8227,7 @@
                       "fill": "$warning-text"
                     },
                     "t3y1jD": {
-                      "content": "메모와 날짜는 볼 수 있어요. 연결 후 스탬프를 다시 받아 주세요.",
+                      "content": "메모와 날짜는 볼 수 있어요. 연결 후 선화를 다시 받아 주세요.",
                       "fill": "$warning-text"
                     }
                   }
@@ -8368,7 +8429,7 @@
                       "fill": "$accent-solid"
                     },
                     "t3y1jD": {
-                      "content": "새 기록은 저장할 수 없어요. 스탬프·메모·계정을 정리하고 있어요.",
+                      "content": "새 기록은 저장할 수 없어요. 선화·메모·계정을 정리하고 있어요.",
                       "fill": "$accent-solid"
                     }
                   }
@@ -8585,7 +8646,7 @@
                   "content": "정말 계정을 삭제할까요?"
                 },
                 "eqgjm": {
-                  "content": "재인증을 완료했어요. 계정의 모든 스탬프와 메모 삭제를 요청해요. 되돌릴 수 없어요."
+                  "content": "재인증을 완료했어요. 계정의 모든 선화와 메모 삭제를 요청해요. 되돌릴 수 없어요."
                 },
                 "NLSvX/uTrwf": {
                   "content": "계정과 기록 삭제"
@@ -8621,11 +8682,11 @@
             {
               "type": "text",
               "id": "kXwby",
-              "name": "대표색·AI 글·스탬프는 새로 만들고 결과 확인을 다시 받아요.",
+              "name": "대표색·AI 글·선화는 새로 만들고 결과 확인을 다시 받아요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "대표색·AI 글·스탬프는 새로 만들고 결과 확인을 다시 받아요.",
+              "content": "대표색·AI 글·선화는 새로 만들고 결과 확인을 다시 받아요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -8696,7 +8757,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "새 스탬프로 바꿀까요?",
+              "content": "새 선화로 바꿀까요?",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-heading",
@@ -8944,7 +9005,14 @@
                   "width": "fill_container",
                   "descendants": {
                     "sLdCL": {
-                      "height": 170
+                      "height": 170,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 09"
@@ -8962,7 +9030,14 @@
                   "width": "fill_container",
                   "descendants": {
                     "sLdCL": {
-                      "height": 170
+                      "height": 170,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 07"
@@ -8980,7 +9055,14 @@
                   "width": "fill_container",
                   "descendants": {
                     "sLdCL": {
-                      "height": 170
+                      "height": 170,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 03"
@@ -9003,7 +9085,7 @@
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "만들던 스탬프 1개 · 이어서 만들기",
+                  "content": "만들던 선화 1개 · 이어서 만들기",
                   "fill": "$text-primary",
                   "fontSize": "$type-small"
                 }
@@ -9012,11 +9094,11 @@
             {
               "type": "text",
               "id": "P88jrC",
-              "name": "스탬프를 선택하면 기록을 자세히 볼 수 있어요.",
+              "name": "선화를 선택하면 기록을 자세히 볼 수 있어요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프를 선택하면 기록을 자세히 볼 수 있어요.",
+              "content": "선화를 선택하면 기록을 자세히 볼 수 있어요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -9166,7 +9248,7 @@
                         {
                           "type": "frame",
                           "id": "GK71c",
-                          "name": "스탬프",
+                          "name": "선화",
                           "width": "fill_container",
                           "layout": "vertical",
                           "gap": 12,
@@ -9174,11 +9256,11 @@
                             {
                               "type": "text",
                               "id": "m1PcNd",
-                              "name": "스탬프 label",
+                              "name": "선화 label",
                               "fill": "$text-primary",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "스탬프",
+                              "content": "선화",
                               "lineHeight": 1.5,
                               "fontFamily": "$font-body",
                               "fontSize": "$type-body",
@@ -9188,11 +9270,11 @@
                               "type": "rectangle",
                               "cornerRadius": 4,
                               "id": "l8FAl",
-                              "name": "스탬프 image",
+                              "name": "선화 image",
                               "fill": {
                                 "type": "image",
                                 "enabled": true,
-                                "url": "images/generated-1788887279815.png",
+                                "url": "images/lineart-style1-source-rgb.png",
                                 "mode": "fit"
                               },
                               "width": "fill_container",
@@ -9394,11 +9476,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "pdKKh",
-              "name": "Welcome stamp",
+              "name": "Welcome line art",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -9412,7 +9494,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Photos to stamps.\nMoments to stories.",
+              "content": "Photos to colored lines.\nMoments to stories.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -9421,11 +9503,11 @@
             {
               "type": "text",
               "id": "owWya",
-              "name": "Your original photo stays on this device.\nFinished stamps and notes are saved to your account.",
+              "name": "Your original photo stays on this device.\nFinished line art and notes are saved to your account.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Your original photo stays on this device.\nFinished stamps and notes are saved to your account.",
+              "content": "Your original photo stays on this device.\nFinished line art and notes are saved to your account.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -9679,7 +9761,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 162
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "Sep 9"
@@ -9699,7 +9788,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 162
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "Sep 7"
@@ -9900,13 +9996,13 @@
                   "id": "SFKOH",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 스탬프",
+                  "name": "Filter / 선화",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "스탬프"
+                      "content": "선화"
                     }
                   }
                 },
@@ -9927,11 +10023,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "v8CWM",
-              "name": "Preview stamp candidate",
+              "name": "Preview line art candidate",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -10117,13 +10213,13 @@
                   "id": "HA7lK",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 스탬프",
+                  "name": "Filter / 선화",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "스탬프",
+                      "content": "선화",
                       "fontSize": 28
                     }
                   }
@@ -10145,11 +10241,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "Ye0Eh",
-              "name": "Preview stamp candidate",
+              "name": "Preview line art candidate",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -10685,10 +10781,10 @@
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
-                  "name": "Filter / 스탬프",
+                  "name": "Filter / 선화",
                   "descendants": {
                     "R1feeN": {
-                      "content": "스탬프"
+                      "content": "선화"
                     }
                   }
                 },
@@ -10893,13 +10989,13 @@
                   "id": "rRsD8",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 스탬프",
+                  "name": "Filter / 선화",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "스탬프"
+                      "content": "선화"
                     }
                   }
                 },
@@ -10920,11 +11016,11 @@
               "type": "rectangle",
               "cornerRadius": 4,
               "id": "mdmhR",
-              "name": "Preview stamp candidate",
+              "name": "Preview line art candidate",
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": "fill_container",
@@ -11099,7 +11195,7 @@
             {
               "type": "frame",
               "id": "jL08U",
-              "name": "Stamp grid",
+              "name": "Line art grid",
               "width": "fill_container",
               "layout": "vertical",
               "gap": 24,
@@ -11113,7 +11209,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 150
+                      "height": 150,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 09"
@@ -11289,7 +11392,7 @@
             {
               "type": "frame",
               "id": "MoNcm",
-              "name": "Stamp grid",
+              "name": "Line art grid",
               "width": "fill_container",
               "layout": "vertical",
               "gap": 24,
@@ -11303,7 +11406,14 @@
                   "padding": 0,
                   "descendants": {
                     "sLdCL": {
-                      "height": 184
+                      "height": 184,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
                     },
                     "GNWKu": {
                       "content": "09. 09",
@@ -11486,7 +11596,21 @@
                       "type": "ref",
                       "ref": "u5MzP4",
                       "name": "RecordArtwork / 저장 전 전체 읽기",
-                      "width": "fill_container"
+                      "width": "fill_container",
+                      "descendants": {
+                        "u77MqE": {
+                          "name": "RecordArtwork line art / large contain center",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "k7gsnv": {
+                          "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                        }
+                      }
                     },
                     {
                       "id": "Xwg3w",
@@ -11659,7 +11783,7 @@
                 {
                   "type": "frame",
                   "id": "fuF9l",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -11671,11 +11795,11 @@
                     {
                       "type": "rectangle",
                       "id": "nC6be",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -12219,7 +12343,7 @@
                 {
                   "type": "frame",
                   "id": "mJ3Ma",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -12231,11 +12355,11 @@
                     {
                       "type": "rectangle",
                       "id": "X2UHX",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -12691,7 +12815,7 @@
                 {
                   "type": "frame",
                   "id": "fRAYs",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -12703,11 +12827,11 @@
                     {
                       "type": "rectangle",
                       "id": "mBnvQ",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -13198,7 +13322,7 @@
                 {
                   "type": "frame",
                   "id": "SBIIb",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -13210,11 +13334,11 @@
                     {
                       "type": "rectangle",
                       "id": "DfWhV",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -13679,13 +13803,13 @@
                       "id": "iRd1K",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 스탬프",
+                      "name": "Filter / 선화",
                       "fill": "$accent-subtle",
                       "stroke": "$accent-solid",
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "스탬프"
+                          "content": "선화"
                         }
                       }
                     },
@@ -13706,11 +13830,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "OW3Ow",
-                  "name": "Preview stamp candidate",
+                  "name": "Preview line art candidate",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -14088,7 +14212,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "content": "완성된 선화와 기록을 계정에 보관했어요.",
                       "fill": "$success-text",
                       "enabled": false,
                       "width": 280
@@ -14099,11 +14223,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "zwPag",
-                  "name": "Saved stamp",
+                  "name": "Saved line art",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -14526,7 +14650,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "content": "완성된 선화와 기록을 계정에 보관했어요.",
                       "fill": "$success-text",
                       "enabled": false,
                       "width": 280
@@ -14537,11 +14661,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "ZnXdc",
-                  "name": "Saved stamp",
+                  "name": "Saved line art",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -14932,7 +15056,7 @@
                 {
                   "type": "frame",
                   "id": "Hiosa",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -14944,11 +15068,11 @@
                     {
                       "type": "rectangle",
                       "id": "e2oEw9",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -15410,7 +15534,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "미니멀리즘 + 스탬프에 한정한 물성 / 불투명 시트와 명확한 계층",
+          "content": "미니멀리즘 + 컬러 선화 / 불투명 시트와 명확한 계층",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": 20,
@@ -15423,7 +15547,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "Book → 사진 가져오기 → 처리 → ① 원본·Stamp 비교 → ② 기록 요약 → 저장",
+          "content": "Book → 사진 가져오기 → 처리 → ① 원본·Line art 비교 → ② 기록 요약 → 저장",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": 20,
@@ -15610,7 +15734,7 @@
                 {
                   "type": "frame",
                   "id": "yBpYf",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -15622,11 +15746,11 @@
                     {
                       "type": "rectangle",
                       "id": "cRYXR",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -16124,7 +16248,7 @@
                 {
                   "type": "frame",
                   "id": "SjwTR",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -16136,11 +16260,11 @@
                     {
                       "type": "rectangle",
                       "id": "R3pnj",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -16685,7 +16809,7 @@
                 {
                   "type": "frame",
                   "id": "po8DT",
-                  "name": "Confirmed stamp summary",
+                  "name": "Confirmed line art summary",
                   "width": "fill_container",
                   "gap": 16,
                   "padding": [
@@ -16697,11 +16821,11 @@
                     {
                       "type": "rectangle",
                       "id": "T0ePgN",
-                      "name": "Confirmed stamp thumbnail",
+                      "name": "Confirmed line art thumbnail",
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1788887279815.png",
+                        "url": "images/lineart-style1-source-rgb.png",
                         "mode": "fit"
                       },
                       "width": 96,
@@ -17368,7 +17492,7 @@
       "id": "V7aTM4",
       "x": 3980,
       "y": 11000,
-      "name": "Phone / 44 · 스탬프 확대 · 1×",
+      "name": "Phone / 44 · 선화 확대 · 1×",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-006",
@@ -17496,7 +17620,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "content": "완성된 선화와 기록을 계정에 보관했어요.",
                       "fill": "$success-text",
                       "enabled": false,
                       "width": 280
@@ -17507,11 +17631,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "WRouW",
-                  "name": "Saved stamp",
+                  "name": "Saved line art",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -17655,7 +17779,7 @@
               "fill": "#FFFDFA",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프 크게 보기",
+              "content": "선화 크게 보기",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-body",
@@ -17720,7 +17844,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": 358,
@@ -17845,7 +17969,7 @@
       "id": "Gczgk",
       "x": 4430,
       "y": 11000,
-      "name": "Phone / 45 · 스탬프 확대 · 4× 이동",
+      "name": "Phone / 45 · 선화 확대 · 4× 이동",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-006",
@@ -17973,7 +18097,7 @@
                       "fill": "$success-text"
                     },
                     "t3y1jD": {
-                      "content": "완성된 스탬프와 기록을 계정에 보관했어요.",
+                      "content": "완성된 선화와 기록을 계정에 보관했어요.",
                       "fill": "$success-text",
                       "enabled": false,
                       "width": 280
@@ -17984,11 +18108,11 @@
                   "type": "rectangle",
                   "cornerRadius": 4,
                   "id": "DgNQ1",
-                  "name": "Saved stamp",
+                  "name": "Saved line art",
                   "fill": {
                     "type": "image",
                     "enabled": true,
-                    "url": "images/generated-1788887279815.png",
+                    "url": "images/lineart-style1-source-rgb.png",
                     "mode": "fit"
                   },
                   "width": "fill_container",
@@ -18132,7 +18256,7 @@
               "fill": "#FFFDFA",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프 크게 보기",
+              "content": "선화 크게 보기",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-body",
@@ -18197,7 +18321,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": 1432,
@@ -18323,7 +18447,7 @@
       "id": "sZ5fQ",
       "x": 4880,
       "y": 11000,
-      "name": "Phone narrow / 46 · 스탬프 확대 · 320",
+      "name": "Phone narrow / 46 · 선화 확대 · 320",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-006",
@@ -18365,7 +18489,7 @@
               "fill": "#FFFDFA",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프 크게 보기",
+              "content": "선화 크게 보기",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -18428,7 +18552,7 @@
               "fill": {
                 "type": "image",
                 "enabled": true,
-                "url": "images/generated-1788887279815.png",
+                "url": "images/lineart-style1-source-rgb.png",
                 "mode": "fit"
               },
               "width": 288,
@@ -18593,7 +18717,7 @@
           "type": "rectangle",
           "cornerRadius": 4,
           "id": "u77MqE",
-          "name": "RecordArtwork stamp / large contain center",
+          "name": "RecordArtwork line art / large contain center",
           "metadata": {
             "type": "record-stamp",
             "fit": "contain",
@@ -18603,7 +18727,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "images/generated-1788887279815.png",
+            "url": "images/lineart-style1-source-rgb.png",
             "mode": "fit"
           },
           "width": "fill_container",
@@ -18721,7 +18845,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 스탬프에 고요하게 남았다.",
+              "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다.",
               "lineHeight": 1.6,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -19165,7 +19289,21 @@
                   "name": "RecordArtwork / 긴 글과 11태그 · 320",
                   "x": 0,
                   "y": -360,
-                  "width": 288
+                  "width": 288,
+                  "descendants": {
+                    "u77MqE": {
+                      "name": "RecordArtwork line art / large contain center",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "k7gsnv": {
+                      "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                    }
+                  }
                 }
               ]
             }
@@ -19310,7 +19448,21 @@
                   "name": "RecordArtwork / 갤러리 저장 미리보기",
                   "x": 0,
                   "y": 0,
-                  "width": 350
+                  "width": 350,
+                  "descendants": {
+                    "u77MqE": {
+                      "name": "RecordArtwork line art / large contain center",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "k7gsnv": {
+                      "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                    }
+                  }
                 }
               ]
             }
@@ -19455,7 +19607,21 @@
                   "name": "RecordArtwork / 갤러리 저장 미리보기",
                   "x": 0,
                   "y": 0,
-                  "width": 350
+                  "width": 350,
+                  "descendants": {
+                    "u77MqE": {
+                      "name": "RecordArtwork line art / large contain center",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "k7gsnv": {
+                      "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                    }
+                  }
                 }
               ]
             }
@@ -19645,7 +19811,21 @@
                   "name": "RecordArtwork / 갤러리 저장 미리보기",
                   "x": 0,
                   "y": 0,
-                  "width": 350
+                  "width": 350,
+                  "descendants": {
+                    "u77MqE": {
+                      "name": "RecordArtwork line art / large contain center",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "k7gsnv": {
+                      "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                    }
+                  }
                 }
               ]
             }
@@ -19839,7 +20019,21 @@
                   "name": "RecordArtwork / 갤러리 저장 미리보기",
                   "x": 0,
                   "y": 0,
-                  "width": 350
+                  "width": 350,
+                  "descendants": {
+                    "u77MqE": {
+                      "name": "RecordArtwork line art / large contain center",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "k7gsnv": {
+                      "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                    }
+                  }
                 }
               ]
             }
@@ -19932,7 +20126,7 @@
       "id": "Fv6dH",
       "x": 4950,
       "y": 1500,
-      "name": "Phone / 06b · 스탬프 변환 파일 받는 중",
+      "name": "Phone / 06b · 선화 변환 파일 받는 중",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-004",
@@ -19994,7 +20188,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "스탬프 준비",
+                  "content": "선화 준비",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -20019,7 +20213,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "스탬프 변환 파일을\n받고 있어요",
+              "content": "선화 변환 파일을\n받고 있어요",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -20032,7 +20226,7 @@
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "전체 184MB 중 72MB · 39%\n남은 시간 약 40초",
+              "content": "변환 파일 다운로드 중 · 39%\n용량은 배포 파일에 따라 표시해요",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -20086,7 +20280,7 @@
                   "fill": "$accent-solid"
                 },
                 "t3y1jD": {
-                  "content": "스탬프 변환 파일 · 52MB 중 20MB",
+                  "content": "선화 변환 파일 · 39%",
                   "fill": "$accent-solid"
                 }
               }
@@ -20095,14 +20289,14 @@
               "id": "U97Ixi",
               "type": "ref",
               "ref": "q0QhL",
-              "name": "스탬프 변환 파일 목록",
+              "name": "선화 변환 파일 목록",
               "width": "fill_container",
               "descendants": {
                 "G0mYoF": {
                   "content": "파일 목록"
                 },
                 "FC5B2": {
-                  "content": "사진 읽기 파일 132MB · 완료\n스탬프 변환 파일 52MB · 39%"
+                  "content": "사진 읽기 파일 · 준비 완료\n선화 변환 파일 · 39%"
                 }
               }
             },
@@ -20237,6 +20431,10 @@
       "type": "color",
       "value": "$ink-disabled"
     },
+    "ink-disabled": {
+      "type": "color",
+      "value": "#59564F"
+    },
     "text-inverse": {
       "type": "color",
       "value": "$paper-0"
@@ -20368,10 +20566,6 @@
     "bg-disabled": {
       "type": "color",
       "value": "#DDD6C9"
-    },
-    "ink-disabled": {
-      "type": "color",
-      "value": "#59564F"
     }
   },
   "fileToken": "86340261-019e-4da0-a687-5bf51771ebb3"

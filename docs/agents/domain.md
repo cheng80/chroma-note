@@ -6,7 +6,7 @@
 
 - `docs/AGENTS.md`: 기존 제품·기술 명세와 현황의 읽기·갱신 경로를 따른다.
 - `CONTEXT.md`: 도메인 용어와 정의를 읽는다.
-- `docs/adr/ADR-003-stamp-record-direction.md`: 현재 Stamp 설계의 선택 이유·제약을 읽는다.
+- `docs/adr/ADR-003-stamp-record-direction.md`: 현재 컬러 선화 기록의 선택 이유·제약을 읽는다. 기존 파일명은 참조 호환성을 위해 유지한다.
 
 `CONTEXT.md`나 ADR이 없으면 조용히 진행한다. `/domain-modeling`이 용어를 확정하거나 중요한 결정을 기록할 때 필요한 파일만 생성한다.
 

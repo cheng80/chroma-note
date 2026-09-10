@@ -1,12 +1,15 @@
 # Chroma Note 문서
 
-2026-09-09 · 사진 임포트 → 대표색·로컬 AI → 원본 장면을 보존한 Stamp → 메모 → 계정별 Book.
+2026-09-10 · 사진 임포트 → 대표색·로컬 AI → 원본 색을 선에 입힌 컬러 선화 → 메모 → 계정별 Book.
 
 ## 읽기와 책임
 
 | 문서 | 책임 |
 |---|---|
 | [제품 명세](01_PRODUCT_SPEC.md) | 범위, SR-FR 기능, SR-SCREEN 화면, SR-BR 규칙, SR-AC 인수 기준 |
+| [ERD](record-erd.html) · [시스템 다이어그램](system-diagram.html) | 이메일 사용자·기록 관계와 기기/서버 처리 경계 |
+| [현행 DBML](chroma-note.dbml) | 이메일 기반 사용자·기록 관계, 전체 앱 컬럼·제약과 한글 설명 |
+| [데이터 모델·ERD 재검토](06_DATA_MODEL_REVIEW.md) | 적용된 DB와 명세 차이, 단일 테이블 판단, 물리 ERD |
 | [기술 명세](02_TECH_SPEC.md) | 데이터·인증·권한, 입력/출력, 저장·복구·충돌·삭제 |
 | [프로젝트 현황](03_PROJECT_STATUS.md) | 실제 구현 상태, 작업 순서, 남은 게이트, 검증 결과 |
 | [작업 흐름](04_WORKFLOW.md) | 구현·문서 작업 절차, 모델 역할, 검증·Git 범위 |
@@ -19,7 +22,7 @@
 | [디자인 brief](design/DESIGN_BRIEF.md) | 화면 구성·문구·상태·접근성 |
 | [감성 디자인 리서치·Pen 개선 기준](design/design.md) | 공식 앱 사례·시각 결정·Pen 반영 위치 |
 | [Pen 디자인 안내](../design/README.md) | 현재 파운데이션·컴포넌트·화면과 정적 미리보기 |
-| [용어집](../CONTEXT.md) | Stamp Record·작업 사진·대표색·AI 글·내 메모 정의 |
+| [용어집](../CONTEXT.md) | 선화 기록·작업 사진·대표색·AI 글·내 메모 정의 |
 
 작업 재개는 현황 → 필요한 명세, 제품 탐색은 제품 → 기술 순으로 읽는다. 정책은 해당 정본에서만 관리하고 ADR에는 선택 이유를 둔다.
 
@@ -38,4 +41,4 @@
 현재 문서 설계가 앱 구현·모델 품질·실기기 검증의 완료를 뜻하지 않는다.
 
 - [로컬 모델 smoke 실측 결과](../experiments/model-selection/SMOKE_RESULTS.md) — VLM·Stamp의 실행 근거, 실패와 자동 평가 결과.
-- 모델 선정은 핵심 identity·count·배치, 목표 컬러 Stamp 유사도, latency의 절충으로 판단하며 완벽한 pixel 복제를 목표로 하지 않는다. JSON prompt/schema 고정과 일관성 검증은 메인이 담당한다.
+- 모델 선정은 핵심 identity·count·배치, 현재 컬러 선화 기준 적합성, latency의 절충으로 판단하며 완벽한 pixel 복제를 목표로 하지 않는다. JSON prompt/schema 고정과 일관성 검증은 메인이 담당한다.

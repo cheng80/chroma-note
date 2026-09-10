@@ -1,0 +1,136 @@
+// Chroma Note 현행 데이터 모델 · 2026-09-10 점검 스냅샷
+// 기준 migration: 20260910082557 initial_record_schema
+// 용도: 스키마 검토와 ERD 작성. 운영 DB 재구축용 마이그레이션이 아니다.
+// 실제 사용자 데이터·비밀정보는 포함하지 않는다.
+// DBML 문법: https://dbml.dbdiagram.io/docs/
+
+Project chroma_note {
+  database_type: 'PostgreSQL'
+  Note: '''
+컬러 선화 기록 앱의 실제 적용 구조: 앱 테이블 3개와 참조용 Auth 테이블 일부.
+Supabase 관리 스키마 전체, RLS, grants, Storage 정책, 함수는 DBML로 재현하지 않는다.
+현재 ai_field_note_edited는 미적용이므로 컬럼으로 추가하지 않았다.
+태그·대표색 항목 검증과 저장·편집·삭제 API도 보완 대상이다.
+상세 근거와 개선안은 06_DATA_MODEL_REVIEW.md를 따른다.
+'''
+}
+
+// Supabase 관리 테이블: 이메일 기반 사용자와 실제 FK를 표시하는 데 필요한 id·email만 발췌했다.
+// 이 정의로 기존 auth.users를 생성하거나 교체하지 않는다.
+Table auth.users {
+  id uuid [pk, not null, note: 'Supabase Auth 사용자 식별자. 전체 테이블 중 관계에 필요한 열만 표시한다.']
+  email varchar(255) [null, note: '이메일 OTP 로그인에 사용하는 주소. 실제 Auth 스키마는 NULL 허용이며 앱은 이메일 로그인만 사용한다. 기록 테이블에 이메일을 복제하지 않는다.']
+  Note: '이메일 기반 사용자 테이블의 부분 정의. 프로필 테이블은 추가하지 않는다. 이메일이 바뀌어도 기록 관계가 유지되도록 UUID id로 연결한다. 인증과 이메일 관리는 Supabase Auth가 담당한다.'
+}
+
+Table public.stamp_records {
+  id uuid [not null, note: '기록 식별자. DB 자동 생성 기본값은 없으며 저장 요청에서 지정한다.']
+  user_id uuid [not null, note: '기록 소유 계정. auth.users.id를 참조한다.']
+  status text [not null, default: `'uploading'::text`, note: '저장 상태: uploading(업로드 준비), ready(저장 완료), deleting(삭제 중).']
+  stamp_image_path text [not null, note: '완성 선화 PNG의 Storage 경로. 사용자 ID/기록 ID/stamp.png 형식이며 전체에서 유일하다. 원본 사진 경로가 아니다.']
+  stamp_sha256 text [null, note: '완성 PNG의 SHA-256. 소문자 16진수 64자이며 ready 상태에서 필수다.']
+  bytes bigint [null, note: '완성 PNG 파일 크기(바이트). 1~5242880, ready 상태에서 필수다.']
+  width integer [null, note: '완성 PNG 가로 픽셀 수. 1~4096, ready 상태에서 필수다.']
+  height integer [null, note: '완성 PNG 세로 픽셀 수. 1~4096, ready 상태에서 필수다.']
+  scene text [null, note: '사진에서 분석한 장면 설명. 최대 120자.']
+  semantic_tags text[] [not null, default: `'{}'::text[]`, note: '의미 태그 배열. 최대 8개. 현재 DB에는 항목별 24자·빈값·중복 검증이 없다.']
+  mood_tags text[] [not null, default: `'{}'::text[]`, note: '분위기 태그 배열. 최대 3개. 실제 감정의 사실 확인을 뜻하지 않는다.']
+  color_tags jsonb [not null, default: `'[]'::jsonb`, note: '대표색 메타데이터 배열. 최대 5개, ready에서는 1~5개. 선화 색 수 제한이 아니며 현재 항목 구조·비중 합 검증은 없다.']
+  ai_field_note text [null, note: '사용자가 명시적으로 생성 요청한 AI 메모 초안. 최대 300자. 자동 태그 분석과 별개다.']
+  user_note text [not null, default: `''::text`, note: '사용자가 작성하거나 제안을 가져와 편집한 메모. 최대 2000자. AI 생성으로 자동 덮어쓰지 않는다.']
+  diary_date date [not null, note: 'Book에서 기록을 분류하는 날짜. 서버 저장 시각과 구별한다.']
+  captured_at "timestamp with time zone" [null, note: '사진 촬영 시각. 확인할 수 없으면 NULL.']
+  captured_offset_minutes integer [null, note: '촬영 당시 UTC 기준 시차(분). -840~840, 알 수 없으면 NULL.']
+  date_source text [not null, note: '기록 날짜 출처: exif(사진 정보), device(기기 날짜), user(직접 지정).']
+  place_name text [null, note: '사용자가 직접 적은 장소명. 최대 120자. 좌표나 위치 인증 정보가 아니다.']
+  is_favorite boolean [not null, default: `false`, note: '즐겨찾기 여부.']
+  analysis_meta jsonb [not null, default: `'{}'::jsonb`, note: '분석 설정·버전 등의 JSON 객체. 다른 두 메타데이터와 DB 저장 크기 합계 16KiB 이하.']
+  model_meta jsonb [not null, default: `'{}'::jsonb`, note: '사용 모델·리비전 등의 JSON 객체. 메타데이터 세 열의 저장 크기 합계 제한을 함께 적용한다.']
+  style_meta jsonb [not null, default: `'{}'::jsonb`, note: '선화 스타일·후처리 설정의 JSON 객체. 원본 RGB 선 마스킹의 버전 추적에 사용한다.']
+  version integer [not null, default: `1`, note: '기록 수정 버전. 1 이상. 충돌 검사용이며 자동 증가 함수·트리거는 아직 없다.']
+  last_operation_id uuid [null, note: '마지막 변경 요청 식별자. 같은 요청을 중복 처리하지 않기 위한 값.']
+  payload_hash text [null, note: '마지막 변경 요청 내용의 해시. 현재 DB는 해시 형식 자체를 제한하지 않는다.']
+  creation_operation_id uuid [not null, note: '최초 생성 요청 식별자. 생성 재시도를 식별하기 위한 값.']
+  creation_payload_hash text [not null, note: '최초 생성 요청 내용의 해시. 현재 DB는 해시 형식 자체를 제한하지 않는다.']
+  created_at "timestamp with time zone" [not null, default: `now()`, note: '서버 행 생성 시각. 기본값 now().']
+  updated_at "timestamp with time zone" [not null, default: `now()`, note: '마지막 수정 시각. 기본값만 있으며 수정 때 자동 갱신하는 트리거는 아직 없다.']
+  deletion_requested_at "timestamp with time zone" [null, note: '기록 삭제 요청 시각. 요청 전에는 NULL.']
+
+  indexes {
+    id [pk, name: 'stamp_records_pkey']
+    stamp_image_path [unique, name: 'stamp_records_stamp_image_path_key']
+    (user_id, status, diary_date, created_at, id) [type: btree, name: 'stamp_records_book_idx', note: 'Book 조회 인덱스. 실제 정렬은 user_id ASC, status ASC, diary_date DESC, created_at DESC, id DESC. DBML 열 목록에는 정렬 방향을 생략했다.']
+  }
+
+  // 실제 PostgreSQL에 적용된 CHECK 조건을 그대로 기록한다.
+  checks {
+    `((ai_field_note IS NULL) OR (char_length(ai_field_note) <= 300))` [name: 'stamp_records_ai_field_note_check']
+    `((bytes >= 1) AND (bytes <= 5242880))` [name: 'stamp_records_bytes_check']
+    `((captured_offset_minutes >= '-840'::integer) AND (captured_offset_minutes <= 840))` [name: 'stamp_records_captured_offset_minutes_check']
+    `((jsonb_typeof(color_tags) = 'array'::text) AND (jsonb_array_length(color_tags) <= 5))` [name: 'stamp_records_color_shape']
+    `(date_source = ANY (ARRAY['exif'::text, 'device'::text, 'user'::text]))` [name: 'stamp_records_date_source_check']
+    `(stamp_image_path = ((((user_id)::text || '/'::text) || (id)::text) || '/stamp.png'::text))` [name: 'stamp_records_exact_path']
+    `((height >= 1) AND (height <= 4096))` [name: 'stamp_records_height_check']
+    `((jsonb_typeof(analysis_meta) = 'object'::text) AND (jsonb_typeof(model_meta) = 'object'::text) AND (jsonb_typeof(style_meta) = 'object'::text) AND (((pg_column_size(analysis_meta) + pg_column_size(model_meta)) + pg_column_size(style_meta)) <= 16384))` [name: 'stamp_records_meta_shape']
+    `((place_name IS NULL) OR (char_length(place_name) <= 120))` [name: 'stamp_records_place_name_check']
+    `((status <> 'ready'::text) OR ((stamp_sha256 IS NOT NULL) AND (bytes IS NOT NULL) AND (width IS NOT NULL) AND (height IS NOT NULL) AND ((jsonb_array_length(color_tags) >= 1) AND (jsonb_array_length(color_tags) <= 5))))` [name: 'stamp_records_ready_fields']
+    `((scene IS NULL) OR (char_length(scene) <= 120))` [name: 'stamp_records_scene_check']
+    `(stamp_sha256 ~ '^[0-9a-f]{64}$'::text)` [name: 'stamp_records_stamp_sha256_check']
+    `(status = ANY (ARRAY['uploading'::text, 'ready'::text, 'deleting'::text]))` [name: 'stamp_records_status_check']
+    `((cardinality(semantic_tags) <= 8) AND (cardinality(mood_tags) <= 3))` [name: 'stamp_records_tag_counts']
+    `(char_length(user_note) <= 2000)` [name: 'stamp_records_user_note_check']
+    `(version >= 1)` [name: 'stamp_records_version_check']
+    `((width >= 1) AND (width <= 4096))` [name: 'stamp_records_width_check']
+  }
+
+  Note: '선화 이미지·메모·태그·날짜를 하나의 기록으로 관리한다. 기존 stamp 명칭은 호환 식별자다. RLS 활성화, authenticated는 소유자 행 SELECT만 가능하다. 쓰기용 서버 API는 아직 미구현이다.'
+}
+
+Table app_private.record_tombstones {
+  user_id uuid [not null, note: '삭제된 기록의 소유 계정. 계정 삭제 시 이 삭제 표식도 함께 제거된다.']
+  record_id uuid [not null, note: '삭제된 기록 식별자. 원래 기록이 없어져도 남아야 하므로 stamp_records로 FK를 연결하지 않는다.']
+  deleted_at "timestamp with time zone" [not null, default: `now()`, note: '기록 삭제를 확정한 시각.']
+
+  indexes {
+    (user_id, record_id) [pk, name: 'record_tombstones_pkey']
+  }
+
+  Note: '삭제한 기록 ID를 기억하여 늦은 재시도가 기록을 되살리지 못하게 하는 내부 표식이다. 해당 방어를 수행할 서버 처리 경로는 아직 미구현이다.'
+}
+
+Table app_private.account_deletion_jobs {
+  user_id uuid [not null, note: '삭제 대상 계정 식별자. Auth 삭제 후에도 정리를 계속해야 하므로 Auth FK를 두지 않는다.']
+  requested_at "timestamp with time zone" [not null, default: `now()`, note: '계정 삭제 요청을 접수한 시각.']
+  status text [not null, default: `'requested'::text`, note: '처리 상태: requested(접수), processing(처리 중), failed(실패), complete(완료).']
+  last_error text [null, note: '계정 삭제 처리 중 마지막 오류. 아직 오류가 없으면 NULL.']
+  attempts integer [not null, default: `0`, note: '계정 삭제 처리 시도 횟수. 0 이상.']
+
+  indexes {
+    user_id [pk, name: 'account_deletion_jobs_pkey']
+  }
+
+  // 실제 PostgreSQL에 적용된 CHECK 조건을 그대로 기록한다.
+  checks {
+    `(attempts >= 0)` [name: 'account_deletion_jobs_attempts_check']
+    `(status = ANY (ARRAY['requested'::text, 'processing'::text, 'failed'::text, 'complete'::text]))` [name: 'account_deletion_jobs_status_check']
+  }
+
+  Note: '계정 탈퇴 후 남은 파일·데이터 정리를 추적하는 내부 작업이다. Auth 사용자 삭제 이후에도 살아 있어야 한다.'
+}
+
+// 실제 FK만 Ref로 표현한다. 기록 소유자는 삭제되어도 자동 CASCADE되지 않는다.
+Ref stamp_records_user_id_fkey: public.stamp_records.user_id > auth.users.id [delete: no action, update: no action]
+
+// 계정이 삭제되면 그 계정의 기록 삭제 표식은 함께 제거한다.
+Ref record_tombstones_user_id_fkey: app_private.record_tombstones.user_id > auth.users.id [delete: cascade, update: no action]
+
+// 다음은 값으로 이어지는 논리 관계이며 실제 FK가 아니다. Ref를 추가하지 않는다.
+// 1. record_tombstones.record_id → 삭제되기 전 stamp_records.id
+// 2. account_deletion_jobs.user_id → 삭제되기 전 auth.users.id
+// 3. stamp_records.stamp_image_path → storage.objects.name (bucket_id = stamp-images)
+// Storage: 비공개 stamp-images 버킷, image/png만 허용, 파일 상한 5242880바이트.
+// 소유자의 uploading 예약 행과 경로가 맞아야 업로드, ready 행이어야 다운로드 가능.
+// 원본 사진은 업로드하지 않는다. Storage 관리 테이블은 이 DBML에서 생략했다.
+// 실제 Book 인덱스 SQL:
+// CREATE INDEX stamp_records_book_idx ON public.stamp_records USING btree
+// (user_id, status, diary_date DESC, created_at DESC, id DESC);
