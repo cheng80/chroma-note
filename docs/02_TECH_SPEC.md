@@ -4,11 +4,17 @@
 
 ## 1. 현재 코드와 목표 구조
 
-현재 앱은 src/ui/AppDemo.tsx의 화면과 메모리 기반 데모 상태로 동작한다. 실제 사진 임포트·대표색 분석·AI·SQLite 초안·Supabase 인증/저장은 앱에 통합되지 않았다. 선화의 별도 실기기 실험과 Supabase 초기 설정은 앱 통합과 구별한다. [시스템 다이어그램](system-diagram.html)은 완성품의 데이터 흐름과 기기·서버의 역할을 보여준다.
+현재 앱은 src/ui/AppDemo.tsx와 useAppController로 화면·시스템 사진 선택·인증·로컬 초안·기록 연결을 구현 중이다. 선화는 `modules/chroma-lineart`에 분리했으며 대표색/VLM/선화의 실제 앱 처리 흐름과 서버 저장 전체 검증은 아직 완료되지 않았다. 선화 모듈·별도 실기기 실측·Supabase 설정은 앱 전체 통합과 구별한다. [시스템 다이어그램](system-diagram.html)은 완성품의 데이터 흐름과 기기·서버의 역할을 보여준다.
 
 Expo SDK 57·React Native·React·TypeScript·Expo Router를 사용한다. 정확한 버전은 package.json/lockfile을 확인한다. 네이티브 모델 연결 목표는 Development Build이며 Expo Go 통과를 요구하지 않는다. SDK별 구현 전 [Expo SDK 57](https://docs.expo.dev/versions/v57.0.0/)과 [로컬 개발 빌드](https://docs.expo.dev/guides/local-app-development/)를 확인한다.
 
 목표 의존성은 필요 시 직접 추가한다: 사진 입력/변환, 실제 픽셀 디코더, 파일/SQLite, 보안 세션 저장, Supabase client, 선정 모델 런타임. 현재 설치된 패키지로 오인하지 않는다. Zustand·React Query·Mapbox·Sentry는 인포그래픽 예시이며 이번 설계의 필수 의존성이 아니다.
+
+### 의미 단위 텍스트 줄바꿈
+
+2026-09-11 사용자 요청으로 `@semantic-wrap/core`, `@semantic-wrap/ko`, `@semantic-wrap/en` 0.4.0을 사용한다. [공식 안내](https://github.com/woohyun-park/semantic-wrap/blob/main/README-ko_kr.md)의 React wrapper는 DOM 전용이므로 설치하지 않는다. 앱의 `src/ui/components/SemanticText.tsx`가 React Native의 실제 글자 폭과 기본 줄바꿈을 측정해 core에 전달한다.
+
+제목과 짧은 안내는 기존 `<Text>` 대신 `<SemanticText style={...}>{text}</SemanticText>`를 사용한다. 기존 서체·크기·접근성 이름을 유지하며 측정이 불가능하거나 더 나은 결과가 없으면 기본 줄바꿈을 유지한다. 직접 입력한 메모·긴 본문·명시적 개행과 저장/내보내기 데이터는 변경하지 않는다. 실제 적용 범위와 검증은 현황의 I-00/T-00을 따른다.
 
 ### 처리 경계
 
@@ -24,6 +30,14 @@ Expo SDK 57·React Native·React·TypeScript·Expo Router를 사용한다. 정�
 
 내부 서비스 이름은 책임 경계다. 범용 DI·플러그인 시스템·상태관리 프레임워크를 미리 만들지 않는다. 추론과 픽셀 분석은 UI 스레드 밖에서 실행하고, 모델은 한 번에 하나만 활성화한다.
 
+### 확정된 선화 모듈
+
+2026-09-11 사용자가 `style1` + 원본 RGB 선화를 확정했다. [앱 모듈](../modules/chroma-lineart/index.ts)의 `convertLineArt(input, options?, signal?)`은 로컬 사진 URI·초안 소유 출력 폴더·입력 revision을 받으며 PNG URI·크기·바이트·소요시간·실제 옵션을 반환한다. 기본값은 `maxEdge: 1024`, `lineGain: 1.8`; 긴 변 16~1536의 정수, 강도 0.1~4의 유한수만 허용한다. 축소 결과의 축이 16px 미만이면 실패한다. 옵션 변경은 새 변환 요청이며 호출자는 revision을 갱신하고 이전 확인을 무효화해야 한다. 옵션 편집 UI는 별도다.
+
+iOS Core ML 엔진이 EXIF 방향·sRGB 디코드, 종횡비 유지 축소, 4배수 reflection padding, `style1` 추론, 기존 ties-to-even 마스크 양자화·gain·원본 RGB/흰 배경 합성, PNG 저장을 담당한다. crop·upscale·색면·다른 스타일은 넣지 않는다. Expo 연결부는 앱 로컬 파일만 허용하고 직렬 백그라운드 큐에서 모델을 재사용한다. 출력은 백업 제외 폴더에 새 파일로 작성하며 원본·기존 결과를 덮어쓰지 않는다. 취소는 처리 단계 사이에서 확인하므로 실행 중인 Core ML 연산의 즉시 중단을 보장하지 않는다.
+
+선화 모듈은 VLM·대표색·인증·서버 저장을 호출하지 않는다. 네이티브 빌드 또는 모델이 없으면 명시 오류를 반환하며 예제 이미지·클라우드로 대체하지 않는다. 모듈 사용법·빌드 준비는 [모듈 안내](../modules/chroma-lineart/README.md), 실제 검증·앱 호출 연결 상태는 현황을 따른다.
+
 ## 2. 사진·파일 수명과 데이터 경계
 
 ### 입력 계약
@@ -31,8 +45,9 @@ Expo SDK 57·React Native·React·TypeScript·Expo Router를 사용한다. 정�
 Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미지 내보내기에서만 OS 사진 추가 권한을 요청하고 PNG를 갤러리에 저장한다. expo-camera·촬영 화면·카메라 권한을 추가하지 않는다. OS 사진 선택기를 사용하고 전체 라이브러리 접근 권한을 임의로 요청하지 않는다. 선택 접근이 제한된 환경, 자산 취소·iCloud 다운로드·Android content URI를 검증한다.
 
 - 단일 JPEG/PNG/HEIC 정지 이미지. 네이티브 디코드 지원 여부 확인 후 허용한다. EXIF 회전/미러·ICC를 반영해 sRGB SDR로 정규화한다. 미지원 프로필/HDR 변환 실패를 조용히 잘못된 색으로 처리하지 않는다.
-- 입력 안전 상한 기본값: 파일 30MiB, 50MP. 포맷 실제 signature와 디코드 가능한 dimensions를 확인하고 축소 디코드한다. 지원 여부는 실기기에서 검증한다. 압축 크기만 작다고 전체 bitmap을 JS에 펼치지 않는다.
+- iOS 입력 안전 상한: 파일 150MiB, 250MP. 고해상도 휴대폰 사진을 기존 30MiB/50MP 기준으로 먼저 거부하지 않는다. ImageIO가 실제 포맷·dimensions를 확인한 뒤 축소 디코드하며 전체 bitmap을 JS로 전달하지 않는다. iOS 외 기존 경로는 30MiB/50MP 상한을 유지하고 별도 검증한다. 상한은 방어용이며 모든 기기에서의 처리 시간·메모리 보장은 아니다.
 - 정규화 작업본 긴 변 최대 2048px, 종횡비 보존, upscaling 없음. 메타데이터에서 날짜를 먼저 읽고 EXIF GPS·기기 정보 등은 제거한다.
+- iOS 피커는 `quality: 1`, 편집·EXIF/base64 반환 없음, `preferredAssetRepresentationMode: Current`로 원본 파일 사본을 가져온다. `ChromaLineArt.normalizePhotoAsync`가 `CGImageSourceCreateThumbnailAtIndex`로 방향을 적용해 축소하고 sRGB·흰색 투명 배경 합성 후 JPEG 품질 0.95로 계정별 백업 제외 작업 폴더에 저장한다. 갤러리 원본은 수정·삭제하지 않는다.
 - 색 분석본은 작업본에서 긴 변 256px로 축소한다. VLM/선화용 resize·padding은 모델 adapter에서 수행하며 전체 장면을 유지한다. crop 여부·padding 제거·출력 좌표 규약은 모델 manifest에 남긴다.
 - 최종 선화 기본 포맷은 sRGB PNG, 흰 배경, 긴 변 기본 1024px, 종횡비·구도 유지, upscaling 없음, 5MiB 이하다. Informative Drawings `style1`의 단일 채널 선 마스크 `line`에 `alpha = min(255, round((255 - line) × 1.8))`을 픽셀별로 적용하고, 같은 위치의 정규화 원본 RGB를 그대로 합성한다. 색면 채우기·5색 양자화·외곽선 확장·내부 선 제거/약화·구도 재배치·거친 인쇄 질감은 적용하지 않는다. PNG 압축 후 초과하면 재처리/실패하며 파일 크기 때문에 crop하지 않는다.
 - 모델은 장면의 선 마스크만 만든다. 날짜·지명·AI 글·대표색·장식 등의 앱 정보는 결정론적 UI로 조합한다. 원본 사진과 선화를 합친 비교 이미지는 업로드 금지다.
@@ -76,7 +91,7 @@ Record 하나가 선화 이미지 하나를 소유한다. `stamp_records`, `Stam
 | 필드 | 자료형·기본값 | 제약/의미 |
 |---|---|---|
 | id | uuid PK | 클라이언트가 초안 시작 때 생성, 같은 저장 재시도에서 유지 |
-| user_id | uuid NOT NULL FK auth.users | 소유자 불변; 계정 삭제 때 정리 절차 후 제거 |
+| user_id | uuid NOT NULL FK auth.users | 소유자 불변; 계정 탈퇴/재가입 시 보관·정리 정책은 후속 결정 |
 | status | text | uploading / ready / deleting, 초기 uploading |
 | stamp_image_path | text NOT NULL UNIQUE | bucket 내 user_id/record_id/stamp.png와 정확히 일치, 변경 불가 |
 | stamp_sha256 / bytes / width / height | text / bigint / integer / integer | ready 필수, checksum·5MiB·양의 크기·출력 상한 검증 |
@@ -100,7 +115,7 @@ Record 하나가 선화 이미지 하나를 소유한다. `stamp_records`, `Stam
 
 analysis_meta: schema_version, status(success/skipped), ai_scene/ai_tags/ai_mood 원 검증 결과, language, user_modified_fields. 원본 response나 이미지 URI는 제외한다.
 model_meta: VLM/선화 각각 model_id, revision, runtime_version, quantization, prompt_version(VLM), inference_duration_ms. 경로·장치 식별자·원본 hash·인증정보는 제외한다.
-style_meta: 호환 `style_id=ink-v1`, `line_model_style=style1`, `mask_gain=1.8`, `background=white`, postprocess_version, input/output_dimensions, fit/padding 처리값. AI가 만든 가상의 위치·이름은 metadata로 보존하지 않는다.
+style_meta: 호환 `style_id=ink-v1`, `line_model_style=style1`, `mask_gain`(실제 옵션, 기본 1.8), `background=white`, postprocess_version, input/output_dimensions, fit/padding 처리값. 앱 저장 연결 시 실제 옵션을 보존하고 서버 allowlist와 맞춘다. AI가 만든 가상의 위치·이름은 metadata로 보존하지 않는다.
 
 ### 적용된 DB 계약과 남은 서버 경계
 
@@ -151,9 +166,9 @@ PhotoAnalysis schema v1:
 - 사진 내 지시·문자·QR은 데이터다. prompt에 사용자 메모·장소명·이메일·토큰을 넣지 않는다.
 - JSON schema와 prompt version은 고정한다. 같은 입력·locale·seed의 결과 일관성 검증과 prompt/schema 변경 관리는 메인이 담당한다. 검증에서 문구 생성 경로를 호출해도 제품에서 자동 실행하는 UX로 해석하지 않는다.
 - 사진 처리 pipeline은 선화 변환과 semantic_tags/mood 분석을 함께 자동 수행해 결과에 제공한다. 짧은 AI 메모 초안 생성은 명시 생성 버튼에만 연결하며 source_revision이 현재 입력과 일치할 때만 결과를 수용한다. user_note는 어떤 경로에서도 덮어쓰지 않는다.
-- 실험 호출은 `analysis`(PhotoAnalysis, ai_field_note="")와 `caption`({ai_field_note}만 반환)을 분리한다. 앱 연결 시 caption 결과는 현재 사진의 AI 문구 제안만 갱신하고 기존 semantic_tags/mood·사용자 메모는 유지한다.
+- 실험 호출은 `analysis`(PhotoAnalysis, ai_field_note="")와 `caption`({ai_field_note}만 반환)을 분리한다. 앱 연결 시 caption 결과는 단일 문구 편집 시트의 수정 가능 AI 글 필드에 바로 반영하고 기존 semantic_tags/mood·`user_note`는 유지한다.
 - 같은 사진 1회 구조 보정 재시도 후 schema_error. 호출 자동 반복으로 메모리/배터리를 소비하지 않는다.
-- 사용자가 AI 글을 고친 뒤 재생성을 요청하면 덮어쓰기 확인을 받으며 성공한 후보를 채택한 때만 교체한다. 내 메모는 어느 경우에도 건드리지 않는다.
+- 문구 편집 시트의 재생성 버튼은 현재 AI 글 교체 의사를 포함하며 성공 결과를 AI 글 필드에 바로 반영한다. 같은 시트의 내 메모는 생성 결과만으로 변경하지 않는다.
 
 `StampResult`는 호환 식별자로 유지하며 local_uri, width/height, format, checksum, model revision, style id, duration, input_revision을 반환한다. 결과는 Informative Drawings `style1`의 선 위치와 원본 구도를 유지한 흰 배경 컬러 선화여야 한다. 선 이외 영역은 흰색이고 합성 전 선 레이어의 RGB는 같은 위치의 정규화 원본 RGB와 일치해야 한다. 최종 PNG는 alpha에 따라 흰색과 혼합되므로 반투명 선의 최종 RGB는 원본과 다를 수 있다. 빈/깨진 이미지, 입력 사진 그대로의 파일, 색면·5색 양자화·외곽선 확장·내부 선 제거·재배치·거친 인쇄 표현이 들어간 결과는 기술 실패다. 확산 모델의 `seed 17` 결과는 과거 실험이며 현재 품질 기준이 아니다.
 
@@ -241,20 +256,17 @@ update_record는 base_version과 operation_id/hash를 받는다. 잠금 안에�
 
 delete_record는 row lock으로 deleting 전환, 사용자 목록에서 숨김 → 서버 Storage 객체 삭제 → Record 행 삭제. 중간 실패는 deleting으로 재시도한다. 이미 없는 객체/행은 멱등 성공이다. 서버 정리 뒤 클라이언트 캐시·draft를 제거한다. offline 기기의 과거 편집은 다음 연결 시 not_found로 막고 서버 삭제 사실을 알린다.
 
-삭제 의도가 있는 delete/abort는 deleting 전환과 같은 DB 트랜잭션에서 record_tombstones(user_id, record_id, deleted_at)를 기록한다. 원본·이미지·메모는 포함하지 않는다. begin_record가 이 UID/ID를 다시 예약하지 못하도록 검사하며 tombstone은 계정 유지 동안 보존한다. 새로 만들기는 새 UUID다. 단순 24시간 미완료 예약 청소는 사용자 삭제가 아니므로 tombstone 없이 같은 ID 재시도를 허용한다. 계정 탈퇴 때 tombstone도 제거한다.
+삭제 의도가 있는 delete/abort는 deleting 전환과 같은 DB 트랜잭션에서 record_tombstones(user_id, record_id, deleted_at)를 기록한다. 원본·이미지·메모는 포함하지 않는다. begin_record가 이 UID/ID를 다시 예약하지 못하도록 검사하며 tombstone은 계정 유지 동안 보존한다. 새로 만들기는 새 UUID다. 단순 24시간 미완료 예약 청소는 사용자 삭제가 아니므로 tombstone 없이 같은 ID 재시도를 허용한다. 탈퇴/재가입 때 tombstone 수명은 후속 정책에 따라 정한다.
 
 서버 확인 전 클라이언트가 삭제 취소/복구를 제공하지 않는다. 업로드 중인 신규 기록의 폐기는 abort도 같은 deleting 경로로 처리한다. 서버 결과 불명확 시 대기 상태를 보존하고 원본 폐기 경고와 구별한다.
 
-### 계정 탈퇴
+### 계정 탈퇴 — 후순위·정책 미정
 
-계정 삭제는 데이터 수명 계약이며 스토어 정책 문서가 아니다. 서버 전용 account_deletion_jobs(user_id PK, requested_at, status, last_error, attempts)를 둔다.
-- 최근 재인증(기본 5분 이내)을 확인한 endpoint가 active 계정을 deleting으로 잠근다. 모든 create/edit/finalize·Storage 쓰기가 이 잠금을 검사한다.
-- 전체 세션 해제를 요청하고 해당 사용자의 Storage 객체를 API로 삭제한 뒤 DB Record·Auth user를 정리한다. Auth user 삭제만으로 Storage 정리를 대신하지 않는다.
-- 실패는 재시도 가능한 서버 job에 남기고 새 업로드/로그인을 통한 사용 재개를 허용하지 않는다. 앱을 닫아도 정리가 계속될 수 있어야 한다.
-- 클라이언트는 접수 후 자기 데이터 접근을 잠그고 로컬 민감 데이터를 정리한다. 삭제 완료의 인증된 조회 수단 또는 접수 토큰 기반 제한된 상태 조회를 제공한다. 접수 토큰은 보안 저장소에만 두고 삭제 외 데이터를 읽지 못하게 한다.
-- 삭제 완료 job의 직접 UID는 결과 확인 뒤 제거하고, 남기는 운영 집계는 비식별 상태/실패 건수로 한정한다. 삭제 재요청은 이미 삭제된 계정으로 새 데이터를 만들지 않는다.
+**2026-09-11 사용자 결정:** 탈퇴는 iPhone 기능 순환 이후 구현하며 이메일 OTP 재인증을 필수로 한다. 활성/탈퇴 상태로 보관하여 재가입 때 기존 데이터를 복원하는 방안은 아직 정책 확정이 아니다. 보관 기간·복원 범위·같은 이메일과 기존 UID의 연결·영구 삭제 선택을 먼저 정한다. 그 전에는 상태 열을 추가하거나 Auth/Record/Storage를 삭제·복원하지 않는다.
 
-[Supabase 사용자 관리](https://supabase.com/docs/guides/auth/managing-user-data)는 사용자 삭제 뒤 기존 JWT가 만료 전 유효할 수 있음과 Storage 소유 객체 정리 필요를 설명한다. 앱의 계정 잠금 검사를 적용하고, 백업/로그의 실제 보존 기간까지 즉시 삭제됐다고 안내하지 않는다. 서비스 백업의 보존 기간·제거 가능성은 실제 프로젝트 구성 확인 전 약속하지 않는다.
+현재 `account_deletion_jobs`와 `current_account_is_active()`는 기존 잠금/접근 제어로 유지한다. 이 테이블은 재가입 복원 저장소도, 완성된 탈퇴 API도 아니다. 기존 물리 삭제 순서를 현재 구현 지시로 사용하지 않는다.
+
+후속 정책과 무관하게 이메일 소유 확인·최근 재인증, 비활성 계정의 기존 토큰/새 쓰기 차단, 계정 간 소유권 격리, 실패 시 재시도 가능한 상태와 명확한 안내는 필요하다. 이메일 문자열이 같다는 이유만으로 타 UID의 자료를 연결하지 않는다. 보관 또는 삭제의 실제 범위를 안내하고 OS 캐시·백업까지 즉시 제거됐다고 약속하지 않는다. 기록 단위 삭제/abort·고아 파일 정리·로그아웃은 현재 구현 범위다.
 
 ## 10. 모델 파일과 런타임 계약
 
@@ -270,10 +282,10 @@ Informative Drawings `style1`의 배포 manifest·다운로드 위치는 사용�
 
 ## 11. 검증 연결과 이번 미실행 범위
 
-- SR-AC-001: 실제 OTP 수신·verify·세션 재실행·만료·다른 사용자·탈퇴 중 요청.
+- SR-AC-001: 실제 OTP 수신·verify·세션 재실행·만료·다른 사용자. 탈퇴 중 요청은 후순위.
 - SR-AC-002~005: 방향/프로필/손상/단색/전체 투명/한계 크기, VLM schema/프롬프트 주입/생략, 선화 품질·취소·사진 revision, 메모 보존.
 - SR-AC-006: 로컬 파일 rename/DB 실패, begin/upload/finalize 각 경계에서 중단, 응답 유실, hash 불일치, 계정 전환, 원본/EXIF/로그/OS 백업 비유출.
-- SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체·계정 삭제 재시도.
+- SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체. 계정 탈퇴/재가입은 후순위.
 - SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·접근성·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
 
 2026-09-11 실제 개발 DB의 migration·RLS·Storage를 적용/대조하고 SQL 제약 및 A/B/미인증 Storage·Data API 테스트를 수행했다. SDK 57 문서와 [Supabase changelog](https://supabase.com/changelog)를 다시 확인했다. 서버 저장 API, 앱 OTP/DB 연결, 복구·CAS·탈퇴 전체 흐름과 원본 비유출 검증은 남아 있다. 개별 결과와 재실행 방법은 현황에 기록한다.

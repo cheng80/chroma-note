@@ -1,0 +1,242 @@
+{
+  "format": 1,
+  "model": {
+    "name": "Informative Drawings style 1",
+    "generator": "Generator(3, 1, 3)"
+  },
+  "source": {
+    "author_code": {
+      "url": "https://raw.githubusercontent.com/carolineec/informative-drawings/2349aee4daf7cb01d8de645b0bbb4f4392fd1395/model.py",
+      "sha256": "b5767c84166752f5f6185d4a65b3be3c1524bfaf0c524172b7636afe1a42e4f3",
+      "revision": "2349aee4daf7cb01d8de645b0bbb4f4392fd1395"
+    },
+    "author_weights": {
+      "url": "https://huggingface.co/spaces/carolineec/informativedrawings/resolve/bd4b4299be505803e036203a39c02024b4cfee11/model.pth",
+      "revision": "bd4b4299be505803e036203a39c02024b4cfee11",
+      "sha256": "c686ced2a666b4850b4bb6ccf0748031c3eda9f822de73a34b8979970d90f0c6",
+      "bytes": 17173511
+    }
+  },
+  "conversion": {
+    "format": "mlprogram",
+    "minimum_deployment_target": "iOS 17",
+    "compute_precision": "float16",
+    "input": {
+      "name": "image",
+      "dtype": "float32",
+      "layout": "NCHW",
+      "shape": [
+        1,
+        3,
+        {
+          "range": [
+            16,
+            1536
+          ],
+          "default": 1024
+        },
+        {
+          "range": [
+            16,
+            1536
+          ],
+          "default": 1024
+        }
+      ]
+    },
+    "output": {
+      "name": "line",
+      "dtype": "float32",
+      "shape": "1x1xHxW"
+    },
+    "runtime_input_rule": "Pad H and W with reflection to multiples of 4 before inference; only padded dimensions within 16...1536 are accepted.",
+    "forced_square": false
+  },
+  "prepared_with": {
+    "command": "experiments/model-selection/.venv/bin/python scripts/prepare-lineart-model.py [--photo PATH]",
+    "dependencies": {
+      "coremltools": "9.0",
+      "torch": "2.14.0",
+      "numpy": "2.5.3",
+      "pillow": "12.3.0"
+    },
+    "package_sha256_tree": "11ca2b2ddd65864905f3be6ed2ebd1411db6595207b81dfcc7b138a6c0f48711",
+    "package_files_sha256": {
+      "Data/com.apple.CoreML/model.mlmodel": "f0f6980e6374011bf05224dfbf49d57544817d9f30736f8c7385fb8e8804845d",
+      "Data/com.apple.CoreML/weights/weight.bin": "21a45d3a829a3c8109b99d22651fb1066a9191fcf0e433d32cfaab7355af77ed",
+      "Manifest.json": "6df29f5ca23d9ac22fa2e33e8612b07b077d78d371a629f2c3b1faf2697bf010"
+    },
+    "compiled_path": "modules/chroma-lineart/ios/Resources/LineArt.mlmodelc",
+    "compiled_sha256_tree": "08c3048dffba851fcbf8b0d19a5c7143b2c0da5ecf1d666b35893c5dbad5a619",
+    "compiled_files_sha256": {
+      "analytics/coremldata.bin": "d38e7f7eb00593650cc8577fe4ab6ca826076427b744a60bd82a7fa67dee47ff",
+      "coremldata.bin": "552a267c2d576f5c35f7b3e7a397c570f1c3789fae7625c324eca42dea536133",
+      "metadata.json": "be62dc33d61c0756fc551a42f3ce76c8198cf58b21076069e94aad0f60da336b",
+      "model.mil": "14f4b09ca1fd9031d1e39e15f180314aaf61129a257a226251aeccd42759d1db",
+      "weights/weight.bin": "21a45d3a829a3c8109b99d22651fb1066a9191fcf0e433d32cfaab7355af77ed"
+    },
+    "compiler": "xcrun coremlcompiler compile --platform iOS --deployment-target 17.0"
+  },
+  "validation": {
+    "local_only": true,
+    "photos_uploaded": false,
+    "reference": "PyTorch CPU versus Core ML on deterministic synthetic inputs and a local reference image; no image is uploaded.",
+    "reference_image": {
+      "path": "design/images/generated-1788887279815.png",
+      "sha256": "5e55082243e1acf2a43c0b4b771b8eba317b83ceef7c63e423491a83935e257d"
+    },
+    "thresholds": {
+      "mae_lt": 0.01,
+      "p99_error_lt": 0.05,
+      "finite_range": "[0, 1]",
+      "repeat": "byte equal"
+    },
+    "cases": [
+      {
+        "id": "synthetic_minimum_16x16",
+        "source_size_wh": [
+          16,
+          16
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          16,
+          16
+        ],
+        "mae": 6.264797411859035e-05,
+        "p99_error": 0.0007238239049911499,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_max_width_1536",
+        "source_size_wh": [
+          1536,
+          16
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          16,
+          1536
+        ],
+        "mae": 6.874958489788696e-05,
+        "p99_error": 0.000717461109161377,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_max_height_1536",
+        "source_size_wh": [
+          16,
+          1536
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          1536,
+          16
+        ],
+        "mae": 6.268468860071152e-05,
+        "p99_error": 0.0007439851760864258,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_portrait_odd",
+        "source_size_wh": [
+          101,
+          151
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          152,
+          104
+        ],
+        "mae": 5.0872207793872803e-05,
+        "p99_error": 0.0005611002561636269,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_landscape_odd",
+        "source_size_wh": [
+          151,
+          101
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          104,
+          152
+        ],
+        "mae": 6.211973959580064e-05,
+        "p99_error": 0.0006278628134168684,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_square_odd",
+        "source_size_wh": [
+          257,
+          257
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          260,
+          260
+        ],
+        "mae": 6.210728315636516e-05,
+        "p99_error": 0.0006185781676322222,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_portrait",
+        "source_size_wh": [
+          509,
+          1021
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          1024,
+          512
+        ],
+        "mae": 6.501386815216392e-05,
+        "p99_error": 0.0006860494613647461,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "synthetic_landscape",
+        "source_size_wh": [
+          1021,
+          509
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          512,
+          1024
+        ],
+        "mae": 6.643049709964544e-05,
+        "p99_error": 0.0006311535835266113,
+        "coreml_repeat_byte_equal": true
+      },
+      {
+        "id": "local_reference_image",
+        "source_size_wh": [
+          1264,
+          848
+        ],
+        "padded_nchw": [
+          1,
+          3,
+          848,
+          1264
+        ],
+        "mae": 3.860672586597502e-05,
+        "p99_error": 0.00043189525604248047,
+        "coreml_repeat_byte_equal": true
+      }
+    ],
+    "phone_performance_claim": "None. This preparation run does not measure a phone."
+  }
+}

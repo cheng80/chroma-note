@@ -21,7 +21,7 @@ export function useDemoController() {
     return () => clearTimeout(timer);
   }, [send, state.active_job]);
 
-  const captionSheet = state.sheet?.kind === 'analysis' || state.sheet?.kind === 'memo' ? state.sheet : null;
+  const captionSheet = state.sheet?.kind === 'analysis' ? state.sheet : null;
   const captionRequestId = captionSheet?.caption_request_id;
   const captionInputRevision = draft?.input_revision;
   const storedCaption = draft ? (draft.fields.ai_field_note_edited === null ? draft.fields.ai_field_note : draft.fields.ai_field_note_edited) : '';

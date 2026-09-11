@@ -1,11 +1,12 @@
 import React, { RefObject } from 'react';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
-import { Modal, Platform, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Modal, Platform, Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
 import { Button } from './Button';
 import { useModalA11y } from './modalA11y';
 import { useEntranceProgress } from './motion';
+import { SemanticText } from './SemanticText';
 
 type Style = StyleProp<ViewStyle>;
 
@@ -15,6 +16,7 @@ export type ConfirmDialogProps = {
   confirmLabel: string;
   onConfirm: () => void;
   onCancel: () => void;
+  onDismiss?: () => void;
   destructive?: boolean;
   visible?: boolean;
   cancelLabel?: string;
@@ -29,6 +31,7 @@ export function ConfirmDialog({
   confirmLabel,
   onConfirm,
   onCancel,
+  onDismiss,
   destructive = false,
   visible = true,
   cancelLabel = '취소',
@@ -45,7 +48,7 @@ export function ConfirmDialog({
   }));
 
   return (
-    <Modal transparent visible={visible} animationType="none" onRequestClose={onCancel} statusBarTranslucent>
+    <Modal transparent visible={visible} animationType="none" onRequestClose={onCancel} onDismiss={onDismiss} statusBarTranslucent>
       <View style={styles.modalRoot}>
         <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.scrim, scrimStyle]} />
         <Pressable accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill} onPress={onCancel} />
@@ -56,8 +59,8 @@ export function ConfirmDialog({
               accessibilityViewIsModal={Platform.OS !== 'web'}
               style={[styles.card, style, cardStyle]}
             >
-              <Text accessibilityRole="header" style={styles.title}>{title}</Text>
-              <Text style={styles.message}>{message}</Text>
+              <SemanticText accessibilityRole="header" style={styles.title}>{title}</SemanticText>
+              <SemanticText style={styles.message}>{message}</SemanticText>
               <Button label={confirmLabel} onPress={onConfirm} tone={destructive ? 'destructive' : 'primary'} />
               <Button label={cancelLabel} onPress={onCancel} tone="secondary" />
             </Animated.View>

@@ -1,17 +1,17 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
 import { IconButton } from './IconButton';
+import { SemanticText } from './SemanticText';
 
 type Style = StyleProp<ViewStyle>;
 
@@ -42,12 +42,16 @@ export function Screen({
   contentStyle,
   accessibilityLabel,
 }: ScreenProps) {
+  const scroll = useRef<ScrollView>(null);
   const body = scrollable ? (
     <ScrollView
+      ref={scroll}
       style={styles.scroll}
       contentContainerStyle={[styles.content, contentStyle]}
       keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
+      showsVerticalScrollIndicator
+      indicatorStyle="black"
+      onContentSizeChange={() => scroll.current?.flashScrollIndicators()}
     >
       {children}
     </ScrollView>
@@ -56,15 +60,15 @@ export function Screen({
   );
 
   return (
-    <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={[styles.screen, style]} accessibilityLabel={accessibilityLabel}>
+    <SafeAreaView edges={footer ? ['top', 'right', 'left'] : ['top', 'right', 'bottom', 'left']} style={[styles.screen, style]} accessibilityLabel={accessibilityLabel}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.header}>
           {onBack ? <IconButton label={backLabel} onPress={onBack} accessibilityHint="이전 화면으로 돌아갑니다" icon="arrow-left" /> : null}
-          <Text accessibilityRole="header" style={[styles.title, brand && styles.brand]} numberOfLines={2}>{title}</Text>
+          <SemanticText accessibilityRole="header" style={[styles.title, brand && styles.brand]} numberOfLines={2}>{title}</SemanticText>
           {actions ? <View style={styles.actions}>{actions}</View> : null}
         </View>
         {body}
-        {footer ? <View style={styles.footer}>{footer}</View> : null}
+        {footer ? <SafeAreaView edges={['bottom']} style={styles.footer}>{footer}</SafeAreaView> : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -105,6 +109,10 @@ const styles = StyleSheet.create({
   },
   staticContent: { flex: 1 },
   footer: {
+    backgroundColor: theme.colors.bgSurface,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.borderControl,
+    boxShadow: '0 -4px 12px rgba(41, 40, 35, 0.08)',
     paddingHorizontal: theme.spacing.xl,
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,

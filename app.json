@@ -8,7 +8,9 @@
     "scheme": "chromanote",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "deploymentTarget": "17.0",
+      "bundleIdentifier": "com.cheng80.chromanote"
     },
     "android": {
       "adaptiveIcon": {
@@ -44,7 +46,19 @@
           "savePhotosPermission": "완성한 Chroma Note 기록 이미지를 사진 보관함에 저장합니다.",
           "granularPermissions": []
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-sqlite",
+      "expo-asset",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": false,
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true,

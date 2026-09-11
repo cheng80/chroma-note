@@ -1,9 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
+import Reanimated from 'react-native-reanimated';
 import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { theme } from '../theme';
 import { AppIcon } from './AppIcon';
+import { usePressScale } from './motion';
 
 type Style = StyleProp<ViewStyle>;
+const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
 
 export type SummaryRowProps = {
   label: string;
@@ -15,6 +18,8 @@ export type SummaryRowProps = {
 };
 
 export function SummaryRow({ label, value, onPress, disabled = false, style, accessibilityHint }: SummaryRowProps) {
+  const [pressed, setPressedState] = useState(false);
+  const { animatedStyle, setPressed } = usePressScale();
   const valueText = typeof value === 'string' || typeof value === 'number';
   const content = (
     <>
@@ -27,17 +32,19 @@ export function SummaryRow({ label, value, onPress, disabled = false, style, acc
   );
 
   return onPress ? (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityLabel={valueText ? `${label}, ${value}` : undefined}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled }}
       disabled={disabled}
+      onPressIn={() => { setPressedState(true); setPressed(true); }}
+      onPressOut={() => { setPressedState(false); setPressed(false); }}
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && !disabled && styles.pressed, style]}
+      style={[styles.row, pressed && !disabled && styles.pressed, style, animatedStyle]}
     >
       {content}
-    </Pressable>
+    </AnimatedPressable>
   ) : <View style={[styles.row, style]}>{content}</View>;
 }
 

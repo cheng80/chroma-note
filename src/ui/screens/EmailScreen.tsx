@@ -5,6 +5,7 @@ import { Button, Field, StampImage } from '../primitives';
 import { getBasicCopy } from '../basic-copy';
 import { theme } from '../theme';
 import type { EmailScreenProps } from '../contract';
+import { SemanticText } from '../components/SemanticText';
 
 const designStamp = require('../../../design/images/generated-1788887279815.png') as ImageSourcePropType;
 
@@ -21,12 +22,12 @@ export function EmailScreen({ locale, email, status, error_code, onChangeEmail, 
     <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <Text accessibilityRole="header" style={styles.brand}>{copy.brand}</Text>
-        <StampImage source={designStamp} accessibilityLabel={locale === 'ko' ? '스탬프 디자인 예시' : 'Stamp design example'} style={styles.heroImage} />
-        <Text style={styles.heading}>{copy.authTitle}</Text>
-        <Text style={styles.bodyMuted}>{copy.authLead}</Text>
+        <StampImage source={designStamp} accessibilityLabel={locale === 'ko' ? '기록 예시 이미지' : 'Record example image'} style={styles.heroImage} />
+        <SemanticText accessibilityRole="header" style={styles.heading}>{copy.authTitle}</SemanticText>
+        <SemanticText style={styles.bodyMuted}>{copy.authLead}</SemanticText>
         <Field label={copy.emailLabel} value={email} onChangeText={onChangeEmail} placeholder={copy.emailPlaceholder} keyboardType="email-address" autoCapitalize="none" autoComplete="email" textContentType="emailAddress" error={errorMessage(locale, error_code)} />
         <Button label={copy.emailAction} onPress={onSubmit} busy={status === 'pending'} disabled={!email.trim()} />
-        <Text style={styles.caption}>{copy.authEmailHint}</Text>
+        <SemanticText style={styles.caption}>{copy.authEmailHint}</SemanticText>
       </ScrollView>
     </KeyboardAvoidingView>
   </SafeAreaView>;

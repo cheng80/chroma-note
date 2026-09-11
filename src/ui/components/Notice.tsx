@@ -1,9 +1,10 @@
 import React from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { theme } from '../theme';
 import { AppIcon, AppIconName } from './AppIcon';
 import { useEntranceProgress } from './motion';
+import { SemanticText } from './SemanticText';
 
 type Style = StyleProp<ViewStyle>;
 export type NoticeTone = 'info' | 'warning' | 'success' | 'error';
@@ -12,6 +13,7 @@ export type NoticeProps = {
   message: string;
   title?: string;
   tone?: NoticeTone;
+  busy?: boolean;
   style?: Style;
 };
 
@@ -22,19 +24,20 @@ const toneIcons: Record<NoticeTone, AppIconName> = {
   error: 'circle-alert',
 };
 
-export function Notice({ message, title, tone = 'info', style }: NoticeProps) {
+export function Notice({ message, title, tone = 'info', busy = false, style }: NoticeProps) {
   const { progress } = useEntranceProgress(true, theme.motion.noticeDuration, `${tone}:${title}:${message}`);
   const animatedStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
   return (
     <Animated.View
       accessibilityRole={tone === 'error' ? 'alert' : 'text'}
       accessibilityLiveRegion={tone === 'error' ? 'assertive' : 'polite'}
+      accessibilityState={{ busy }}
       style={[styles.notice, toneStyles[tone], style, animatedStyle]}
     >
-      <AppIcon name={toneIcons[tone]} color={toneColors[tone]} />
+      {busy ? <ActivityIndicator color={toneColors[tone]} /> : <AppIcon name={toneIcons[tone]} color={toneColors[tone]} />}
       <View style={styles.body}>
-        {title ? <Text style={[styles.title, { color: toneColors[tone] }]}>{title}</Text> : null}
-        <Text style={[styles.message, { color: tone === 'info' ? theme.colors.ink : toneColors[tone] }]}>{message}</Text>
+        {title ? <SemanticText style={[styles.title, { color: toneColors[tone] }]}>{title}</SemanticText> : null}
+        <SemanticText style={[styles.message, { color: tone === 'info' ? theme.colors.ink : toneColors[tone] }]}>{message}</SemanticText>
       </View>
     </Animated.View>
   );

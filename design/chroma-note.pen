@@ -389,7 +389,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "AI가 쓴 글",
+                  "content": "AI 문구",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -1399,7 +1399,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "원본과 결과를 비교했어요",
+                      "content": "이 컬러 스케치로 기록할게요",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-small",
@@ -1443,7 +1443,7 @@
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "AI가 쓴 글",
+                      "content": "AI 문구",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-caption",
@@ -1471,7 +1471,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "AI가 쓴 글과 내 메모는\n서로 다른 필드·출처로 표시합니다.",
+                  "content": "AI 문구와 내 메모는\n서로 다른 필드와 출처로 표시합니다.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-small",
@@ -1721,13 +1721,14 @@
                       "id": "Su9ja",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 원본",
+                      "name": "Filter / 원본 사진",
+                      "width": "fill_container",
                       "fill": "$accent-subtle",
                       "stroke": "$accent-solid",
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "원본"
+                          "content": "원본 사진"
                         }
                       }
                     },
@@ -1735,13 +1736,14 @@
                       "id": "rD4RA",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 선화",
+                      "name": "Filter / 컬러 스케치",
+                      "width": "fill_container",
                       "fill": "$bg-surface",
                       "stroke": "$border-control",
                       "strokeWidth": 1,
                       "descendants": {
                         "R1feeN": {
-                          "content": "선화"
+                          "content": "컬러 스케치"
                         }
                       }
                     },
@@ -1777,11 +1779,11 @@
                 {
                   "type": "text",
                   "id": "va1q4",
-                  "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+                  "name": "변환된 컬러 스케치를 확인해 주세요.",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+                  "content": "변환된 컬러 스케치를 확인해 주세요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-small",
@@ -1800,7 +1802,7 @@
             "type": "interaction",
             "role": "button",
             "minTarget": 48,
-            "label": "기록 영역 열기"
+            "label": "문구 편집 열기"
           },
           "width": 350,
           "stroke": "$border-subtle",
@@ -1829,7 +1831,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "내 메모 · 선택",
+                  "content": "문구 편집",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 14,
@@ -1842,7 +1844,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "기억하고 싶은 이야기를 적어보세요",
+                  "content": "AI 문구, 내 메모, 태그",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 16,
@@ -2745,6 +2747,8 @@
       "fill": "$bg-page",
       "cornerRadius": 24,
       "layout": "vertical",
+      "justifyContent": "center",
+      "alignItems": "end",
       "children": [
         {
           "id": "C5scI",
@@ -2847,11 +2851,11 @@
             {
               "type": "text",
               "id": "eqyJF",
-              "name": "사진 전체를 기준으로 선화를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
+              "name": "사진 전체를 컬러 스케치로 바꿔요.\n갤러리 원본은 바뀌지 않아요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "사진 전체를 기준으로 선화를 만들어요.\n갤러리 원본은 바뀌지 않아요.",
+              "content": "사진 전체를 컬러 스케치로 바꿔요.\n갤러리 원본은 바뀌지 않아요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -2914,11 +2918,11 @@
             {
               "type": "text",
               "id": "k1W0JZ",
-              "name": "원본 작업본은 저장 전까지 이 기기에 보관해요.",
+              "name": "사진 작업본은 저장 전까지 이 기기에 보관해요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본 작업본은 저장 전까지 이 기기에 보관해요.",
+              "content": "사진 작업본은 저장 전까지 이 기기에 보관해요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-caption",
@@ -3338,7 +3342,7 @@
       "id": "yhiki",
       "x": 3150,
       "y": 1500,
-      "name": "Phone / 08 · 선화 비교 · 1/2",
+      "name": "Phone / 08 · 컬러 스케치 확인 · 1/2",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-005",
@@ -3400,7 +3404,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -3410,10 +3414,10 @@
                   "id": "efPcC",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "다시 만들기·사진 바꾸기 메뉴",
+                  "name": "사진 바꾸기",
                   "descendants": {
                     "QbEcD": {
-                      "icon": "ellipsis"
+                      "icon": "image"
                     }
                   }
                 }
@@ -3431,13 +3435,14 @@
                   "id": "jlHr5",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 원본",
+                  "name": "Filter / 원본 사진",
+                  "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
                   "descendants": {
                     "R1feeN": {
-                      "content": "원본"
+                      "content": "원본 사진"
                     }
                   }
                 },
@@ -3445,13 +3450,14 @@
                   "id": "d8wSW4",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 선화",
+                  "name": "Filter / 컬러 스케치",
+                  "width": "fill_container",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "선화"
+                      "content": "컬러 스케치"
                     }
                   }
                 },
@@ -3487,11 +3493,11 @@
             {
               "type": "text",
               "id": "IcY2p",
-              "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "name": "변환된 컬러 스케치를 확인해 주세요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "content": "변환된 컬러 스케치를 확인해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -3535,7 +3541,7 @@
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "비교 확인 후 계속",
+                  "content": "컬러 스케치 선택 후 계속",
                   "fill": "$text-primary"
                 }
               }
@@ -3916,7 +3922,7 @@
                       "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "선화·대표색은 변경할 수 없어요",
+                      "content": "선화와 대표색은 변경할 수 없어요",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 14,
@@ -3930,29 +3936,14 @@
               "id": "RiB6T",
               "type": "ref",
               "ref": "OEjV6",
-              "name": "Open / AI가 쓴 글 · 태그",
+              "name": "Open / 문구 편집",
               "width": "fill_container",
               "descendants": {
                 "GmGUS": {
-                  "content": "AI가 쓴 글 · 태그"
+                  "content": "문구 편집"
                 },
                 "GxQU9": {
-                  "content": "낮은 지붕 아래 초록 문이…"
-                }
-              }
-            },
-            {
-              "id": "I3Vwbh",
-              "type": "ref",
-              "ref": "OEjV6",
-              "name": "Open / 내 메모 · 선택",
-              "width": "fill_container",
-              "descendants": {
-                "GmGUS": {
-                  "content": "내 메모 · 선택"
-                },
-                "GxQU9": {
-                  "content": "햇살이 머문 작은 카페."
+                  "content": "AI 문구, 내 메모, 태그"
                 }
               }
             },
@@ -3964,10 +3955,10 @@
               "width": "fill_container",
               "descendants": {
                 "GmGUS": {
-                  "content": "날짜 · 장소"
+                  "content": "날짜와 장소"
                 },
                 "GxQU9": {
-                  "content": "2026. 09. 09 · 작은 골목의 카페"
+                  "content": "2026. 09. 09, 작은 골목의 카페"
                 }
               }
             },
@@ -3982,7 +3973,7 @@
                   "content": "사진에서 찾은 색"
                 },
                 "GxQU9": {
-                  "content": "대표색 5개 · 색과 비중 보기"
+                  "content": "대표색 5개, 색과 비중 보기"
                 }
               }
             }
@@ -5524,7 +5515,7 @@
                           "fill": "$text-secondary",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "선화·대표색은 변경할 수 없어요",
+                          "content": "선화와 대표색은 변경할 수 없어요",
                           "lineHeight": 1.5,
                           "fontFamily": "$font-body",
                           "fontSize": 14,
@@ -5538,29 +5529,14 @@
                   "id": "hE2Cp",
                   "type": "ref",
                   "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
+                  "name": "Open / 문구 편집",
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
+                      "content": "문구 편집"
                     },
                     "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "QoRG9",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
+                      "content": "AI 문구, 내 메모, 태그"
                     }
                   }
                 },
@@ -5572,10 +5548,10 @@
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "날짜 · 장소"
+                      "content": "날짜와 장소"
                     },
                     "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                      "content": "2026. 09. 09, 작은 골목의 카페"
                     }
                   }
                 },
@@ -5590,7 +5566,7 @@
                       "content": "사진에서 찾은 색"
                     },
                     "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
+                      "content": "대표색 5개, 색과 비중 보기"
                     }
                   }
                 }
@@ -5763,11 +5739,11 @@
               "id": "a6MCy",
               "type": "ref",
               "ref": "q0QhL",
-              "name": "내 수정본 · 이 기기",
+              "name": "내 수정본, 이 기기",
               "width": "fill_container",
               "descendants": {
                 "G0mYoF": {
-                  "content": "내 수정본 · 이 기기"
+                  "content": "내 수정본, 이 기기"
                 },
                 "FC5B2": {
                   "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다."
@@ -7196,6 +7172,81 @@
                   "width": 300
                 }
               }
+            },
+            {
+              "type": "frame",
+              "id": "d10Calendar",
+              "name": "Native calendar / 시작 날짜 펼침",
+              "width": "fill_container",
+              "fill": "$bg-page",
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "cornerRadius": 12,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "d10CalendarHeader",
+                  "name": "Calendar header",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "d10Prev",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "이전 달",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "chevron-left"
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "d10Month",
+                      "name": "선택 중인 달",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "2026년 9월",
+                      "textAlign": "center",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "id": "d10Next",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "다음 달",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "chevron-right"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "d10Days",
+                  "name": "달력 날짜 · 1일 선택",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "일   월   화   수   목   금   토\n30   31   [1]   2    3    4    5\n 6    7    8    9   10   11   12",
+                  "textAlign": "center",
+                  "lineHeight": 1.8,
+                  "fontFamily": "$font-body",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
             },
             {
               "id": "Hzct3",
@@ -8738,76 +8789,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "frame",
-          "id": "yNREz",
-          "name": "Regenerate candidate",
-          "width": "fill_container",
-          "fill": "$bg-surface",
-          "cornerRadius": 20,
-          "layout": "vertical",
-          "gap": 12,
-          "padding": 24,
-          "children": [
-            {
-              "type": "text",
-              "id": "foWLV",
-              "name": "Candidate title",
-              "fill": "$text-primary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "새 선화로 바꿀까요?",
-              "lineHeight": 1.5,
-              "fontFamily": "$font-body",
-              "fontSize": "$type-heading",
-              "fontWeight": "600"
-            },
-            {
-              "type": "text",
-              "id": "Xu3XO",
-              "name": "메모는 유지해요. 새 후보를 선택하면 결과 확인은 해제돼요. 실패해도 마지막 유효 후보는 남아요.",
-              "fill": "$text-secondary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "메모는 유지해요. 새 후보를 선택하면 결과 확인은 해제돼요. 실패해도 마지막 유효 후보는 남아요.",
-              "lineHeight": 1.5,
-              "fontFamily": "$font-body",
-              "fontSize": "$type-small",
-              "fontWeight": "normal"
-            },
-            {
-              "id": "mOqwU",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 새 후보 선택",
-              "width": "fill_container",
-              "fill": "$accent-solid",
-              "strokeWidth": 0,
-              "descendants": {
-                "uTrwf": {
-                  "content": "새 후보 선택",
-                  "fill": "$text-inverse"
-                }
-              }
-            },
-            {
-              "id": "BoInV",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 기존 후보 유지",
-              "width": "fill_container",
-              "fill": "$bg-surface",
-              "stroke": "$border-control",
-              "strokeWidth": 1,
-              "descendants": {
-                "uTrwf": {
-                  "content": "기존 후보 유지",
-                  "fill": "$text-primary"
-                }
-              }
-            }
-          ]
         }
       ]
     },
@@ -9175,7 +9156,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -9221,7 +9202,7 @@
                               "fill": "$text-primary",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "원본",
+                              "content": "원본 사진",
                               "lineHeight": 1.5,
                               "fontFamily": "$font-body",
                               "fontSize": "$type-body",
@@ -9260,7 +9241,7 @@
                               "fill": "$text-primary",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "선화",
+                              "content": "컬러 스케치",
                               "lineHeight": 1.5,
                               "fontFamily": "$font-body",
                               "fontSize": "$type-body",
@@ -9324,22 +9305,6 @@
                           }
                         },
                         {
-                          "id": "O4TP0",
-                          "type": "ref",
-                          "ref": "okVIz",
-                          "name": "Button / 다시 만들기",
-                          "width": "fill_container",
-                          "fill": "$bg-surface",
-                          "stroke": "$border-control",
-                          "strokeWidth": 1,
-                          "descendants": {
-                            "uTrwf": {
-                              "content": "다시 만들기",
-                              "fill": "$text-primary"
-                            }
-                          }
-                        },
-                        {
                           "id": "Bd6fN",
                           "type": "ref",
                           "ref": "okVIz",
@@ -9393,13 +9358,13 @@
               "id": "nDD1z",
               "type": "ref",
               "ref": "okVIz",
-              "name": "Button / 비교 확인 후 계속",
+              "name": "Button / 컬러 스케치 선택 후 계속",
               "width": 360,
               "fill": "$bg-sunken",
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "비교 확인 후 계속",
+                  "content": "컬러 스케치 선택 후 계속",
                   "fill": "$text-primary"
                 }
               }
@@ -9951,7 +9916,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -9961,10 +9926,10 @@
                   "id": "xHuri",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "다시 만들기·사진 바꾸기 메뉴",
+                  "name": "사진 바꾸기",
                   "descendants": {
                     "QbEcD": {
-                      "icon": "ellipsis"
+                      "icon": "image"
                     }
                   }
                 }
@@ -9982,13 +9947,14 @@
                   "id": "o7DKpR",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 원본",
+                  "name": "Filter / 원본 사진",
+                  "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
                   "descendants": {
                     "R1feeN": {
-                      "content": "원본"
+                      "content": "원본 사진"
                     }
                   }
                 },
@@ -9996,13 +9962,14 @@
                   "id": "SFKOH",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 선화",
+                  "name": "Filter / 컬러 스케치",
+                  "width": "fill_container",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "선화"
+                      "content": "컬러 스케치"
                     }
                   }
                 },
@@ -10038,11 +10005,11 @@
             {
               "type": "text",
               "id": "d4cSz",
-              "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "name": "변환된 컬러 스케치를 확인해 주세요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "content": "변환된 컬러 스케치를 확인해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -10086,7 +10053,7 @@
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "비교 확인 후 계속",
+                  "content": "컬러 스케치 선택 후 계속",
                   "fill": "$text-primary"
                 }
               }
@@ -10167,7 +10134,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 40,
@@ -10177,10 +10144,10 @@
                   "id": "xry5W",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "다시 만들기·사진 바꾸기 메뉴",
+                  "name": "사진 바꾸기",
                   "descendants": {
                     "QbEcD": {
-                      "icon": "ellipsis"
+                      "icon": "image"
                     }
                   }
                 }
@@ -10198,13 +10165,14 @@
                   "id": "kKFlw",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 원본",
+                  "name": "Filter / 원본 사진",
+                  "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
                   "descendants": {
                     "R1feeN": {
-                      "content": "원본",
+                      "content": "원본 사진",
                       "fontSize": 28
                     }
                   }
@@ -10213,13 +10181,14 @@
                   "id": "HA7lK",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 선화",
+                  "name": "Filter / 컬러 스케치",
+                  "width": "fill_container",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "선화",
+                      "content": "컬러 스케치",
                       "fontSize": 28
                     }
                   }
@@ -10256,11 +10225,11 @@
             {
               "type": "text",
               "id": "V1P2W",
-              "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "name": "변환된 컬러 스케치를 확인해 주세요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "content": "변환된 컬러 스케치를 확인해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": 28,
@@ -10309,7 +10278,7 @@
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "비교 확인 후 계속",
+                  "content": "컬러 스케치 선택 후 계속",
                   "fill": "$text-primary",
                   "fontSize": 32
                 }
@@ -10637,11 +10606,11 @@
                 {
                   "type": "text",
                   "id": "kQ81w",
-                  "name": "새 후보 채택·사진 교체 시 확인 해제",
+                  "name": "사진 교체 시 결과 확인 해제",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "새 후보 채택·사진 교체 시 확인 해제",
+                  "content": "사진 교체 시 결과 확인 해제",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -10733,7 +10702,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -10743,10 +10712,10 @@
                   "id": "kZDj2",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "다시 만들기·사진 바꾸기 메뉴",
+                  "name": "사진 바꾸기",
                   "descendants": {
                     "QbEcD": {
-                      "icon": "ellipsis"
+                      "icon": "image"
                     }
                   }
                 }
@@ -10767,10 +10736,11 @@
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
-                  "name": "Filter / 원본",
+                  "name": "Filter / 원본 사진",
+                  "width": "fill_container",
                   "descendants": {
                     "R1feeN": {
-                      "content": "원본"
+                      "content": "원본 사진"
                     }
                   }
                 },
@@ -10781,10 +10751,11 @@
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
-                  "name": "Filter / 선화",
+                  "name": "Filter / 컬러 스케치",
+                  "width": "fill_container",
                   "descendants": {
                     "R1feeN": {
-                      "content": "선화"
+                      "content": "컬러 스케치"
                     }
                   }
                 },
@@ -10820,11 +10791,11 @@
             {
               "type": "text",
               "id": "bbKs7",
-              "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "name": "변환된 컬러 스케치를 확인해 주세요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "content": "변환된 컬러 스케치를 확인해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -10868,7 +10839,7 @@
               "strokeWidth": 0,
               "descendants": {
                 "uTrwf": {
-                  "content": "비교 확인 후 계속",
+                  "content": "컬러 스케치 선택 후 계속",
                   "fill": "$text-primary"
                 }
               }
@@ -10882,7 +10853,7 @@
       "id": "ZBEGg",
       "x": 4610,
       "y": 6350,
-      "name": "Phone / 28 · 비교 완료 · 다음 단계",
+      "name": "Phone / 28 · 컬러 스케치 확인 완료",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-005",
@@ -10944,7 +10915,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "비교 · 1/2",
+                  "content": "컬러 스케치 확인 · 1/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-heading",
@@ -10954,10 +10925,10 @@
                   "id": "wQxi0",
                   "type": "ref",
                   "ref": "OYxj6",
-                  "name": "다시 만들기·사진 바꾸기 메뉴",
+                  "name": "사진 바꾸기",
                   "descendants": {
                     "QbEcD": {
-                      "icon": "ellipsis"
+                      "icon": "image"
                     }
                   }
                 }
@@ -10975,13 +10946,14 @@
                   "id": "izPUS",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 원본",
+                  "name": "Filter / 원본 사진",
+                  "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
                   "descendants": {
                     "R1feeN": {
-                      "content": "원본"
+                      "content": "원본 사진"
                     }
                   }
                 },
@@ -10989,13 +10961,14 @@
                   "id": "rRsD8",
                   "type": "ref",
                   "ref": "ssGLv",
-                  "name": "Filter / 선화",
+                  "name": "Filter / 컬러 스케치",
+                  "width": "fill_container",
                   "fill": "$accent-subtle",
                   "stroke": "$accent-solid",
                   "strokeWidth": 2,
                   "descendants": {
                     "R1feeN": {
-                      "content": "선화"
+                      "content": "컬러 스케치"
                     }
                   }
                 },
@@ -11031,11 +11004,11 @@
             {
               "type": "text",
               "id": "oj97w",
-              "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "name": "변환된 컬러 스케치를 확인해 주세요.",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+              "content": "변환된 컬러 스케치를 확인해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -11557,13 +11530,37 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "기록 요약 · 2/2",
+                  "content": "기록 요약 2/2",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 20,
                   "fontWeight": "600"
+                },
+                {
+                  "id": "d06close",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
                 }
               ]
+            },
+            {
+              "type": "text",
+              "id": "d06confirmed",
+              "name": "기록할 컬러 스케치를 선택했어요",
+              "fill": "$success-text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "기록할 컬러 스케치를 선택했어요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -11595,11 +11592,12 @@
                       "id": "anJSP",
                       "type": "ref",
                       "ref": "u5MzP4",
-                      "name": "RecordArtwork / 저장 전 전체 읽기",
+                      "name": "RecordArtwork / 저장 전 컬러 스케치",
                       "width": "fill_container",
                       "descendants": {
                         "u77MqE": {
                           "name": "RecordArtwork line art / large contain center",
+                          "height": 208,
                           "fill": {
                             "type": "image",
                             "enabled": true,
@@ -11607,24 +11605,62 @@
                             "mode": "fit"
                           }
                         },
-                        "k7gsnv": {
-                          "content": "낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다."
+                        "bgJR9": {
+                          "enabled": false
+                        },
+                        "vJXir": {
+                          "enabled": false
+                        },
+                        "gAwvH": {
+                          "enabled": false
+                        },
+                        "k3b8Q": {
+                          "enabled": false
                         }
                       }
                     },
                     {
-                      "id": "Xwg3w",
+                      "id": "d06ai",
                       "type": "ref",
-                      "ref": "okVIz",
-                      "name": "Button / 기록 내용 편집",
+                      "ref": "OEjV6",
+                      "name": "Open / 문구 편집",
                       "width": "fill_container",
-                      "fill": "$bg-surface",
-                      "stroke": "$border-control",
-                      "strokeWidth": 1,
                       "descendants": {
-                        "uTrwf": {
-                          "content": "기록 내용 편집",
-                          "fill": "$text-primary"
+                        "GmGUS": {
+                          "content": "문구 편집"
+                        },
+                        "GxQU9": {
+                          "content": "AI 문구, 내 메모, 태그"
+                        }
+                      }
+                    },
+                    {
+                      "id": "d06date",
+                      "type": "ref",
+                      "ref": "OEjV6",
+                      "name": "Open / 날짜 · 장소",
+                      "width": "fill_container",
+                      "descendants": {
+                        "GmGUS": {
+                          "content": "날짜와 장소"
+                        },
+                        "GxQU9": {
+                          "content": "2026. 09. 09, 작은 골목의 카페"
+                        }
+                      }
+                    },
+                    {
+                      "id": "d06colors",
+                      "type": "ref",
+                      "ref": "OEjV6",
+                      "name": "Open / 사진에서 찾은 색",
+                      "width": "fill_container",
+                      "descendants": {
+                        "GmGUS": {
+                          "content": "사진에서 찾은 색"
+                        },
+                        "GxQU9": {
+                          "content": "대표색 5개, 색과 비중 보기"
                         }
                       }
                     }
@@ -11660,7 +11696,7 @@
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+              "content": "저장 후에는 컬러 스케치만 보관하고 사진 작업본은 지워요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": 12,
@@ -11677,566 +11713,6 @@
                   "content": "저장하기"
                 }
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "L844KQ",
-      "x": 0,
-      "y": 11000,
-      "name": "Phone / 32 · 내 메모 시트",
-      "metadata": {
-        "type": "screen",
-        "requirement": "SR-SCREEN-005",
-        "surface": "sheet",
-        "safeTop": 62,
-        "safeBottom": 34,
-        "fixture": true,
-        "key": "memo"
-      },
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg-page",
-      "cornerRadius": 24,
-      "layout": "none",
-      "children": [
-        {
-          "type": "frame",
-          "id": "C0K4lX",
-          "x": 0,
-          "y": 0,
-          "name": "Context / inactive underlying screen",
-          "metadata": {
-            "type": "screen",
-            "requirement": "SR-SCREEN-005",
-            "fixture": true,
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "clip": true,
-          "width": 390,
-          "height": 844,
-          "fill": "$bg-page",
-          "cornerRadius": 24,
-          "layout": "vertical",
-          "children": [
-            {
-              "id": "WJV79",
-              "type": "ref",
-              "ref": "T6p8dZ",
-              "name": "System status bar",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "gY9Vi",
-              "name": "Screen content",
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                8,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "FfVXs",
-                  "name": "App header",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "cbw17",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "비교 화면으로",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "arrow-left"
-                        }
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "id": "TqX7V",
-                      "name": "Screen title",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 20,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "fuF9l",
-                  "name": "Confirmed line art summary",
-                  "width": "fill_container",
-                  "gap": 16,
-                  "padding": [
-                    8,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "nC6be",
-                      "name": "Confirmed line art thumbnail",
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "images/lineart-style1-source-rgb.png",
-                        "mode": "fit"
-                      },
-                      "width": 96,
-                      "height": 72
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ZO8UV",
-                      "name": "Result status",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 6,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "VmO2S",
-                          "name": "한 장의 순간, 한 편의 기록",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "한 장의 순간, 한 편의 기록",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "FhsFf",
-                          "name": "원본과 비교했어요",
-                          "fill": "$success-text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "원본과 비교했어요",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "kJALc",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
-                    },
-                    "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "VeVlJ",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
-                    }
-                  }
-                },
-                {
-                  "id": "tRxqk",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 날짜 · 장소",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "날짜 · 장소"
-                    },
-                    "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
-                    }
-                  }
-                },
-                {
-                  "id": "M9Cf4",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 사진에서 찾은 색",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "사진에서 찾은 색"
-                    },
-                    "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "FUgZV",
-              "name": "Safe footer / 저장",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "type": "text",
-                  "id": "zGvJa",
-                  "name": "Original lifetime before saving",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "KttjI",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 저장하기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "저장하기"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "rectangle",
-          "id": "Cx0or",
-          "x": 0,
-          "y": 0,
-          "name": "Modal scrim",
-          "metadata": {
-            "type": "decoration"
-          },
-          "fill": "#29282366",
-          "width": 390,
-          "height": 844
-        },
-        {
-          "type": "frame",
-          "id": "Pk9xs",
-          "x": 0,
-          "y": 128,
-          "name": "Sheet / 내 메모",
-          "metadata": {
-            "type": "dialog",
-            "modal": true,
-            "restoreFocus": true,
-            "dismiss": "persist-draft-before-close",
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "width": 390,
-          "height": 716,
-          "fill": "$bg-surface",
-          "cornerRadius": [
-            24,
-            24,
-            0,
-            0
-          ],
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#29282338",
-            "offset": {
-              "x": 0,
-              "y": 12
-            },
-            "blur": 28
-          },
-          "layout": "vertical",
-          "children": [
-            {
-              "type": "frame",
-              "id": "synxL",
-              "name": "Sheet header",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                20
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "NccQA",
-                  "name": "Sheet title",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "내 메모",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 20,
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "OqLdz",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "작성 내용 보관 후 닫기",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "x"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "B0e7w",
-              "name": "Sheet content",
-              "metadata": {
-                "type": "content",
-                "scroll": "only-if-content-exceeds-available-height"
-              },
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                0,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "bMxxv",
-                  "name": "AI 글 제안 시작",
-                  "metadata": {
-                    "type": "ai-assist",
-                    "action": "generate-suggestion",
-                    "target": "ai-suggestion-only",
-                    "autoOverwrite": false
-                  },
-                  "width": "fill_container",
-                  "fill": "$accent-subtle",
-                  "cornerRadius": 16,
-                  "gap": 12,
-                  "padding": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "A0xoYv",
-                      "name": "AI 제안 안내",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 4,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "tMSSF",
-                          "name": "AI 제안 제목",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "AI가 글 초안을 제안해요",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": "$type-small",
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "V8fe7",
-                          "name": "AI 제안 설명",
-                          "fill": "$text-secondary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "따로 미리 본 뒤 원할 때만 가져와요.",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": "$type-caption",
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "oqyT0",
-                      "type": "ref",
-                      "ref": "okVIz",
-                      "name": "Button / AI 글 만들기",
-                      "width": 132,
-                      "descendants": {
-                        "uTrwf": {
-                          "content": "제안 만들기",
-                          "fontSize": "$type-small"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "S3IkV",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 직접 작성",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "내 메모"
-                    },
-                    "tux95": {
-                      "height": 240
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "38 / 2,000자",
-                      "enabled": true
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "nUMWX",
-                  "name": "Button / 비우고 직접 작성",
-                  "metadata": {
-                    "type": "interaction",
-                    "role": "button",
-                    "action": "clear-user-memo",
-                    "confirmWhenNonEmpty": true,
-                    "minTarget": 48
-                  },
-                  "width": "fill_container",
-                  "height": 48,
-                  "gap": 8,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "gw6bS",
-                      "name": "비우기 아이콘",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "eraser",
-                      "library": "lucide",
-                      "fill": "$text-secondary"
-                    },
-                    {
-                      "type": "text",
-                      "id": "q1yJBI",
-                      "name": "비우고 직접 작성 라벨",
-                      "fill": "$text-secondary",
-                      "content": "비우고 직접 작성",
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-small",
-                      "fontWeight": "600"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "o3Jo1",
-              "name": "Safe footer / 시트",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "id": "yZRpV",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 초안에 적용",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "초안에 적용"
-                    }
-                  }
-                },
-                {
-                  "id": "Vewk1",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 이번 편집 취소",
-                  "width": "fill_container",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "이번 편집 취소",
-                      "fill": "$text-primary"
-                    }
-                  }
-                }
-              ]
             }
           ]
         }
@@ -12332,7 +11808,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
+                      "content": "기록 요약 2/2",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 20,
@@ -12363,7 +11839,7 @@
                         "mode": "fit"
                       },
                       "width": 96,
-                      "height": 72
+                      "height": 64.4
                     },
                     {
                       "type": "frame",
@@ -12407,29 +11883,14 @@
                   "id": "qoWwX",
                   "type": "ref",
                   "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
+                  "name": "Open / 문구 편집",
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
+                      "content": "문구 편집"
                     },
                     "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "U1qvt0",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
+                      "content": "AI 문구, 내 메모, 태그"
                     }
                   }
                 },
@@ -12441,10 +11902,10 @@
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "날짜 · 장소"
+                      "content": "날짜와 장소"
                     },
                     "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                      "content": "2026. 09. 09, 작은 골목의 카페"
                     }
                   }
                 },
@@ -12459,7 +11920,7 @@
                       "content": "사진에서 찾은 색"
                     },
                     "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
+                      "content": "대표색 5개, 색과 비중 보기"
                     }
                   }
                 }
@@ -12491,7 +11952,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "content": "저장 후에는 원본 비교와 재생성을 할 수 없어요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -12640,14 +12101,89 @@
                   }
                 },
                 {
+                  "type": "frame",
+                  "id": "d08Calendar",
+                  "name": "Native calendar / 펼침",
+                  "width": "fill_container",
+                  "fill": "$bg-page",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "cornerRadius": 12,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "d08CalendarHeader",
+                      "name": "Calendar header",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "d08Prev",
+                          "type": "ref",
+                          "ref": "OYxj6",
+                          "name": "이전 달",
+                          "descendants": {
+                            "QbEcD": {
+                              "icon": "chevron-left"
+                            }
+                          }
+                        },
+                        {
+                          "type": "text",
+                          "id": "d08Month",
+                          "name": "선택 중인 달",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "2026년 9월",
+                          "textAlign": "center",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "id": "d08Next",
+                          "type": "ref",
+                          "ref": "OYxj6",
+                          "name": "다음 달",
+                          "descendants": {
+                            "QbEcD": {
+                              "icon": "chevron-right"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "d08Days",
+                      "name": "달력 날짜 · 9일 선택",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "일   월   화   수   목   금   토\n30   31    1    2    3    4    5\n 6    7   [9]  10   11   12   13\n14   15   16   17   18   19   20",
+                      "textAlign": "center",
+                      "lineHeight": 1.8,
+                      "fontFamily": "$font-body",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
                   "id": "Lg2PF",
                   "type": "ref",
                   "ref": "uyBqq",
-                  "name": "Field / 장소명 · 선택",
+                  "name": "Field / 장소명",
                   "width": "fill_container",
                   "descendants": {
                     "DeUAO": {
-                      "content": "장소명 · 선택"
+                      "content": "장소명"
                     },
                     "ES1XO": {
                       "content": "작은 골목의 카페",
@@ -12719,7 +12255,7 @@
       "id": "ZT1he",
       "x": 900,
       "y": 11000,
-      "name": "Phone / 34 · AI 글·태그 시트",
+      "name": "Phone / 34 · 문구 편집 시트",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-005",
@@ -12727,7 +12263,7 @@
         "safeTop": 62,
         "safeBottom": 34,
         "fixture": true,
-        "key": "ai"
+        "key": "writing"
       },
       "clip": true,
       "width": 390,
@@ -12804,7 +12340,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
+                      "content": "기록 요약 2/2",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 20,
@@ -12835,7 +12371,7 @@
                         "mode": "fit"
                       },
                       "width": 96,
-                      "height": 72
+                      "height": 64.4
                     },
                     {
                       "type": "frame",
@@ -12879,29 +12415,14 @@
                   "id": "jQ1eJ",
                   "type": "ref",
                   "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
+                  "name": "Open / 문구 편집",
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
+                      "content": "문구 편집"
                     },
                     "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "FGkU0",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
+                      "content": "AI 문구, 내 메모, 태그"
                     }
                   }
                 },
@@ -12913,10 +12434,10 @@
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "날짜 · 장소"
+                      "content": "날짜와 장소"
                     },
                     "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                      "content": "2026. 09. 09, 작은 골목의 카페"
                     }
                   }
                 },
@@ -12931,7 +12452,7 @@
                       "content": "사진에서 찾은 색"
                     },
                     "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
+                      "content": "대표색 5개, 색과 비중 보기"
                     }
                   }
                 }
@@ -12963,7 +12484,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "content": "저장 후에는 원본 비교와 재생성을 할 수 없어요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -13003,7 +12524,7 @@
           "id": "YNZ0A",
           "x": 0,
           "y": 104,
-          "name": "Sheet / AI 글과 태그",
+          "name": "Sheet / 문구 편집",
           "metadata": {
             "type": "dialog",
             "modal": true,
@@ -13052,7 +12573,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "AI 글과 태그",
+                  "content": "문구 편집",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 20,
@@ -13094,11 +12615,11 @@
                   "id": "qxcQE",
                   "type": "ref",
                   "ref": "uyBqq",
-                  "name": "Field / AI가 쓴 글 · 수정 가능",
+                  "name": "Field / AI 문구",
                   "width": "fill_container",
                   "descendants": {
                     "DeUAO": {
-                      "content": "AI가 쓴 글 · 수정 가능"
+                      "content": "AI 문구"
                     },
                     "tux95": {
                       "height": 100
@@ -13108,7 +12629,85 @@
                       "fill": "$text-primary"
                     },
                     "ZL2eD": {
-                      "content": "내 메모와 따로 보관해요.",
+                      "content": "AI로 만들거나 직접 수정할 수 있어요.",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "d09Suggestion",
+                  "name": "AI 문구 만들기",
+                  "metadata": {
+                    "type": "ai-assist",
+                    "action": "generate-ai-copy",
+                    "target": "ai_field_note",
+                    "preserveUserNote": true
+                  },
+                  "width": "fill_container",
+                  "fill": "$accent-subtle",
+                  "cornerRadius": 12,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "d09SuggestionTitle",
+                      "name": "AI 문구 만들기 제목",
+                      "fill": "$text-primary",
+                      "content": "AI 문구 만들기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "d09SuggestionBody",
+                      "name": "AI 문구 만들기 안내",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "사진을 바탕으로 문구를 만들면 위 칸에 바로 반영돼요.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "d09SuggestButton",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / AI 문구 만들기",
+                      "width": "fill_container",
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "AI 문구 만들기"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "d07Memo",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 내 메모",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "내 메모"
+                    },
+                    "tux95": {
+                      "height": 120
+                    },
+                    "ES1XO": {
+                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "AI 문구 생성으로 바뀌지 않아요. 38 / 2,000자",
                       "enabled": true
                     }
                   }
@@ -13124,11 +12723,11 @@
                       "content": "의미 태그"
                     },
                     "ES1XO": {
-                      "content": "카페 · 골목",
+                      "content": "카페, 골목",
                       "fill": "$text-primary"
                     },
                     "ZL2eD": {
-                      "content": "최대 8개 · 태그당 24자",
+                      "content": "최대 8개, 태그당 24자",
                       "enabled": true
                     }
                   }
@@ -13148,7 +12747,7 @@
                       "fill": "$text-primary"
                     },
                     "ZL2eD": {
-                      "content": "최대 3개 · 태그당 24자",
+                      "content": "최대 3개, 태그당 24자",
                       "enabled": true
                     }
                   }
@@ -13160,7 +12759,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "AI 글과 태그는 비워도 저장할 수 있어요.",
+                  "content": "AI 문구와 태그는 비워도 저장할 수 있어요. 내 메모는 AI 생성으로 바뀌지 않아요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -13311,7 +12910,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
+                      "content": "기록 요약 2/2",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 20,
@@ -13342,7 +12941,7 @@
                         "mode": "fit"
                       },
                       "width": 96,
-                      "height": 72
+                      "height": 64.4
                     },
                     {
                       "type": "frame",
@@ -13386,29 +12985,14 @@
                   "id": "E4G6d",
                   "type": "ref",
                   "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
+                  "name": "Open / 문구 편집",
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
+                      "content": "문구 편집"
                     },
                     "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "if4P6",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
+                      "content": "AI 문구, 내 메모, 태그"
                     }
                   }
                 },
@@ -13420,10 +13004,10 @@
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "날짜 · 장소"
+                      "content": "날짜와 장소"
                     },
                     "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                      "content": "2026. 09. 09, 작은 골목의 카페"
                     }
                   }
                 },
@@ -13438,7 +13022,7 @@
                       "content": "사진에서 찾은 색"
                     },
                     "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
+                      "content": "대표색 5개, 색과 비중 보기"
                     }
                   }
                 }
@@ -13470,7 +13054,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "content": "저장 후에는 원본 비교와 재생성을 할 수 없어요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -13758,7 +13342,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "비교 · 1/2",
+                      "content": "컬러 스케치 확인 · 1/2",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": "$type-heading",
@@ -13768,10 +13352,10 @@
                       "id": "g10M3K",
                       "type": "ref",
                       "ref": "OYxj6",
-                      "name": "다시 만들기·사진 바꾸기 메뉴",
+                      "name": "사진 바꾸기",
                       "descendants": {
                         "QbEcD": {
-                          "icon": "ellipsis"
+                          "icon": "image"
                         }
                       }
                     }
@@ -13789,13 +13373,14 @@
                       "id": "YVZ0l",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 원본",
+                      "name": "Filter / 원본 사진",
+                      "width": "fill_container",
                       "fill": "$bg-surface",
                       "stroke": "$border-control",
                       "strokeWidth": 1,
                       "descendants": {
                         "R1feeN": {
-                          "content": "원본"
+                          "content": "원본 사진"
                         }
                       }
                     },
@@ -13803,13 +13388,14 @@
                       "id": "iRd1K",
                       "type": "ref",
                       "ref": "ssGLv",
-                      "name": "Filter / 선화",
+                      "name": "Filter / 컬러 스케치",
+                      "width": "fill_container",
                       "fill": "$accent-subtle",
                       "stroke": "$accent-solid",
                       "strokeWidth": 2,
                       "descendants": {
                         "R1feeN": {
-                          "content": "선화"
+                          "content": "컬러 스케치"
                         }
                       }
                     },
@@ -13845,11 +13431,11 @@
                 {
                   "type": "text",
                   "id": "Zf7kY",
-                  "name": "원본과 달라진 부분이 없는지 확인해 주세요.",
+                  "name": "변환된 컬러 스케치를 확인해 주세요.",
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "원본과 달라진 부분이 없는지 확인해 주세요.",
+                  "content": "변환된 컬러 스케치를 확인해 주세요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-small",
@@ -13893,7 +13479,7 @@
                   "strokeWidth": 0,
                   "descendants": {
                     "uTrwf": {
-                      "content": "비교 확인 후 계속",
+                      "content": "컬러 스케치 선택 후 계속",
                       "fill": "$text-primary"
                     }
                   }
@@ -14008,18 +13594,6 @@
               ],
               "children": [
                 {
-                  "id": "IzftQ",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 다시 만들기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "다시 만들기"
-                    }
-                  }
-                },
-                {
                   "id": "WWPqT",
                   "type": "ref",
                   "ref": "okVIz",
@@ -14038,7 +13612,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "결과가 바뀌면 원본과 다시 비교해 주세요.",
+                  "content": "사진을 바꾸면 컬러 스케치를 다시 확인해 주세요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -14960,7 +14534,7 @@
       "id": "hGZdL",
       "x": 900,
       "y": 12000,
-      "name": "Phone / 39 · 메모 키보드 · Safe area",
+      "name": "Phone / 39 · 문구 편집 키보드 · Safe area",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-005",
@@ -14968,7 +14542,7 @@
         "safeTop": 62,
         "safeBottom": 34,
         "fixture": true,
-        "key": "memo"
+        "key": "writing-keyboard"
       },
       "clip": true,
       "width": 390,
@@ -15045,7 +14619,7 @@
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
+                      "content": "기록 요약 2/2",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
                       "fontSize": 20,
@@ -15076,7 +14650,7 @@
                         "mode": "fit"
                       },
                       "width": 96,
-                      "height": 72
+                      "height": 64.4
                     },
                     {
                       "type": "frame",
@@ -15120,29 +14694,14 @@
                   "id": "DrE0a",
                   "type": "ref",
                   "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
+                  "name": "Open / 문구 편집",
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
+                      "content": "문구 편집"
                     },
                     "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "e2A9WI",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
+                      "content": "AI 문구, 내 메모, 태그"
                     }
                   }
                 },
@@ -15154,10 +14713,10 @@
                   "width": "fill_container",
                   "descendants": {
                     "GmGUS": {
-                      "content": "날짜 · 장소"
+                      "content": "날짜와 장소"
                     },
                     "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
+                      "content": "2026. 09. 09, 작은 골목의 카페"
                     }
                   }
                 },
@@ -15172,7 +14731,7 @@
                       "content": "사진에서 찾은 색"
                     },
                     "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
+                      "content": "대표색 5개, 색과 비중 보기"
                     }
                   }
                 }
@@ -15204,7 +14763,7 @@
                   "fill": "$text-secondary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
+                  "content": "저장 후에는 원본 비교와 재생성을 할 수 없어요.",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 12,
@@ -15244,7 +14803,7 @@
           "id": "NgPuB",
           "x": 0,
           "y": 62,
-          "name": "Sheet / 내 메모",
+          "name": "Sheet / 문구 편집",
           "metadata": {
             "type": "dialog",
             "modal": true,
@@ -15293,7 +14852,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "내 메모",
+                  "content": "문구 편집",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": 20,
@@ -15332,47 +14891,66 @@
               ],
               "children": [
                 {
+                  "id": "k09AIField",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / AI 문구, 편집 중",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "AI 문구"
+                    },
+                    "tux95": {
+                      "height": 100
+                    },
+                    "ES1XO": {
+                      "content": "낮은 지붕 아래 초록 문이\n오후의 햇살을 받고 있어요.",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "AI로 만들거나 직접 수정할 수 있어요.",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
                   "type": "frame",
                   "id": "HHrSJ",
-                  "name": "AI 글 제안 바로가기",
+                  "name": "AI 문구 만들기",
                   "metadata": {
                     "type": "ai-assist",
-                    "action": "generate-suggestion",
-                    "target": "ai-suggestion-only",
-                    "autoOverwrite": false
+                    "action": "generate-ai-copy",
+                    "target": "ai_field_note",
+                    "preserveUserNote": true
                   },
                   "width": "fill_container",
                   "height": 52,
-                  "fill": "$accent-subtle",
-                  "cornerRadius": 12,
                   "gap": 8,
-                  "padding": [
-                    2,
-                    8
-                  ],
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
                       "id": "QBbpi",
-                      "name": "AI 제안 별도 안내",
-                      "fill": "$text-primary",
+                      "name": "AI 문구 만들기 안내",
+                      "fill": "$text-secondary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "AI 글은 별도 제안으로 만들어요",
+                      "content": "생성 결과는 AI 문구 칸에 바로 들어가요.",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-body",
-                      "fontSize": "$type-caption",
+                      "fontSize": 12,
                       "fontWeight": "normal"
                     },
                     {
                       "id": "rrMgT",
                       "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "AI 글 제안 만들기",
+                      "ref": "okVIz",
+                      "name": "Button / AI 문구 만들기",
+                      "width": 128,
                       "descendants": {
-                        "QbEcD": {
-                          "icon": "wand-sparkles"
+                        "uTrwf": {
+                          "content": "AI 문구 만들기",
+                          "fontSize": 12
                         }
                       }
                     }
@@ -15382,21 +14960,61 @@
                   "id": "Be05i",
                   "type": "ref",
                   "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 편집 중",
+                  "name": "Field / 내 메모, 편집 중",
                   "width": "fill_container",
                   "descendants": {
                     "DeUAO": {
-                      "content": "내 메모 · 편집 중"
+                      "content": "내 메모"
                     },
                     "tux95": {
-                      "height": 132
+                      "height": 120
                     },
                     "ES1XO": {
                       "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
                       "fill": "$text-primary"
                     },
                     "ZL2eD": {
-                      "content": "38 / 2,000자",
+                      "content": "AI 문구 생성으로 바뀌지 않아요. 38 / 2,000자",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "k09Meaning",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 의미 태그",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "의미 태그"
+                    },
+                    "ES1XO": {
+                      "content": "카페, 골목",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "최대 8개, 태그당 24자",
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "k09Mood",
+                  "type": "ref",
+                  "ref": "uyBqq",
+                  "name": "Field / 분위기 태그",
+                  "width": "fill_container",
+                  "descendants": {
+                    "DeUAO": {
+                      "content": "분위기 태그"
+                    },
+                    "ES1XO": {
+                      "content": "따뜻한",
+                      "fill": "$text-primary"
+                    },
+                    "ZL2eD": {
+                      "content": "최대 3개, 태그당 24자",
                       "enabled": true
                     }
                   }
@@ -15560,7 +15178,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "영역을 누를 때만 열기\n내 메모 / AI 글·태그 / 날짜·장소 / 대표색 / 필터 / 기록 읽기 / 더보기",
+          "content": "영역을 누를 때만 열기\n문구 편집 / 날짜와 장소 / 대표색 / 필터 / 기록 읽기 / 더보기",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": 16,
@@ -15573,7 +15191,7 @@
           "fill": "$text-primary",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "선택의 결과를 확인할 때만 열기\n삭제 / 초안 폐기 / 사진 교체 / 새 후보 채택 / 로그아웃",
+          "content": "선택의 결과를 확인할 때만 열기\n삭제 / 초안 폐기 / 사진 교체 / 로그아웃",
           "lineHeight": 1.5,
           "fontFamily": "$font-body",
           "fontSize": 16,
@@ -15630,1860 +15248,6 @@
           "fontFamily": "$font-body",
           "fontSize": 14,
           "fontWeight": "normal"
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "LkfBx",
-      "x": 2250,
-      "y": 11000,
-      "name": "Phone / 40 · AI 글 제안 미리보기",
-      "metadata": {
-        "type": "screen",
-        "requirement": "SR-SCREEN-005",
-        "surface": "sheet",
-        "fixture": true,
-        "key": "memo-ai-preview",
-        "flow": "generate-suggestion-then-explicit-import",
-        "autoOverwrite": false
-      },
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg-page",
-      "cornerRadius": 24,
-      "layout": "none",
-      "children": [
-        {
-          "type": "frame",
-          "id": "ImAcd",
-          "x": 0,
-          "y": 0,
-          "name": "Context / 기록 요약 · 비활성",
-          "metadata": {
-            "type": "screen",
-            "requirement": "SR-SCREEN-005",
-            "fixture": true,
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "clip": true,
-          "width": 390,
-          "height": 844,
-          "fill": "$bg-page",
-          "cornerRadius": 24,
-          "layout": "vertical",
-          "children": [
-            {
-              "id": "kOZgm",
-              "type": "ref",
-              "ref": "T6p8dZ",
-              "name": "System status bar",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "qjl6F",
-              "name": "Screen content",
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                8,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "LOhXJ",
-                  "name": "App header",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "VvViG",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "비교 화면으로",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "arrow-left"
-                        }
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "id": "TxfDv",
-                      "name": "Screen title",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 20,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "yBpYf",
-                  "name": "Confirmed line art summary",
-                  "width": "fill_container",
-                  "gap": 16,
-                  "padding": [
-                    8,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "cRYXR",
-                      "name": "Confirmed line art thumbnail",
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "images/lineart-style1-source-rgb.png",
-                        "mode": "fit"
-                      },
-                      "width": 96,
-                      "height": 72
-                    },
-                    {
-                      "type": "frame",
-                      "id": "pefgX",
-                      "name": "Result status",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 6,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "p4CGQO",
-                          "name": "한 장의 순간, 한 편의 기록",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "한 장의 순간, 한 편의 기록",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "i8TUK",
-                          "name": "원본과 비교했어요",
-                          "fill": "$success-text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "원본과 비교했어요",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "QVHQM",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
-                    },
-                    "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "ImgXR",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
-                    }
-                  }
-                },
-                {
-                  "id": "Q8YxWk",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 날짜 · 장소",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "날짜 · 장소"
-                    },
-                    "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
-                    }
-                  }
-                },
-                {
-                  "id": "He59U",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 사진에서 찾은 색",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "사진에서 찾은 색"
-                    },
-                    "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "l8nEGl",
-              "name": "Safe footer / 저장",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "type": "text",
-                  "id": "V1qwb",
-                  "name": "Original lifetime before saving",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "VPeJV",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 저장하기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "저장하기"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "rectangle",
-          "id": "e3PbF",
-          "x": 0,
-          "y": 0,
-          "name": "Modal scrim / AI 제안",
-          "metadata": {
-            "type": "decoration"
-          },
-          "fill": "#29282366",
-          "width": 390,
-          "height": 844
-        },
-        {
-          "type": "frame",
-          "id": "q03mX",
-          "x": 0,
-          "y": 62,
-          "name": "Sheet / AI 글 제안 미리보기",
-          "metadata": {
-            "type": "dialog",
-            "modal": true,
-            "restoreFocus": true,
-            "dismiss": "keep-user-memo-unchanged",
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "width": 390,
-          "height": 782,
-          "fill": "$bg-surface",
-          "cornerRadius": [
-            24,
-            24,
-            0,
-            0
-          ],
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#29282338",
-            "offset": {
-              "x": 0,
-              "y": 12
-            },
-            "blur": 28
-          },
-          "layout": "vertical",
-          "children": [
-            {
-              "type": "frame",
-              "id": "nC5ou",
-              "name": "Sheet header / AI 글 제안",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                20
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "u3O7QB",
-                  "name": "Sheet title / AI 글 제안",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "AI 글 제안",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-heading",
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "SYFEf",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "제안 닫기",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "x"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "Jj0D1",
-              "name": "Sheet content / 분리된 AI 제안과 내 메모",
-              "metadata": {
-                "type": "content",
-                "scroll": "only-if-content-exceeds-available-height"
-              },
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                0,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "x85LOA",
-                  "name": "AI 제안 준비 완료",
-                  "width": "fill_container",
-                  "fill": "$accent-subtle",
-                  "cornerRadius": 12,
-                  "gap": 8,
-                  "padding": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "MLyd6",
-                      "name": "AI 제안 아이콘",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "sparkles",
-                      "library": "lucide",
-                      "fill": "$accent-solid"
-                    },
-                    {
-                      "type": "text",
-                      "id": "l0PJw",
-                      "name": "AI 제안 상태",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "제안을 만들었어요 · 아직 내 메모와 분리됨",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-caption",
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "Y76V1",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / AI 글 제안 · 읽기 전용",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "AI 글 제안 · 미리보기"
-                    },
-                    "tux95": {
-                      "height": 116,
-                      "fill": "$bg-sunken"
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "제안 · 아직 내 메모에 반영되지 않음",
-                      "enabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "gDGD9",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 변경 전",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "내 메모 · 그대로 유지 중"
-                    },
-                    "tux95": {
-                      "height": 100
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "가져오기를 누르기 전에는 바뀌지 않아요.",
-                      "enabled": true
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "mwiqb",
-              "name": "Safe footer / AI 제안",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "id": "nqH0E",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 내 메모로 가져오기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "내 메모로 가져오기"
-                    }
-                  }
-                },
-                {
-                  "id": "FndwA",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 비우고 직접 작성",
-                  "width": "fill_container",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "비우고 직접 작성",
-                      "fill": "$text-primary"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "njOQC",
-      "x": 2700,
-      "y": 11000,
-      "name": "Phone / 41 · 기존 메모 대체 인라인 확인",
-      "metadata": {
-        "type": "screen",
-        "requirement": "SR-SCREEN-005",
-        "surface": "sheet",
-        "fixture": true,
-        "key": "memo-ai-preview",
-        "flow": "generate-suggestion-then-explicit-import",
-        "autoOverwrite": false
-      },
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg-page",
-      "cornerRadius": 24,
-      "layout": "none",
-      "children": [
-        {
-          "type": "frame",
-          "id": "uI08M",
-          "x": 0,
-          "y": 0,
-          "name": "Context / 기록 요약 · 비활성",
-          "metadata": {
-            "type": "screen",
-            "requirement": "SR-SCREEN-005",
-            "fixture": true,
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "clip": true,
-          "width": 390,
-          "height": 844,
-          "fill": "$bg-page",
-          "cornerRadius": 24,
-          "layout": "vertical",
-          "children": [
-            {
-              "id": "KiQDF",
-              "type": "ref",
-              "ref": "T6p8dZ",
-              "name": "System status bar",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "InT0e",
-              "name": "Screen content",
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                8,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "s0P5T",
-                  "name": "App header",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "Y0hyqj",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "비교 화면으로",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "arrow-left"
-                        }
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "id": "TeVCR",
-                      "name": "Screen title",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 20,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "SjwTR",
-                  "name": "Confirmed line art summary",
-                  "width": "fill_container",
-                  "gap": 16,
-                  "padding": [
-                    8,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "R3pnj",
-                      "name": "Confirmed line art thumbnail",
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "images/lineart-style1-source-rgb.png",
-                        "mode": "fit"
-                      },
-                      "width": 96,
-                      "height": 72
-                    },
-                    {
-                      "type": "frame",
-                      "id": "bwD6w",
-                      "name": "Result status",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 6,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "thVeb",
-                          "name": "한 장의 순간, 한 편의 기록",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "한 장의 순간, 한 편의 기록",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "mcvqU",
-                          "name": "원본과 비교했어요",
-                          "fill": "$success-text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "원본과 비교했어요",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "L4ek8",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
-                    },
-                    "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "V5cDXV",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
-                    }
-                  }
-                },
-                {
-                  "id": "D13Qy",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 날짜 · 장소",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "날짜 · 장소"
-                    },
-                    "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
-                    }
-                  }
-                },
-                {
-                  "id": "iWzxp",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 사진에서 찾은 색",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "사진에서 찾은 색"
-                    },
-                    "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "VuLDK",
-              "name": "Safe footer / 저장",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "type": "text",
-                  "id": "d19qD",
-                  "name": "Original lifetime before saving",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "rT1g7",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 저장하기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "저장하기"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "rectangle",
-          "id": "e9xmx",
-          "x": 0,
-          "y": 0,
-          "name": "Modal scrim / AI 제안",
-          "metadata": {
-            "type": "decoration"
-          },
-          "fill": "#29282366",
-          "width": 390,
-          "height": 844
-        },
-        {
-          "type": "frame",
-          "id": "txoqn",
-          "x": 0,
-          "y": 62,
-          "name": "Sheet / AI 글 제안 미리보기",
-          "metadata": {
-            "type": "dialog",
-            "modal": true,
-            "restoreFocus": true,
-            "dismiss": "keep-user-memo-unchanged",
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "width": 390,
-          "height": 782,
-          "fill": "$bg-surface",
-          "cornerRadius": [
-            24,
-            24,
-            0,
-            0
-          ],
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#29282338",
-            "offset": {
-              "x": 0,
-              "y": 12
-            },
-            "blur": 28
-          },
-          "layout": "vertical",
-          "children": [
-            {
-              "type": "frame",
-              "id": "qbyRU",
-              "name": "Sheet header / AI 글 제안",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                20
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "eB1Ef",
-                  "name": "Sheet title / AI 글 제안",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "AI 글 제안",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-heading",
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "kZwn2",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "제안 닫기",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "x"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "tZf20",
-              "name": "Sheet content / 분리된 AI 제안과 내 메모",
-              "metadata": {
-                "type": "content",
-                "scroll": "only-if-content-exceeds-available-height"
-              },
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                0,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "id": "nSvvI",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / AI 글 제안 · 읽기 전용",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "AI 글 제안 · 미리보기"
-                    },
-                    "tux95": {
-                      "height": 116,
-                      "fill": "$bg-sunken"
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "제안 · 아직 내 메모에 반영되지 않음",
-                      "enabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "Fhiq7",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 변경 전",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "내 메모 · 그대로 유지 중"
-                    },
-                    "tux95": {
-                      "height": 100
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 머문 작은 카페.\n다음에는 더 오래 앉아 있고 싶다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "가져오기를 누르기 전에는 바뀌지 않아요.",
-                      "enabled": true
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "r5AAR",
-              "name": "Safe footer / AI 제안",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "id": "pXCGG",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 내 메모로 가져오기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "내 메모로 가져오기"
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "YQZMu",
-                  "name": "Inline confirm / 기존 메모 대체",
-                  "metadata": {
-                    "type": "confirmation",
-                    "placement": "immediately-after-import-action",
-                    "workingMemoUnchangedUntilConfirm": true,
-                    "undoAvailableAfterConfirm": true,
-                    "autoOverwrite": false
-                  },
-                  "width": "fill_container",
-                  "fill": "$warning-subtle",
-                  "cornerRadius": 16,
-                  "layout": "vertical",
-                  "gap": 8,
-                  "padding": 12,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "a1q9Ds",
-                      "name": "Inline confirm title",
-                      "fill": "$warning-text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기존 메모가 있어요",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-small",
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "n5aZGV",
-                      "name": "Inline confirm body",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "AI 제안으로 바꿀까요? 바꾼 뒤 되돌릴 수 있어요.",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-caption",
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ekwGs",
-                      "name": "Inline confirm actions",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "JdWcX",
-                          "type": "ref",
-                          "ref": "okVIz",
-                          "name": "Button / 기존 메모 바꾸기 · 인라인",
-                          "width": "fill_container",
-                          "descendants": {
-                            "uTrwf": {
-                              "content": "바꾸기"
-                            }
-                          }
-                        },
-                        {
-                          "id": "GXZZZ",
-                          "type": "ref",
-                          "ref": "okVIz",
-                          "name": "Button / 대체 취소 · 인라인",
-                          "width": "fill_container",
-                          "fill": "$bg-surface",
-                          "stroke": "$border-control",
-                          "strokeWidth": 1,
-                          "descendants": {
-                            "uTrwf": {
-                              "content": "취소",
-                              "fill": "$text-primary"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "hgxfI",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 비우고 직접 작성",
-                  "width": "fill_container",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "비우고 직접 작성",
-                      "fill": "$text-primary"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "p0vvTv",
-      "x": 3150,
-      "y": 11000,
-      "name": "Phone / 42 · AI 글 가져온 내 메모 편집",
-      "metadata": {
-        "type": "screen",
-        "requirement": "SR-SCREEN-005",
-        "surface": "sheet",
-        "fixture": true,
-        "key": "memo-ai-preview",
-        "flow": "generate-suggestion-then-explicit-import",
-        "autoOverwrite": false
-      },
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bg-page",
-      "cornerRadius": 24,
-      "layout": "none",
-      "children": [
-        {
-          "type": "frame",
-          "id": "s9Nps",
-          "x": 0,
-          "y": 0,
-          "name": "Context / 기록 요약 · 비활성",
-          "metadata": {
-            "type": "screen",
-            "requirement": "SR-SCREEN-005",
-            "fixture": true,
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "clip": true,
-          "width": 390,
-          "height": 844,
-          "fill": "$bg-page",
-          "cornerRadius": 24,
-          "layout": "vertical",
-          "children": [
-            {
-              "id": "b4Qf8s",
-              "type": "ref",
-              "ref": "T6p8dZ",
-              "name": "System status bar",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "eJVqQ",
-              "name": "Screen content",
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                8,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "XR6Sd",
-                  "name": "App header",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "id": "J8uld",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "비교 화면으로",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "arrow-left"
-                        }
-                      }
-                    },
-                    {
-                      "type": "text",
-                      "id": "zKOFr",
-                      "name": "Screen title",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기록 요약 · 2/2",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": 20,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "po8DT",
-                  "name": "Confirmed line art summary",
-                  "width": "fill_container",
-                  "gap": 16,
-                  "padding": [
-                    8,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "rectangle",
-                      "id": "T0ePgN",
-                      "name": "Confirmed line art thumbnail",
-                      "fill": {
-                        "type": "image",
-                        "enabled": true,
-                        "url": "images/lineart-style1-source-rgb.png",
-                        "mode": "fit"
-                      },
-                      "width": 96,
-                      "height": 72
-                    },
-                    {
-                      "type": "frame",
-                      "id": "O1bbK",
-                      "name": "Result status",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 6,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "ZiPyT",
-                          "name": "한 장의 순간, 한 편의 기록",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "한 장의 순간, 한 편의 기록",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        },
-                        {
-                          "type": "text",
-                          "id": "eM0XI",
-                          "name": "원본과 비교했어요",
-                          "fill": "$success-text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "원본과 비교했어요",
-                          "lineHeight": 1.5,
-                          "fontFamily": "$font-body",
-                          "fontSize": 14,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "mlXNp",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / AI가 쓴 글 · 태그",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "AI가 쓴 글 · 태그"
-                    },
-                    "GxQU9": {
-                      "content": "낮은 지붕 아래 초록 문이…"
-                    }
-                  }
-                },
-                {
-                  "id": "a58TT",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 내 메모 · 선택",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "내 메모 · 선택"
-                    },
-                    "GxQU9": {
-                      "content": "햇살이 머문 작은 카페."
-                    }
-                  }
-                },
-                {
-                  "id": "Get8a",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 날짜 · 장소",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "날짜 · 장소"
-                    },
-                    "GxQU9": {
-                      "content": "2026. 09. 09 · 작은 골목의 카페"
-                    }
-                  }
-                },
-                {
-                  "id": "TXrb6",
-                  "type": "ref",
-                  "ref": "OEjV6",
-                  "name": "Open / 사진에서 찾은 색",
-                  "width": "fill_container",
-                  "descendants": {
-                    "GmGUS": {
-                      "content": "사진에서 찾은 색"
-                    },
-                    "GxQU9": {
-                      "content": "대표색 5개 · 색과 비중 보기"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "HsCnT",
-              "name": "Safe footer / 저장",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "type": "text",
-                  "id": "EniHy",
-                  "name": "Original lifetime before saving",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "저장 후에는 원본 비교·재생성을 할 수 없어요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "fi1wl",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 저장하기",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "저장하기"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "rectangle",
-          "id": "YgzHk",
-          "x": 0,
-          "y": 0,
-          "name": "Modal scrim / AI 제안",
-          "metadata": {
-            "type": "decoration"
-          },
-          "fill": "#29282366",
-          "width": 390,
-          "height": 844
-        },
-        {
-          "type": "frame",
-          "id": "QEtfE",
-          "x": 0,
-          "y": 62,
-          "name": "Sheet / AI 글 제안 미리보기",
-          "metadata": {
-            "type": "dialog",
-            "modal": true,
-            "restoreFocus": true,
-            "dismiss": "keep-user-memo-unchanged",
-            "safeTop": 62,
-            "safeBottom": 34
-          },
-          "width": 390,
-          "height": 782,
-          "fill": "$bg-surface",
-          "cornerRadius": [
-            24,
-            24,
-            0,
-            0
-          ],
-          "effect": {
-            "type": "shadow",
-            "shadowType": "outer",
-            "color": "#29282338",
-            "offset": {
-              "x": 0,
-              "y": 12
-            },
-            "blur": 28
-          },
-          "layout": "vertical",
-          "children": [
-            {
-              "type": "frame",
-              "id": "imdXD",
-              "name": "Sheet header / AI 글 제안",
-              "width": "fill_container",
-              "gap": 12,
-              "padding": [
-                12,
-                20
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "sOhaB",
-                  "name": "Sheet title / AI 글 제안",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "내 메모 편집",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-heading",
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "opKP9",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "제안 닫기",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "x"
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "aCo2V",
-              "name": "Sheet content / 분리된 AI 제안과 내 메모",
-              "metadata": {
-                "type": "content",
-                "scroll": "only-if-content-exceeds-available-height"
-              },
-              "width": "fill_container",
-              "height": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                0,
-                20,
-                12,
-                20
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "d9JGRh",
-                  "name": "가져오기 완료 · 되돌리기 가능",
-                  "width": "fill_container",
-                  "fill": "$success-subtle",
-                  "cornerRadius": 12,
-                  "gap": 8,
-                  "padding": 12,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "ItgXc",
-                      "name": "AI 제안 아이콘",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "undo-2",
-                      "library": "lucide",
-                      "fill": "$success-text"
-                    },
-                    {
-                      "type": "text",
-                      "id": "lwLTm",
-                      "name": "AI 제안 상태",
-                      "fill": "$success-text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "AI 제안을 가져왔어요 · 이전 메모는 되돌릴 수 있어요.",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-caption",
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "id": "bvKrd",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / AI 글 제안 · 참고용",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "AI 글 제안 · 참고용"
-                    },
-                    "tux95": {
-                      "height": 100,
-                      "fill": "$bg-sunken"
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "제안 원문은 내 메모와 별도로 유지돼요.",
-                      "enabled": true
-                    }
-                  }
-                },
-                {
-                  "id": "dyAwW",
-                  "type": "ref",
-                  "ref": "uyBqq",
-                  "name": "Field / 내 메모 · 수정 가능",
-                  "width": "fill_container",
-                  "descendants": {
-                    "DeUAO": {
-                      "content": "내 메모 · 수정하거나 덧붙이기"
-                    },
-                    "tux95": {
-                      "height": 148
-                    },
-                    "ES1XO": {
-                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
-                      "fill": "$text-primary"
-                    },
-                    "ZL2eD": {
-                      "content": "48 / 2,000자 · 자유롭게 수정할 수 있어요.",
-                      "enabled": true
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "YKKcH",
-              "name": "Safe footer / AI 제안",
-              "metadata": {
-                "type": "safe-area",
-                "edge": "bottom",
-                "inset": 34
-              },
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 8,
-              "padding": [
-                12,
-                20,
-                34,
-                20
-              ],
-              "children": [
-                {
-                  "id": "d2f6f",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 수정한 메모 적용",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "수정한 메모 적용"
-                    }
-                  }
-                },
-                {
-                  "id": "RYd2v",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 가져오기 되돌리기",
-                  "width": "fill_container",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "가져오기 되돌리기",
-                      "fill": "$text-primary"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "BOKUT",
-      "x": 3600,
-      "y": 11000,
-      "name": "Phone narrow / 43 · 메모 대체 인라인 확인 · 320",
-      "metadata": {
-        "type": "screen",
-        "requirement": "SR-SCREEN-005",
-        "surface": "dialog-over-sheet",
-        "fixture": true,
-        "key": "memo-ai-replace-confirm",
-        "viewportWidth": 320,
-        "autoOverwrite": false
-      },
-      "clip": true,
-      "width": 320,
-      "height": 640,
-      "fill": "$bg-page",
-      "cornerRadius": 24,
-      "layout": "none",
-      "children": [
-        {
-          "type": "frame",
-          "id": "jiWqM",
-          "x": 0,
-          "y": 0,
-          "name": "Context / AI 글 제안 · 320",
-          "width": 320,
-          "height": 640,
-          "fill": "$bg-page",
-          "layout": "vertical",
-          "children": [
-            {
-              "id": "xiW1I",
-              "type": "ref",
-              "ref": "T6p8dZ",
-              "name": "System status bar / 320",
-              "width": "fill_container"
-            },
-            {
-              "type": "frame",
-              "id": "cDUZR",
-              "name": "Sheet / AI 글 제안 · 320",
-              "width": "fill_container",
-              "height": "fill_container",
-              "fill": "$bg-surface",
-              "cornerRadius": [
-                24,
-                24,
-                0,
-                0
-              ],
-              "layout": "vertical",
-              "gap": 12,
-              "padding": [
-                12,
-                16,
-                20,
-                16
-              ],
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "UNR06",
-                  "name": "Sheet header / AI 글 제안 · 320",
-                  "width": "fill_container",
-                  "height": 48,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "UaXBX",
-                      "name": "Sheet title / AI 글 제안 · 320",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "AI 글 제안",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-heading",
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "id": "l9znel",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "제안 닫기 / 320",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "x"
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "kvNFC",
-                  "name": "AI 글 제안 미리보기 / 320",
-                  "width": "fill_container",
-                  "fill": "$bg-sunken",
-                  "cornerRadius": 12,
-                  "layout": "vertical",
-                  "gap": 8,
-                  "padding": 12,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "PxgGU",
-                      "name": "AI 글 제안 라벨 / 320",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "AI 글 제안 · 미리보기",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-small",
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "cr799",
-                      "name": "AI 글 제안 본문 / 320",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "햇살이 오래 머문 작은 카페.\n오늘의 고요를 한 장에 담았다.",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-small",
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "text",
-                  "id": "h5Vr0",
-                  "name": "내 메모 유지 안내 / 320",
-                  "fill": "$text-secondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "내 메모는 가져오기 전까지 그대로예요.",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-caption",
-                  "fontWeight": "normal"
-                },
-                {
-                  "id": "q1arIP",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 내 메모로 가져오기 · 320",
-                  "width": "fill_container",
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "내 메모로 가져오기"
-                    }
-                  }
-                },
-                {
-                  "type": "frame",
-                  "id": "OGm2t",
-                  "name": "Inline confirm / 기존 메모 대체 · 320",
-                  "metadata": {
-                    "type": "confirmation",
-                    "placement": "immediately-after-import-action",
-                    "workingMemoUnchangedUntilConfirm": true,
-                    "undoAvailableAfterConfirm": true,
-                    "autoOverwrite": false
-                  },
-                  "width": "fill_container",
-                  "fill": "$warning-subtle",
-                  "cornerRadius": 16,
-                  "layout": "vertical",
-                  "gap": 8,
-                  "padding": 12,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "o7Voq1",
-                      "name": "Inline confirm title / 320",
-                      "fill": "$warning-text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "기존 메모가 있어요",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-small",
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "FPUjD",
-                      "name": "Inline confirm body / 320",
-                      "fill": "$text-primary",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "AI 제안으로 바꿀까요? 되돌릴 수 있어요.",
-                      "lineHeight": 1.5,
-                      "fontFamily": "$font-body",
-                      "fontSize": "$type-caption",
-                      "fontWeight": "normal"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "Lx9pQ",
-                      "name": "Inline confirm actions / 320",
-                      "width": "fill_container",
-                      "gap": 8,
-                      "children": [
-                        {
-                          "id": "nn8ip",
-                          "type": "ref",
-                          "ref": "okVIz",
-                          "name": "Button / 바꾸기 · 320",
-                          "width": "fill_container",
-                          "descendants": {
-                            "uTrwf": {
-                              "content": "바꾸기"
-                            }
-                          }
-                        },
-                        {
-                          "id": "VMeYw",
-                          "type": "ref",
-                          "ref": "okVIz",
-                          "name": "Button / 취소 · 320",
-                          "width": "fill_container",
-                          "fill": "$bg-surface",
-                          "stroke": "$border-control",
-                          "strokeWidth": 1,
-                          "descendants": {
-                            "uTrwf": {
-                              "content": "취소",
-                              "fill": "$text-primary"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "id": "KTBBh",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 비우고 직접 작성 · 320",
-                  "width": "fill_container",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "비우고 직접 작성",
-                      "fill": "$text-primary"
-                    }
-                  }
-                }
-              ]
-            }
-          ]
         }
       ]
     },
