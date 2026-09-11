@@ -26,7 +26,7 @@ export function OtpScreen({ locale, email, code, status, error_code, resend_seco
         <Button label={copy.otpAction} onPress={onVerify} busy={status === 'pending'} disabled={code.length !== 6} />
         <Button label={copy.changeEmail} onPress={onChangeEmail} tone="secondary" />
         <Button label={resend_seconds > 0 ? (locale === 'ko' ? `${resend_seconds}초 후 다시 받기` : `Get another code in ${resend_seconds}s`) : copy.resend} onPress={onResend} disabled={resend_seconds > 0 || status === 'pending'} tone="secondary" />
-        <Notice message={`${copy.mailNoticeTitle} · ${copy.mailNoticeBody}`} tone="info" />
+        <Notice message={`${copy.mailNoticeTitle}\n${copy.mailNoticeBody}`} tone="info" />
       </ScrollView>
     </KeyboardAvoidingView>
   </SafeAreaView>;

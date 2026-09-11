@@ -1,4 +1,4 @@
-import { DEMO_CODE, assertDemoInvariants, demoReducer, initialDemoState } from './demo-state.ts';
+import { DEMO_CODE, assertDemoInvariants, demoReducer, displayLocale, initialDemoState } from './demo-state.ts';
 
 function login() {
   let state = initialDemoState();
@@ -24,19 +24,24 @@ function finishNew(state: ReturnType<typeof initialDemoState>) {
   return state;
 }
 
-function memoSheet(state: ReturnType<typeof initialDemoState>) {
+function analysisSheet(state: ReturnType<typeof initialDemoState>) {
   const sheet = state.sheet;
-  if (sheet?.kind !== 'memo') throw new Error('memo sheet should be open');
+  if (sheet?.kind !== 'analysis') throw new Error('writing sheet should be open');
   return sheet;
 }
 
+if (displayLocale('system', 'ko-KR') !== 'ko' || displayLocale('system', 'fr-FR') !== 'en' || displayLocale('ko', 'en-US') !== 'ko') throw new Error('explicit locale must override the supported system locale fallback');
+
 let state = login();
 state = finishNew(state);
+const selectedCandidateId = state.drafts.new?.selected_candidate?.candidate_id;
+state = demoReducer(state, { type: 'regenerate' });
+if (state.drafts.new?.selected_candidate?.candidate_id !== selectedCandidateId || state.drafts.new?.pending_candidate) throw new Error('comparison must keep its single deterministic candidate');
 state = demoReducer(state, { type: 'save' });
 const firstOperation = state.save_attempt?.operation_id;
 if (!firstOperation) throw new Error('valid draft should create a save operation');
-state = demoReducer(state, { type: 'open-summary-sheet', kind: 'memo' });
-state = demoReducer(state, { type: 'sheet-change', change: { kind: 'memo', working: 'changed after save started' } });
+state = demoReducer(state, { type: 'open-summary-sheet', kind: 'analysis' });
+state = demoReducer(state, { type: 'sheet-change', change: { kind: 'analysis', working: { ...analysisSheet(state).working, user_note: 'changed after save started' } } });
 state = demoReducer(state, { type: 'sheet-apply' });
 state = demoReducer(state, { type: 'save-result', operationId: firstOperation, outcome: 'success' });
 if (state.records.length !== 1 || !state.records[0] || state.records[0].fields.user_note !== '') throw new Error('save should use the pending snapshot');
@@ -78,56 +83,47 @@ if (!state.sheet) throw new Error('sheet cancel should preserve dirty input');
 state = demoReducer(state, { type: 'sheet-cancel' });
 if (state.sheet) throw new Error('explicit sheet cancel should rollback and close');
 
-let memoState = finishNew(login());
-const memoDraft = memoState.drafts.new!;
+state = demoReducer(state, { type: 'open-summary-sheet', kind: 'analysis' });
+state = demoReducer(state, { type: 'sheet-change', change: { kind: 'analysis', working: { ...analysisSheet(state).working, user_note: '🙂'.repeat(2000) } } });
+state = demoReducer(state, { type: 'sheet-apply' });
+if (state.sheet || state.drafts.new?.fields.user_note !== '🙂'.repeat(2000)) throw new Error('text limits must count Unicode code points like the server');
+state = demoReducer(state, { type: 'open-summary-sheet', kind: 'analysis' });
+state = demoReducer(state, { type: 'sheet-change', change: { kind: 'analysis', working: { ...analysisSheet(state).working, user_note: 'e\u0301' } } });
+state = demoReducer(state, { type: 'sheet-apply' });
+if (state.sheet?.kind !== 'analysis' || !state.sheet.error) throw new Error('non-NFC text must be rejected before saving');
+state = demoReducer(state, { type: 'sheet-cancel' });
+state = demoReducer(state, { type: 'open-summary-sheet', kind: 'analysis' });
+if (state.sheet?.kind !== 'analysis') throw new Error('analysis sheet should be open');
+state = demoReducer(state, { type: 'sheet-change', change: { kind: 'analysis', working: { ...state.sheet.working, semantic_tags: ['카페', '카페'] } } });
+state = demoReducer(state, { type: 'sheet-apply' });
+if (state.sheet?.kind !== 'analysis' || !state.sheet.error) throw new Error('duplicate tags must be rejected before saving');
+state = demoReducer(state, { type: 'sheet-cancel' });
+
+let writingState = finishNew(login());
+const writingDraft = writingState.drafts.new!;
 const aiOriginal = '빛이 머문 길';
 const aiEdited = '빛이 머문 산책길';
-memoState = { ...memoState, drafts: { ...memoState.drafts, new: { ...memoDraft, analysis: memoDraft.analysis ? { ...memoDraft.analysis, ai_field_note: aiOriginal, ai_field_note_edited: aiEdited } : null, fields: { ...memoDraft.fields, ai_field_note: aiOriginal, ai_field_note_edited: aiEdited, user_note: '내가 쓴 메모' } } } };
-memoState = demoReducer(memoState, { type: 'open-summary-sheet', kind: 'memo' });
-if (memoSheet(memoState).caption_suggestion !== aiEdited || memoSheet(memoState).working !== '내가 쓴 메모') throw new Error('opening memo should offer AI writing without inserting it');
-memoState = demoReducer(memoState, { type: 'sheet-change', change: { kind: 'memo', action: 'import-caption' } });
-if (memoSheet(memoState).pending_import !== aiEdited || memoSheet(memoState).working !== '내가 쓴 메모') throw new Error('import should confirm before replacing existing memo');
-memoState = demoReducer(memoState, { type: 'sheet-change', change: { kind: 'memo', action: 'confirm-caption-import' } });
-if (memoSheet(memoState).working !== aiEdited || memoSheet(memoState).restore_value !== '내가 쓴 메모') throw new Error('confirmed import should retain one-step recovery');
-memoState = demoReducer(memoState, { type: 'sheet-change', change: { kind: 'memo', action: 'restore' } });
-if (memoSheet(memoState).working !== '내가 쓴 메모') throw new Error('restore should recover the replaced memo');
-memoState = demoReducer(memoState, { type: 'sheet-change', change: { kind: 'memo', action: 'clear' } });
-memoState = demoReducer(memoState, { type: 'sheet-apply' });
-memoState = demoReducer(memoState, { type: 'open-summary-sheet', kind: 'memo' });
-if (memoSheet(memoState).working !== '' || memoSheet(memoState).caption_suggestion !== aiEdited) throw new Error('cleared memo must stay empty when reopened');
-memoState = demoReducer(memoState, { type: 'sheet-change', change: { kind: 'memo', action: 'import-caption' } });
-memoState = demoReducer(memoState, { type: 'sheet-apply' });
-memoState = demoReducer(memoState, { type: 'save' });
-const memoOperation = memoState.save_attempt?.operation_id;
-if (!memoOperation) throw new Error('memo draft should start saving');
-memoState = demoReducer(memoState, { type: 'save-result', operationId: memoOperation, outcome: 'success' });
-const memoRecord = memoState.records.find((record) => record.id === memoDraft.record_id);
-if (!memoRecord || memoRecord.fields.user_note !== aiEdited || memoRecord.fields.ai_field_note !== aiOriginal || memoRecord.fields.ai_field_note_edited !== aiEdited) throw new Error('saving imported memo must preserve AI source fields');
-
-let captionState = finishNew(login());
-captionState = demoReducer(captionState, { type: 'open-summary-sheet', kind: 'memo' });
-captionState = demoReducer(captionState, { type: 'request-caption' });
-const firstCaptionRequest = memoSheet(captionState).caption_request_id;
-const captionRevision = captionState.drafts.new!.input_revision;
+writingState = { ...writingState, drafts: { ...writingState.drafts, new: { ...writingDraft, analysis: writingDraft.analysis ? { ...writingDraft.analysis, ai_field_note: aiOriginal, ai_field_note_edited: aiEdited } : null, fields: { ...writingDraft.fields, ai_field_note: aiOriginal, ai_field_note_edited: aiEdited, user_note: '내가 쓴 메모' } } } };
+writingState = demoReducer(writingState, { type: 'open-summary-sheet', kind: 'analysis' });
+if (analysisSheet(writingState).working.ai_field_note_edited !== aiEdited || analysisSheet(writingState).working.user_note !== '내가 쓴 메모') throw new Error('the unified writing sheet must keep AI writing and the user note separate');
+writingState = demoReducer(writingState, { type: 'request-caption' });
+const firstCaptionRequest = analysisSheet(writingState).caption_request_id;
+const captionRevision = writingState.drafts.new!.input_revision;
 if (!firstCaptionRequest) throw new Error('caption request needs an identity');
-captionState = demoReducer(captionState, { type: 'sheet-change', change: { kind: 'memo', working: '입력 중인 메모' } });
-captionState = demoReducer(captionState, { type: 'caption-result', requestId: firstCaptionRequest, inputRevision: captionRevision, outcome: 'success', value: '도착한 제안' });
-if (memoSheet(captionState).working !== '입력 중인 메모' || memoSheet(captionState).caption_suggestion !== '도착한 제안') throw new Error('caption result must not overwrite memo typing');
-captionState = demoReducer(captionState, { type: 'sheet-close' });
-if (captionState.dialog?.kind !== 'discard-draft') throw new Error('closing a dirty memo should require discard confirmation');
-captionState = demoReducer(captionState, { type: 'sheet-discard-cancel' });
-if (memoSheet(captionState).working !== '입력 중인 메모') throw new Error('canceling discard should preserve memo typing');
-captionState = demoReducer(captionState, { type: 'sheet-cancel' });
-captionState = demoReducer(captionState, { type: 'open-summary-sheet', kind: 'memo' });
-captionState = demoReducer(captionState, { type: 'request-caption' });
-const retryCaptionRequest = memoSheet(captionState).caption_request_id;
+writingState = demoReducer(writingState, { type: 'sheet-change', change: { kind: 'analysis', working: { ...analysisSheet(writingState).working, user_note: '입력 중인 메모' } } });
+writingState = demoReducer(writingState, { type: 'caption-result', requestId: firstCaptionRequest, inputRevision: captionRevision, outcome: 'success', value: '따뜻한 조명 아래 머문 계단' });
+if (analysisSheet(writingState).working.ai_field_note_edited !== '따뜻한 조명 아래 머문 계단' || analysisSheet(writingState).working.user_note !== '입력 중인 메모') throw new Error('generated AI writing must fill only the AI field');
+writingState = demoReducer(writingState, { type: 'sheet-cancel' });
+writingState = demoReducer(writingState, { type: 'open-summary-sheet', kind: 'analysis' });
+writingState = demoReducer(writingState, { type: 'request-caption' });
+const retryCaptionRequest = analysisSheet(writingState).caption_request_id;
 if (!retryCaptionRequest || retryCaptionRequest === firstCaptionRequest) throw new Error('reopened caption request needs a new identity');
-captionState = demoReducer(captionState, { type: 'caption-result', requestId: firstCaptionRequest, inputRevision: captionRevision, outcome: 'success', value: '늦은 제안' });
-if (memoSheet(captionState).caption_suggestion === '늦은 제안') throw new Error('late caption result must be ignored');
-captionState = demoReducer(captionState, { type: 'caption-result', requestId: retryCaptionRequest, inputRevision: captionRevision, outcome: 'failure' });
-if (memoSheet(captionState).caption_status !== 'error') throw new Error('caption failure should be retryable');
-captionState = demoReducer(captionState, { type: 'request-caption' });
-if (memoSheet(captionState).caption_status !== 'pending' || memoSheet(captionState).caption_request_id === retryCaptionRequest) throw new Error('caption retry should start a fresh request');
+writingState = demoReducer(writingState, { type: 'caption-result', requestId: firstCaptionRequest, inputRevision: captionRevision, outcome: 'success', value: '늦은 제안' });
+if (analysisSheet(writingState).working.ai_field_note_edited === '늦은 제안') throw new Error('late caption result must be ignored');
+writingState = demoReducer(writingState, { type: 'caption-result', requestId: retryCaptionRequest, inputRevision: captionRevision, outcome: 'failure' });
+if (analysisSheet(writingState).caption_status !== 'error' || analysisSheet(writingState).working.user_note !== '내가 쓴 메모') throw new Error('caption failure must preserve the user note and remain retryable');
+writingState = demoReducer(writingState, { type: 'request-caption' });
+if (analysisSheet(writingState).caption_status !== 'pending' || analysisSheet(writingState).caption_request_id === retryCaptionRequest) throw new Error('caption retry should start a fresh request');
 
 let invalid = login();
 invalid = demoReducer(invalid, { type: 'start-record' });

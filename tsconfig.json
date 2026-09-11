@@ -19,6 +19,8 @@
     "expo-env.d.ts"
   ],
   "exclude": [
-    "experiments/model-selection/data"
+    "experiments/model-selection/data",
+    "supabase/functions",
+    "supabase/tests"
   ]
 }

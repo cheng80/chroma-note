@@ -12,7 +12,7 @@
 | [데이터 모델·ERD 재검토](06_DATA_MODEL_REVIEW.md) | 적용된 DB와 명세 차이, 단일 테이블 판단, 물리 ERD |
 | [Supabase migration](../supabase/migrations/) · [SQL 검사](../supabase/tests/record_contract.sql) · [API 검사](../supabase/tests/record_access.mjs) | 실제 DB 변경과 계정별 접근·입력 제약의 재검증 |
 | [기술 명세](02_TECH_SPEC.md) | 데이터·인증·권한, 입력/출력, 저장·복구·충돌·삭제 |
-| [프로젝트 현황](03_PROJECT_STATUS.md) | 실제 구현 상태, 작업 순서, 남은 게이트, 검증 결과 |
+| [프로젝트 현황·세부 체크리스트](03_PROJECT_STATUS.md#4-작업-체크리스트와-완료-기준) | 디자인·기능 구현·자동/네이티브/API/앱 검증을 구분하고 통과 즉시 체크 |
 | [작업 흐름](04_WORKFLOW.md) | 구현·문서 작업 절차, 모델 역할, 검증·Git 범위 |
 | [AI·대표색 검증 계획](05_AI_VALIDATION_PLAN.md) | 모델 근거, 비교 입력, 측정·합격 기준 |
 | [Pixabay 모델 평가 준비](../experiments/model-selection/README.md) | 실험 전용 env·사진 검색표·태그/무드/문구 평가 |

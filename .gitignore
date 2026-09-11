@@ -5,6 +5,7 @@ node_modules/
 
 # Expo
 .expo/
+supabase/.temp/
 dist/
 web-build/
 expo-env.d.ts
@@ -53,6 +54,11 @@ example
 /experiments/model-selection/__pycache__/
 
 # Downloaded weights and generated model builds
+/modules/chroma-lineart/.model-cache/
+/modules/chroma-lineart/ios/Resources/LineArt.mlmodelc/
+/modules/chroma-lineart/tests/.build/
+/modules/chroma-analysis/ios/Resources/
+/modules/chroma-analysis/ios/Libraries/
 /experiments/model-selection/**/*.bin
 /experiments/model-selection/**/*.ckpt
 /experiments/model-selection/**/*.gguf

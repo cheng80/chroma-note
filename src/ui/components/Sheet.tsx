@@ -1,4 +1,4 @@
-import React, { ReactNode, RefObject } from 'react';
+import React, { ReactNode, RefObject, useState } from 'react';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import {
   KeyboardAvoidingView,
@@ -8,7 +8,6 @@ import {
   ScrollView,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from 'react-native';
@@ -17,6 +16,7 @@ import { theme } from '../theme';
 import { IconButton } from './IconButton';
 import { useModalA11y } from './modalA11y';
 import { useEntranceProgress } from './motion';
+import { SemanticText } from './SemanticText';
 
 const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView);
 type Style = StyleProp<ViewStyle>;
@@ -46,6 +46,9 @@ export function Sheet({
   restoreFocusRef,
   style,
 }: SheetProps) {
+  const [contentHeight, setContentHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const overflows = viewportHeight > 0 && contentHeight > viewportHeight + 1;
   const dialogRef = useModalA11y({ visible, initialFocusRef, restoreFocusRef });
   const { progress, reduceMotion } = useEntranceProgress(visible);
   const scrimStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
@@ -67,14 +70,20 @@ export function Sheet({
             style={[styles.sheet, style, sheetStyle]}
           >
             <View style={styles.header}>
-              <Text accessibilityRole="header" style={styles.title}>{title}</Text>
+              <SemanticText accessibilityRole="header" style={styles.title}>{title}</SemanticText>
               <IconButton label={closeLabel} onPress={onRequestClose} icon="x" />
             </View>
             <ScrollView
               style={styles.scroll}
               contentContainerStyle={styles.content}
               keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
+              onContentSizeChange={(_width, height) => setContentHeight(height)}
+              onLayout={({ nativeEvent }) => setViewportHeight(nativeEvent.layout.height)}
+              scrollEnabled={overflows}
+              bounces={overflows}
+              alwaysBounceVertical={false}
+              overScrollMode="never"
+              showsVerticalScrollIndicator={overflows}
             >
               {children}
             </ScrollView>

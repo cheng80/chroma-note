@@ -10,11 +10,11 @@ export const MEMORY_NOTICE = {
 
 export type DisplayLocale = 'ko' | 'en';
 export type LocalePreference = 'system' | DisplayLocale;
-export type DemoOwnerId = 'demo-a' | 'demo-b';
+export type DemoOwnerId = string;
 export type DraftKind = 'new' | 'edit';
 
 export interface DemoSession {
-  source: 'demo';
+  source: 'demo' | 'supabase';
   owner_id: DemoOwnerId;
   generation: number;
   email: string;
@@ -36,7 +36,7 @@ export interface ColorTag {
 }
 
 export interface ColorResult {
-  source: 'demo';
+  source: 'demo' | 'device' | 'supabase';
   source_revision: number;
   tags: ColorTag[];
 }
@@ -59,7 +59,8 @@ export interface RecordFields {
 export type RecordFieldKey = keyof RecordFields;
 
 export interface Analysis {
-  source: 'demo';
+  source: 'demo' | 'device';
+  model_version?: string;
   source_revision: number;
   status: 'success' | 'skipped';
   scene: string | null;
@@ -76,7 +77,18 @@ export interface StampCandidate {
   local_uri: string;
   width: number;
   height: number;
-  source: 'demo';
+  source: 'demo' | 'supabase' | 'device';
+  image_headers?: Record<string, string>;
+  processing?: {
+    model_id: string;
+    revision: string;
+    runtime_version: string;
+    quantization: string;
+    inference_duration_ms: number;
+    max_edge: number;
+    mask_gain: number;
+    postprocess_version: string;
+  };
 }
 
 export interface CandidateConfirmation {
@@ -128,7 +140,7 @@ export interface Draft {
   colors: ColorResult | null;
   analysis: Analysis | null;
   selected_candidate: StampCandidate | null;
-  pending_candidate: StampCandidate | null;
+  pending_candidate?: StampCandidate | null;
   confirmation: CandidateConfirmation | null;
   fields: RecordFields;
   base_record_version?: number;
@@ -137,7 +149,7 @@ export interface Draft {
 }
 
 export interface DemoRecord {
-  source: 'demo';
+  source: 'demo' | 'supabase';
   id: string;
   user_id: DemoOwnerId;
   status: 'ready';
@@ -156,6 +168,7 @@ export interface BookFilter {
 }
 
 export type BookListState =
+  | 'loading'
   | 'ready'
   | 'empty'
   | 'filter-empty'
@@ -167,6 +180,9 @@ export interface SavePayloadSnapshot {
   color_tags: ColorTag[];
   confirmation: CandidateConfirmation | null;
   fields: RecordFields;
+  analysis?: Analysis;
+  input_dimensions?: [number, number];
+  locale?: DisplayLocale;
 }
 
 export type SaveState =
@@ -176,6 +192,7 @@ export type SaveState =
   | 'uncertain'
   | 'failed'
   | 'conflict'
+  | 'saved'
   | 'demo_saved';
 
 export interface SaveAttempt {
@@ -210,15 +227,8 @@ export interface ActiveJob {
 
 export type AnalysisSheetValue = Pick<
   RecordFields,
-  'scene' | 'semantic_tags' | 'mood_tags' | 'ai_field_note_edited'
+  'scene' | 'semantic_tags' | 'mood_tags' | 'ai_field_note_edited' | 'user_note'
 >;
-
-export type MemoSheetAction =
-  | 'import-caption'
-  | 'confirm-caption-import'
-  | 'cancel-caption-import'
-  | 'clear'
-  | 'restore';
 export type DatePlaceSheetValue = Pick<
   RecordFields,
   'diary_date' | 'date_source' | 'place_name'
@@ -226,17 +236,6 @@ export type DatePlaceSheetValue = Pick<
 
 export type SheetState =
   | null
-  | {
-      kind: 'memo';
-      initial: string;
-      working: string;
-      error: string | null;
-      caption_status: AsyncStatus;
-      caption_suggestion: string | null;
-      caption_request_id: string | null;
-      pending_import: string | null;
-      restore_value: string | null;
-    }
   | {
       kind: 'datePlace';
       initial: DatePlaceSheetValue;
@@ -263,8 +262,6 @@ export type SheetState =
   | { kind: 'actions'; record_id: string };
 
 export type SheetChange =
-  | { kind: 'memo'; working: string }
-  | { kind: 'memo'; action: MemoSheetAction }
   | { kind: 'datePlace'; working: DatePlaceSheetValue }
   | { kind: 'analysis'; working: AnalysisSheetValue }
   | { kind: 'filter'; working: BookFilter };
@@ -414,6 +411,7 @@ export interface BookScreenProps {
   save_attempt: SaveAttempt | null;
   sheet: SheetState;
   has_more: boolean;
+  refreshing?: boolean;
   onOpenSettings: () => void;
   onStartRecord: () => void;
   onResumeDraft: (draft_id: string) => void;
@@ -434,7 +432,6 @@ export interface DetailScreenProps {
   record: DemoRecord;
   sheet: SheetState;
   image_missing: boolean;
-  status_message?: string;
   onBack: () => void;
   onOpenRead: () => void;
   onOpenActions: () => void;
@@ -494,8 +491,6 @@ export interface CompareScreenProps {
   onOpenOriginal: () => void;
   onConfirmChange: (checked: boolean) => void;
   onContinue: () => void;
-  onRegenerate: () => void;
-  onRequestAdoptCandidate: (candidate_id: string) => void;
   onRequestReplacePhoto: () => void;
 }
 
@@ -508,7 +503,7 @@ export interface RecordSummaryScreenProps {
   blocking_reason: string | null;
   onBack: () => void;
   onClose: () => void;
-  onOpenSheet: (kind: 'memo' | 'datePlace' | 'analysis' | 'colors') => void;
+  onOpenSheet: (kind: 'datePlace' | 'analysis' | 'colors') => void;
   onChangeSheet: (change: SheetChange) => void;
   onApplySheet: () => void;
   onCancelSheet: () => void;

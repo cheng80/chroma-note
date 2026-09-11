@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Animated from 'react-native-reanimated';
-import { ActivityIndicator, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
+import { AccessibilityState, ActivityIndicator, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { theme } from '../theme';
 import { usePressScale } from './motion';
 
@@ -18,6 +18,8 @@ export type ButtonProps = {
   style?: Style;
   textStyle?: StyleProp<TextStyle>;
   accessibilityHint?: string;
+  accessibilityLabel?: string;
+  accessibilityState?: AccessibilityState;
   testID?: string;
 };
 
@@ -30,6 +32,8 @@ export function Button({
   style,
   textStyle,
   accessibilityHint,
+  accessibilityLabel,
+  accessibilityState,
   testID,
 }: ButtonProps) {
   const [focused, setFocused] = useState(false);
@@ -40,9 +44,9 @@ export function Button({
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
-      accessibilityState={{ disabled: inactive, busy }}
+      accessibilityState={{ ...accessibilityState, disabled: inactive, busy }}
       disabled={inactive}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}

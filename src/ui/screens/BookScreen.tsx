@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageSourcePropType, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ImageSourcePropType, RefreshControl, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, IconButton, Notice, StampImage } from '../primitives';
 import { FilterChip } from '../components/FilterChip';
@@ -8,61 +8,76 @@ import { AppIcon } from '../components/AppIcon';
 import { FilterSheet } from '../sheets/FilterSheet';
 import { getBasicCopy } from '../basic-copy';
 import { theme } from '../theme';
-import type { BookFilter, BookScreenProps, DemoRecord, DisplayLocale, SheetChange, SheetState } from '../contract';
+import { SemanticText } from '../components/SemanticText';
+import { displayDate, imageSource as sourceFor } from '../record-copy';
+import type { BookFilter, BookScreenProps, DemoRecord, DisplayLocale, SaveAttempt, SheetChange, SheetState } from '../contract';
 
 const designStamp = require('../../../design/images/generated-1788887279815.png') as ImageSourcePropType;
 
-function sourceFor(uri: string, fallback: ImageSourcePropType): ImageSourcePropType {
-  return uri && !uri.startsWith('demo-') && uri !== 'demo' ? { uri } : fallback;
-}
-
-function formatDate(value: string) { return value ? value.replaceAll('-', '. ') : '—'; }
-
 function recordTitle(record: DemoRecord, locale: DisplayLocale) {
-  return record.fields.user_note || record.fields.place_name || (locale === 'ko' ? '기록' : 'Record');
+  return record.fields.user_note.trim() || record.fields.place_name?.trim() || (locale === 'ko' ? '기록' : 'Record');
 }
 
-function EmptyBook({ locale, drafts, onOpenSettings, onStartRecord, onResumeDraft }: Pick<BookScreenProps, 'locale' | 'drafts' | 'onOpenSettings' | 'onStartRecord' | 'onResumeDraft'>) {
+function recordCountLabel(count: number, locale: DisplayLocale) {
+  return locale === 'ko' ? `${count}개의 기록` : `${count} record${count === 1 ? '' : 's'}`;
+}
+
+function SaveAttemptNotice({ locale, attempt }: { locale: DisplayLocale; attempt: SaveAttempt | null }) {
+  if (attempt?.state === 'pending' || attempt?.state === 'uploading' || attempt?.state === 'finalizing') return <Notice message={locale === 'ko' ? '저장 결과를 확인하는 중이에요.' : 'Checking the save result.'} tone="info" busy />;
+  if (attempt?.state === 'uncertain') return <Notice message={locale === 'ko' ? '저장 결과를 확인하지 못했어요. 초안은 보관했어요.' : 'The save result could not be confirmed. Your draft is kept.'} tone="warning" />;
+  if (attempt?.state === 'conflict') return <Notice message={locale === 'ko' ? '다른 기기에서 변경된 기록이에요. 초안을 열어 최신 내용과 다시 확인해 주세요.' : 'This record changed on another device. Open the draft to review the latest version.'} tone="warning" />;
+  if (attempt?.state === 'failed') return <Notice message={locale === 'ko' ? '저장하지 못한 초안을 보관했어요. 초안을 열어 다시 확인해 주세요.' : 'The unsaved draft is kept. Open it to review and try again.'} tone="warning" />;
+  return null;
+}
+
+function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord, onResumeDraft, onRetry, refreshing }: Pick<BookScreenProps, 'locale' | 'drafts' | 'save_attempt' | 'onOpenSettings' | 'onStartRecord' | 'onResumeDraft' | 'onRetry' | 'refreshing'>) {
   const copy = getBasicCopy(locale);
-  const draft = drafts.find((item) => item.kind === 'new');
+  const draft = drafts[0];
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
-    <ScrollView contentContainerStyle={styles.emptyContent} showsVerticalScrollIndicator={false}>
+    <ScrollView refreshControl={<RefreshControl refreshing={Boolean(refreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.emptyContent} showsVerticalScrollIndicator={false}>
       <View style={styles.brandHeader}><Text accessibilityRole="header" style={styles.brand}>{copy.brand}</Text><IconButton label={copy.settings} onPress={onOpenSettings}><AppIcon name="settings" size={20} color={theme.colors.ink} /></IconButton></View>
       <View style={styles.emptyExample}><StampImage source={designStamp} accessibilityLabel={copy.designExample} style={styles.emptyImage} /><Text style={styles.emptyCaption}>{copy.designExample}</Text></View>
-      <Text style={styles.emptyHeading}>{copy.emptyTitle}</Text>
-      <Text style={styles.emptyBody}>{copy.emptyBody}</Text>
+      <SemanticText accessibilityRole="header" style={styles.emptyHeading}>{copy.emptyTitle}</SemanticText>
+      <SemanticText style={styles.emptyBody}>{copy.emptyBody}</SemanticText>
+      <SaveAttemptNotice locale={locale} attempt={save_attempt} />
       <Button label={copy.importPhoto} onPress={onStartRecord} />
       {draft ? <Button label={copy.resume(1)} onPress={() => onResumeDraft(draft.draft_id)} tone="subtle" /> : null}
-      <Text style={styles.caption}>{copy.emptyHint}</Text>
+      <SemanticText style={styles.caption}>{copy.emptyHint}</SemanticText>
     </ScrollView>
   </SafeAreaView>;
 }
 
 function activeFilter(filter: BookFilter) { return Boolean(filter.start_date || filter.end_date || filter.semantic_tag || filter.favorite_only); }
 
-export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, model_status: _modelStatus, save_attempt, sheet, has_more, onOpenSettings, onStartRecord, onResumeDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry }: BookScreenProps) {
+export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, model_status: _modelStatus, save_attempt, sheet, has_more, refreshing, onOpenSettings, onStartRecord, onResumeDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry }: BookScreenProps) {
   const copy = getBasicCopy(locale);
   const { width, fontScale } = useWindowDimensions();
   const columns = fontScale >= 1.5 || width < 360 ? 1 : width >= 760 ? Math.min(4, Math.max(3, Math.floor((width - 28) / 240))) : 2;
   const cardWidth = (width - 40 - 12 * (columns - 1)) / columns;
   const filterSheet = sheet?.kind === 'filter' ? sheet : null;
   const isActive = activeFilter(filter);
-  const draft = drafts.find((item) => item.kind === 'new');
-  if (list_state === 'empty') return <EmptyBook locale={locale} drafts={drafts} onOpenSettings={onOpenSettings} onStartRecord={onStartRecord} onResumeDraft={onResumeDraft} />;
+  const draft = drafts[0];
+  const showRecordCount = list_state === 'ready' || list_state === 'partial-cache';
+  if (list_state === 'empty') return <EmptyBook locale={locale} drafts={drafts} save_attempt={save_attempt} onOpenSettings={onOpenSettings} onStartRecord={onStartRecord} onResumeDraft={onResumeDraft} onRetry={onRetry} refreshing={refreshing} />;
 
   const content = list_state === 'filter-empty' ? <View style={styles.emptyState}><Text style={styles.emptyStateTitle}>{copy.noResults}</Text><Text style={styles.bodyMuted}>{copy.noResultsBody}</Text><Button label={copy.filter} onPress={onOpenFilter} tone="secondary" /></View>
     : list_state === 'error' ? <View style={styles.emptyState}><Notice message={copy.listError} tone="error" /><Button label={copy.retry} onPress={onRetry} tone="secondary" /></View>
-    : <><View style={[styles.grid, columns === 1 && styles.singleColumn]}>{records.map((record) => <RecordCard key={record.id} width={cardWidth} date={formatDate(record.fields.diary_date)} title={recordTitle(record, locale)} source={sourceFor(record.stamp.local_uri, designStamp)} onPress={() => onOpenRecord(record.id)} onToggleFavorite={() => onToggleFavorite(record.id)} isFavorite={record.fields.is_favorite} favoriteLabel={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} accessibilityLabel={`${copy.record}, ${record.fields.diary_date}`} />)}</View>{list_state === 'partial-cache' ? <Text style={styles.caption}>{copy.partial}</Text> : null}{has_more ? <Button label={copy.more} onPress={onLoadMore} tone="secondary" /> : null}</>;
+    : list_state === 'loading' ? <Notice message={locale === 'ko' ? '기록을 불러오는 중이에요.' : 'Loading records.'} tone="info" busy />
+    : <><View style={[styles.grid, columns === 1 && styles.singleColumn]}>{records.map((record) => {
+      const date = displayDate(record.fields.diary_date) || '—';
+      const title = recordTitle(record, locale);
+      return <RecordCard key={record.id} width={cardWidth} date={date} title={title} source={sourceFor(record.stamp.local_uri, designStamp, record.stamp.image_headers)} onPress={() => onOpenRecord(record.id)} onToggleFavorite={() => onToggleFavorite(record.id)} isFavorite={record.fields.is_favorite} favoriteLabel={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} accessibilityLabel={`${copy.record}, ${date}, ${title}`} />;
+    })}</View>{list_state === 'partial-cache' ? <Text style={styles.caption}>{copy.partial}</Text> : null}{has_more ? <Button label={copy.more} onPress={onLoadMore} tone="secondary" disabled={refreshing} /> : null}</>;
 
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
     <View style={styles.flex}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView refreshControl={<RefreshControl refreshing={Boolean(refreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.brandHeader}><Text accessibilityRole="header" style={styles.brand}>{copy.brand}</Text><IconButton label={copy.settings} onPress={onOpenSettings}><AppIcon name="settings" size={20} color={theme.colors.ink} /></IconButton></View>
-        <View style={styles.intro}><Text style={styles.heading}>{copy.bookHeading}</Text><Text style={styles.bodyMuted}>{copy.bookLead}</Text></View>
+        <View style={styles.intro}><SemanticText accessibilityRole="header" style={styles.heading}>{copy.bookHeading}</SemanticText><SemanticText style={styles.bodyMuted}>{copy.bookLead}</SemanticText></View>
         <View style={styles.filters}><FilterChip label={copy.all} selected={!isActive} onPress={onOpenFilter} /><FilterChip label={copy.date} selected={Boolean(filter.start_date || filter.end_date)} onPress={onOpenFilter} /><FilterChip label={copy.filter} selected={isActive} onPress={onOpenFilter} /></View>
-        <Text style={styles.month}>{copy.month(records.length)}</Text>
+        {showRecordCount ? <Text style={styles.month}>{recordCountLabel(records.length, locale)}</Text> : null}
         {content}
-        {save_attempt?.state === 'pending' || save_attempt?.state === 'uncertain' ? <Text style={styles.caption}>{locale === 'ko' ? '저장 결과 확인 중' : 'Checking the save result'}</Text> : null}
+        <SaveAttemptNotice locale={locale} attempt={save_attempt} />
       </ScrollView>
       <View style={styles.footer}><Button label={copy.importPhoto} onPress={onStartRecord} />{draft ? <Button label={copy.resume(1)} onPress={() => onResumeDraft(draft.draft_id)} tone="subtle" /> : null}<Text style={styles.caption}>{copy.privateBook}</Text></View>
       {filterSheet ? <FilterSheet locale={locale} sheet={filterSheet} records={records} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} /> : null}

@@ -1,0 +1,2 @@
+[functions.record-lifecycle]
+verify_jwt = false

@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { SemanticText } from '../components/SemanticText';
 
 import type { ProcessStep, ProcessingScreenProps } from '../contract';
 import { ProcessingStep, type ProcessingStepStatus } from '../components/ProcessingStep';
@@ -27,9 +28,9 @@ export function ProcessingScreen({ locale, images, draft, active_job, model_stat
   return (
     <Screen title={preparing ? t.preparingHeader : t.processingHeader} onBack={onCancel} backLabel={t.back} footer={footer} contentStyle={styles.content}>
       <StampImage source={source} accessibilityLabel={locale === 'ko' ? '처리 중인 원본 사진' : 'Photo being processed'} resizeMode="contain" style={styles.photo} />
-      <Text accessibilityRole="header" style={styles.title}>{preparing ? t.preparingTitle : t.processingTitle}</Text>
-      <Text style={styles.body}>{preparing ? t.preparingBody : t.processingBody}</Text>
-      {preparing ? <Notice message={t.preparingNotice} tone="info" /> : <>{steps.map((step, index) => { const status = statusFor(step, index); return <ProcessingStep key={step} label={t.steps[step]} status={status} statusLabel={t.stepStatus[status]} />; })}</>}
+      <SemanticText accessibilityRole="header" style={styles.title}>{preparing ? t.preparingTitle : t.processingTitle}</SemanticText>
+      <SemanticText style={styles.body}>{preparing ? t.preparingBody : t.processingBody}</SemanticText>
+      {preparing ? <ProcessingStep label={t.preparingNotice} status="active" statusLabel={t.stepStatus.active} /> : <>{steps.map((step, index) => { const status = statusFor(step, index); return <ProcessingStep key={step} label={t.steps[step]} status={status} statusLabel={t.stepStatus[status]} />; })}</>}
       {failed ? <Notice message={t.error} tone="error" /> : null}
     </Screen>
   );

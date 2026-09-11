@@ -60,10 +60,11 @@ export const theme = {
     title: { fontSize: 28, lineHeight: 42 },
   },
   motion: {
-    pressScale: 0.98,
+    pressScale: 0.96,
     pressDuration: 140,
     enterDuration: 180,
     noticeDuration: 140,
+    loadingDuration: 900,
     sheetOffset: 24,
     dialogScale: 0.98,
   },

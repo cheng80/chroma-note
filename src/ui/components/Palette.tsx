@@ -3,14 +3,16 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import type { ColorTag } from '../contract';
 import { theme } from '../theme';
+import { palettePercentages } from './palette-weights';
 
 export function Palette({ tags }: { tags: ColorTag[] }) {
+  const percentages = palettePercentages(tags.map((tag) => tag.weight));
   return (
     <View accessibilityRole="summary" style={styles.palette}>
       {tags.map((tag, index) => (
-        <View key={`${tag.hex}-${index}`} accessible accessibilityLabel={`${tag.hex}, ${Math.round(tag.weight * 100)}%`} style={styles.item}>
+        <View key={`${tag.hex}-${index}`} accessible accessibilityLabel={`${tag.hex}, ${percentages[index]}%`} style={styles.item}>
           <View style={[styles.swatch, { backgroundColor: tag.hex }]} />
-          <Text style={styles.weight}>{Math.round(tag.weight * 100)}%</Text>
+          <Text style={styles.weight}>{percentages[index]}%</Text>
         </View>
       ))}
     </View>

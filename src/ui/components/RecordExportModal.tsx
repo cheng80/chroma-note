@@ -37,10 +37,10 @@ const copy = {
   ko: {
     title: '이미지 내보내기',
     close: '이미지 내보내기 닫기',
-    intro: '스탬프와 글, 태그를 종이 한 장에 담아 저장해요.',
+    intro: '컬러 스케치와 글, 태그를 종이 한 장에 담아 저장해요.',
     preview: '저장할 이미지 미리보기',
     loading: '미리보기 이미지를 불러오는 중이에요.',
-    imageError: '스탬프 이미지를 불러오지 못해 저장할 수 없어요.',
+    imageError: '컬러 스케치 이미지를 불러오지 못해 저장할 수 없어요.',
     retryImage: '미리보기 다시 불러오기',
     tooTall: '기록이 이미지 크기 한도를 넘어 저장할 수 없어요.',
     web: '웹에서는 갤러리 저장을 지원하지 않아요. iOS 또는 Android 앱에서 이용해 주세요.',
@@ -60,10 +60,10 @@ const copy = {
   en: {
     title: 'Export image',
     close: 'Close image export',
-    intro: 'Save the Stamp, writing, and tags together on one paper image.',
+    intro: 'Save the color sketch, writing, and tags together on one paper image.',
     preview: 'Image preview',
     loading: 'Loading the preview image.',
-    imageError: 'The Stamp image could not load, so it cannot be saved.',
+    imageError: 'The color sketch image could not load, so it cannot be saved.',
     retryImage: 'Reload preview',
     tooTall: 'This record exceeds the image size limit and cannot be saved.',
     web: 'Saving to the gallery is not supported on the web. Use the iOS or Android app.',
@@ -104,7 +104,7 @@ export function RecordExportModal({ record, locale, onClose }: { record: DemoRec
   const [imageState, setImageState] = useState<'loading' | 'loaded' | 'error'>('loading');
   const [imageAttempt, setImageAttempt] = useState(0);
   const [layout, setLayout] = useState({ width: 0, height: 0 });
-  const source = useMemo(() => imageSource(record.stamp.local_uri, demoAssets.stamp.source), [record.stamp.local_uri]);
+  const source = useMemo(() => imageSource(record.stamp.local_uri, demoAssets.stamp.source, record.stamp.image_headers), [record.stamp.local_uri, record.stamp.image_headers]);
   const captureSize = exportCaptureSize(layout.width, layout.height, PixelRatio.get());
   const notice = statusNotice(status, locale);
   const busy = status === 'saving';
@@ -187,7 +187,7 @@ export function RecordExportModal({ record, locale, onClose }: { record: DemoRec
         <ScrollView removeClippedSubviews={false} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Text style={styles.intro}>{text.intro}</Text>
           {!supported ? <Notice message={text.web} tone="info" /> : null}
-          {imageState === 'loading' ? <Notice message={text.loading} tone="info" /> : null}
+          {imageState === 'loading' ? <Notice message={text.loading} tone="info" busy /> : null}
           {imageState === 'error' ? <Notice message={text.imageError} tone="error" /> : null}
           {captureSize.kind === 'too-tall' ? <Notice message={text.tooTall} tone="error" /> : null}
           {notice ? <Notice message={notice.message} tone={notice.tone} /> : null}
@@ -198,6 +198,7 @@ export function RecordExportModal({ record, locale, onClose }: { record: DemoRec
                 fields={record.fields}
                 source={source}
                 locale={locale}
+                aspectRatio={record.stamp.width / record.stamp.height}
                 exportMode
                 onImageLoad={() => setImageState('loaded')}
                 onImageError={() => setImageState('error')}

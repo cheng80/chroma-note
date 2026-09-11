@@ -9,7 +9,7 @@ export function ReadSheet({ locale, record, onClose }: { locale: DisplayLocale; 
   const copy = getBasicCopy(locale);
   return <Sheet title={copy.read} onRequestClose={onClose} footer={<Button label={copy.close} onPress={onClose} tone="secondary" />}>
     <Text style={styles.label}>{copy.aiNote}</Text><Text style={styles.body}>{(record.fields.ai_field_note_edited ?? record.fields.ai_field_note) || (locale === 'ko' ? '아직 AI가 쓴 글이 없어요.' : 'No AI writing yet.')}</Text>
-    <Text style={styles.label}>{copy.tags}</Text><Text style={styles.body}>{[...record.fields.semantic_tags, ...record.fields.mood_tags].join(' · ') || '—'}</Text>
+    <Text style={styles.label}>{copy.tags}</Text><Text style={styles.body}>{[...record.fields.semantic_tags, ...record.fields.mood_tags].join(', ') || (locale === 'ko' ? '없음' : 'None')}</Text>
     <Text style={styles.label}>{copy.memo}</Text><Text style={styles.body}>{record.fields.user_note || copy.noMemo}</Text>
   </Sheet>;
 }

@@ -1,0 +1,5 @@
+# Isolated model-preparation runtime; install only in experiments/model-selection/.venv.
+coremltools==9.0
+torch==2.14.0
+numpy==2.5.3
+pillow==12.3.0
