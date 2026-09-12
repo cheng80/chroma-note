@@ -53,6 +53,10 @@ example
 /experiments/model-selection/.venv/
 /experiments/model-selection/__pycache__/
 
+# Local design review captures and script bytecode
+/design/exports/
+/scripts/__pycache__/
+
 # Downloaded weights and generated model builds
 /modules/chroma-lineart/.model-cache/
 /modules/chroma-lineart/ios/Resources/LineArt.mlmodelc/
