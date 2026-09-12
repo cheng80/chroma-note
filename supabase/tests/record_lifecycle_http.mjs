@@ -19,7 +19,7 @@ const users = [];
 const paths = new Set();
 const records = new Set();
 const checks = [];
-const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAHhlWElmTU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAAEsAAAAAQAAASwAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAAGgAwAEAAAAAQAAAAEAAAAArE7Z4gAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAAxJREFUCB1juHb5BAAE9AJyUWRfCQAAAABJRU5ErkJggg==', 'base64');
+const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGP4z8AAAAMBAQDJ/pLvAAAAAElFTkSuQmCC', 'base64');
 
 function canonical(value) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
@@ -38,12 +38,16 @@ async function request(path, { method = 'GET', body, token, admin = false, conte
 }
 async function json(response, status, label) {
   const body = await response.json().catch(() => ({}));
-  assert.equal(response.status, status, `${label}: HTTP ${response.status} ${JSON.stringify(body)}`);
+  assert.equal(response.status, status, `${label}: HTTP ${response.status}`);
   checks.push(label);
   return body;
 }
 async function lifecycle(user, body, expected = 200, label = body.action) {
   return json(await request('/functions/v1/record-lifecycle', { method: 'POST', token: user?.token, body }), expected, label);
+}
+async function lifecycleResponse(user, body) {
+  const response = await request('/functions/v1/record-lifecycle', { method: 'POST', token: user?.token, body });
+  return { status: response.status, body: await response.json().catch(() => ({})) };
 }
 function beginBody(recordId, operationId) {
   const payload = {
@@ -65,9 +69,12 @@ try {
     const password = randomBytes(32).toString('base64url');
     const created = await json(await request('/auth/v1/admin/users', { admin: true, method: 'POST', body: { email, password, email_confirm: true } }), 200, '합성 계정 생성');
     const session = await json(await request('/auth/v1/token?grant_type=password', { method: 'POST', body: { email, password } }), 200, '합성 세션 생성');
-    users.push({ id: created.id, token: session.access_token });
+    users.push({ id: created.id, token: session.access_token, email, password });
   }
   const [owner, stranger] = users;
+  const secondSession = await json(await request('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: owner.email, password: owner.password } }), 200, '동일 소유자 두 번째 세션 생성');
+  assert.notEqual(secondSession.access_token, owner.token, '서로 다른 인증 세션이 필요하다.');
+  const ownerSecondSession = { token: secondSession.access_token };
   const recordId = randomUUID();
   const createOperation = randomUUID();
   const begin = beginBody(recordId, createOperation);
@@ -107,18 +114,56 @@ try {
   assert.equal(edited.record.stamp_sha256, pngHash);
   assert.deepEqual(await lifecycle(owner, edit, 200, 'edit 멱등 재시도'), edited);
   await lifecycle(owner, { ...edit, operation_id: randomUUID() }, 409, '오래된 version 차단');
+  const concurrentEdits = [
+    { action: 'edit', record_id: recordId, operation_id: randomUUID(), payload_hash: hash({ user_note: '첫 세션 동시 수정' }), payload: { user_note: '첫 세션 동시 수정' }, base_version: edited.record.version },
+    { action: 'edit', record_id: recordId, operation_id: randomUUID(), payload_hash: hash({ user_note: '두 번째 세션 동시 수정' }), payload: { user_note: '두 번째 세션 동시 수정' }, base_version: edited.record.version },
+  ];
+  const concurrentResults = await Promise.all([
+    lifecycleResponse(owner, concurrentEdits[0]),
+    lifecycleResponse(ownerSecondSession, concurrentEdits[1]),
+  ]);
+  assert.deepEqual(concurrentResults.map(({ status }) => status).sort(), [200, 409], '두 세션 CAS는 한 요청만 반영해야 한다.');
+  const concurrentWinner = concurrentResults.find(({ status }) => status === 200).body;
+  const concurrentLoser = concurrentResults.find(({ status }) => status === 409).body;
+  assert.equal(concurrentWinner.record.version, edited.record.version + 1);
+  assert.equal(concurrentLoser.error?.code, 'version_conflict');
+  checks.push('동일 소유자 두 세션 CAS 동시 수정');
   const forbidden = { stamp: { sha256: '0'.repeat(64) } };
   await lifecycle(owner, { ...edit, operation_id: randomUUID(), payload: forbidden, payload_hash: hash(forbidden), base_version: edited.record.version }, 400, '이미지 edit 차단');
 
   const deletionPayload = {};
-  const deletion = { action: 'delete', record_id: recordId, operation_id: randomUUID(), payload_hash: hash(deletionPayload), payload: deletionPayload, base_version: edited.record.version };
+  const deletion = { action: 'delete', record_id: recordId, operation_id: randomUUID(), payload_hash: hash(deletionPayload), payload: deletionPayload, base_version: concurrentWinner.record.version };
   await lifecycle(stranger, deletion, 404, '타 계정 delete 차단');
   assert.deepEqual(await lifecycle(owner, deletion, 200, 'delete 및 객체 정리'), { record: null });
   assert.deepEqual(await lifecycle(owner, deletion, 200, 'delete tombstone 멱등 재시도'), { record: null });
   assert.deepEqual(await lifecycle(owner, { ...deletion, operation_id: randomUUID() }, 200, '이미 삭제된 record 재요청'), { record: null });
   await lifecycle(owner, begin, 404, 'tombstone 재생성 차단');
+  await lifecycle(ownerSecondSession, { ...concurrentEdits[0], operation_id: randomUUID() }, 404, '삭제 후 과거 edit 차단');
+  await lifecycle(ownerSecondSession, finalize, 404, '삭제 후 과거 finalize 차단');
   const rows = await json(await request(`/rest/v1/stamp_records?id=eq.${recordId}&select=id`, { token: owner.token }), 200, '삭제 후 목록 확인');
   assert.deepEqual(rows, []);
+
+  const raceId = randomUUID();
+  const raceOperation = randomUUID();
+  const raceBegin = beginBody(raceId, raceOperation);
+  records.add(raceId);
+  const raceReserved = await lifecycle(owner, raceBegin, 200, '경합 대상 예약');
+  paths.add(raceReserved.record.stamp_image_path);
+  await json(await request(`/storage/v1/object/stamp-images/${raceReserved.record.stamp_image_path}`, { method: 'POST', token: owner.token, body: png, contentType: 'image/png' }), 200, '경합 대상 PNG 업로드');
+  const raceFinalize = { action: 'finalize', record_id: raceId, operation_id: raceOperation, payload_hash: raceBegin.payload_hash, payload: {} };
+  const raceReady = await lifecycle(owner, raceFinalize, 200, '경합 대상 finalize');
+  const raceDelete = { action: 'delete', record_id: raceId, operation_id: randomUUID(), payload_hash: hash({}), payload: {}, base_version: raceReady.record.version };
+  const [deleteRace, finalizeRace] = await Promise.all([
+    lifecycleResponse(owner, raceDelete),
+    lifecycleResponse(ownerSecondSession, raceFinalize),
+  ]);
+  assert.equal(deleteRace.status, 200, 'delete/finalize 경합의 삭제가 완료되어야 한다.');
+  assert.ok([200, 404].includes(finalizeRace.status), 'delete/finalize 경합은 ready 응답 또는 삭제 확인으로 수렴해야 한다.');
+  checks.push('delete/finalize 경합');
+  await lifecycle(ownerSecondSession, raceFinalize, 404, '경합 삭제 후 과거 finalize 차단');
+  await lifecycle(ownerSecondSession, { action: 'edit', record_id: raceId, operation_id: randomUUID(), payload_hash: hash({ user_note: '늦은 수정' }), payload: { user_note: '늦은 수정' }, base_version: raceReady.record.version }, 404, '경합 삭제 후 과거 edit 차단');
+  const raceRows = await json(await request(`/rest/v1/stamp_records?id=eq.${raceId}&select=id`, { token: owner.token }), 200, '경합 삭제 후 목록 확인');
+  assert.deepEqual(raceRows, []);
 
   const abortId = randomUUID();
   const abortOperation = randomUUID();

@@ -132,7 +132,7 @@ Expo의 `EXPO_PUBLIC_`는 앱에 포함되는 공개 값이다. `.env.local`을 
 3. 관리자 권한을 쓰는 처리도 검증된 사용자·소유권·허용 필드를 확인한다. `SECURITY DEFINER`가 필요한 함수는 호출 권한·실행 경로·UID 검사를 명시하고 최소화한다.
 4. 중복 요청에는 같은 결과를, 오래된 수정에는 충돌을, 부분 실패에는 재시도 가능한 상태를 반환하도록 앱의 계약을 구현한다. 결과를 알 수 없으면 성공으로 표시하지 않는다.
 5. 삭제/탈퇴는 파일·DB·사용자·세션의 수명을 함께 처리한다. Auth 사용자 삭제만으로 파일 정리와 기존 토큰 무효화가 끝났다고 가정하지 않는다. [사용자 데이터 관리](https://supabase.com/docs/guides/auth/managing-user-data)
-6. Cron·Realtime·확장 등은 선택한 기능에만 추가한다. 실행 주체·주기·재시도·로그를 설명하고 실제 요청으로 확인한다. [Cron](https://supabase.com/docs/guides/cron), [Realtime](https://supabase.com/docs/guides/realtime)
+6. Cron·Realtime·확장 등은 선택한 기능에만 추가한다. 실행 주체·주기·재시도·로그를 설명하고 실제 요청으로 확인한다. 비동기 HTTP 작업의 Cron 성공은 요청 접수만 뜻할 수 있으므로 해당 요청 ID의 응답 코드·본문까지 확인한다. Vault와 함수가 공유 인증값을 쓰면 원문을 기록하지 않고 양쪽 hash 일치와 실제 인증 요청 성공을 확인한다. [Cron](https://supabase.com/docs/guides/cron), [Realtime](https://supabase.com/docs/guides/realtime)
 
 **확인:** 실제 API에서 허용·거부·중복·부분 실패가 의도대로 처리된다. **막히면:** 호출 인증과 함수 내부 권한을 분리해 살핀다. 서버 secret이 있다는 이유로 입력 UID·경로를 신뢰하지 않는다.
 
