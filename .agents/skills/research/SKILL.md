@@ -1,12 +1,10 @@
 ---
 name: research
-description: Investigate a question against high-trust primary sources and capture the findings as a Markdown file in the repo. Use when the user wants a topic researched, docs or API facts gathered, or reading legwork delegated to a background agent.
+description: "Investigate a requested question using cited primary sources."
 ---
 
-Spin up a **background agent** to do the research, so you keep working while it reads.
+Investigate the requested question using primary sources: official documentation, source code, specifications, and first-party APIs. Tie material claims to their sources and distinguish evidence, inference, and uncertainty.
 
-Its job:
+Delegate independent reading when available and worthwhile; otherwise research directly. Produce the requested artifact. When a saved research note is requested, use the supplied path or the repository's existing note convention; ordinary lookup does not require a new file.
 
-1. Investigate the question against **primary sources** (official docs, source code, specs, first-party APIs), not a secondary write-up of them. Follow every claim back to the source that owns it.
-2. Write the findings to a single Markdown file, citing each claim's source.
-3. Save it where the repo already keeps such notes; match the existing convention, and if there is none, put it somewhere sensible and say where.
+Done when the question is answered with supporting sources or the remaining evidence gap is stated explicitly.

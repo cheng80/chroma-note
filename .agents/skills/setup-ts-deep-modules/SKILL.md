@@ -1,6 +1,6 @@
 ---
 name: setup-ts-deep-modules
-description: Wire dependency-cruiser into a TypeScript repo so each package is a deep module, with implementation hidden in subfolders and reachable only through its entry-point files. User-invoked.
+description: "Configure dependency-cruiser to enforce TypeScript package entry-point boundaries."
 disable-model-invocation: true
 ---
 
@@ -39,7 +39,7 @@ Layering (which packages may depend on which) is a *different* concern and is le
 ### 1. Detect the environment
 
 - **Package manager**: `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn, `bun.lockb` → bun, else npm. Use it for every command below (`pnpm`/`yarn`/`npm run`/`bunx`).
-- **Packages root**: if `src/` exists use `src/packages`, else `packages`. Confirm the choice with the user if the repo already has a different obvious convention.
+- **Packages root**: use the existing package layout. For a new layout, choose `src/packages` when `src/` exists, otherwise `packages`; clarify only an ambiguity that affects the requested scope.
 - **Existing config**: check for a `.dependency-cruiser.*` file. If one exists, do **not** overwrite it: merge the four rules and the options in, and tell the user what you added.
 
 **Done when:** package manager, packages root, and existing-config status are all known.
@@ -62,29 +62,13 @@ Copy [`dependency-cruiser.config.cjs`](./dependency-cruiser.config.cjs) to the r
 - Fold it into the repo's umbrella check command, the one that already runs typecheck (e.g. a `check` / `ci` / `validate` script). Do **not** touch `tsconfig` or add path aliases.
 - If there is no umbrella script, add `lint:boundaries` and tell the user to include it in CI.
 
-**Done when:** `lint:boundaries` exists and runs as part of the same command as typecheck.
+**Done when:** `lint:boundaries` runs and is included in the existing umbrella check, or the absence of that check is reported.
 
-### 5. Scaffold the example package
+### 5. Verify the boundary rules
 
-Create a committed `<packages-root>/example/` as a copy-me template:
+Use an existing package or a disposable fixture in the checked package root. Confirm an allowed entry-point import passes and a forbidden deep import fails with the intended rule, then remove only the temporary fixture or probe. Preserve any pre-existing violation and report it separately; do not add a permanent example package unless requested.
 
-- `index.ts` is an entry point. Export one function that delegates to an internal file (so the package is visibly *deep*, not a pass-through).
-- `lib/impl.ts`: an internal file in a **subfolder**, imported by `index.ts`, not reachable from outside.
-- `tests/example.test.ts` imports **only** `../index` (an entry point) and asserts against the public function.
-
-Tell the user this is a starter template to copy or delete.
-
-**Done when:** the example package exists, exposes its behaviour through a root entry point, and hides `impl` in a subfolder.
-
-### 6. Prove the rules bite
-
-This is the completion criterion for the whole skill: a config that doesn't fail on a violation is worthless.
-
-1. Run `lint:boundaries`. It must **pass** on the clean example.
-2. Temporarily add a deep import to `tests/example.test.ts` (e.g. `import { thing } from "../lib/impl"`). Run `lint:boundaries` again; it must **fail** with `tests-through-entrypoints`.
-3. Revert the deep import. Run once more, and it must **pass**.
-
-**Done when:** you have observed a pass, then a fail on the deep import, then a pass again. If step 2 does not fail, the rules are not wired correctly, so fix before finishing.
+Done when an allowed import passes, a forbidden import fails, and temporary probes have been cleaned up. If the repository has no TypeScript implementation, explain that limitation rather than installing an app or test framework just for the example.
 
 ### 7. Document the convention
 
