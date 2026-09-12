@@ -24,6 +24,12 @@ assert.equal(resolveSemanticWrap(text, lines, 12, new Map(input.samples.map(samp
 assert.equal(resolveSemanticWrap(text, lines, 12, new Map(input.samples.map(sample => [sample, -1]))), text);
 assert.equal(resolveSemanticWrap(text, lines, 12, widths, 1), text);
 assert.equal(resolveSemanticWrap(text, [text], 100, widths), text);
+const KoreanNotice = 'AI 변환 과정에서 일부 윤곽이나 세부 표현이 생략될 수 있어요.';
+const splitKoreanNotice = ['AI 변환 과정에서 일부 윤곽이나 세부 표현이 생략될 수 있', '어요.'];
+const KoreanNoticeInput = prepareSemanticWrap(KoreanNotice, splitKoreanNotice);
+assert.ok(KoreanNoticeInput);
+const KoreanNoticeWidths = new Map(KoreanNoticeInput.samples.map(sample => [sample, [...sample].reduce((total, character) => total + (character === ' ' ? 0.35 : 1), 0)]));
+assert.equal(resolveSemanticWrap(KoreanNotice, splitKoreanNotice, 29, KoreanNoticeWidths), 'AI 변환 과정에서 일부 윤곽이나\n세부 표현이 생략될 수 있어요.');
 const english = 'A familiar place with a new story to remember';
 const englishLines = ['A familiar place with a new ', 'story to remember'];
 const englishInput = prepareSemanticWrap(english, englishLines);

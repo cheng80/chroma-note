@@ -70,14 +70,14 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
   const showRecordCount = list_state === 'ready' || list_state === 'partial-cache';
   if (list_state === 'empty') return <EmptyBook locale={locale} drafts={drafts} save_attempt={save_attempt} onOpenSettings={onOpenSettings} onStartRecord={onStartRecord} importTriggerRef={importTriggerRef} onResumeDraft={onResumeDraft} onRetry={onRetry} refreshing={refreshing} />;
 
-  const content = list_state === 'filter-empty' ? <View style={styles.emptyState}><Text style={styles.emptyStateTitle}>{copy.noResults}</Text><Text style={styles.bodyMuted}>{copy.noResultsBody}</Text><Button ref={emptyFilterRef} label={copy.filter} onPress={() => openFilterFrom(emptyFilterRef)} tone="secondary" /></View>
+  const content = list_state === 'filter-empty' ? <View style={styles.emptyState}><SemanticText style={styles.emptyStateTitle}>{copy.noResults}</SemanticText><SemanticText style={styles.bodyMuted}>{copy.noResultsBody}</SemanticText><Button ref={emptyFilterRef} label={copy.filter} onPress={() => openFilterFrom(emptyFilterRef)} tone="secondary" /></View>
     : list_state === 'error' ? <View style={styles.emptyState}><Notice message={copy.listError} tone="error" /><Button label={copy.retry} onPress={onRetry} tone="secondary" /></View>
     : list_state === 'loading' ? <Notice message={locale === 'ko' ? '기록을 불러오는 중이에요.' : 'Loading records.'} tone="info" busy />
     : <><View style={[styles.grid, columns === 1 && styles.singleColumn]}>{records.map((record) => {
       const date = displayDate(record.fields.diary_date) || '—';
       const title = recordTitle(record, locale);
       return <RecordCard key={record.id} width={cardWidth} date={date} title={title} source={sourceFor(record.stamp.local_uri, designStamp, record.stamp.image_headers)} imageMissing={!record.stamp.local_uri} onPress={() => onOpenRecord(record.id)} onToggleFavorite={() => onToggleFavorite(record.id)} isFavorite={record.fields.is_favorite} favoriteLabel={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} accessibilityLabel={`${copy.record}, ${date}, ${title}`} />;
-    })}</View>{list_state === 'partial-cache' ? <Text style={styles.caption}>{copy.partial}</Text> : null}{has_more ? <Button label={copy.more} onPress={onLoadMore} tone="secondary" disabled={refreshing} /> : null}</>;
+    })}</View>{list_state === 'partial-cache' ? <SemanticText style={styles.caption}>{copy.partial}</SemanticText> : null}{has_more ? <Button label={copy.more} onPress={onLoadMore} tone="secondary" disabled={refreshing} /> : null}</>;
 
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
     <View style={styles.flex}>
@@ -90,7 +90,7 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
         {pending_deletions.length ? <Notice message={locale === 'ko' ? `삭제 대기 중인 기록 ${pending_deletions.length}개가 있어요. 연결을 확인하면 삭제를 이어갑니다.` : `Waiting for a connection to delete ${pending_deletions.length} ${pending_deletions.length === 1 ? 'record' : 'records'}.`} tone="warning" /> : null}
         <SaveAttemptNotice locale={locale} attempt={save_attempt} />
       </ScrollView>
-      <View style={styles.footer}><Button ref={importTriggerRef} label={copy.importPhoto} onPress={onStartRecord} />{draft ? <Button label={copy.resume(1)} onPress={() => onResumeDraft(draft.draft_id)} tone="subtle" /> : null}<Text style={styles.caption}>{copy.privateBook}</Text></View>
+      <View style={styles.footer}><Button ref={importTriggerRef} label={copy.importPhoto} onPress={onStartRecord} />{draft ? <Button label={copy.resume(1)} onPress={() => onResumeDraft(draft.draft_id)} tone="subtle" /> : null}<SemanticText style={styles.caption}>{copy.privateBook}</SemanticText></View>
       {filterSheet ? <FilterSheet locale={locale} sheet={filterSheet} records={records} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} restoreFocusRef={filterRestoreRef} /> : null}
     </View>
   </SafeAreaView>;

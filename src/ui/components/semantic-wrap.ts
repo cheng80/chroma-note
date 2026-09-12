@@ -41,9 +41,12 @@ export function resolveSemanticWrap(text: string, nativeLines: readonly string[]
   const input = prepareSemanticWrap(text, nativeLines);
   if (!input || !Number.isFinite(width) || width <= 0 || (numberOfLines > 0 && nativeLines.length > numberOfLines)) return text;
   try {
+    const semanticOffsets = new Set(input.plan.aggregate().map(candidate => candidate.offset));
+    // A native Korean character break can split one word. Let the model choose instead.
+    const nativeLayout = input.breaks.every(offset => semanticOffsets.has(offset)) ? { breaks: input.breaks } : undefined;
     const result = input.plan.select({
       maxWidth: width,
-      nativeLayout: { breaks: input.breaks },
+      nativeLayout,
       measureText: value => widths.get(value) ?? NaN,
     });
     return result.applied && !result.overflow ? result.lines.join('\n') : text;
