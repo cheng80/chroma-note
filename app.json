@@ -8,6 +8,7 @@
     "scheme": "chromanote",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "appleTeamId": "M382EW7FD8",
       "icon": "./assets/expo.icon",
       "deploymentTarget": "17.0",
       "bundleIdentifier": "com.cheng80.chromanote"
@@ -34,9 +35,10 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#F7F3EA",
+          "image": "./assets/images/splash-chroma-note.png",
+          "imageWidth": 280,
+          "resizeMode": "contain"
         }
       ],
       [
@@ -58,7 +60,8 @@
           "microphonePermission": false
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "./plugins/with-private-http-cache"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -4,15 +4,26 @@ import { convertLineArt } from '../../modules/chroma-lineart';
 import lineArtManifest from '../../modules/chroma-lineart/model-manifest.json';
 import { extractPhotoColors } from '../../modules/chroma-lineart/palette';
 import { analyzePhoto, preparePhotoAnalysis } from '../../modules/chroma-analysis';
-import type { ActiveJob, DisplayLocale, PhotoInput } from '../ui/contract';
-import type { PhotoStepResult } from '../ui/processing-state';
+import type { ActiveJob, DisplayLocale, PhotoInput, PhotoStepResult } from '../domain/record';
 
 export async function processPhotoStep(photo: PhotoInput, job: ActiveJob, locale: DisplayLocale, signal: AbortSignal): Promise<PhotoStepResult> {
+  const started = performance.now();
+  let outcome = 'failed';
+  try {
+    const result = await executePhotoStep(photo, job, locale, signal);
+    outcome = signal.aborted ? 'cancelled' : 'success';
+    return result;
+  } finally {
+    if (__DEV__) console.info('[photo-timing]', JSON.stringify({ step: job.step, outcome: signal.aborted ? 'cancelled' : outcome, durationMs: Math.round(performance.now() - started), width: photo.width, height: photo.height }));
+  }
+}
+
+async function executePhotoStep(photo: PhotoInput, job: ActiveJob, locale: DisplayLocale, signal: AbortSignal): Promise<PhotoStepResult> {
   if (photo.source !== 'device' || photo.input_revision !== job.input_revision || !new File(photo.local_uri).exists) throw new Error('photo_missing');
   if (signal.aborted) throw new Error('photo_cancelled');
   const input = { uri: photo.local_uri, inputRevision: photo.input_revision, locale };
   if (job.step === 'prepare') {
-    await preparePhotoAnalysis();
+    await preparePhotoAnalysis(signal);
     return { step: 'prepare' };
   }
   if (job.step === 'colors') {

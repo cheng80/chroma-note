@@ -14,7 +14,8 @@ const call = (args) => {
 const phone = call(['list-windows', '--app', 'Simulator']).windows.find(window => window.title.startsWith('iPhone'));
 assert.ok(phone, 'An already running iPhone simulator is required.');
 const tree = call(['get-app-state', '--app', 'Simulator', '--window-id', String(phone.id), '--no-screenshot']).snapshot.treeText;
-assert.match(tree, /(?:button|generic element) (?:문구 편집|날짜와 장소|사진에서 찾은 색|필터) 닫기/, 'Open the intended sheet before running this check.');
+assert.match(tree, /heading (?:문구 편집|날짜와 장소|사진에서 찾은 색|필터)(?:,|$)/m, 'Open the intended sheet before running this check.');
+assert.match(tree, /(?:button|generic element) (?:문구 편집 |날짜와 장소 |사진에서 찾은 색 |필터 )?닫기(?:,|$)/m, 'The sheet needs its close control.');
 const scrolls = tree.includes('scroll down');
 assert.equal(scrolls, expected === 'scrollable', 'Sheet scrolling does not match its available space.');
 const footer = tree.split('\n').find(line => /(?:button|generic element) (?:초안에 적용|필터 적용|닫기),/.test(line));

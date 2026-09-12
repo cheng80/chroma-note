@@ -2,13 +2,13 @@
 
 루트 [AGENTS.md](../AGENTS.md)를 함께 따른다.
 
-## 읽기 순서
+## 작업별 참고 문서
 
-1. [현황](03_PROJECT_STATUS.md)에서 현재 범위·구현 사실·남은 게이트를 확인한다.
-2. 제품 변경은 [제품 명세](01_PRODUCT_SPEC.md), 저장/인증/데이터 변경은 [기술 명세](02_TECH_SPEC.md)를 읽는다.
-3. 모델 선택·실험은 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 화면 작업은 [디자인 brief](design/DESIGN_BRIEF.md)를 읽는다.
-4. 주요 선택의 이유와 제약은 [설계 결정 ADR](adr/ADR-003-stamp-record-direction.md)을 확인한다.
-5. 작업 절차와 역할 배정은 [작업 흐름](04_WORKFLOW.md)을 따른다.
+- 현재 범위·구현 상태·남은 검증: [현황](03_PROJECT_STATUS.md).
+- 제품 동작·범위 변경: [제품 명세](01_PRODUCT_SPEC.md), 방향과 제약은 [설계 결정 ADR](adr/ADR-003-stamp-record-direction.md).
+- 저장·인증·데이터 변경: [기술 명세](02_TECH_SPEC.md).
+- 모델 선택·실험: [AI 검증 계획](05_AI_VALIDATION_PLAN.md). 화면 작업: [디자인 brief](design/DESIGN_BRIEF.md).
+- 작업 절차·역할 배정·인수인계: [작업 흐름](04_WORKFLOW.md).
 
 ## 갱신 위치
 

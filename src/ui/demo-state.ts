@@ -16,6 +16,8 @@ import {
   type StampCandidate,
 } from './contract.ts';
 
+import { recordWriting } from './record-writing.ts';
+
 export { DEMO_CODE };
 
 export const DEMO_PHOTO_URI = 'demo-photo';
@@ -23,6 +25,13 @@ export const DEMO_STAMP_URI = 'demo-stamp';
 
 export function displayLocale(preference: 'system' | 'ko' | 'en', systemLocale = Intl.DateTimeFormat().resolvedOptions().locale) {
   return preference === 'system' ? systemLocale.toLowerCase().startsWith('ko') ? 'ko' : 'en' : preference;
+}
+
+export function discardSaveMode(attempt: SaveAttempt | null, draft: Draft | null | undefined): 'abort' | 'local' | null {
+  if (!attempt || !draft || attempt.draft_id !== draft.draft_id || attempt.record_id !== draft.record_id || !['failed', 'uncertain', 'conflict'].includes(attempt.state)) return null;
+  if (draft.kind === 'new' && attempt.base_version === undefined) return 'abort';
+  if (draft.kind === 'edit' && attempt.base_version !== undefined) return 'local';
+  return null;
 }
 
 export type DemoAction =
@@ -65,6 +74,11 @@ export type DemoAction =
   | { type: 'save' }
   | { type: 'save-result'; operationId: string; outcome: 'success' | 'failed' | 'uncertain' | 'conflict' }
   | { type: 'retry-save' }
+  | { type: 'request-discard-save' }
+  | { type: 'request-delete-draft'; draftId: string }
+  | { type: 'discard-save-confirm' }
+  | { type: 'discard-save-cancel' }
+  | { type: 'discard-save-result'; draftId: string; operationId?: string; outcome: 'success' | 'failed' }
   | { type: 'open-detail'; recordId: string }
   | { type: 'back-book' }
   | { type: 'summary-back' }
@@ -84,6 +98,8 @@ export type DemoAction =
   | { type: 'locale'; value: 'system' | 'ko' | 'en'; systemLocale?: string }
   | { type: 'scenario'; value: DemoScenario }
   | { type: 'logout' }
+  | { type: 'logout-save' }
+  | { type: 'retry-model' }
   | { type: 'logout-confirm' }
   | { type: 'logout-cancel' }
   | { type: 'delete-account-request' }
@@ -142,7 +158,7 @@ function setDraft(state: DemoState, draft: Draft): DemoState {
 
 function resetAfterPhotoChange(draft: Draft): Draft {
   const revision = draft.input_revision + 1;
-  return { ...draft, input_revision: revision, photo: { ...draft.photo, input_revision: revision }, stage: 'photo_ready', colors: null, analysis: null, selected_candidate: null, confirmation: null, error_code: undefined };
+  return { ...draft, input_revision: revision, photo: { ...draft.photo, input_revision: revision }, stage: 'photo_ready', colors: null, analysis: null, selected_candidate: null, confirmation: null, fields: { ...draft.fields, user_note: recordWriting(draft.fields), scene: null, semantic_tags: [], mood_tags: [], ai_field_note: '', ai_field_note_edited: null }, error_code: undefined };
 }
 
 function baseAnalysis(revision: number): Analysis {
@@ -172,7 +188,7 @@ function isValidAnalysisFields(fields: RecordFields) {
   return (fields.scene === null || isValidText(fields.scene, 120)) && isValidTags(fields.semantic_tags, 8) && isValidTags(fields.mood_tags, 3) && (fields.ai_field_note_edited === null || isValidText(fields.ai_field_note_edited, 300));
 }
 
-function isSaveableDraft(draft: Draft | null) {
+export function isSaveableDraft(draft: Draft | null) {
   const candidate = draft?.selected_candidate;
   const confirmation = draft?.confirmation;
   return Boolean(draft && candidate && candidate.input_revision === draft.input_revision && confirmation && confirmation.input_revision === draft.input_revision && confirmation.candidate_id === candidate.candidate_id && draft.colors?.source_revision === draft.input_revision && isCalendarDate(draft.fields.diary_date) && isValidText(draft.fields.user_note, 2000) && (draft.fields.place_name === null || isValidText(draft.fields.place_name, 120)) && isValidAnalysisFields(draft.fields));
@@ -237,13 +253,13 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'compare-tab': return { ...state, comparison_tab: action.value };
     case 'confirm': { const draft = state.drafts.new; if (!draft?.selected_candidate || draft.selected_candidate.input_revision !== draft.input_revision) return state; return { ...state, drafts: { ...state.drafts, new: { ...draft, confirmation: action.value ? { input_revision: draft.input_revision, candidate_id: draft.selected_candidate.candidate_id } : null } } }; }
     case 'continue-compare': { const draft = state.drafts.new; const confirmed = Boolean(draft?.selected_candidate && draft.selected_candidate.input_revision === draft.input_revision && draft.confirmation && draft.confirmation.candidate_id === draft.selected_candidate.candidate_id && draft.confirmation.input_revision === draft.input_revision); return confirmed && draft ? { ...state, route: 'summary', active_draft_kind: 'new', drafts: { ...state.drafts, new: { ...draft, stage: 'summary' } } } : state; }
-    case 'open-summary-sheet': { const draft = currentDraft(state); if (!draft) return state; if (action.kind === 'datePlace') return { ...state, sheet: { kind: 'datePlace', initial: { diary_date: draft.fields.diary_date, date_source: draft.fields.date_source, place_name: draft.fields.place_name }, working: { diary_date: draft.fields.diary_date, date_source: draft.fields.date_source, place_name: draft.fields.place_name }, error: null } }; if (action.kind === 'analysis') { const working = { scene: draft.fields.scene, semantic_tags: [...draft.fields.semantic_tags], mood_tags: [...draft.fields.mood_tags], ai_field_note_edited: draft.fields.ai_field_note_edited, user_note: draft.fields.user_note }; return { ...state, sheet: { kind: 'analysis', initial: working, working, error: null, caption_status: 'idle', caption_suggestion: null, caption_request_id: null } }; } return draft.colors ? { ...state, sheet: { kind: 'colors', value: draft.colors } } : state; }
+    case 'open-summary-sheet': { const draft = currentDraft(state); if (!draft) return state; if (action.kind === 'datePlace') return { ...state, sheet: { kind: 'datePlace', initial: { diary_date: draft.fields.diary_date, date_source: draft.fields.date_source, place_name: draft.fields.place_name }, working: { diary_date: draft.fields.diary_date, date_source: draft.fields.date_source, place_name: draft.fields.place_name }, error: null } }; if (action.kind === 'analysis') { const working = { scene: draft.fields.scene, semantic_tags: [...draft.fields.semantic_tags], mood_tags: [...draft.fields.mood_tags], ai_field_note_edited: '', user_note: recordWriting(draft.fields) }; return { ...state, sheet: { kind: 'analysis', initial: working, working, error: null, caption_status: 'idle', caption_suggestion: null, caption_request_id: null } }; } return draft.colors ? { ...state, sheet: { kind: 'colors', value: draft.colors } } : state; }
     case 'sheet-change': {
       const sheet = state.sheet;
       if (!sheet || sheet.kind !== action.change.kind) return state;
       return { ...state, sheet: { ...sheet, working: action.change.working, error: null } as DemoState['sheet'] };
     }
-    case 'sheet-apply': { const draft = currentDraft(state); const sheet = state.sheet; if (!sheet) return state; if (sheet.kind === 'filter') return isValidFilter(sheet.working) ? withBookState({ ...state, book_filter: sheet.working, sheet: null }) : { ...state, sheet: { ...sheet, error: 'date-range-invalid' } }; if (!draft || sheet.kind === 'colors' || sheet.kind === 'read' || sheet.kind === 'actions') return { ...state, sheet: null }; if (sheet.kind === 'datePlace' && (!isCalendarDate(sheet.working.diary_date) || (sheet.working.place_name !== null && !isValidText(sheet.working.place_name, 120)))) return { ...state, sheet: { ...sheet, error: 'date-or-place-invalid' } }; if (sheet.kind === 'analysis' && (!isValidText(sheet.working.user_note, 2000) || !isValidAnalysisFields({ ...draft.fields, ...sheet.working }))) return { ...state, sheet: { ...sheet, error: 'analysis-invalid' } }; const fields = sheet.kind === 'datePlace' ? { ...draft.fields, ...sheet.working } : { ...draft.fields, scene: sheet.working.scene, semantic_tags: [...sheet.working.semantic_tags], mood_tags: [...sheet.working.mood_tags], ai_field_note_edited: sheet.working.ai_field_note_edited, user_note: sheet.working.user_note }; return { ...state, sheet: null, drafts: { ...state.drafts, [draft.kind]: { ...draft, fields } } }; }
+    case 'sheet-apply': { const draft = currentDraft(state); const sheet = state.sheet; if (!sheet) return state; if (sheet.kind === 'filter') return isValidFilter(sheet.working) ? withBookState({ ...state, book_filter: sheet.working, sheet: null }) : { ...state, sheet: { ...sheet, error: 'date-range-invalid' } }; if (!draft || sheet.kind === 'colors' || sheet.kind === 'read' || sheet.kind === 'actions') return { ...state, sheet: null }; if (sheet.kind === 'datePlace' && (!isCalendarDate(sheet.working.diary_date) || (sheet.working.place_name !== null && !isValidText(sheet.working.place_name, 120)))) return { ...state, sheet: { ...sheet, error: 'date-or-place-invalid' } }; if (sheet.kind === 'analysis' && (!isValidText(sheet.working.user_note, 2000) || !isValidAnalysisFields({ ...draft.fields, ...sheet.working }))) return { ...state, sheet: { ...sheet, error: 'analysis-invalid' } }; const fields = sheet.kind === 'datePlace' ? { ...draft.fields, ...sheet.working } : { ...draft.fields, scene: sheet.working.scene, semantic_tags: [...sheet.working.semantic_tags], mood_tags: [...sheet.working.mood_tags], ai_field_note_edited: '', user_note: sheet.working.user_note }; return { ...state, sheet: null, drafts: { ...state.drafts, [draft.kind]: { ...draft, fields } } }; }
     case 'sheet-cancel': return { ...state, sheet: null };
     case 'sheet-close': return sheetDirty(state) ? { ...state, dialog: { kind: 'discard-draft' } } : { ...state, sheet: null };
     case 'sheet-discard-confirm': return { ...state, sheet: null, dialog: null };
@@ -252,12 +268,32 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'caption-result': {
       const sheet = state.sheet;
       if (sheet?.kind !== 'analysis' || sheet.caption_status !== 'pending' || sheet.caption_request_id !== action.requestId || currentDraft(state)?.input_revision !== action.inputRevision) return state;
-      if (action.outcome === 'failure' || !action.value || action.value.length > 300) return { ...state, sheet: { ...sheet, caption_status: 'error', caption_request_id: null } };
-      return { ...state, sheet: { ...sheet, working: { ...sheet.working, ai_field_note_edited: action.value }, caption_status: 'success', caption_suggestion: action.value, caption_request_id: null } };
+      if (action.outcome === 'failure' || !action.value || !isValidText(action.value, 300)) return { ...state, sheet: { ...sheet, caption_status: 'error', caption_request_id: null } };
+      const writing = recordWriting({ user_note: sheet.working.user_note, ai_field_note: action.value, ai_field_note_edited: null });
+      if (!isValidText(writing, 2000)) return { ...state, sheet: { ...sheet, caption_status: 'error', caption_request_id: null } };
+      return { ...state, sheet: { ...sheet, working: { ...sheet.working, user_note: writing, ai_field_note_edited: '' }, error: null, caption_status: 'success', caption_suggestion: action.value, caption_request_id: null } };
     }
     case 'save': { const draft = currentDraft(state); if (!draft || !isSaveableDraft(draft) || state.save_attempt?.state === 'pending') return state; const operationId = nextId('operation'); const attempt: SaveAttempt = { operation_id: operationId, draft_id: draft.draft_id, record_id: draft.record_id, owner_id: state.session?.owner_id ?? draft.owner_id, base_version: draft.base_record_version, payload_snapshot: snapshotFor(draft), state: 'pending' }; return { ...state, save_attempt: attempt, drafts: { ...state.drafts, [draft.kind]: { ...draft, stage: 'save_pending', operation_id: operationId } } }; }
     case 'save-result': { const attempt = state.save_attempt; const draft = attempt ? Object.values(state.drafts).find((item) => item?.draft_id === attempt.draft_id) : null; if (!attempt || !draft || attempt.operation_id !== action.operationId || attempt.state !== 'pending') return state; if (action.outcome !== 'success') return { ...state, save_attempt: { ...attempt, state: action.outcome } }; const snapshot = attempt.payload_snapshot; const existing = state.records.find((item) => item.id === attempt.record_id); const record: DemoRecord = { source: 'demo', id: attempt.record_id, user_id: attempt.owner_id, status: 'ready', version: (existing?.version ?? 0) + 1, stamp: { ...snapshot.stamp }, color_tags: snapshot.color_tags.map((tag) => ({ ...tag, rgb: [...tag.rgb] as [number, number, number] })), fields: { ...snapshot.fields, semantic_tags: [...snapshot.fields.semantic_tags], mood_tags: [...snapshot.fields.mood_tags] }, created_at: existing?.created_at ?? new Date().toISOString() }; const records = existing ? state.records.map((item) => item.id === record.id ? record : item) : [...state.records, record]; return withBookState({ ...state, route: 'book', records, drafts: { ...state.drafts, [draft.kind]: null }, active_draft_kind: null, selected_record_id: null, save_attempt: { ...attempt, state: 'demo_saved' }, sheet: null }); }
     case 'retry-save': return state.save_attempt && state.save_attempt.state !== 'pending' && state.save_attempt.state !== 'demo_saved' ? { ...state, scenario: state.scenario === 'save-failed' || state.scenario === 'save-uncertain' || state.scenario === 'save-conflict' ? 'normal' : state.scenario, save_attempt: { ...state.save_attempt, state: 'pending', error_code: undefined } } : state;
+    case 'request-discard-save':
+    case 'request-delete-draft': {
+      const id = action.type === 'request-delete-draft' ? action.draftId : state.save_attempt?.draft_id;
+      const draft = Object.values(state.drafts).find(item => item?.draft_id === id);
+      const attempt = state.save_attempt?.draft_id === id ? state.save_attempt : null;
+      if (!draft || draft.owner_id !== state.session?.owner_id || (state.active_job?.status === 'running' && draft.kind === 'new') || (attempt && !discardSaveMode(attempt, draft))) return state;
+      return { ...state, dialog: { kind: 'discard-save', draft_id: draft.draft_id } };
+    }
+    case 'discard-save-confirm': return state;
+    case 'discard-save-cancel': return { ...state, dialog: null };
+    case 'discard-save-result': {
+      const attempt = state.save_attempt;
+      const draft = Object.values(state.drafts).find(item => item?.draft_id === action.draftId);
+      const matchingAttempt = attempt?.draft_id === action.draftId ? attempt : null;
+      if (!draft || draft.owner_id !== state.session?.owner_id || (state.active_job?.status === 'running' && draft.kind === 'new') || matchingAttempt?.operation_id !== action.operationId || (matchingAttempt && !discardSaveMode(matchingAttempt, draft))) return state;
+      if (action.outcome === 'failed') return { ...state, dialog: null };
+      return { ...state, route: 'book', drafts: { ...state.drafts, [draft.kind]: null }, active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null, active_job: draft.kind === 'new' ? null : state.active_job, save_attempt: matchingAttempt ? null : state.save_attempt };
+    }
     case 'open-detail': return state.records.some((record) => record.id === action.recordId) ? { ...state, route: 'detail', selected_record_id: action.recordId, active_draft_kind: null, sheet: null } : state;
     case 'back-book': return { ...state, route: 'book', selected_record_id: null, active_draft_kind: null, sheet: null };
     case 'summary-back': { const draft = currentDraft(state); return draft?.kind === 'new' ? { ...state, route: 'compare', active_draft_kind: 'new', sheet: null } : draft?.kind === 'edit' ? { ...state, route: 'detail', active_draft_kind: 'edit', selected_record_id: draft.record_id, sheet: null } : { ...state, route: 'book', active_draft_kind: null, sheet: null }; }

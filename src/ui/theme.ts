@@ -16,6 +16,7 @@ export const theme = {
     accent: '#294B63',
     accentPressed: '#1D3C52',
     accentSubtle: '#E8EFF3',
+    info: '#35658A',
     danger: '#9B3535',
     dangerSubtle: '#F9ECE8',
     warning: '#79551D',
@@ -68,6 +69,7 @@ export const theme = {
     sheetOffset: 24,
     dialogScale: 0.98,
   },
+  contentMaxWidth: 540,
   touchTarget: 48,
   buttonHeight: 52,
 } as const;

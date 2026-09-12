@@ -1,5 +1,6 @@
 import { demoReducer, filterRecords, initialDemoState } from './demo-state.ts';
 import type { DemoRecord, DemoState, Draft, PhotoInput } from './contract.ts';
+import { recordWriting } from './record-writing.ts';
 
 export function bookState(state: DemoState): DemoState {
   const filtered = filterRecords(state.records, state.book_filter);
@@ -21,10 +22,11 @@ export function preserveAdoptedCaption(before: DemoState, after: DemoState): Dem
 }
 
 /** Keep a user's newer edit when native caption generation finishes late. */
-export function acceptCaptionResult(state: DemoState, requestId: string, inputRevision: number, requestedWriting: string | null, outcome: 'success' | 'failure', value?: string): DemoState {
+export function acceptCaptionResult(state: DemoState, requestId: string, inputRevision: number, requestedWriting: string, outcome: 'success' | 'failure', value?: string): DemoState {
   const sheet = state.sheet;
-  if (sheet?.kind !== 'analysis' || sheet.caption_status !== 'pending' || sheet.caption_request_id !== requestId) return state;
-  if (sheet.working.ai_field_note_edited !== requestedWriting) {
+  const draft = state.active_draft_kind ? state.drafts[state.active_draft_kind] : null;
+  if (sheet?.kind !== 'analysis' || sheet.caption_status !== 'pending' || sheet.caption_request_id !== requestId || draft?.input_revision !== inputRevision) return state;
+  if (sheet.working.user_note !== requestedWriting) {
     return { ...state, sheet: { ...sheet, caption_status: 'idle', caption_request_id: null } };
   }
   return outcome === 'success' && value
@@ -46,6 +48,7 @@ export function replaceDraftPhoto(draft: Draft, photo: PhotoInput, capturedDate:
     confirmation: null,
     fields: {
       ...draft.fields,
+      user_note: recordWriting(draft.fields),
       diary_date: userDate ? draft.fields.diary_date : capturedDate ?? deviceDate,
       date_source: userDate ? 'user' : capturedDate ? 'exif' : 'device',
       scene: null,

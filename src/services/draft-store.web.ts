@@ -1,4 +1,4 @@
-import type { Draft, DemoOwnerId, SaveAttempt } from '../ui/contract';
+import type { Draft, DemoOwnerId, SaveAttempt } from '../domain/record';
 
 export interface DraftState {
   drafts: { new: Draft | null; edit: Draft | null };

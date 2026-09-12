@@ -9,10 +9,11 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { AppIcon, type AppIconName } from './AppIcon';
 import { useEntranceProgress } from './motion';
+import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
 
 export type ProcessingStepStatus = 'done' | 'active' | 'waiting' | 'error';
@@ -27,11 +28,17 @@ export function ProcessingStep({ label, status, statusLabel }: { label: string; 
     cancelAnimation(rotation);
     rotation.value = 0;
     if (status === 'active' && !reduceMotion) {
-      rotation.value = withRepeat(withTiming(1, {
-        duration: theme.motion.loadingDuration,
-        easing: Easing.linear,
-        reduceMotion: ReduceMotion.System,
-      }), -1, false);
+      rotation.value = withRepeat(
+        withTiming(1, {
+          duration: theme.motion.loadingDuration,
+          easing: Easing.linear,
+          reduceMotion: reduceMotion ? ReduceMotion.Always : ReduceMotion.Never,
+        }),
+        -1,
+        false,
+        undefined,
+        reduceMotion ? ReduceMotion.Always : ReduceMotion.Never,
+      );
     }
     return () => cancelAnimation(rotation);
   }, [reduceMotion, rotation, status]);
@@ -47,8 +54,8 @@ export function ProcessingStep({ label, status, statusLabel }: { label: string; 
   return (
     <Reanimated.View accessible accessibilityRole="text" accessibilityLabel={`${label}, ${statusLabel}`} accessibilityLiveRegion={status === 'error' ? 'assertive' : status === 'active' ? 'polite' : 'none'} style={[styles.root, animatedStyle]}>
       <View style={styles.indicator}><Reanimated.View style={indicatorStyle}><AppIcon name={icon} size={18} color={color} /></Reanimated.View></View>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={[styles.status, status === 'active' && styles.activeText, status === 'error' && styles.errorText]}>{statusLabel}</Text>
+      <SemanticText style={styles.label}>{label}</SemanticText>
+      <SemanticText style={[styles.status, status === 'active' && styles.activeText, status === 'error' && styles.errorText]}>{statusLabel}</SemanticText>
     </Reanimated.View>
   );
 }
@@ -57,7 +64,7 @@ const styles = StyleSheet.create({
   root: { minHeight: 40, flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm },
   indicator: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
   label: { flex: 1, color: theme.colors.ink, fontFamily: theme.typography.fontFamily, fontSize: 14, lineHeight: 21 },
-  status: { color: theme.colors.inkSecondary, fontFamily: theme.typography.fontFamily, fontSize: 12, lineHeight: 18 },
+  status: { flexShrink: 1, color: theme.colors.inkSecondary, fontFamily: theme.typography.fontFamily, fontSize: 12, lineHeight: 18 },
   activeText: { color: theme.colors.accent },
   errorText: { color: theme.colors.danger },
 });

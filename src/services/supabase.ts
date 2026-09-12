@@ -2,6 +2,7 @@ import { AppState, type AppStateStatus, Platform } from 'react-native';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 import { secureSessionStorage } from './secure-session';
+import { boundedFetch } from './network';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim();
 const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
@@ -15,6 +16,8 @@ export class SupabaseConfigError extends Error {
 
 export const supabase: SupabaseClient | undefined = supabaseUrl && supabaseKey
   ? createClient(supabaseUrl, supabaseKey, {
+      db: { retry: false },
+      global: { fetch: boundedFetch },
       auth: {
         autoRefreshToken: true,
         detectSessionInUrl: false,

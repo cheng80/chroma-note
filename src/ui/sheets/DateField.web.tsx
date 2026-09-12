@@ -1,4 +1,5 @@
 import React, { useId } from 'react';
+import { SemanticText } from '../components/SemanticText';
 import { Button } from '../primitives';
 import { theme } from '../theme';
 import { calendarDateToLocalDate } from './date-place';
@@ -7,7 +8,7 @@ import type { DateFieldProps } from './DateField';
 export function DateField({ label, locale, value, onChange, onClear }: DateFieldProps) {
   const id = useId();
   return <div style={{ display: 'flex', flexDirection: 'column', gap: theme.spacing.sm }}>
-    <label htmlFor={id} style={{ color: theme.colors.ink, fontSize: 14, lineHeight: '21px', fontWeight: 600 }}>{label}</label>
+    <label htmlFor={id} style={{ color: theme.colors.ink, fontSize: 14, lineHeight: '21px', fontWeight: 600 }}><SemanticText style={{ color: theme.colors.ink, fontSize: 14, lineHeight: 21, fontWeight: '600' }}>{label}</SemanticText></label>
     <input id={id} type="date" lang={locale} value={value ?? ''} onChange={(event) => {
       const next = event.currentTarget.value;
       if (!next && onClear) onClear();

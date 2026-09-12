@@ -11,7 +11,7 @@ enum PhotoImporterTests {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
 
-        let source = root.appendingPathComponent("source.png")
+        let source = root.appendingPathComponent("transparent.png")
         try makePNG().write(to: source)
         let result = try PhotoImporter.normalize(inputURL: source, outputDirectory: root)
         try expect(FileManager.default.fileExists(atPath: source.path), "source preserved")
@@ -20,17 +20,25 @@ enum PhotoImporterTests {
 
         let output = URL(string: result.uri)!
         guard let imageSource = CGImageSourceCreateWithURL(output as CFURL, nil),
-              CGImageSourceGetType(imageSource) == UTType.jpeg.identifier as CFString,
+              CGImageSourceGetType(imageSource) == UTType.png.identifier as CFString,
               let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any],
               let outputImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil)
-        else { throw TestFailure("JPEG output") }
+        else { throw TestFailure("PNG output") }
         try expect(properties[kCGImagePropertyGPSDictionary] == nil, "GPS stripped")
         let exif = properties[kCGImagePropertyExifDictionary] as? [CFString: Any]
         let tiff = properties[kCGImagePropertyTIFFDictionary] as? [CFString: Any]
         try expect(exif?[kCGImagePropertyExifDateTimeOriginal] == nil &&
                    exif?[kCGImagePropertyExifDateTimeDigitized] == nil &&
                    tiff?[kCGImagePropertyTIFFDateTime] == nil, "capture metadata stripped")
-        try expect(try firstPixel(outputImage).allSatisfy { $0 > 245 }, "alpha flattened on white")
+        try expect(try firstPixel(outputImage)[3] == 0, "alpha preserved")
+
+        let opaque = root.appendingPathComponent("opaque.png")
+        try makePNG(alpha: 255).write(to: opaque)
+        let opaqueResult = try PhotoImporter.normalize(inputURL: opaque, outputDirectory: root)
+        let opaqueOutput = URL(string: opaqueResult.uri)!
+        guard let opaqueSource = CGImageSourceCreateWithURL(opaqueOutput as CFURL, nil),
+              CGImageSourceGetType(opaqueSource) == UTType.jpeg.identifier as CFString
+        else { throw TestFailure("opaque JPEG output") }
 
         let oriented = root.appendingPathComponent("oriented.jpg")
         try makeOrientedJPEG().write(to: oriented)
@@ -91,7 +99,7 @@ private func firstPixel(_ image: CGImage) throws -> [UInt8] {
         return true
     }
     guard drew else { throw TestFailure("pixel read") }
-    return Array(rgba.prefix(3))
+    return rgba
 }
 
 private func makeOrientedJPEG(width: Int = 40, height: Int = 20, orientation: Int = 6) throws -> Data {
@@ -110,13 +118,13 @@ private func makeOrientedJPEG(width: Int = 40, height: Int = 20, orientation: In
     return data as Data
 }
 
-private func makePNG(width: Int = 64, height: Int = 32) throws -> Data {
+private func makePNG(width: Int = 64, height: Int = 32, alpha: UInt8 = 0) throws -> Data {
     var rgba = [UInt8](repeating: 0, count: width * height * 4)
     for index in stride(from: 0, to: rgba.count, by: 4) {
         rgba[index] = 40
         rgba[index + 1] = 120
         rgba[index + 2] = 220
-        rgba[index + 3] = 0
+        rgba[index + 3] = alpha
     }
     guard let provider = CGDataProvider(data: Data(rgba) as CFData),
           let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),

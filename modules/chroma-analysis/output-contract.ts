@@ -50,7 +50,7 @@ export function parsePhotoNote(raw: string, locale: string): string {
     if (codePoints(note) < 8 || codePoints(note) > 24 || !/[가-힣]/.test(note)) invalid();
   } else if (locale === 'en') {
     const words = note.split(/\s+/);
-    if (words.length < 4 || words.length > 8 || /[가-힣]/.test(note)) invalid();
+    if (words.length < 4 || words.length > 8 || !/[A-Za-z]/.test(note) || /[^\x00-\x7F]/.test(note)) invalid();
   } else {
     invalid();
   }

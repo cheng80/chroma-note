@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import Animated from 'react-native-reanimated';
-import { AccessibilityState, ActivityIndicator, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
+import { AccessibilityState, ActivityIndicator, Pressable, StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
-import { usePressScale } from './motion';
+import { usePressScale, useEntranceProgress } from './motion';
+import { AppIcon } from './AppIcon';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 type Style = StyleProp<ViewStyle>;
@@ -23,7 +25,7 @@ export type ButtonProps = {
   testID?: string;
 };
 
-export function Button({
+export const Button = forwardRef<React.ElementRef<typeof Pressable>, ButtonProps>(function Button({
   label,
   onPress,
   disabled = false,
@@ -35,17 +37,20 @@ export function Button({
   accessibilityLabel,
   accessibilityState,
   testID,
-}: ButtonProps) {
+}: ButtonProps, ref) {
   const [focused, setFocused] = useState(false);
   const [pressed, setPressedState] = useState(false);
   const { animatedStyle, setPressed } = usePressScale();
+  const { reduceMotion } = useEntranceProgress(true);
   const inactive = disabled || busy;
 
   return (
     <AnimatedPressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
+      accessibilityLiveRegion={busy ? 'polite' : 'none'}
       accessibilityState={{ ...accessibilityState, disabled: inactive, busy }}
       disabled={inactive}
       onFocus={() => setFocused(true)}
@@ -71,11 +76,11 @@ export function Button({
         animatedStyle,
       ]}
     >
-      {busy ? <ActivityIndicator color={theme.colors.accent} /> : null}
-      <Text style={[styles.buttonText, busy || disabled ? styles.inactiveText : toneTextStyles[tone], textStyle]}>{label}</Text>
+      {busy ? reduceMotion ? <AppIcon name="refresh-cw" color={theme.colors.accent} /> : <ActivityIndicator color={theme.colors.accent} /> : null}
+      <SemanticText style={[styles.buttonText, busy || disabled ? styles.inactiveText : toneTextStyles[tone], textStyle]}>{label}</SemanticText>
     </AnimatedPressable>
   );
-}
+});
 
 const toneStyles = StyleSheet.create({
   primary: { backgroundColor: theme.colors.accent, ...theme.shadows.low },
@@ -110,6 +115,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
   },
   buttonText: {
+    flexShrink: 1,
     fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.body.fontSize,
     lineHeight: theme.typography.body.lineHeight,

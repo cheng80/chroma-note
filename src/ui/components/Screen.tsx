@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -43,15 +43,24 @@ export function Screen({
   accessibilityLabel,
 }: ScreenProps) {
   const scroll = useRef<ScrollView>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const overflows = viewportHeight > 0 && contentHeight > viewportHeight + 1;
   const body = scrollable ? (
     <ScrollView
       ref={scroll}
       style={styles.scroll}
       contentContainerStyle={[styles.content, contentStyle]}
       keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator
+      scrollEnabled={overflows}
+      bounces={overflows}
+      showsVerticalScrollIndicator={overflows}
       indicatorStyle="black"
-      onContentSizeChange={() => scroll.current?.flashScrollIndicators()}
+      onContentSizeChange={(_width, height) => {
+        setContentHeight(height);
+        if (height > viewportHeight + 1) scroll.current?.flashScrollIndicators();
+      }}
+      onLayout={({ nativeEvent }) => setViewportHeight(nativeEvent.layout.height)}
     >
       {children}
     </ScrollView>
@@ -63,12 +72,12 @@ export function Screen({
     <SafeAreaView edges={footer ? ['top', 'right', 'left'] : ['top', 'right', 'bottom', 'left']} style={[styles.screen, style]} accessibilityLabel={accessibilityLabel}>
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.header}>
-          {onBack ? <IconButton label={backLabel} onPress={onBack} accessibilityHint="이전 화면으로 돌아갑니다" icon="arrow-left" /> : null}
-          <SemanticText accessibilityRole="header" style={[styles.title, brand && styles.brand]} numberOfLines={2}>{title}</SemanticText>
+          {onBack ? <IconButton label={backLabel} onPress={onBack} icon="arrow-left" /> : null}
+          <SemanticText accessibilityRole="header" style={[styles.title, brand && styles.brand]}>{title}</SemanticText>
           {actions ? <View style={styles.actions}>{actions}</View> : null}
         </View>
         {body}
-        {footer ? <SafeAreaView edges={['bottom']} style={styles.footer}>{footer}</SafeAreaView> : null}
+        {footer ? <SafeAreaView edges={['bottom']} style={styles.footer}><View style={styles.footerContent}>{footer}</View></SafeAreaView> : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -78,6 +87,9 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   screen: { flex: 1, backgroundColor: theme.colors.bgPage },
   header: {
+    width: '100%',
+    maxWidth: theme.contentMaxWidth,
+    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
@@ -102,6 +114,9 @@ const styles = StyleSheet.create({
   actions: { alignItems: 'flex-end', justifyContent: 'center' },
   scroll: { flex: 1 },
   content: {
+    width: '100%',
+    maxWidth: theme.contentMaxWidth,
+    alignSelf: 'center',
     flexGrow: 1,
     paddingHorizontal: theme.spacing.xl,
     paddingBottom: theme.spacing.md,
@@ -113,9 +128,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: theme.colors.borderControl,
     boxShadow: '0 -4px 12px rgba(41, 40, 35, 0.08)',
-    paddingHorizontal: theme.spacing.xl,
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,
+  },
+  footerContent: {
+    width: '100%',
+    maxWidth: theme.contentMaxWidth,
+    alignSelf: 'center',
+    paddingHorizontal: theme.spacing.xl,
     gap: theme.spacing.sm,
   },
 });

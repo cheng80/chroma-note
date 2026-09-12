@@ -20,7 +20,7 @@
 | [Supabase 재사용 체크리스트](supabase/SETUP_CHECKLIST.md) | 앱별 설정값·단계별 완료 기준·진행 기록 양식 |
 | [Supabase 단계별 세팅 가이드](supabase/SETUP_GUIDE.md) | 설정 위치·이유·순서·확인 방법·공식 근거 |
 | [설계 결정 ADR](adr/ADR-003-stamp-record-direction.md) | 현재 선택의 이유, 대안, 제약과 영향 |
-| [디자인 brief](design/DESIGN_BRIEF.md) | 화면 구성·문구·상태·접근성 |
+| [디자인 brief](design/DESIGN_BRIEF.md) | 화면 구성·문구·상태·기본 사용성 |
 | [감성 디자인 리서치·Pen 개선 기준](design/design.md) | 공식 앱 사례·시각 결정·Pen 반영 위치 |
 | [Pen 디자인 안내](../design/README.md) | 현재 파운데이션·컴포넌트·화면과 정적 미리보기 |
 | [용어집](../CONTEXT.md) | 선화 기록·작업 사진·대표색·AI 글·내 메모 정의 |

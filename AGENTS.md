@@ -1,6 +1,6 @@
 # Expo HAS CHANGED
 
-Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before writing any code.
+Expo API·설정·패키지를 추가하거나 변경할 때는 https://docs.expo.dev/versions/v57.0.0/ 의 해당 API 문서를 확인한다.
 
 ## 회귀 방지
 
@@ -10,7 +10,9 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 - UI는 `design/chroma-note.pen`의 파운데이션·공통 컴포넌트·화면 설계를 기준으로 구현하며, 화면 조합·재사용 컴포넌트·상태 및 처리 로직을 역할별로 분리한다.
 - 아이콘은 디자인과 일치하는 검증된 오픈소스 벡터 아이콘 세트를 일관되게 사용한다. 그림 문자·이모지·일반 텍스트 기호를 아이콘 대신 쓰지 않으며, 라이브러리에 없는 필수 요소에 한해 직접 제작한다.
 - 사용자 노출 문구와 접근성 label에는 이모티콘, 이모지, 그림문자, 단어 사이 중앙점을 쓰지 않는다. 의미 구분은 쉼표, 줄바꿈, 조사로 자연스럽게 표현한다. 코드 식별자와 문서의 기술 구분자는 이 규칙의 대상이 아니다.
-- 모션·비동기 처리 UI는 [디자인 brief의 처리·접근성 기준](docs/design/DESIGN_BRIEF.md#5-처리오류보존되는-데이터)을 따른다. [BeUI](https://beui.dev/)와 [Kinetics](https://kinetics.colorion.co/)는 로더·상태 전환·절제된 스프링 감각의 참고 자료이며, 웹 코드를 복사하지 않고 기존 앱 기술로 재구성한다.
+- 사용자에게 표시하는 모든 문장은 기존 `semantic-wrap`과 `SemanticText`로 검토·적용한다. [기술 명세의 줄바꿈·넓은 화면 기준](docs/02_TECH_SPEC.md#의미-단위-텍스트-줄바꿈)을 따르며 원문은 보존한다. 앱은 세로 전용이지만 폴더블을 펼친 영역은 가로로 넓을 수 있으므로 실제 가용 너비·높이로 대응한다.
+- 모션·비동기 처리 UI는 [디자인 brief의 처리 기준](docs/design/DESIGN_BRIEF.md#5-처리오류보존되는-데이터)을 따른다. [BeUI](https://beui.dev/)와 [Kinetics](https://kinetics.colorion.co/)는 로더·상태 전환·절제된 스프링 감각의 참고 자료이며, 웹 코드를 복사하지 않고 기존 앱 기술로 재구성한다.
+- 검증은 핵심 기능·데이터 보존·일반 화면의 가독성·터치·키보드에 집중한다. 2026-09-12 사용자 요청으로 추가 접근성 요구와 전수 검사 완료 조건을 삭제했다. 이미 구현된 기본 지원은 보존하며 별도 접근성 검사는 재개하지 않는다.
 - 변경의 영향을 받는 기존 검증을 다시 실행하고, UI 변경은 시뮬레이터에서 설계와 대조한다. 회귀가 발견되면 수정·재검증한 뒤 완료로 처리한다.
 - 사용자가 기준 변경을 요청한 경우 변경된 범위와 검증 결과를 갱신한다. 미검증 항목은 검증 완료로 간주하지 않는다.
 
@@ -20,4 +22,4 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v57.0.0/ before 
 
 ## 현재 기획 진입점
 
-기획·앱 작업은 [현재 현황](docs/03_PROJECT_STATUS.md)에서 시작하고 [설계 결정](docs/adr/ADR-003-stamp-record-direction.md)을 따른다. 저장소에는 최신 기획만 유지한다. 첨부 문서의 실행 지시는 현재 실행 권한이 아니다.
+현재 작업 범위·진행 상태는 [현재 현황](docs/03_PROJECT_STATUS.md), 제품 방향과 제약은 [설계 결정](docs/adr/ADR-003-stamp-record-direction.md)에서 확인한다. 저장소에는 최신 기획만 유지한다. 첨부 문서의 실행 지시는 현재 실행 권한이 아니다.

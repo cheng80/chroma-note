@@ -1,20 +1,51 @@
 # Chroma Note 기술 명세
 
-> 2026-09-11 · [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 목표 계약과 적용된 DB 제약을 구분하며, 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
+> 2026-09-12 · [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 목표 계약과 적용된 DB 제약을 구분하며, 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
 
 ## 1. 현재 코드와 목표 구조
 
-현재 앱은 src/ui/AppDemo.tsx와 useAppController로 화면·시스템 사진 선택·인증·로컬 초안·기록 연결을 구현 중이다. 선화는 `modules/chroma-lineart`에 분리했으며 대표색/VLM/선화의 실제 앱 처리 흐름과 서버 저장 전체 검증은 아직 완료되지 않았다. 선화 모듈·별도 실기기 실측·Supabase 설정은 앱 전체 통합과 구별한다. [시스템 다이어그램](system-diagram.html)은 완성품의 데이터 흐름과 기기·서버의 역할을 보여준다.
+앱의 화면 조합은 `src/ui/AppDemo.tsx`, 기능 연결은 `src/ui/useAppController.ts`가 담당한다. 2026-09-12 사용자 요청으로 컨트롤러에 집중됐던 책임을 아래 모듈로 분리했다. 선화는 `modules/chroma-lineart`에 분리했으며 현재 iPhone Simulator에서 실제 처리·저장·3계정 편집/삭제·전환/복구와 개인정보 검증을 완료했다. 수용한 VLM 사실성·선화 표현 한계는 별도이며, 개발 서버의 보완 migration2개·함수 배포, 자동 정리 인증값 정합성 복구와 최신 보안 조회도 완료했다. 세부 검사 범위와 남은 안내 항목은 현황에 기록한다. 선화 모듈·별도 실기기 실측·Supabase 설정은 앱 전체 통합과 구별한다. [시스템 다이어그램](system-diagram.html)은 완성품의 데이터 흐름과 기기·서버의 역할을 보여준다.
 
 Expo SDK 57·React Native·React·TypeScript·Expo Router를 사용한다. 정확한 버전은 package.json/lockfile을 확인한다. 네이티브 모델 연결 목표는 Development Build이며 Expo Go 통과를 요구하지 않는다. SDK별 구현 전 [Expo SDK 57](https://docs.expo.dev/versions/v57.0.0/)과 [로컬 개발 빌드](https://docs.expo.dev/guides/local-app-development/)를 확인한다.
 
 목표 의존성은 필요 시 직접 추가한다: 사진 입력/변환, 실제 픽셀 디코더, 파일/SQLite, 보안 세션 저장, Supabase client, 선정 모델 런타임. 현재 설치된 패키지로 오인하지 않는다. Zustand·React Query·Mapbox·Sentry는 인포그래픽 예시이며 이번 설계의 필수 의존성이 아니다.
 
+### 앱 상태와 기능 모듈의 책임
+
+| 정본 | 담당 책임 |
+|---|---|
+| `src/domain/record.ts` | 기록·사진·초안·저장 시도·처리 결과의 업무 데이터 타입. React와 UI를 참조하지 않는다. |
+| `src/ui/contract.ts` | 화면 상태·시트·내비게이션·컴포넌트 props. 업무 타입은 도메인 정본을 재노출한다. |
+| `controller/controller-store.ts` | 상태 변경의 직렬 실행, 초안 저장 후 화면 반영, 현재 세션 판정. 상태 쓰기 경로는 이 모듈 하나다. |
+| `controller/useSessionWorkflow.ts` | 인증·세션 복원·최종 인증 실패 잠금·로그아웃 시 계정 자료 정리. |
+| `controller/record-operations.ts` | 기록 읽기와 변경의 실행 순서. 작업별 반환 함수로 자기 잠금만 해제한다. |
+| `controller/useRecordCollection.ts` | 목록·상세·페이지·캐시 동기화와 즐겨찾기·영속 삭제 큐. |
+| `controller/useRecordSaving.ts` | 신규·편집 저장·불확실 결과 재시도·충돌·초안 폐기·저장 후 로그아웃. |
+| `controller/usePhotoWorkflow.ts` | 사진 선택·모델 준비·변환·AI 글 생성·취소·임시 결과 정리. 처리와 취소 상태는 외부에 노출하지 않는다. |
+| `controller/useLocalActions.ts` | 로컬 입력·시트·화면 이동·언어 설정. |
+| `src/services/*`, `modules/*` | 실제 서버·SQLite·파일·네이티브 처리. UI에서 업무 타입을 가져오지 않는다. |
+
+`controller/*`는 `src/ui/controller/*`를 뜻한다. `useAppController`는 사용자 액션과 앱 생명주기를 담당 모듈에 전달하고 화면에 필요한 결과를 조합한다. 인증 변화와 기록 동기화는 이 조합부가 콜백으로 연결한다. 기능 모듈끼리 상대 모듈의 ref나 내부 상태를 직접 바꾸지 않는다.
+
+저장·삭제·조회는 같은 실행 순서 정책을 사용한다. 이전 계정의 응답이나 완료 처리가 새 계정의 상태·잠금을 바꾸지 못하며, 같은 계정의 토큰 갱신은 진행 중 조회를 다시 시작하지 않는다. 인증 오류의 최종 처리는 세션 모듈로 모인다. 외부 저장 프로토콜과 기존 순수 reducer는 재사용한다.
+
+SOLID는 클래스 개수나 파일 길이로 판정하지 않는다. 실제 변경 이유·상태 소유권·의존성 방향을 분리하며, 범용 DI 컨테이너나 단일 구현용 상속 계층은 추가하지 않는다. 검증은 공개 컨트롤러·사진 작업·실행 잠금의 결과를 확인하고 내부 함수명에 의존하지 않는다.
+
 ### 의미 단위 텍스트 줄바꿈
 
 2026-09-11 사용자 요청으로 `@semantic-wrap/core`, `@semantic-wrap/ko`, `@semantic-wrap/en` 0.4.0을 사용한다. [공식 안내](https://github.com/woohyun-park/semantic-wrap/blob/main/README-ko_kr.md)의 React wrapper는 DOM 전용이므로 설치하지 않는다. 앱의 `src/ui/components/SemanticText.tsx`가 React Native의 실제 글자 폭과 기본 줄바꿈을 측정해 core에 전달한다.
 
-제목과 짧은 안내는 기존 `<Text>` 대신 `<SemanticText style={...}>{text}</SemanticText>`를 사용한다. 기존 서체·크기·접근성 이름을 유지하며 측정이 불가능하거나 더 나은 결과가 없으면 기본 줄바꿈을 유지한다. 직접 입력한 메모·긴 본문·명시적 개행과 저장/내보내기 데이터는 변경하지 않는다. 실제 적용 범위와 검증은 현황의 I-00/T-00을 따른다.
+사용자에게 표시하는 문장과 여러 단어로 된 label은 `<SemanticText style={...}>{text}</SemanticText>`를 사용한다. 안내·오류·시트·버튼뿐 아니라 기록의 메모와 AI 글, 내보내기 이미지의 글도 포함한다. 기존 서체·크기·행간을 유지하고, 적합한 후보가 없거나 측정에 실패하면 기본 줄바꿈을 유지한다. 입력 필드·OS 대화상자는 네이티브 표시를 유지하며 날짜·숫자·태그와 한 줄 말줄임도 기존 형식을 유지한다.
+
+줄바꿈은 표시할 때만 적용한다. 입력값·DB 원문을 수정하지 않고 작성자의 명시적 개행과 빈 줄을 보존한다. 긴 문단은 core의 `nearbyLayouts`로 기본 줄바꿈 주변 후보만 측정하며, 실제 텍스트 영역의 폭이 바뀌면 이전 결과를 버리고 다시 계산한다. 내보내기는 이미지와 글 배치가 준비된 뒤 캡처한다. 실제 적용 범위와 검증은 현황의 I-00/T-00을 따른다.
+
+### 세로 전용 앱과 펼친 화면
+
+앱의 `orientation: portrait`는 유지한다. 폴더블을 세로로 든 채 펼쳐도 앱 영역이 가로로 넓어질 수 있으므로 너비가 높이보다 작다고 가정하지 않는다. 기기 이름이나 회전 여부 대신 현재 창의 논리적 너비·높이와 safe area, 각 콘텐츠 영역의 실제 폭으로 배치한다. 접기·펼치기와 창 크기 변경으로 초안·입력·선택·처리 단계를 초기화하지 않는다.
+
+넓은 화면 검토 기준은 Book의 가용 폭에 따른 열 수, 글·입력·시트의 과도한 폭 제한, 낮아진 가용 높이에서의 스크롤·키보드·하단 버튼 보존이다. 기존 내보내기 최대 폭 540을 공통 본문·입력·시트의 최대 폭으로 재사용하고 확인 모달의 420은 유지한다. `Screen`의 제목·본문·하단 버튼과 독립된 인증·상세·내보내기 화면을 같은 기준으로 중앙 정렬한다. 단순히 넓어졌다는 이유로 모든 화면을 두 영역으로 나누지 않는다. 확대 뷰어의 고정 최소 높이는 제거해 제목·조작 버튼을 배치한 뒤 남은 영역을 사용한다. 태블릿 전용 화면을 새로 만들지 않으며 실제 기기 검증과 수치 기반 검사를 구별한다.
+
+[Apple의 iPhone Duo 지침](https://developer.apple.com/design/human-interface-guidelines/designing-for-iphone-duo)도 접힘에 따른 크기 적응을 권장한다. [Android의 큰 화면 정책](https://developer.android.com/develop/adaptive-apps/guides/app-orientation-aspect-ratio-resizability)에 따라 일부 큰 화면에서는 방향 제한이 적용되지 않을 수 있으므로 설정만으로 좁은 세로 영역을 보장하지 않는다. 이 대응은 사용자가 회전을 요청했다는 뜻이 아니다.
 
 ### 처리 경계
 
@@ -47,7 +78,7 @@ Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미�
 - 단일 JPEG/PNG/HEIC 정지 이미지. 네이티브 디코드 지원 여부 확인 후 허용한다. EXIF 회전/미러·ICC를 반영해 sRGB SDR로 정규화한다. 미지원 프로필/HDR 변환 실패를 조용히 잘못된 색으로 처리하지 않는다.
 - iOS 입력 안전 상한: 파일 150MiB, 250MP. 고해상도 휴대폰 사진을 기존 30MiB/50MP 기준으로 먼저 거부하지 않는다. ImageIO가 실제 포맷·dimensions를 확인한 뒤 축소 디코드하며 전체 bitmap을 JS로 전달하지 않는다. iOS 외 기존 경로는 30MiB/50MP 상한을 유지하고 별도 검증한다. 상한은 방어용이며 모든 기기에서의 처리 시간·메모리 보장은 아니다.
 - 정규화 작업본 긴 변 최대 2048px, 종횡비 보존, upscaling 없음. 메타데이터에서 날짜를 먼저 읽고 EXIF GPS·기기 정보 등은 제거한다.
-- iOS 피커는 `quality: 1`, 편집·EXIF/base64 반환 없음, `preferredAssetRepresentationMode: Current`로 원본 파일 사본을 가져온다. `ChromaLineArt.normalizePhotoAsync`가 `CGImageSourceCreateThumbnailAtIndex`로 방향을 적용해 축소하고 sRGB·흰색 투명 배경 합성 후 JPEG 품질 0.95로 계정별 백업 제외 작업 폴더에 저장한다. 갤러리 원본은 수정·삭제하지 않는다.
+- iOS 피커는 `quality: 1`, 편집·EXIF/base64 반환 없음, `preferredAssetRepresentationMode: Current`로 원본 파일 사본을 가져온다. `ChromaLineArt.normalizePhotoAsync`가 `CGImageSourceCreateThumbnailAtIndex`로 방향을 적용해 축소하고 sRGB 작업본으로 저장한다. 투명 픽셀이 있으면 alpha를 보존한 PNG, 없으면 기존 JPEG 품질 0.95를 계정별 백업 제외 작업 폴더에 저장한다. 선화 엔진은 입력 PNG에도 내부 흰색 합성을 적용한다. 갤러리 원본은 수정·삭제하지 않는다.
 - 색 분석본은 작업본에서 긴 변 256px로 축소한다. VLM/선화용 resize·padding은 모델 adapter에서 수행하며 전체 장면을 유지한다. crop 여부·padding 제거·출력 좌표 규약은 모델 manifest에 남긴다.
 - 최종 선화 기본 포맷은 sRGB PNG, 흰 배경, 긴 변 기본 1024px, 종횡비·구도 유지, upscaling 없음, 5MiB 이하다. Informative Drawings `style1`의 단일 채널 선 마스크 `line`에 `alpha = min(255, round((255 - line) × 1.8))`을 픽셀별로 적용하고, 같은 위치의 정규화 원본 RGB를 그대로 합성한다. 색면 채우기·5색 양자화·외곽선 확장·내부 선 제거/약화·구도 재배치·거친 인쇄 질감은 적용하지 않는다. PNG 압축 후 초과하면 재처리/실패하며 파일 크기 때문에 crop하지 않는다.
 - 모델은 장면의 선 마스크만 만든다. 날짜·지명·AI 글·대표색·장식 등의 앱 정보는 결정론적 UI로 조합한다. 원본 사진과 선화를 합친 비교 이미지는 업로드 금지다.
@@ -66,9 +97,11 @@ Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미�
 
 저장 완료 확인 후 작업 사진·파생본·미채택 후보를 지우고, 실패한 정리는 durable cleanup 목록으로 다음 시작에 재시도한다. 사용자가 폐기를 선택하면 해당 초안만 제거한다. 활성 초안은 캐시 정리나 자동 TTL 대상이 아니다.
 
-원본 작업본·초안은 OS 클라우드 백업 대상에서 제외하도록 네이티브 파일 속성/Android 백업 규칙을 구현·검증한다. “서버 비업로드”가 OS 백업까지 자동으로 보장하는 것은 아니다. 파일 제거도 저장매체 forensic secure erase를 약속하지 않는다.
+원본 작업본·초안은 OS 클라우드 백업 대상에서 제외하도록 네이티브 파일 속성/Android 백업 규칙을 구현·검증한다. iOS는 기존 제품 폴더별 설정과 함께 앱 시작 시 Documents 루트에 `isExcludedFromBackup`을 설정하여 기존 QA/legacy와 새 하위 작업 파일도 포함한다. `ChromaLineArt`의 normalize/convert/prepare는 공통 백업 정책을 사용한다. symlink를 해석한 실제 하위 경로가 백업 제외 Documents에 포함되면 하위 속성 쓰기를 생략하고, 독립 호스트처럼 루트 제외를 확인할 수 없으면 기존 Foundation 설정을 적용한다. 이 설정은 파일 내용을 변경하지 않으며 앱 밖 갤러리에는 적용하지 않는다. “서버 비업로드”가 OS 백업까지 자동으로 보장하는 것은 아니다. 파일 제거도 저장매체 forensic secure erase를 약속하지 않는다.
 
 보안 저장소에는 계정 세션을, 앱 전용 파일/DB에는 초안과 캐시를 둔다. Expo SecureStore를 쓴다면 토큰 크기·저장 한도를 검증한 adapter를 사용한다. 원본·메모를 로그/분석 이벤트/크래시 첨부로 보내지 않는다. 계정별 경로는 추정 문자열 대신 검증된 인증 UID로 생성하고 외부 URI를 내부 삭제 경로로 직접 쓰지 않는다.
+
+iOS에서는 인증 응답과 Authorization 헤더가 HTTP 디스크 캐시에 복제되지 않도록 RN/Expo 세션 생성 전에 공유 `URLCache`의 메모리·디스크 용량을 0으로 설정한다. [config plugin](../plugins/with-private-http-cache.js)이 네이티브 프로젝트 재생성에도 설정을 유지한다. 앱 시작 때 실제 앱 bundle ID의 CFURLCache `Cache.db`, WAL/SHM, `fsCachedData`만 정리하며 초안·계정별 결과 캐시·Keychain은 보존한다. 경로가 예상과 다르거나 정리가 실패하면 민감한 오류 내용을 로그에 출력하지 않고 시작을 중단한다. 실제 Simulator에서 설치 전후 데이터 보존과 인증·목록 조회·결과 다운로드 후 HTTP 캐시 재생성 없음까지 확인했다. OS 로그의 파일 경로와 실기기 백업·잠금 보호는 이 검증과 구분한다.
 
 ## 3. 데이터 모델
 
@@ -81,6 +114,7 @@ Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미�
 - record cache는 서버 ready 데이터의 사본이며 version과 fetched_at을 저장한다. outbox/초안은 캐시와 분리해 캐시 삭제로 유실되지 않게 한다.
 - 앱 재실행 시 실행 중이던 추론은 interrupted로 되돌린다. 이전 단계 결과와 사용자 편집값은 그대로 유지한다.
 - 초안 개수 제한은 **계정·기기별**이다. 두 기기의 각 로컬 초안은 독립적이며 계정 전체에 하나의 서버 초안을 예약하지 않는다.
+- Book 초안 삭제는 확인창에 고정한 `draft_id`와 현재 소유자를 검증하고 기존 `writeDraftState`를 거친다. SQLite 반영 후 화면에서 제거하고, 남은 초안/저장 스냅샷이 참조하지 않는 작업 파일만 기존 `draft_cleanup`에서 정리한다. 일반 초안은 서버 호출 없이 삭제하며, 대상에 연결된 저장 실패/결과 불명확 상태는 기존 abort/fetch 경로로 처리한다. 다른 초안의 `save_attempt`와 저장된 Record는 보존한다.
 - cleanup_jobs에는 owner_id, draft_id, 앱 내부 상대 경로, reason(server_ready/discard/logout), status, attempts를 둔다. 서버 ready 확인과 cleanup 등록을 같은 로컬 트랜잭션으로 기록한 뒤 파일을 제거한다. 재실행에서 참조·소유·경로를 다시 확인하고, 성공/이미 없는 파일은 완료 처리한다. 서버 결과가 불명확하면 등록하지 않는다.
 - 명시적 로그아웃의 폐기 확인은 outbox 보존의 예외다. 전송 worker를 중단하고 같은 계정의 outbox/초안/캐시를 삭제하며, 늦은 callback은 session_generation과 owner_id가 다르면 무시한다. 오프라인에서는 “서버 저장 후 나가기”를 비활성화하고 연결 후 저장·폐기 후 나가기·취소만 제공한다.
 
@@ -100,7 +134,7 @@ Record 하나가 선화 이미지 하나를 소유한다. `stamp_records`, `Stam
 | color_tags | jsonb array | 선화 픽셀과 별도로 원본에서 추출한 대표색 1~5개; ready 때 §4 형식/합계 검사 |
 | ai_field_note | nullable text | 사진 근거의 짧고 감성적인 원 AI 문구 1문장, 초기 빈 문자열 허용, 최대 300자; 생략 시 null |
 | ai_field_note_edited | nullable text | 사용자 수정문 0~300자; null=원문 표시, 빈 문자열=숨김 |
-| user_note | text default '' | 최대 2,000자, AI 작업에서 변경 금지 |
+| user_note | text default '' | 최대 2,000자의 통합 기록 글. 명시 AI 추가는 기존 글 보존·동시 편집 검사 후 수행 |
 | diary_date | date NOT NULL | 사용자 표시 날짜; 시각/시간대 이동으로 자동 변경하지 않음 |
 | captured_at / captured_offset_minutes | nullable timestamptz / integer | 신뢰 가능한 offset 포함 EXIF만 시각 저장 |
 | date_source | text | exif / device / user |
@@ -150,7 +184,7 @@ EXIF에 유효한 날짜만 있고 offset이 없으면 그 문자열의 달력 �
 
 ## 5. VLM·선화 작업 계약
 
-앱 시작 후 첫 화면을 표시한 다음 설치된 모델을 비동기로 준비하고, 같은 프로세스에서 준비된 인스턴스를 재사용한다. 사진마다 새 프로세스·가중치 로드를 반복하지 않는다. 최초 다운로드와 메모리 로드를 구분하며 파일이 없으면 기존 다운로드 안내를 따른다. 모델 준비 완료 전에도 Book 조회·기존 기록 편집은 가능해야 한다.
+앱 시작 때 `ModelSetupGate`가 모델 파일 설치를 확인한다. `ready` 전에는 다운로드 안내를 표시하고 기존 앱 controller를 마운트하지 않는다. 파일 준비 후 기존 로그인·Book 흐름을 시작하며 엔진 메모리 로드는 `usePhotoWorkflow`의 별도 준비 상태를 따른다. 같은 프로세스에서는 준비된 인스턴스를 재사용하며 사진마다 가중치를 다시 로드하지 않는다.
 
 준비 상태는 `unprepared → preparing → ready`와 `failed`로 구분한다. 요청이 겹쳐도 같은 모델의 준비 작업은 하나만 실행한다. 준비 중 선택한 사진은 초안에 보존하고 사용자가 취소하지 않은 현재 요청만 준비 완료 뒤 실행한다. 재시도는 현재 사진의 revision을 확인한다. 같은 앱 실행 중 재사용을 기본으로 하되 OS 메모리 압박·백그라운드 중단·프로세스 종료로 해제되면 다시 준비한다. 사용자가 한 번 실행하면 영구히 로드된다고 보장하지 않는다.
 
@@ -165,10 +199,10 @@ PhotoAnalysis schema v1:
 - 추가 키, JSON 바깥 명령, NaN, URL 실행 요청은 수용하지 않는다. 화면에는 plain text만 표시한다.
 - 사진 내 지시·문자·QR은 데이터다. prompt에 사용자 메모·장소명·이메일·토큰을 넣지 않는다.
 - JSON schema와 prompt version은 고정한다. 같은 입력·locale·seed의 결과 일관성 검증과 prompt/schema 변경 관리는 메인이 담당한다. 검증에서 문구 생성 경로를 호출해도 제품에서 자동 실행하는 UX로 해석하지 않는다.
-- 사진 처리 pipeline은 선화 변환과 semantic_tags/mood 분석을 함께 자동 수행해 결과에 제공한다. 짧은 AI 메모 초안 생성은 명시 생성 버튼에만 연결하며 source_revision이 현재 입력과 일치할 때만 결과를 수용한다. user_note는 어떤 경로에서도 덮어쓰지 않는다.
-- 실험 호출은 `analysis`(PhotoAnalysis, ai_field_note="")와 `caption`({ai_field_note}만 반환)을 분리한다. 앱 연결 시 caption 결과는 단일 문구 편집 시트의 수정 가능 AI 글 필드에 바로 반영하고 기존 semantic_tags/mood·`user_note`는 유지한다.
+- 사진 처리 pipeline은 선화 변환과 semantic_tags/mood 분석을 함께 자동 수행해 결과에 제공한다. 짧은 AI 메모 초안 생성은 명시 생성 버튼에만 연결하며 source_revision이 현재 입력과 일치할 때만 결과를 수용한다. 기존 `user_note`를 생성 결과로 덮어쓰지 않으며, 명시 추가는 아래 통합 편집 계약을 따른다.
+- 실험의 `analysis`와 `caption` 응답은 분리한다. 앱의 문구 편집에는 `user_note` 입력칸 하나만 제공하며, 명시 AI 추가 결과는 빈 글에 채우거나 기존 글 끝에 빈 줄 뒤 붙인다. 같은 입력칸이 요청 이후 수정됐거나 요청·사진·계정이 바뀌었으면 늦은 응답을 적용하지 않는다. 전체 글이 2,000자를 넘으면 기존 내용을 유지하고 오류를 알린다.
 - 같은 사진 1회 구조 보정 재시도 후 schema_error. 호출 자동 반복으로 메모리/배터리를 소비하지 않는다.
-- 문구 편집 시트의 재생성 버튼은 현재 AI 글 교체 의사를 포함하며 성공 결과를 AI 글 필드에 바로 반영한다. 같은 시트의 내 메모는 생성 결과만으로 변경하지 않는다.
+- 이전 분리 기록은 `recordWriting`으로 메모와 표시할 AI 글을 원문 그대로 결합한다. 시트를 열 때는 작업 사본만 정규화하고, 취소하면 원래 기록이 유지된다. 적용 시 통합 글은 `user_note`, `ai_field_note_edited`는 빈 문자열로 저장해 AI 본문의 중복 표시를 막는다. `ai_field_note`에는 채택한 생성 원문을 보존한다. 기존 스키마와 300자 AI 원문 상한은 유지한다.
 
 `StampResult`는 호환 식별자로 유지하며 local_uri, width/height, format, checksum, model revision, style id, duration, input_revision을 반환한다. 결과는 Informative Drawings `style1`의 선 위치와 원본 구도를 유지한 흰 배경 컬러 선화여야 한다. 선 이외 영역은 흰색이고 합성 전 선 레이어의 RGB는 같은 위치의 정규화 원본 RGB와 일치해야 한다. 최종 PNG는 alpha에 따라 흰색과 혼합되므로 반투명 선의 최종 RGB는 원본과 다를 수 있다. 빈/깨진 이미지, 입력 사진 그대로의 파일, 색면·5색 양자화·외곽선 확장·내부 선 제거·재배치·거친 인쇄 표현이 들어간 결과는 기술 실패다. 확산 모델의 `seed 17` 결과는 과거 실험이며 현재 품질 기준이 아니다.
 
@@ -276,7 +310,9 @@ delete_record는 row lock으로 deleting 전환, 사용자 목록에서 숨김 �
 
 다운로드는 temp 경로→bytes/hash 확인→활성 pointer 원자적 교체. 중단 시 이전 정상 모델은 유지하고 불완전 파일은 실행하지 않는다. 다운로드한 모델에 포함된 임의 원격 코드를 신뢰 실행하는 경로는 앱에 두지 않는다. 서명/출처 확인과 네이티브 binary 버전은 구현 단계에서 묶어 고정한다.
 
-Informative Drawings `style1`의 배포 manifest·다운로드 위치는 사용조건과 실제 앱 통합 검증 뒤 확정하며, 그 전에는 앱 다운로드 기능을 구현하지 않는다.
+Qwen 본체와 vision projector는 앱 내 `modules/chroma-analysis/model-manifest.json`에 고정한 키·파일명·bytes·SHA-256을 따른다. 번들 `model-download.json`은 초기 키별 HTTPS 주소를 제공한다. 다운로드마다 `delivery.catalog_url`의 NAS JSON을 우선 조회하며, HTTP 404일 때만 번들 초기 주소를 쓴다. 잘못된 JSON·HTTPS 위반·다른 서버 오류는 실패로 처리한다. 같은 파일의 위치 변경은 NAS `model-download.json`의 URL을 수정하며 파일 내용·신뢰 해시가 바뀌면 앱 manifest도 갱신해야 한다. catalog 자체의 주소 변경은 앱 설정 변경이다.
+
+`ModelAssetStore`가 다운로드·부분 파일·검증·설치 경로를 한 곳에서 관리한다. 완성 파일은 계정 데이터와 분리한 백업 제외 `Application Support/chroma-models`에 저장하고 추론은 이 경로만 사용한다. llama.cpp 준비 스크립트는 라이브러리·헤더와 두 JSON을 준비하며 Qwen 가중치를 복사하지 않는다. Informative Drawings `style1`의 컴파일된 선화 모델 약 8.6MB만 앱에 내장한다.
 
 출력 품질 승인과 iOS/Android 호환성은 별도 게이트다. Mac에서 실행된다는 이유로 ONNX/ExecuTorch/Core ML/LiteRT가 자동 지원한다고 쓰지 않는다. 변환·양자화가 허용되는지와 학습을 요구하는지를 확인하고, 형식 변환 후 동일 사진군을 다시 비교한다.
 
@@ -286,7 +322,7 @@ Informative Drawings `style1`의 배포 manifest·다운로드 위치는 사용�
 - SR-AC-002~005: 방향/프로필/손상/단색/전체 투명/한계 크기, VLM schema/프롬프트 주입/생략, 선화 품질·취소·사진 revision, 메모 보존.
 - SR-AC-006: 로컬 파일 rename/DB 실패, begin/upload/finalize 각 경계에서 중단, 응답 유실, hash 불일치, 계정 전환, 원본/EXIF/로그/OS 백업 비유출.
 - SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체. 계정 탈퇴/재가입은 후순위.
-- SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·접근성·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
+- SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·일반 화면 동작·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
 
 2026-09-11 실제 개발 DB의 migration·RLS·Storage를 적용/대조하고 SQL 제약 및 A/B/미인증 Storage·Data API 테스트를 수행했다. SDK 57 문서와 [Supabase changelog](https://supabase.com/changelog)를 다시 확인했다. 서버 저장 API, 앱 OTP/DB 연결, 복구·CAS·탈퇴 전체 흐름과 원본 비유출 검증은 남아 있다. 개별 결과와 재실행 방법은 현황에 기록한다.
 

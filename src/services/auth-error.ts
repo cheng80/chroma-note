@@ -17,7 +17,8 @@ const knownErrorCodes = new Set<AuthErrorCode>([
 
 function isOffline(error?: unknown) {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return true;
-  return error instanceof TypeError;
+  const details = error as { name?: unknown; status?: unknown } | null;
+  return error instanceof TypeError || (details?.name === 'AuthRetryableFetchError' && details.status === 0);
 }
 
 export function authErrorCode(error: unknown, operation: AuthOperation = 'send'): AuthErrorCode {
@@ -55,7 +56,7 @@ function safeMessage(code: AuthErrorCode) {
     email_invalid: 'Enter a valid email address.',
     send_failed: 'We could not complete that request. Try again.',
     otp_invalid: 'The code could not be verified.',
-    otp_expired: 'This code has expired. Request a new one.',
+    otp_expired: 'The code is incorrect or expired. Check it or request a new one.',
     rate_limited: 'Please wait before trying again.',
     offline: 'Check your connection and try again.',
   }[code];

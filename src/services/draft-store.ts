@@ -3,7 +3,7 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { requireOptionalNativeModule } from 'expo';
 import { Platform } from 'react-native';
 
-import type { Draft, DemoOwnerId, SaveAttempt } from '../ui/contract';
+import type { Draft, DemoOwnerId, SaveAttempt } from '../domain/record';
 import { workingFileName } from './draft-path';
 
 export interface DraftState {

@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react';
-import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
+import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
 
 type Style = StyleProp<ViewStyle>;
@@ -18,7 +19,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field(
   const [focused, setFocused] = useState(false);
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={styles.label}>{label}</Text>
+      <SemanticText style={styles.label}>{label}</SemanticText>
       <TextInput
         ref={ref}
         {...props}
@@ -36,7 +37,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field(
         style={[styles.field, focused && styles.focused, error && styles.errorField, props.style]}
         placeholderTextColor={props.placeholderTextColor ?? theme.colors.inkSecondary}
       />
-      {error ? <Text accessibilityRole="alert" style={styles.errorText}>{error}</Text> : hint ? <Text style={styles.hint}>{hint}</Text> : null}
+      {error ? <SemanticText accessibilityRole="alert" style={styles.errorText}>{error}</SemanticText> : hint ? <SemanticText style={styles.hint}>{hint}</SemanticText> : null}
     </View>
   );
 });

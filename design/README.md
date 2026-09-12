@@ -8,7 +8,7 @@
 
 | 영역 | 내용 |
 |---|---|
-| 00 Foundations | 종이/잉크/행동/상태 색, 역할별 글자, 간격, 터치·확대 원칙 |
+| 00 Foundations | 종이/잉크/행동/상태 색, 역할별 글자, 간격, 터치·이미지 확대 원칙 |
 | 01 Components | 버튼, 입력, 아이콘 버튼, 필터 칩, 기록 카드, 팔레트, 안내, 확인 선택, 글 영역, 시스템 상태바, 처리 단계, 확인 대화상자, 이미지 비교, 요약 행 — 기존 15개 재사용 components 기준 |
 | 02 Image fixtures | 디자인용 사진·선화와 품질 근거로 사용하지 않는다는 안내 |
 | 03 States | 인증·사진·모델·Book·저장·삭제의 오류/복구 카드 18개 |
@@ -34,13 +34,13 @@
 
 폰 기본은 390×844이며 360×800·320×640 변형을 포함한다. 비교와 요약을 두 단계로 나누고, AI 문구·내 메모·태그는 하나의 문구 편집 시트에서 함께 다루며 날짜/장소·대표색은 별도 바텀시트로 연다. 삭제는 중앙 확인 모달이다. 시트의 “초안에 적용”과 서버의 “저장하기/변경 저장”을 구분한다.
 
-모든 화면·시트·모달의 콘텐츠는 safe area 안에 둔다. 기본 fixture는 상태바 포함 상단 62, 하단 34이며 실제 앱은 OS의 네 방향 inset을 사용한다. 키보드 시안은 높이 290의 예시이며 실제 키보드를 구현한 것은 아니다. Book의 누적 목록, 긴 원문과 큰 글씨 등 필요한 콘텐츠만 스크롤하고, 화면과 시트의 이중 스크롤은 금지한다.
+모든 화면·시트·모달의 콘텐츠는 safe area 안에 둔다. 기본 fixture는 상태바 포함 상단 62, 하단 34이며 실제 앱은 OS의 네 방향 inset을 사용한다. 키보드 시안은 높이 290의 예시이며 실제 키보드를 구현한 것은 아니다. Book의 누적 목록과 긴 원문 등 필요한 콘텐츠만 스크롤하고, 화면과 시트의 이중 스크롤은 금지한다.
 
 스타일은 미니멀리즘을 바탕으로 흰 배경 컬러 선화를 중심에 둔다. Book 카드 상자·그림자를 덜어내고, 불투명한 밝은 시트와 어두운 배경막으로 편집 영역을 구분한다.
 
 ## 공통 규칙과 이미지
 
-색은 primitive → semantic 변수로 연결하며 화면과 컴포넌트는 의미 변수로 참조한다. 본문 16, 보조 14, 작은 글 12, 제목 20/28, 줄 높이 1.5, 조작 최소 48×48을 사용한다. `better-*` 디자인 스킬의 대비·그룹화·가독성·접근성 원칙을 이 공통 규칙에 반영했다.
+색은 primitive → semantic 변수로 연결하며 화면과 컴포넌트는 의미 변수로 참조한다. 본문 16, 보조 14, 작은 글 12, 제목 20/28, 줄 높이 1.5, 조작 최소 48×48을 사용한다. `better-*` 디자인 스킬의 대비·그룹화·가독성 원칙을 이 공통 규칙에 반영했다.
 
 Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이다. 이는 디자인 도구의 표현용 글꼴이며 앱의 시스템 글꼴 우선 원칙을 바꾸거나 폰트 패키지 설치를 요구하지 않는다. 초점과 오류는 색만으로 구분하지 않는다.
 
@@ -63,4 +63,14 @@ Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이�
 
 2026-09-11 문구 흐름 동기화: 요약을 `문구 편집`·`날짜와 장소`·`사진에서 찾은 색` 3행으로 정리하고 AI 문구·내 메모·의미/분위기 태그를 단일 시트로 합쳤다. 폐기된 별도 메모·AI 제안·대체 화면 5개를 제거했다. 현재 루트 55개·재사용 15개·placeholder 0개이며 JSON, ID/ref, 금칙 문구, clipping·키보드 경계 정적 검사가 통과했다.
 
-이 Pen 기록만으로 앱 코드·네이티브 동작 완료를 뜻하지 않는다. 실제 키보드·safe area·스크린리더·Android·모델/서버 통합 상태는 [프로젝트 현황](../docs/03_PROJECT_STATUS.md)을 따른다.
+이 Pen 기록만으로 앱 코드·네이티브 동작 완료를 뜻하지 않는다. 실제 키보드·safe area·Android·모델/서버 통합 상태는 [프로젝트 현황](../docs/03_PROJECT_STATUS.md)을 따른다.
+
+2026-09-12 초안 삭제 동기화: Book·두 초안·태블릿·좁은 폭 변형의 재개 버튼 옆에 기존 48px 아이콘 버튼과 휴지통 아이콘을 배치했다. 기존 확인 모달의 제목을 `초안을 삭제할까요?`, 본문을 `이 기기의 초안을 삭제해요. 저장된 기록은 유지돼요.`로 맞췄다. 별도 공통 컴포넌트나 화면을 추가하지 않았다. 두 초안 footer의 행 높이 52px·삭제 버튼 48px과 iPhone 앱의 동일 배치·확인창을 시각 확인했다.
+
+2026-09-13 모델 배포 변경: 06b를 사진 분석 AI 다운로드 화면으로 갱신했다. 약 2.95GB와 Wi-Fi 안내, 실제 바이트 진행률, 고정 하단 일시 정지를 반영하고 선화 모델 다운로드·뒤로가기·취소 후 파일 삭제 문구를 제거했다. 새 루트 화면은 추가하지 않았다.
+
+2026-09-13 시작 이미지: 내장 Imagegen으로 노트·커피잔·잎의 컬러 선화를 생성해 [앱 스플래시](../assets/images/splash-chroma-note.png)에 적용했다. 글자를 이미지에 넣지 않았고 종이색 `#F7F3EA` 배경, 280pt 이미지 영역, 중앙 정렬·contain을 사용한다. 기기 화면 비율과 무관하게 그림 비율을 유지하고 별도 표시 지연을 추가하지 않는다.
+
+생성 프롬프트: “Create one polished mobile app splash illustration for Chroma Note, a quiet photo diary that turns the original colors of everyday photographs into delicate colored line drawings. Transparent PNG background, square composition, 1024 by 1024. Centered small still-life vignette drawn only with expressive fine colored ink contours: a warm ceramic coffee cup and saucer beside a simple open notebook and one small leafy branch, viewed at a gentle three-quarter angle. A few loose contour strokes suggest an ordinary moment being remembered. Refined Korean editorial stationery aesthetic, airy, restrained, organic, calm, mature. Muted deep blue #294B63, sage green, dusty terracotta, warm ochre and soft charcoal; limited harmonious palette. No filled color blocks, no photographic surfaces, no gradients, no watercolor washes, no shadows, no backdrop, no border or app icon tile. Crisp clean confident linework that remains legible when displayed at 220 pixels wide. Entire artwork within the central 75 percent of the square with generous clear transparent margins. No text, letters, logo, watermark or UI. This will be centered on a solid warm paper-colored #F7F3EA launch screen; keep the alpha background genuinely transparent, not a checkerboard painting. Deliver a finished raster illustration, not a mockup of a phone.”
+
+스플래시 검증은 [실제 iPhone 시작 캡처](../experiments/model-selection/data/model-delivery-20260913/splash-native.png)를 기준으로 한다. Pen 도구가 새 이미지 레이어를 빈 화면으로 출력해 별도 스플래시 시안은 남기지 않았으며, 기존 화면과 파운데이션은 유지했다.

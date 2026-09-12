@@ -51,6 +51,8 @@ cd ios && pod install
 
 결과는 `modules/chroma-lineart/ios/Resources/LineArt.mlmodelc`다. 원본 가중치·변환 캐시·컴파일 결과는 Git 제외이며 `expo-module.config.json`과 Pod 리소스 번들로 연결한다. 네이티브 빌드는 기존 iPhone의 ID를 명시해 실행한다. iPad를 자동 실행하지 않는다. 배포 시 [저자 사용조건](THIRD_PARTY_NOTICES.md)을 확인한다.
 
+빌드·설치 후 실제 설치된 `.app/ChromaLineArt.bundle/LineArt.mlmodelc` 포함 여부를 확인하고, 앱을 새로 시작한 상태에서 아래 `tests/native-bridge.ts`의 `checkNativeLineArt()`로 모델 로딩부터 PNG 생성까지 검증한다.
+
 ## 검증과 연결 범위
 
 ```sh

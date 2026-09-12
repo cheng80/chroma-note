@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import { createRecordOperations } from './record-operations.ts';
+
+const a = { owner_id: 'a', generation: 1, email: '', locale: 'ko', source: 'supabase' };
+const b = { ...a, owner_id: 'b', generation: 2 };
+let active = a;
+const operations = createRecordOperations({ isCurrent: session => session.owner_id === active.owner_id && session.generation === active.generation });
+const readA = operations.request(a, true);
+const releaseA = operations.acquire(a);
+assert.equal(readA.signal.aborted, true);
+assert.equal(operations.request(a), null);
+active = b;
+const releaseB = operations.acquire(b);
+assert.equal(releaseA(), false);
+assert.equal(operations.busy(), true, 'A cannot release B mutation');
+assert.equal(operations.accepts(readA), false);
+assert.equal(releaseB(), true);
+const batch = operations.reserveLogout(b);
+assert.equal(operations.request(b), null, 'logout batch blocks reads between saves');
+const batchSave = operations.acquire(b);
+assert.equal(batchSave(), true);
+assert.equal(operations.savingForLogout(), true);
+operations.reset();
+const newerBatch = operations.reserveLogout(b);
+batch();
+assert.equal(operations.savingForLogout(), true, 'an old batch cannot release a newer same-owner batch');
+newerBatch();
+const readB = operations.request(b, true);
+active = { ...b }; // Same-owner token refresh preserves operation ownership.
+assert.equal(operations.accepts(readB), true);
+operations.reset();
+assert.equal(operations.accepts(readB), false);
+console.log('record-operations: owned mutation/logout leases, read cancellation and token refresh PASS');

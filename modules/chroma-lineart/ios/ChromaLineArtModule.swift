@@ -36,11 +36,10 @@ public final class ChromaLineArtModule: Module {
       guard !self.cancelled(id) else { throw self.failure("lineart_cancelled") }
       guard #available(iOS 17.0, *) else { throw self.failure("lineart_ios_17_required") }
       let input = try self.localURL(uri, output: false)
-      var folder = try self.localURL(directory, output: true)
+      let folder = try self.localURL(directory, output: true)
       let attributes = try folder.resourceValues(forKeys: [.isDirectoryKey])
       guard attributes.isDirectory == true else { throw self.failure("lineart_output_directory_required") }
-      var backup = URLResourceValues(); backup.isExcludedFromBackup = true
-      try folder.setResourceValues(backup)
+      try excludePrivateDirectoryFromBackup(folder, coveredBy: self.appContext?.config.documentDirectory)
       let output = folder.appendingPathComponent("lineart-\(id).png")
       if self.engine == nil {
         guard let model = self.modelURL() else { throw self.failure("lineart_model_missing") }
@@ -71,20 +70,18 @@ public final class ChromaLineArtModule: Module {
     }.runOnQueue(work)
 
     AsyncFunction("preparePrivateDirectoryAsync") { (directory: String) throws in
-      var folder = try self.localURL(directory, output: true)
+      let folder = try self.localURL(directory, output: true)
       let attributes = try folder.resourceValues(forKeys: [.isDirectoryKey])
       guard attributes.isDirectory == true else { throw self.failure("lineart_output_directory_required") }
-      var backup = URLResourceValues(); backup.isExcludedFromBackup = true
-      try folder.setResourceValues(backup)
+      try excludePrivateDirectoryFromBackup(folder, coveredBy: self.appContext?.config.documentDirectory)
     }.runOnQueue(work)
 
     AsyncFunction("normalizePhotoAsync") { (uri: String, directory: String) throws -> [String: Any] in
       let input = try self.localURL(uri, output: false)
-      var folder = try self.localURL(directory, output: true)
+      let folder = try self.localURL(directory, output: true)
       let attributes = try folder.resourceValues(forKeys: [.isDirectoryKey])
       guard attributes.isDirectory == true else { throw self.failure("photo_output_directory_required") }
-      var backup = URLResourceValues(); backup.isExcludedFromBackup = true
-      try folder.setResourceValues(backup)
+      try excludePrivateDirectoryFromBackup(folder, coveredBy: self.appContext?.config.documentDirectory)
       let result = try PhotoImporter.normalize(inputURL: input, outputDirectory: folder)
       var response: [String: Any] = ["uri": result.uri, "width": result.width,
                                      "height": result.height, "bytes": result.bytes]

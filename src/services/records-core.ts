@@ -17,12 +17,52 @@ export type RecordErrorCode =
 
 export class RecordError extends Error {
   readonly code: RecordErrorCode;
+  readonly retryAfterMilliseconds?: number;
 
-  constructor(code: RecordErrorCode) {
+  constructor(code: RecordErrorCode, retryAfterMilliseconds?: number) {
     super(code);
     this.name = 'RecordError';
     this.code = code;
+    this.retryAfterMilliseconds = retryAfterMilliseconds;
   }
+}
+
+const RETRY_DELAYS_MS = [2_000, 5_000, 15_000] as const;
+
+function retryAfterHeader(error: unknown): string | null {
+  const details = error as { retryAfterMilliseconds?: unknown; headers?: unknown; context?: unknown; response?: unknown } | null;
+  if (typeof details?.retryAfterMilliseconds === 'number') return String(details.retryAfterMilliseconds / 1_000);
+  const source = (details?.context ?? details?.response ?? details) as { headers?: { get?: (name: string) => string | null } } | null;
+  return source?.headers?.get?.('retry-after') ?? null;
+}
+
+export function retryAfterMilliseconds(error: unknown, now = Date.now()): number | undefined {
+  const header = retryAfterHeader(error);
+  if (header === null) return undefined;
+  const milliseconds = /^\d+$/.test(header.trim()) ? Number(header.trim()) * 1_000 : Date.parse(header) - now;
+  return Number.isFinite(milliseconds) ? Math.max(0, milliseconds) : undefined;
+}
+
+function statusFrom(error: unknown): unknown {
+  const details = error as { status?: unknown; statusCode?: unknown; context?: unknown } | null;
+  const context = details?.context as { status?: unknown } | null;
+  return details?.status ?? details?.statusCode ?? context?.status;
+}
+
+export function retryDelayMilliseconds(error: unknown, retryIndex: number, now = Date.now()): number | null {
+  const fallback = RETRY_DELAYS_MS[retryIndex];
+  if (fallback === undefined) return null;
+  const code = errorCode(error);
+  if (code === 'network') return fallback;
+  if (code !== 'rate_limited') return null;
+  const retryAfter = retryAfterMilliseconds(error, now);
+  if (retryAfter === undefined) return fallback;
+  return retryAfter <= RETRY_DELAYS_MS.at(-1)! ? retryAfter : null;
+}
+
+export function durationMilliseconds(value: number): number {
+  if (!Number.isFinite(value) || value < 0) throw new RecordError('validation');
+  return Math.round(value);
 }
 
 export function canonicalJson(value: unknown): string {
@@ -77,18 +117,23 @@ export function sessionIdFromAccessToken(accessToken: string): string {
 }
 
 export function errorCode(error: unknown): RecordErrorCode {
-  const details = error as { code?: unknown; status?: unknown; statusCode?: unknown; message?: unknown; context?: { status?: unknown } } | null;
-  const rawStatus = details?.status ?? details?.statusCode ?? details?.context?.status;
+  if (error instanceof RecordError) return error.code;
+  const details = error as { code?: unknown; name?: unknown; context?: unknown; originalError?: unknown; cause?: unknown } | null;
+  const rawStatus = statusFrom(error);
   const status = typeof rawStatus === 'number' ? rawStatus
     : typeof rawStatus === 'string' && /^\d{3}$/.test(rawStatus) ? Number(rawStatus) : undefined;
   const code = typeof details?.code === 'string' ? details.code.toLowerCase() : '';
-  if (status === 401 || code === 'unauthorized') return 'unauthorized';
+  const name = typeof details?.name === 'string' ? details.name : '';
+  if (status === 401 || ['unauthorized', 'bad_jwt', 'session_not_found', 'session_expired', 'refresh_token_not_found', 'refresh_token_already_used'].includes(code)) return 'unauthorized';
   if (status === 403 || code === 'forbidden') return 'forbidden';
   if (status === 404 || code === 'not_found' || code === 'pgrst116') return 'not_found';
   if (status === 409 || code === 'conflict') return 'conflict';
   if (status === 429 || code === 'rate_limited') return 'rate_limited';
   if (status === 400 || status === 413 || code === 'validation') return 'validation';
-  if (error instanceof TypeError) return 'network';
+  if (status === 0 || (status !== undefined && status >= 500) || error instanceof TypeError || ['AbortError', 'AuthRetryableFetchError', 'FunctionsFetchError', 'FunctionsRelayError', 'StorageUnknownError'].includes(name)) return 'network';
+  for (const nested of [details?.context, details?.originalError, details?.cause]) {
+    if (nested && nested !== error && errorCode(nested) === 'network') return 'network';
+  }
   return 'unknown';
 }
 

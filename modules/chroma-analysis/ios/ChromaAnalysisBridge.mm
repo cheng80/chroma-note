@@ -81,7 +81,7 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
   if (!_vision || !mtmd_support_vision(_vision)) {
     if (_vision) { mtmd_free(_vision); _vision = nullptr; }
     llama_model_free(_model); _model = nullptr;
-    if (error) *error = failure(cancel->block() ? @"analysis_cancelled" : @"analysis_vision_load_failed");
+    if (error) *error = failure(cancel->block() ? @"analysis_cancelled" : @"analysis_model_load_failed");
     return NO;
   }
   return YES;
@@ -89,6 +89,11 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
 
 - (NSNumber *)prepareWithError:(NSError **)error {
   CancelContext cancel{^{ return NO; }};
+  return [self loadWithCancellation:&cancel error:error] ? @YES : nil;
+}
+
+- (NSNumber *)prepareWithIsCancelled:(BOOL (^)(void))isCancelled error:(NSError **)error {
+  CancelContext cancel{[isCancelled copy]};
   return [self loadWithCancellation:&cancel error:error] ? @YES : nil;
 }
 
@@ -111,7 +116,7 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
   contextParams.abort_callback = shouldAbort;
   contextParams.abort_callback_data = &cancel;
   llama_context * context = llama_init_from_model(_model, contextParams);
-  if (!context) { if (error) *error = failure(@"analysis_context_failed"); return nil; }
+  if (!context) { if (error) *error = failure(@"analysis_out_of_memory"); return nil; }
   auto freeContext = [&] { llama_free(context); };
 
   mtmd_helper_init_opt imageOptions = mtmd_helper_init_opt_default();
@@ -172,7 +177,9 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
   freeContext();
   if (cancel.block()) { if (error) *error = failure(@"analysis_cancelled"); return nil; }
   if (status != 0) { if (error) *error = failure(@"analysis_decode_failed"); return nil; }
-  return [[NSString alloc] initWithBytes:output.data() length:output.size() encoding:NSUTF8StringEncoding];
+  NSString * result = [[NSString alloc] initWithBytes:output.data() length:output.size() encoding:NSUTF8StringEncoding];
+  if (!result.length) { if (error) *error = failure(@"analysis_no_valid_output"); return nil; }
+  return result;
 }
 
 @end

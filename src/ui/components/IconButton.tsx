@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { forwardRef, ReactNode, useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { theme } from '../theme';
@@ -23,7 +23,7 @@ function IconContent({ children }: { children?: ReactNode }) {
   return children == null || typeof children === 'string' || typeof children === 'number' ? <AppIcon name="ellipsis" /> : children;
 }
 
-export function IconButton({
+export const IconButton = forwardRef<React.ElementRef<typeof Pressable>, IconButtonProps>(function IconButton({
   label,
   onPress,
   children,
@@ -32,12 +32,13 @@ export function IconButton({
   style,
   accessibilityHint,
   testID,
-}: IconButtonProps) {
+}: IconButtonProps, ref) {
   const [focused, setFocused] = useState(false);
   const { animatedStyle, setPressed } = usePressScale();
 
   return (
     <AnimatedPressable
+      ref={ref}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
@@ -54,7 +55,7 @@ export function IconButton({
       {icon ? <AppIcon name={icon} /> : <IconContent>{children}</IconContent>}
     </AnimatedPressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   iconButton: {

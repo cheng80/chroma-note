@@ -1,7 +1,7 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, useRef } from 'react';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { Modal, Platform, Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
 import { Button } from './Button';
 import { useModalA11y } from './modalA11y';
@@ -20,6 +20,9 @@ export type ConfirmDialogProps = {
   destructive?: boolean;
   visible?: boolean;
   cancelLabel?: string;
+  secondaryLabel?: string;
+  onSecondary?: () => void;
+  secondaryDisabled?: boolean;
   initialFocusRef?: RefObject<unknown | null>;
   restoreFocusRef?: RefObject<unknown | null>;
   style?: Style;
@@ -35,11 +38,16 @@ export function ConfirmDialog({
   destructive = false,
   visible = true,
   cancelLabel = '취소',
+  secondaryLabel,
+  onSecondary,
+  secondaryDisabled = false,
   initialFocusRef,
   restoreFocusRef,
   style,
 }: ConfirmDialogProps) {
-  const dialogRef = useModalA11y({ visible, initialFocusRef, restoreFocusRef });
+  const cancelRef = useRef<React.ElementRef<typeof Pressable>>(null);
+  const confirmRef = useRef<React.ElementRef<typeof Pressable>>(null);
+  const { dialogRef, onShow } = useModalA11y({ visible, initialFocusRef: initialFocusRef ?? cancelRef, restoreFocusRef });
   const { progress, reduceMotion } = useEntranceProgress(visible);
   const scrimStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
   const cardStyle = useAnimatedStyle(() => ({
@@ -48,8 +56,8 @@ export function ConfirmDialog({
   }));
 
   return (
-    <Modal transparent visible={visible} animationType="none" onRequestClose={onCancel} onDismiss={onDismiss} statusBarTranslucent>
-      <View style={styles.modalRoot}>
+    <Modal transparent visible={visible} animationType="none" onRequestClose={onCancel} onShow={onShow} onDismiss={onDismiss} statusBarTranslucent>
+      <SafeAreaProvider style={styles.modalRoot}>
         <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.scrim, scrimStyle]} />
         <Pressable accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill} onPress={onCancel} />
         <SafeAreaView edges={['top', 'right', 'bottom', 'left']} pointerEvents="box-none" style={styles.safeArea}>
@@ -61,12 +69,13 @@ export function ConfirmDialog({
             >
               <SemanticText accessibilityRole="header" style={styles.title}>{title}</SemanticText>
               <SemanticText style={styles.message}>{message}</SemanticText>
-              <Button label={confirmLabel} onPress={onConfirm} tone={destructive ? 'destructive' : 'primary'} />
-              <Button label={cancelLabel} onPress={onCancel} tone="secondary" />
+              <Button ref={confirmRef} label={confirmLabel} onPress={onConfirm} tone={destructive ? 'destructive' : 'primary'} />
+              {secondaryLabel && onSecondary ? <Button label={secondaryLabel} onPress={onSecondary} disabled={secondaryDisabled} tone="secondary" /> : null}
+              <Button ref={cancelRef} label={cancelLabel} onPress={onCancel} tone="secondary" />
             </Animated.View>
           </View>
         </SafeAreaView>
-      </View>
+      </SafeAreaProvider>
     </Modal>
   );
 }

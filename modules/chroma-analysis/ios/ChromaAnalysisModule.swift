@@ -1,18 +1,42 @@
 import ExpoModulesCore
 import Foundation
+import UIKit
 
 public final class ChromaAnalysisModule: Module {
   private let work = DispatchQueue(label: "chroma.analysis", qos: .userInitiated)
   private let lock = NSLock()
   private var jobs: [String: Bool] = [:]
+  private var unloading = false
   private var engine: ChromaAnalysisBridge?
+  private let modelAssets = ModelAssetStore()
 
   public func definition() -> ModuleDefinition {
     Name("ChromaAnalysis")
+    Events("onModelDownloadProgress")
+
+    OnCreate {
+      self.modelAssets.observe { [weak self] state in
+        self?.sendEvent("onModelDownloadProgress", state.dictionary)
+      }
+    }
+
+    AsyncFunction("getModelAssetStatus") { (promise: Promise) in
+      self.modelAssets.getStatus { promise.resolve($0.dictionary) }
+    }
+
+    AsyncFunction("downloadModelAssets") { (promise: Promise) in
+      self.modelAssets.download { promise.resolve($0.dictionary) }
+    }
+
+    AsyncFunction("pauseModelDownload") { (promise: Promise) in
+      self.modelAssets.pause { promise.resolve($0.dictionary) }
+    }
+
+    OnAppEntersBackground { self.pauseAssetsForBackground() }
 
     Function("begin") { () throws -> String in
       self.lock.lock(); defer { self.lock.unlock() }
-      guard self.jobs.isEmpty else { throw self.failure("analysis_busy") }
+      guard self.jobs.isEmpty, !self.unloading else { throw self.failure("analysis_busy") }
       let id = UUID().uuidString
       self.jobs[id] = false
       return id
@@ -24,11 +48,14 @@ public final class ChromaAnalysisModule: Module {
     }
 
     AsyncFunction("prepareAsync") { () throws -> [String: Bool] in
-      if self.engine == nil {
-        guard let paths = self.modelPaths() else { throw self.failure("analysis_model_missing") }
-        self.engine = ChromaAnalysisBridge(modelPath: paths.model.path, visionPath: paths.vision.path)
-      }
-      _ = try self.engine!.prepare()
+      try self.prepareEngine(isCancelled: { false })
+      return ["ready": true]
+    }.runOnQueue(work)
+
+    AsyncFunction("prepareJobAsync") { (id: String) throws -> [String: Bool] in
+      defer { self.finish(id) }
+      guard !self.cancelled(id) else { throw self.failure("analysis_cancelled") }
+      try self.prepareEngine(isCancelled: { [weak self] in self?.cancelled(id) ?? true })
       return ["ready": true]
     }.runOnQueue(work)
 
@@ -37,17 +64,31 @@ public final class ChromaAnalysisModule: Module {
       guard !self.cancelled(id) else { throw self.failure("analysis_cancelled") }
       guard (8...128).contains(maxTokens), (1...1200).contains(prompt.count) else { throw self.failure("analysis_invalid_request") }
       let input = try self.localURL(uri)
-      if self.engine == nil {
-        guard let paths = self.modelPaths() else { throw self.failure("analysis_model_missing") }
-        self.engine = ChromaAnalysisBridge(modelPath: paths.model.path, visionPath: paths.vision.path)
-      }
+      if self.engine == nil { try self.prepareEngine(isCancelled: { [weak self] in self?.cancelled(id) ?? true }) }
       let started = Date()
-      let text = try self.engine!.generate(forImagePath: input.path, prompt: prompt, maxTokens: maxTokens,
-        isCancelled: { [weak self] in self?.cancelled(id) ?? true })
-      return ["text": text, "durationMs": Int(Date().timeIntervalSince(started) * 1000)]
+      do {
+        let text = try self.engine!.generate(forImagePath: input.path, prompt: prompt, maxTokens: maxTokens,
+          isCancelled: { [weak self] in self?.cancelled(id) ?? true })
+        return ["text": text, "durationMs": Int(Date().timeIntervalSince(started) * 1000)]
+      } catch {
+        if self.invalidatesEngine(error) { self.engine = nil }
+        throw error
+      }
+    }.runOnQueue(work)
+
+    AsyncFunction("unloadAsync") { () throws in
+      self.lock.lock()
+      guard self.jobs.isEmpty, !self.unloading else { self.lock.unlock(); throw self.failure("analysis_busy") }
+      self.unloading = true
+      self.lock.unlock()
+      self.engine = nil
+      self.lock.lock()
+      self.unloading = false
+      self.lock.unlock()
     }.runOnQueue(work)
 
     OnDestroy {
+      self.modelAssets.close()
       self.lock.lock()
       for id in self.jobs.keys { self.jobs[id] = true }
       self.lock.unlock()
@@ -59,16 +100,48 @@ public final class ChromaAnalysisModule: Module {
     return jobs[id] != false
   }
 
-  private func modelPaths() -> (model: URL, vision: URL)? {
-    let host = Bundle(for: ChromaAnalysisModule.self)
-    for bundle in [host, Bundle.main] {
-      guard let bundleURL = bundle.url(forResource: "ChromaAnalysis", withExtension: "bundle"),
-        let resources = Bundle(url: bundleURL),
-        let model = resources.url(forResource: "Qwen3VL-4B-Instruct-Q4_K_M-compatible", withExtension: "gguf"),
-        let vision = resources.url(forResource: "mmproj-Qwen3VL-4B-Instruct-Q8_0", withExtension: "gguf") else { continue }
-      return (model, vision)
+  private func finish(_ id: String) {
+    lock.lock(); defer { lock.unlock() }
+    jobs.removeValue(forKey: id)
+  }
+
+  private func prepareEngine(isCancelled: @escaping () -> Bool) throws {
+    if engine != nil { _ = try engine!.prepare(); return }
+    let paths = try modelPaths(isCancelled: isCancelled)
+    let candidate = ChromaAnalysisBridge(modelPath: paths.model.path, visionPath: paths.vision.path)
+    do {
+      _ = try candidate.prepare(isCancelled: isCancelled)
+      guard !isCancelled() else { throw failure("analysis_cancelled") }
+      engine = candidate
+    } catch {
+      engine = nil
+      throw error
     }
-    return nil
+  }
+
+  private func modelPaths(isCancelled: () -> Bool) throws -> (model: URL, vision: URL) {
+    try modelAssets.modelPaths(isCancelled: isCancelled)
+  }
+
+  private func pauseAssetsForBackground() {
+    DispatchQueue.main.async {
+      // Foreground downloads pause on backgrounding. A short system grant saves resume data.
+      var identifier = UIBackgroundTaskIdentifier.invalid
+      let finish = {
+        if identifier != .invalid {
+          UIApplication.shared.endBackgroundTask(identifier)
+          identifier = .invalid
+        }
+      }
+      identifier = UIApplication.shared.beginBackgroundTask(withName: "chroma.model-resume", expirationHandler: finish)
+      self.modelAssets.pause { _ in DispatchQueue.main.async(execute: finish) }
+    }
+  }
+
+  private func invalidatesEngine(_ error: Error) -> Bool {
+    let code = (error as NSError).localizedDescription
+    return ["analysis_model_load_failed", "analysis_out_of_memory",
+      "analysis_tokenize_failed", "analysis_image_eval_failed", "analysis_decode_failed"].contains(code)
   }
 
   private func localURL(_ raw: String) throws -> URL {
