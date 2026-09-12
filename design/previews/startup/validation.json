@@ -1,0 +1,100 @@
+{
+  "date": "2026-09-13",
+  "file": "design/chroma-note.pen",
+  "rootCount": 63,
+  "reusableCount": 15,
+  "changedScope": {
+    "updatedScreens": [
+      "z8Hbv"
+    ],
+    "addedScreens": [
+      "A75ol0",
+      "a1JhB1",
+      "L2tpcK",
+      "YZ1xk",
+      "aABgr",
+      "KaNiR",
+      "K66JOY"
+    ],
+    "addedBoards": [
+      "gUy2E"
+    ]
+  },
+  "placeholderCount": 0,
+  "scopedClippingProblems": 0,
+  "newRootOverlaps": [],
+  "copyComparisons": [
+    {
+      "fixture": "required",
+      "nodeId": "a1JhB1",
+      "textCount": 5,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "downloading",
+      "nodeId": "z8Hbv",
+      "textCount": 8,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "paused",
+      "nodeId": "L2tpcK",
+      "textCount": 7,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "verifying",
+      "nodeId": "YZ1xk",
+      "textCount": 6,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "network",
+      "nodeId": "aABgr",
+      "textCount": 6,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "storage",
+      "nodeId": "KaNiR",
+      "textCount": 6,
+      "allCopyMatchesApp": true
+    },
+    {
+      "fixture": "integrity",
+      "nodeId": "K66JOY",
+      "textCount": 6,
+      "allCopyMatchesApp": true
+    }
+  ],
+  "simulatorStates": 10,
+  "semanticTextMeasurements": 63,
+  "allMeasurementsSettledAndPreserved": true,
+  "simulatorRestored": {
+    "appMounted": true,
+    "status": "ready"
+  },
+  "splash": {
+    "image": "assets/images/splash-chroma-note.png",
+    "imageBox": [
+      55,
+      282,
+      280,
+      280
+    ],
+    "screenSize": [
+      390,
+      844
+    ],
+    "background": "#F7F3EA",
+    "mode": "fit",
+    "sourceReviewedStartup": "ModelSetupGate keeps the native splash until startupChecked, then ready opens app and other states open ModelSetupScreen.",
+    "visualReference": "experiments/model-selection/data/model-delivery-20260913/splash-native.png",
+    "limitation": "Startup timing was reviewed against current source, not rerun in the installed simulator fixture session."
+  },
+  "scopeNotes": [
+    "Pen root and image export verified through Pen MCP only.",
+    "Simulator state fixtures exercised display only; native downloads were not invoked.",
+    "No new device-wide or accessibility-wide pass is claimed."
+  ]
+}

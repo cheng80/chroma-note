@@ -1,0 +1,627 @@
+{
+  "date": "2026-09-13",
+  "device": "iPhone 17 Pro / iOS 26.5 Simulator",
+  "method": "Existing installed app, temporary React state fixtures. No download or pause native methods invoked. Original gate state restored. Startup splash timing is source-reviewed, not reverified by these fixtures.",
+  "cases": [
+    {
+      "fixture": "required",
+      "status": "required",
+      "errorCode": null,
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "다운로드"
+      ]
+    },
+    {
+      "fixture": "downloading",
+      "status": "downloading",
+      "errorCode": null,
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "사진 분석 AI",
+          "preserved": true,
+          "settled": true,
+          "source": "사진 분석 AI",
+          "width": 287.3333435058594
+        },
+        {
+          "display": "진행 중",
+          "preserved": true,
+          "settled": true,
+          "source": "진행 중",
+          "width": 34.666656494140625
+        },
+        {
+          "display": "1.04 GB / 2.95 GB (35%)",
+          "preserved": true,
+          "settled": true,
+          "source": "1.04 GB / 2.95 GB (35%)",
+          "width": 362
+        },
+        {
+          "display": "일시 정지",
+          "preserved": true,
+          "settled": true,
+          "source": "일시 정지",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "사진 분석 AI",
+        "진행 중",
+        "1.04 GB / 2.95 GB (35%)",
+        "일시 정지"
+      ]
+    },
+    {
+      "fixture": "vision",
+      "status": "downloading",
+      "errorCode": null,
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "이미지 처리 파일",
+          "preserved": true,
+          "settled": true,
+          "source": "이미지 처리 파일",
+          "width": 287.3333435058594
+        },
+        {
+          "display": "진행 중",
+          "preserved": true,
+          "settled": true,
+          "source": "진행 중",
+          "width": 34.666656494140625
+        },
+        {
+          "display": "1.04 GB / 2.95 GB (35%)",
+          "preserved": true,
+          "settled": true,
+          "source": "1.04 GB / 2.95 GB (35%)",
+          "width": 362
+        },
+        {
+          "display": "일시 정지",
+          "preserved": true,
+          "settled": true,
+          "source": "일시 정지",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "이미지 처리 파일",
+        "진행 중",
+        "1.04 GB / 2.95 GB (35%)",
+        "일시 정지"
+      ]
+    },
+    {
+      "fixture": "paused",
+      "status": "paused",
+      "errorCode": null,
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "다운로드를 멈췄어요. 이어받아 준비를 마쳐 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "다운로드를 멈췄어요. 이어받아 준비를 마쳐 주세요.",
+          "width": 298
+        },
+        {
+          "display": "1.04 GB / 2.95 GB (35%)",
+          "preserved": true,
+          "settled": true,
+          "source": "1.04 GB / 2.95 GB (35%)",
+          "width": 362
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "다운로드를 멈췄어요. 이어받아 준비를 마쳐 주세요.",
+        "1.04 GB / 2.95 GB (35%)",
+        "이어받기"
+      ]
+    },
+    {
+      "fixture": "verifying",
+      "status": "verifying",
+      "errorCode": null,
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "파일이 온전한지 확인하고 있어요.",
+          "preserved": true,
+          "settled": true,
+          "source": "파일이 온전한지 확인하고 있어요.",
+          "width": 287.3333435058594
+        },
+        {
+          "display": "진행 중",
+          "preserved": true,
+          "settled": true,
+          "source": "진행 중",
+          "width": 34.666656494140625
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "파일이 온전한지 확인하고 있어요.",
+        "진행 중"
+      ]
+    },
+    {
+      "fixture": "network",
+      "status": "failed",
+      "errorCode": "model_network_failed",
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "다운로드하지 못했어요. 인터넷 연결을\n확인한 뒤 다시 시도해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "다운로드하지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.",
+          "width": 298
+        },
+        {
+          "display": "다시 시도",
+          "preserved": true,
+          "settled": true,
+          "source": "다시 시도",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "다운로드하지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.",
+        "다시 시도"
+      ]
+    },
+    {
+      "fixture": "storage",
+      "status": "failed",
+      "errorCode": "model_storage_full",
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "저장 공간이 부족해요. 공간을\n확보한 뒤 다시 시도해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "저장 공간이 부족해요. 공간을 확보한 뒤 다시 시도해 주세요.",
+          "width": 298
+        },
+        {
+          "display": "다시 시도",
+          "preserved": true,
+          "settled": true,
+          "source": "다시 시도",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "저장 공간이 부족해요. 공간을 확보한 뒤 다시 시도해 주세요.",
+        "다시 시도"
+      ]
+    },
+    {
+      "fixture": "integrity",
+      "status": "failed",
+      "errorCode": "model_integrity_failed",
+      "pending": null,
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "파일 확인에 실패했어요. 다시 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "파일 확인에 실패했어요. 다시 다운로드해 주세요.",
+          "width": 298
+        },
+        {
+          "display": "다시 시도",
+          "preserved": true,
+          "settled": true,
+          "source": "다시 시도",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "파일 확인에 실패했어요. 다시 다운로드해 주세요.",
+        "다시 시도"
+      ]
+    },
+    {
+      "fixture": "starting",
+      "status": "required",
+      "errorCode": null,
+      "pending": "start",
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "다운로드 준비 중",
+          "preserved": true,
+          "settled": true,
+          "source": "다운로드 준비 중",
+          "width": 105.00001525878906
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "다운로드 준비 중"
+      ]
+    },
+    {
+      "fixture": "pausing",
+      "status": "downloading",
+      "errorCode": null,
+      "pending": "pause",
+      "appMounted": false,
+      "measured": [
+        {
+          "display": "시작 준비",
+          "preserved": true,
+          "settled": true,
+          "source": "시작 준비",
+          "width": 362
+        },
+        {
+          "display": "사진을 읽을 AI를 준비해요",
+          "preserved": true,
+          "settled": true,
+          "source": "사진을 읽을 AI를 준비해요",
+          "width": 362
+        },
+        {
+          "display": "앱을 사용하려면 약 2.95GB의 AI\n파일을 한 번 다운로드해 주세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+          "width": 362
+        },
+        {
+          "display": "와이파이 연결을 권장해요. 다운로드가\n끝날 때까지 앱을 열어 두세요.",
+          "preserved": true,
+          "settled": true,
+          "source": "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+          "width": 298
+        },
+        {
+          "display": "사진 분석 AI",
+          "preserved": true,
+          "settled": true,
+          "source": "사진 분석 AI",
+          "width": 287.3333435058594
+        },
+        {
+          "display": "진행 중",
+          "preserved": true,
+          "settled": true,
+          "source": "진행 중",
+          "width": 34.666656494140625
+        },
+        {
+          "display": "1.04 GB / 2.95 GB (35%)",
+          "preserved": true,
+          "settled": true,
+          "source": "1.04 GB / 2.95 GB (35%)",
+          "width": 362
+        },
+        {
+          "display": "멈추는 중",
+          "preserved": true,
+          "settled": true,
+          "source": "멈추는 중",
+          "width": 59.333343505859375
+        }
+      ],
+      "text": [
+        "시작 준비",
+        "사진을 읽을 AI를 준비해요",
+        "앱을 사용하려면 약 2.95GB의 AI 파일을 한 번 다운로드해 주세요.",
+        "와이파이 연결을 권장해요. 다운로드가 끝날 때까지 앱을 열어 두세요.",
+        "사진 분석 AI",
+        "진행 중",
+        "1.04 GB / 2.95 GB (35%)",
+        "멈추는 중"
+      ]
+    }
+  ],
+  "restored": {
+    "appMounted": true,
+    "status": "ready"
+  }
+}

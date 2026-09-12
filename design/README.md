@@ -15,8 +15,9 @@
 | 04 Confirmations | 초안 폐기, 사진 교체, 재인증 후 계정 영구 삭제 |
 | 05 Interaction states | 기본·초점·눌림·비활성·처리 중, 입력 오류 |
 | 06 Mobile flow | 비교→요약, 영역별 시트, 중앙 모달, 필수 safe area·키보드 계약 |
+| 07 Startup flow | 스플래시 유지와 시작 파일 검사, 다운로드·이어받기·검증·오류 복구, 요청 처리 중 버튼 |
 
-현재 Pen은 루트 55개(보드 7개, 재사용 기록 컴포넌트 1개, 화면 47개)다.
+현재 Pen은 루트 63개(보드 8개, 재사용 기록 컴포넌트 1개, 화면 54개), 재사용 컴포넌트 15개다.
 
 | 번호 | 화면 |
 |---|---|
@@ -30,7 +31,8 @@
 | 31, 33–35 | 기록 요약 2/2, 날짜/장소·통합 문구 편집·색 시트 |
 | 36–39 | 사진 작업 시트, 글 읽기 시트, 기록 더보기 시트, 통합 문구 편집+키보드 안전영역 |
 | 44–47 | 선화 확대 1×·4×·320폭, 전체 기록 읽기 |
-| 48–51, 06b | 이미지 내보내기·권한·저장 상태, 모델 다운로드 |
+| 48–51 | 이미지 내보내기·권한·저장 상태 |
+| 00s, 06a–06g | 스플래시, AI 다운로드 안내·진행·일시 정지·검증, 연결 오류·저장 공간 부족·파일 손상 |
 
 폰 기본은 390×844이며 360×800·320×640 변형을 포함한다. 비교와 요약을 두 단계로 나누고, AI 문구·내 메모·태그는 하나의 문구 편집 시트에서 함께 다루며 날짜/장소·대표색은 별도 바텀시트로 연다. 삭제는 중앙 확인 모달이다. 시트의 “초안에 적용”과 서버의 “저장하기/변경 저장”을 구분한다.
 
@@ -67,10 +69,16 @@ Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이�
 
 2026-09-12 초안 삭제 동기화: Book·두 초안·태블릿·좁은 폭 변형의 재개 버튼 옆에 기존 48px 아이콘 버튼과 휴지통 아이콘을 배치했다. 기존 확인 모달의 제목을 `초안을 삭제할까요?`, 본문을 `이 기기의 초안을 삭제해요. 저장된 기록은 유지돼요.`로 맞췄다. 별도 공통 컴포넌트나 화면을 추가하지 않았다. 두 초안 footer의 행 높이 52px·삭제 버튼 48px과 iPhone 앱의 동일 배치·확인창을 시각 확인했다.
 
-2026-09-13 모델 배포 변경: 06b를 사진 분석 AI 다운로드 화면으로 갱신했다. 약 2.95GB와 Wi-Fi 안내, 실제 바이트 진행률, 고정 하단 일시 정지를 반영하고 선화 모델 다운로드·뒤로가기·취소 후 파일 삭제 문구를 제거했다. 새 루트 화면은 추가하지 않았다.
+2026-09-13 시작 화면 최신화: 기존 06b를 갱신하고 스플래시 00s, 다운로드 안내 06a, 일시 정지 06c, 파일 검증 06d, 연결 오류 06e, 저장 공간 부족 06f, 파일 손상 06g를 추가했다. `07 Startup flow` 아래 두 행으로 배치했다. 약 2.95GB와 와이파이 안내, 실제 바이트 진행률, 고정 하단의 다운로드·일시 정지·이어받기·다시 시도를 현재 `ModelSetupScreen`에 맞췄다. 검증 중에는 진행률과 조작 버튼을 표시하지 않고, 정상 파일이면 자동으로 앱에 진입한다. 요청 중 버튼의 `다운로드 준비 중`, `멈추는 중`도 보드에 반영했다.
+
+- [시작 흐름](previews/startup/gUy2E.png) · [스플래시](previews/startup/A75ol0.png) · [다운로드 안내](previews/startup/a1JhB1.png)
+- [다운로드 진행](previews/startup/z8Hbv.png) · [일시 정지](previews/startup/L2tpcK.png) · [파일 검증](previews/startup/YZ1xk.png)
+- [연결 오류](previews/startup/aABgr.png) · [저장 공간 부족](previews/startup/KaNiR.png) · [파일 손상](previews/startup/K66JOY.png)
+
+검증: Pen MCP에서 루트 63개·재사용 15개·placeholder 0개, 변경 범위의 clipping 0개와 다른 루트와의 겹침 0개를 확인했다. iPhone 17 Pro / iOS 26.5 Simulator에서 10개 임시 화면 상태, `SemanticText` 63개 문구의 측정 완료·원문 보존을 확인하고 원래 `ready` 상태로 복원했다. 대응하는 Pen 7개 화면의 사용자 문구 44개가 앱과 일치한다. 선화·계정·저장 데이터 변경이나 실제 모델 재다운로드는 수행하지 않았다. [검증 결과](previews/startup/validation.json) · [시뮬레이터 문구 측정](previews/startup/simulator-comparison.json) · [실제 다운로드 화면](previews/startup/simulator-downloading.png)
 
 2026-09-13 시작 이미지: 내장 Imagegen으로 노트·커피잔·잎의 컬러 선화를 생성해 [앱 스플래시](../assets/images/splash-chroma-note.png)에 적용했다. 글자를 이미지에 넣지 않았고 종이색 `#F7F3EA` 배경, 280pt 이미지 영역, 중앙 정렬·contain을 사용한다. 기기 화면 비율과 무관하게 그림 비율을 유지하고 별도 표시 지연을 추가하지 않는다.
 
 생성 프롬프트: “Create one polished mobile app splash illustration for Chroma Note, a quiet photo diary that turns the original colors of everyday photographs into delicate colored line drawings. Transparent PNG background, square composition, 1024 by 1024. Centered small still-life vignette drawn only with expressive fine colored ink contours: a warm ceramic coffee cup and saucer beside a simple open notebook and one small leafy branch, viewed at a gentle three-quarter angle. A few loose contour strokes suggest an ordinary moment being remembered. Refined Korean editorial stationery aesthetic, airy, restrained, organic, calm, mature. Muted deep blue #294B63, sage green, dusty terracotta, warm ochre and soft charcoal; limited harmonious palette. No filled color blocks, no photographic surfaces, no gradients, no watercolor washes, no shadows, no backdrop, no border or app icon tile. Crisp clean confident linework that remains legible when displayed at 220 pixels wide. Entire artwork within the central 75 percent of the square with generous clear transparent margins. No text, letters, logo, watermark or UI. This will be centered on a solid warm paper-colored #F7F3EA launch screen; keep the alpha background genuinely transparent, not a checkerboard painting. Deliver a finished raster illustration, not a mockup of a phone.”
 
-스플래시 검증은 [실제 iPhone 시작 캡처](../experiments/model-selection/data/model-delivery-20260913/splash-native.png)를 기준으로 한다. Pen 도구가 새 이미지 레이어를 빈 화면으로 출력해 별도 스플래시 시안은 남기지 않았으며, 기존 화면과 파운데이션은 유지했다.
+스플래시 00s는 앱과 같은 원본 이미지를 참조한다. 새 레이어의 첫 내보내기가 비어 보이던 문제는 렌더링 완료 후 다시 내보내 정상 표시를 확인했다. [실제 iPhone 시작 캡처](../experiments/model-selection/data/model-delivery-20260913/splash-native.png)와 중앙 280pt·contain 배치를 대조했다. 최신 `ModelSetupGate`의 시작 파일 검사 중 스플래시 유지와 정상·누락·손상 분기를 보드에 기록했다. 이번 상태 주입 검증은 스플래시 표시 시간을 재검증한 것이 아니며, 해당 동작은 현재 소스 대조와 기존 시작 캡처를 근거로 한다.

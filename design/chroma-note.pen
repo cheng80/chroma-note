@@ -2500,25 +2500,52 @@
               }
             },
             {
-              "id": "VjQnI",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 초안 1개 이어서 만들기",
+              "type": "frame",
+              "id": "gMOSX",
+              "name": "초안 이어쓰기와 삭제",
               "width": "fill_container",
-              "fill": "$bg-sunken",
-              "stroke": "$border-control",
-              "strokeWidth": 0,
-              "padding": [
-                14,
-                16
-              ],
-              "descendants": {
-                "uTrwf": {
-                  "content": "초안 1개 이어서 만들기",
-                  "fill": "$text-primary",
-                  "fontSize": "$type-small"
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "VjQnI",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 초안 1개 이어서 만들기",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "stroke": "$border-control",
+                  "strokeWidth": 0,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "초안 1개 이어서 만들기",
+                      "fill": "$text-primary",
+                      "fontSize": "$type-small",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "textAlign": "center"
+                    }
+                  }
+                },
+                {
+                  "id": "e6qwE",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "새 초안 삭제",
+                  "width": 48,
+                  "height": 48,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "trash-2",
+                      "fill": "$danger-solid"
+                    }
+                  }
                 }
-              }
+              ]
             },
             {
               "type": "text",
@@ -5118,48 +5145,102 @@
                   }
                 },
                 {
-                  "id": "Gog7O",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 새 기록 이어가기",
+                  "type": "frame",
+                  "id": "VxWWv",
+                  "name": "초안 이어쓰기와 삭제",
                   "width": "fill_container",
-                  "fill": "$bg-sunken",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "padding": [
-                    14,
-                    16
-                  ],
-                  "effect": [],
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "새 기록 이어가기",
-                      "fill": "$text-primary",
-                      "fontSize": 16
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "Gog7O",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 새 기록 이어가기",
+                      "width": "fill_container",
+                      "fill": "$bg-sunken",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "effect": [],
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "새 기록 이어가기",
+                          "fill": "$text-primary",
+                          "fontSize": 16,
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "textAlign": "center"
+                        }
+                      }
+                    },
+                    {
+                      "id": "vGsI3",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "새 초안 삭제",
+                      "width": 48,
+                      "height": 48,
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "trash-2",
+                          "fill": "$danger-solid"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 {
-                  "id": "DobyB",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 기록 편집 이어가기",
+                  "type": "frame",
+                  "id": "dOUVd",
+                  "name": "초안 이어쓰기와 삭제",
                   "width": "fill_container",
-                  "fill": "$bg-sunken",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "padding": [
-                    14,
-                    16
-                  ],
-                  "effect": [],
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "기록 편집 이어가기",
-                      "fill": "$text-primary",
-                      "fontSize": 16
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "DobyB",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 기록 편집 이어가기",
+                      "width": "fill_container",
+                      "fill": "$bg-sunken",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "effect": [],
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "기록 편집 이어가기",
+                          "fill": "$text-primary",
+                          "fontSize": 16,
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "textAlign": "center"
+                        }
+                      }
+                    },
+                    {
+                      "id": "WfHFv",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "편집 초안 삭제",
+                      "width": 48,
+                      "height": 48,
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "trash-2",
+                          "fill": "$danger-solid"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 {
                   "type": "text",
@@ -7806,25 +7887,52 @@
                   }
                 },
                 {
-                  "id": "E0m71s",
-                  "type": "ref",
-                  "ref": "okVIz",
-                  "name": "Button / 초안 1개 이어서 만들기",
+                  "type": "frame",
+                  "id": "lGBX1",
+                  "name": "초안 이어쓰기와 삭제",
                   "width": "fill_container",
-                  "fill": "$bg-sunken",
-                  "stroke": "$border-control",
-                  "strokeWidth": 0,
-                  "padding": [
-                    14,
-                    16
-                  ],
-                  "descendants": {
-                    "uTrwf": {
-                      "content": "초안 1개 이어서 만들기",
-                      "fill": "$text-primary",
-                      "fontSize": "$type-small"
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "E0m71s",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 초안 1개 이어서 만들기",
+                      "width": "fill_container",
+                      "fill": "$bg-sunken",
+                      "stroke": "$border-control",
+                      "strokeWidth": 0,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "초안 1개 이어서 만들기",
+                          "fill": "$text-primary",
+                          "fontSize": "$type-small",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "textAlign": "center"
+                        }
+                      }
+                    },
+                    {
+                      "id": "YICkS",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "새 초안 삭제",
+                      "width": 48,
+                      "height": 48,
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "trash-2",
+                          "fill": "$danger-solid"
+                        }
+                      }
                     }
-                  }
+                  ]
                 },
                 {
                   "type": "text",
@@ -9444,17 +9552,17 @@
               "id": "BqfFl",
               "type": "ref",
               "ref": "T8O0U",
-              "name": "ConfirmDialog / 초안 폐기",
+              "name": "ConfirmDialog / 초안 삭제",
               "width": 342,
               "descendants": {
                 "P7TJHS": {
-                  "content": "초안을 폐기할까요?"
+                  "content": "초안을 삭제할까요?"
                 },
                 "eqgjm": {
-                  "content": "이 기기의 초안과 입력을 폐기해요.\n저장 결과가 불확실하면\n서버 상태를 먼저 확인하며,\n서버에 저장된 기록은 삭제하지 않아요."
+                  "content": "이 기기의 초안을 삭제해요.\n저장된 기록은 유지돼요."
                 },
                 "NLSvX/uTrwf": {
-                  "content": "초안 폐기"
+                  "content": "초안 삭제"
                 }
               }
             },
@@ -9951,21 +10059,48 @@
               ]
             },
             {
-              "id": "uRQo6",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 초안 이어서 만들기",
+              "type": "frame",
+              "id": "vfgrz",
+              "name": "초안 이어쓰기와 삭제",
               "width": "fill_container",
-              "fill": "$bg-sunken",
-              "stroke": "$border-control",
-              "strokeWidth": 0,
-              "descendants": {
-                "uTrwf": {
-                  "content": "초안 1개 이어서 만들기",
-                  "fill": "$text-primary",
-                  "fontSize": "$type-small"
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "uRQo6",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 초안 이어서 만들기",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "stroke": "$border-control",
+                  "strokeWidth": 0,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "초안 1개 이어서 만들기",
+                      "fill": "$text-primary",
+                      "fontSize": "$type-small",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "textAlign": "center"
+                    }
+                  }
+                },
+                {
+                  "id": "c9ono",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "새 초안 삭제",
+                  "width": 48,
+                  "height": 48,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "trash-2",
+                      "fill": "$danger-solid"
+                    }
+                  }
                 }
-              }
+              ]
             },
             {
               "type": "text",
@@ -12206,25 +12341,52 @@
               }
             },
             {
-              "id": "j6ipA",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 초안 1개 이어서 만들기",
+              "type": "frame",
+              "id": "T1bkT",
+              "name": "초안 이어쓰기와 삭제",
               "width": "fill_container",
-              "fill": "$bg-sunken",
-              "stroke": "$border-control",
-              "strokeWidth": 0,
-              "padding": [
-                14,
-                16
-              ],
-              "descendants": {
-                "uTrwf": {
-                  "content": "초안 1개 · 이어서 만들기",
-                  "fill": "$text-primary",
-                  "fontSize": "$type-small"
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "j6ipA",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 초안 1개 이어서 만들기",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "stroke": "$border-control",
+                  "strokeWidth": 0,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "초안 1개 이어서 만들기",
+                      "fill": "$text-primary",
+                      "fontSize": "$type-small",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "textAlign": "center"
+                    }
+                  }
+                },
+                {
+                  "id": "J5u3Z",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "새 초안 삭제",
+                  "width": 48,
+                  "height": 48,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "trash-2",
+                      "fill": "$danger-solid"
+                    }
+                  }
                 }
-              }
+              ]
             }
           ]
         }
@@ -12405,25 +12567,52 @@
               }
             },
             {
-              "id": "w4lzU",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 초안 1개 이어서 만들기",
+              "type": "frame",
+              "id": "f1uMl5",
+              "name": "초안 이어쓰기와 삭제",
               "width": "fill_container",
-              "fill": "$bg-sunken",
-              "stroke": "$border-control",
-              "strokeWidth": 0,
-              "padding": [
-                14,
-                16
-              ],
-              "descendants": {
-                "uTrwf": {
-                  "content": "초안 1개 · 이어서 만들기",
-                  "fill": "$text-primary",
-                  "fontSize": 28
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "w4lzU",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 초안 1개 이어서 만들기",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "stroke": "$border-control",
+                  "strokeWidth": 0,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "초안 1개 이어서 만들기",
+                      "fill": "$text-primary",
+                      "fontSize": 28,
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "textAlign": "center"
+                    }
+                  }
+                },
+                {
+                  "id": "O288SB",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "새 초안 삭제",
+                  "width": 48,
+                  "height": 48,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "trash-2",
+                      "fill": "$danger-solid"
+                    }
+                  }
                 }
-              }
+              ]
             }
           ]
         }
@@ -20828,9 +21017,9 @@
     {
       "type": "frame",
       "id": "z8Hbv",
-      "x": 4950,
-      "y": 1500,
-      "name": "Phone / 06b · 선화 변환 파일 받는 중 · H03 후속",
+      "x": 960,
+      "y": 13344,
+      "name": "Phone / 06b · AI 파일 다운로드",
       "metadata": {
         "type": "screen",
         "requirement": "SR-SCREEN-004",
@@ -20853,6 +21042,35 @@
         },
         {
           "type": "frame",
+          "id": "V73jF",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "YiZJg",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
           "id": "a9EMBT",
           "name": "Screen content",
           "width": "fill_container",
@@ -20860,56 +21078,12 @@
           "layout": "vertical",
           "gap": 16,
           "padding": [
-            8,
+            16,
             20,
-            34,
+            12,
             20
           ],
           "children": [
-            {
-              "type": "frame",
-              "id": "V73jF",
-              "name": "App header",
-              "width": "fill_container",
-              "gap": 12,
-              "alignItems": "center",
-              "children": [
-                {
-                  "id": "tDD46",
-                  "type": "ref",
-                  "ref": "OYxj6",
-                  "name": "뒤로",
-                  "descendants": {
-                    "QbEcD": {
-                      "icon": "arrow-left"
-                    }
-                  }
-                },
-                {
-                  "type": "text",
-                  "id": "YiZJg",
-                  "name": "Screen title",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "컬러 스케치 준비",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-heading",
-                  "fontWeight": "600"
-                }
-              ]
-            },
-            {
-              "type": "icon",
-              "id": "IkaR4",
-              "name": "Download progress icon",
-              "width": 48,
-              "height": 48,
-              "icon": "download",
-              "library": "lucide",
-              "fill": "$accent-solid"
-            },
             {
               "type": "text",
               "id": "wGPGd",
@@ -20917,7 +21091,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "선화 변환 파일을\n받고 있어요",
+              "content": "사진을 읽을 AI를 준비해요",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-title",
@@ -20930,17 +21104,17 @@
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "변환 파일을 다운로드하고 있어요.\n받는 동안 작업을 안전하게 보관해요.",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
-              "fontSize": "$type-small",
+              "fontSize": "$type-body",
               "fontWeight": "normal"
             },
             {
               "id": "TII7V",
               "type": "ref",
               "ref": "DOjki",
-              "name": "Notice / 현재 받는 파일",
+              "name": "Notice / 와이파이와 앱 유지 안내",
               "width": "fill_container",
               "fill": "$accent-subtle",
               "descendants": {
@@ -20950,72 +21124,1555 @@
                 },
                 "HZd7j": {
                   "content": "현재 받는 파일",
-                  "fill": "$accent-solid"
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
                 },
                 "t3y1jD": {
-                  "content": "선화 변환 파일 · 다운로드 중",
-                  "fill": "$accent-solid"
-                }
-              }
-            },
-            {
-              "id": "KUQNa",
-              "type": "ref",
-              "ref": "q0QhL",
-              "name": "선화 변환 파일 목록",
-              "width": "fill_container",
-              "descendants": {
-                "G0mYoF": {
-                  "content": "파일 목록"
-                },
-                "FC5B2": {
-                  "content": "사진 읽기 파일 · 준비 완료\n선화 변환 파일 · 다운로드 중"
-                }
-              }
-            },
-            {
-              "id": "r9fvX",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 다운로드 중",
-              "fill": "$bg-disabled",
-              "stroke": "$border-control",
-              "strokeWidth": 1,
-              "width": "fill_container",
-              "descendants": {
-                "uTrwf": {
-                  "content": "다운로드 중",
-                  "fill": "$ink-disabled"
-                }
-              }
-            },
-            {
-              "id": "Z7HzJP",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 다운로드 취소",
-              "fill": "$bg-surface",
-              "stroke": "$border-control",
-              "strokeWidth": 1,
-              "width": "fill_container",
-              "descendants": {
-                "uTrwf": {
-                  "content": "다운로드 취소",
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
                   "fill": "$text-primary"
                 }
               }
             },
             {
+              "id": "ozDlF",
+              "type": "ref",
+              "ref": "u0Amud",
+              "name": "사진 분석 AI 다운로드 진행",
+              "width": "fill_container",
+              "height": 40,
+              "padding": 0,
+              "gap": 8,
+              "descendants": {
+                "oBmZT": {
+                  "icon": "refresh-cw",
+                  "fill": "$accent-solid",
+                  "width": 18,
+                  "height": 18
+                },
+                "N12OW": {
+                  "content": "사진 분석 AI"
+                },
+                "l33ky": {
+                  "content": "진행 중",
+                  "fill": "$accent-solid",
+                  "width": 38
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "v0rpc",
+              "name": "실제 바이트 진행률과 용량",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YBft2",
+                  "name": "다운로드 진행률 예시 35%",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 8,
+                  "fill": "$bg-sunken",
+                  "cornerRadius": 999,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "iowrC",
+                      "name": "받은 파일 비율",
+                      "fill": "$accent-solid",
+                      "width": 123.36843214936874,
+                      "height": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "hyIxi",
+                  "name": "다운로드 용량 예시",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "1.04 GB / 2.95 GB (35%)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "SQasl",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "Z7HzJP",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 일시 정지",
+              "fill": "$bg-surface",
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "width": "fill_container",
+              "effect": [],
+              "descendants": {
+                "uTrwf": {
+                  "content": "일시 정지",
+                  "fill": "$text-primary"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "A75ol0",
+      "x": 0,
+      "y": 13344,
+      "name": "Phone / 00s · 스플래시와 시작 파일 검사",
+      "metadata": {
+        "type": "screen",
+        "locale": "ko",
+        "fixture": true,
+        "startup": "Keep native splash while startupChecked is false; ready opens app, missing or corrupt files open setup; no artificial delay."
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "id": "Pmw56",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "x": 0,
+          "y": 0,
+          "width": 390
+        },
+        {
+          "type": "rectangle",
+          "id": "J6Fu2",
+          "x": 55,
+          "y": 282,
+          "name": "컬러 선화 스플래시, 원본 이미지 280pt contain",
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "../assets/images/splash-chroma-note.png",
+            "mode": "fit"
+          },
+          "width": 280,
+          "height": 280
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "a1JhB1",
+      "x": 480,
+      "y": 13344,
+      "name": "Phone / 06a · AI 파일 다운로드 안내",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "yQaP4",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "X4RtaI",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
               "type": "text",
-              "id": "rAFmY",
-              "name": "Download cancellation note",
+              "id": "I1zAq",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hzmK4",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "vvnwL",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "aKAEB",
+              "name": "Download progress summary",
               "fill": "$text-secondary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "취소하면 받은 파일은 안전하게 정리해요.",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
-              "fontSize": "$type-caption",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "N5EVn",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "b44K7",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "w1PSJ2",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 다운로드",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "stroke": "$border-control",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "다운로드",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "L2tpcK",
+      "x": 1440,
+      "y": 13344,
+      "name": "Phone / 06c · 다운로드 일시 정지와 이어받기",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "oqrBj",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "SJHAj",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Y0DKGL",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d9hoP",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "I9274j",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "R0I4o",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "ZtiDi",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "id": "kHo7Z",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 일시 정지와 받은 분량 보존",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "다운로드를 멈췄어요.\n이어받아 준비를 마쳐 주세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "MMrCi",
+              "name": "실제 바이트 진행률과 용량",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h2LPsk",
+                  "name": "다운로드 진행률 예시 35%",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 8,
+                  "fill": "$bg-sunken",
+                  "cornerRadius": 999,
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "kIN3H",
+                      "name": "받은 파일 비율",
+                      "fill": "$accent-solid",
+                      "width": 123.36843214936874,
+                      "height": 8
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "KCCRW",
+                  "name": "다운로드 용량 예시",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "1.04 GB / 2.95 GB (35%)",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Zh94v",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "YpaoQ",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 이어받기",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "stroke": "$border-control",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "이어받기",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "YZ1xk",
+      "x": 0,
+      "y": 14344,
+      "name": "Phone / 06d · 다운로드 후 파일 검증",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "Did1I",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "haEbd",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "ci7jd",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PNic0",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "O0X3U3",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "GRYoY",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "a9LMjP",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "id": "VbkYK",
+              "type": "ref",
+              "ref": "u0Amud",
+              "name": "ProcessingStep / 파일 검증",
+              "width": "fill_container",
+              "height": 40,
+              "padding": 0,
+              "gap": 8,
+              "descendants": {
+                "oBmZT": {
+                  "icon": "refresh-cw",
+                  "fill": "$accent-solid",
+                  "width": 18,
+                  "height": 18
+                },
+                "N12OW": {
+                  "content": "파일이 온전한지 확인하고 있어요."
+                },
+                "l33ky": {
+                  "content": "진행 중",
+                  "fill": "$accent-solid",
+                  "width": 38
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "aABgr",
+      "x": 480,
+      "y": 14344,
+      "name": "Phone / 06e · 다운로드 연결 오류",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "M5I9g",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "FKRCu",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "g1cvGr",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "T1aIK",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "gxsze",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "HoACB",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "BOWxO",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "id": "ip2zD",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / model_network_failed",
+              "width": "fill_container",
+              "fill": "$danger-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "circle-alert",
+                  "fill": "$danger-solid"
+                },
+                "HZd7j": {
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "다운로드하지 못했어요.\n인터넷 연결을 확인한 뒤 다시 시도해 주세요.",
+                  "fill": "$danger-solid"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "erttf",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "xVTa7",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 다시 시도",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "stroke": "$border-control",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "다시 시도",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KaNiR",
+      "x": 960,
+      "y": 14344,
+      "name": "Phone / 06f · 다운로드 저장 공간 부족",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "aIlCz",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "MdZg0",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "N1laC",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "l5LbDd",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "G2PYX",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "M6QqK",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "D2CV3i",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "id": "fLtYI",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / model_storage_full",
+              "width": "fill_container",
+              "fill": "$danger-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "circle-alert",
+                  "fill": "$danger-solid"
+                },
+                "HZd7j": {
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "저장 공간이 부족해요.\n공간을 확보한 뒤 다시 시도해 주세요.",
+                  "fill": "$danger-solid"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "f2VQxA",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "NnfHm",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 다시 시도",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "stroke": "$border-control",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "다시 시도",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "K66JOY",
+      "x": 1440,
+      "y": 14344,
+      "name": "Phone / 06g · 다운로드 파일 손상",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-004",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "gUsIV",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "R46KW",
+          "name": "App header",
+          "width": "fill_container",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "nPTZt",
+              "name": "Screen title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "시작 준비",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-heading",
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "S9SB2f",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            16,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "vab5k",
+              "name": "Download progress heading",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "사진을 읽을 AI를 준비해요",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-title",
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "TTV9H",
+              "name": "Download progress summary",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "앱을 사용하려면 약 2.95GB의 AI 파일을\n한 번 다운로드해 주세요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-body",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "sPtoy",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / 와이파이와 앱 유지 안내",
+              "width": "fill_container",
+              "fill": "$accent-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "info",
+                  "fill": "$accent-solid"
+                },
+                "HZd7j": {
+                  "content": "현재 받는 파일",
+                  "fill": "$accent-solid",
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "와이파이 연결을 권장해요.\n다운로드가 끝날 때까지 앱을 열어 두세요.",
+                  "fill": "$text-primary"
+                }
+              }
+            },
+            {
+              "id": "RUhdW",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / model_integrity_failed",
+              "width": "fill_container",
+              "fill": "$danger-subtle",
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "circle-alert",
+                  "fill": "$danger-solid"
+                },
+                "HZd7j": {
+                  "enabled": false,
+                  "width": 1
+                },
+                "t3y1jD": {
+                  "content": "파일 확인에 실패했어요.\n다시 다운로드해 주세요.",
+                  "fill": "$danger-solid"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d83H0r",
+          "name": "고정 하단 조작",
+          "width": "fill_container",
+          "height": 110,
+          "fill": "$bg-surface",
+          "stroke": "$border-control",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            46,
+            20
+          ],
+          "children": [
+            {
+              "id": "sON6t",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 다시 시도",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#29282324",
+                "offset": {
+                  "x": 0,
+                  "y": 2
+                },
+                "blur": 8
+              },
+              "stroke": "$border-control",
+              "width": "fill_container",
+              "descendants": {
+                "uTrwf": {
+                  "content": "다시 시도",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "gUy2E",
+      "x": 0,
+      "y": 13004,
+      "name": "07 · Startup flow / 스플래시와 AI 파일 준비",
+      "width": 1830,
+      "fill": "$bg-surface",
+      "cornerRadius": 16,
+      "layout": "vertical",
+      "gap": 20,
+      "padding": 28,
+      "children": [
+        {
+          "type": "text",
+          "id": "DCXsC",
+          "name": "시작 흐름 제목",
+          "fill": "$text-primary",
+          "content": "스플래시에서 준비를 마치고, 기록으로",
+          "fontFamily": "$font-body",
+          "fontSize": 28,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "FTRR8",
+          "name": "시작 흐름과 화면 원칙",
+          "width": "fill_container",
+          "gap": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "y61fq",
+              "name": "1. 시작할 때",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "hwAgC",
+                  "name": "1. 시작할 때 제목",
+                  "fill": "$accent-solid",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "1. 시작할 때",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "S5x9y",
+                  "name": "1. 시작할 때 설명",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "로컬 파일을 검사하는 동안 스플래시를 유지합니다. 정상 파일이면 로그인 또는 Book으로 바로 진입하며, 누락되거나 손상된 파일이 있으면 다운로드 안내를 표시합니다.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VjKsV",
+              "name": "2. 다운로드와 이어받기",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yPh3q",
+                  "name": "2. 다운로드와 이어받기 제목",
+                  "fill": "$accent-solid",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2. 다운로드와 이어받기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Nkin4",
+                  "name": "2. 다운로드와 이어받기 설명",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "약 2.95GB를 한 번 다운로드합니다. 받은 바이트에 따른 진행률만 표시하고, 일시 정지 또는 앱 종료 후 받은 분량을 보존합니다. 검증이 끝나면 자동으로 앱에 진입합니다.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UKUsZ",
+              "name": "3. 기다림과 복구",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "RuBmL",
+                  "name": "3. 기다림과 복구 제목",
+                  "fill": "$accent-solid",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "3. 기다림과 복구",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "q27Fy",
+                  "name": "3. 기다림과 복구 설명",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "요청 중에는 다운로드 준비 중 또는 멈추는 중으로 표시하고 중복 입력을 막습니다. 파일 검증에는 비율이나 남은 시간을 표시하지 않으며, 오류는 원인과 다시 시도를 함께 보여줍니다.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "A1ymVk",
+          "name": "요청 처리 중 버튼 상태",
+          "width": "fill_container",
+          "gap": 16,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "SshS2",
+              "name": "Button busy / 다운로드 준비 중",
+              "width": 260,
+              "height": 52,
+              "fill": "$bg-disabled",
+              "cornerRadius": 12,
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                14,
+                20
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "YuA4J",
+                  "name": "활성 로더",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "refresh-cw",
+                  "library": "lucide",
+                  "fill": "$accent-solid"
+                },
+                {
+                  "type": "text",
+                  "id": "B7keCu",
+                  "name": "처리 중 문구",
+                  "fill": "$text-disabled",
+                  "content": "다운로드 준비 중",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yEUsz",
+              "name": "Button busy / 멈추는 중",
+              "width": 260,
+              "height": 52,
+              "fill": "$bg-disabled",
+              "cornerRadius": 12,
+              "stroke": "$border-control",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                14,
+                20
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "EDEA6",
+                  "name": "활성 로더",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "refresh-cw",
+                  "library": "lucide",
+                  "fill": "$accent-solid"
+                },
+                {
+                  "type": "text",
+                  "id": "UnXuJ",
+                  "name": "처리 중 문구",
+                  "fill": "$text-disabled",
+                  "content": "멈추는 중",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "UYf5Z",
+              "name": "요청 대기 동작 기준",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "요청 완료 전 중복 입력을 막습니다. 받는 파일은 사진 분석 AI 또는 이미지 처리 파일로 표시합니다.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": 14,
               "fontWeight": "normal"
             }
           ]
