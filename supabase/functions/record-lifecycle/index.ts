@@ -915,7 +915,7 @@ async function handler(request: Request) {
   }
   if (body.action === "cleanup") {
     exactKeys(body as unknown as Record<string, Json>, new Set(["action", "limit"]), new Set(["action"]));
-    if (body.limit !== undefined && (!Number.isInteger(body.limit) || body.limit < 1 || body.limit > 20)) {
+    if (body.limit !== undefined && (!Number.isInteger(body.limit) || body.limit < 1 || body.limit > 10)) {
       throw new HttpError(400, "validation", "cleanup limit is invalid.");
     }
     authenticateCleanup(request);

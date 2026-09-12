@@ -9,7 +9,16 @@ declare
   intruder uuid := gen_random_uuid();
   record_id uuid := gen_random_uuid();
   result jsonb;
+  lifecycle_session_id uuid := gen_random_uuid();
+  lifecycle_record_id uuid := gen_random_uuid();
+  lifecycle_legacy_record_id uuid := gen_random_uuid();
+  lifecycle_creation_id uuid := gen_random_uuid();
+  lifecycle_result jsonb;
 begin
+  -- 로컬 빈 DB에서도 Cron 계약을 검사하되, 실제 Vault 값은 남기지 않는다.
+  if not exists (select 1 from vault.secrets where name = 'record_lifecycle_cleanup_secret') then
+    perform vault.create_secret('record-contract-fixture', 'record_lifecycle_cleanup_secret');
+  end if;
   assert (select relrowsecurity from pg_class where oid = 'public.stamp_records'::regclass), 'Record RLS 비활성';
   assert (select relrowsecurity from pg_class where oid = 'app_private.record_tombstones'::regclass), 'tombstone RLS 비활성';
   assert (select relrowsecurity from pg_class where oid = 'app_private.account_deletion_jobs'::regclass), '탈퇴 작업 RLS 비활성';
@@ -101,6 +110,59 @@ begin
   end loop;
   assert not app_private.valid_record_colors(null);
   insert into auth.users(id) values(owner), (intruder);
+  insert into auth.sessions(id, user_id) values(lifecycle_session_id, owner);
+  insert into public.stamp_records(
+    id, user_id, status, stamp_image_path, stamp_sha256, bytes, width, height,
+    scene, semantic_tags, mood_tags, color_tags, ai_field_note_edited,
+    diary_date, date_source, analysis_meta, creation_operation_id, creation_payload_hash
+  ) values (
+    lifecycle_record_id, owner, 'ready', owner::text || '/' || lifecycle_record_id::text || '/stamp.png',
+    repeat('0', 64), 1, 1, 1,
+    '원래 장면', array['원래 태그'], array['차분함'],
+    '[{"hex":"#FFFFFF","rgb":[255,255,255],"weight":1}]'::jsonb, '기존 수정문',
+    current_date, 'user',
+    '{"schema_version":1,"status":"success","ai_scene":"원래 장면","ai_tags":["원래 태그"],"ai_mood":["차분함"],"language":"ko","user_modified_fields":["ai_field_note_edited"]}'::jsonb,
+    lifecycle_creation_id, repeat('1', 64)
+  );
+  lifecycle_result := public.record_lifecycle_transaction(
+    'edit', owner, lifecycle_session_id, lifecycle_record_id, gen_random_uuid(), repeat('2', 64),
+    '{"scene":"바꾼 장면","semantic_tags":["바꾼 태그"],"mood_tags":["밝음"]}'::jsonb, 1
+  );
+  assert lifecycle_result->>'ok' = 'true'
+    and lifecycle_result#>'{record,analysis_meta,user_modified_fields}' = '["scene","semantic_tags","mood_tags","ai_field_note_edited"]'::jsonb,
+    'lifecycle edit가 변경된 AI 필드를 표식하지 않음';
+  assert lifecycle_result#>>'{record,analysis_meta,ai_scene}' = '원래 장면'
+    and lifecycle_result#>'{record,analysis_meta,ai_tags}' = '["원래 태그"]'::jsonb
+    and lifecycle_result#>'{record,analysis_meta,ai_mood}' = '["차분함"]'::jsonb,
+    'lifecycle edit가 AI 원본을 덮어씀';
+  lifecycle_result := public.record_lifecycle_transaction(
+    'edit', owner, lifecycle_session_id, lifecycle_record_id, gen_random_uuid(), repeat('3', 64),
+    '{"scene":"원래 장면","semantic_tags":["원래 태그"],"mood_tags":["차분함"]}'::jsonb, 2
+  );
+  assert lifecycle_result->>'ok' = 'true'
+    and lifecycle_result#>'{record,analysis_meta,user_modified_fields}' = '["ai_field_note_edited"]'::jsonb,
+    'lifecycle edit가 기준값 복귀 뒤 세 AI 표식을 제거하지 않음';
+  insert into public.stamp_records(
+    id, user_id, status, stamp_image_path, stamp_sha256, bytes, width, height,
+    scene, semantic_tags, mood_tags, color_tags, diary_date, date_source,
+    analysis_meta, creation_operation_id, creation_payload_hash
+  ) values (
+    lifecycle_legacy_record_id, owner, 'ready', owner::text || '/' || lifecycle_legacy_record_id::text || '/stamp.png',
+    repeat('4', 64), 1, 1, 1,
+    'legacy 장면', array['legacy 태그'], array['차분함'],
+    '[{"hex":"#FFFFFF","rgb":[255,255,255],"weight":1}]'::jsonb, current_date, 'user',
+    '{"schema_version":0,"status":"success","language":"ko","user_modified_fields":["scene"]}'::jsonb,
+    gen_random_uuid(), repeat('5', 64)
+  );
+  lifecycle_result := public.record_lifecycle_transaction(
+    'edit', owner, lifecycle_session_id, lifecycle_legacy_record_id, gen_random_uuid(), repeat('6', 64),
+    '{"user_note":"legacy 편집"}'::jsonb, 1
+  );
+  assert lifecycle_result->>'ok' = 'true'
+    and lifecycle_result#>'{record,analysis_meta,user_modified_fields}' = '["scene"]'::jsonb,
+    '원본 없는 legacy metadata가 태그 또는 분위기 표식을 만들었음';
+  delete from public.stamp_records where id in (lifecycle_record_id, lifecycle_legacy_record_id);
+  delete from auth.sessions where id = lifecycle_session_id;
   result := app_private.record_lifecycle_actual(
     null, owner, null, record_id, gen_random_uuid(), repeat('0', 64), '{}'::jsonb, null
   );
