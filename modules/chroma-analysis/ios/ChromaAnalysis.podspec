@@ -13,12 +13,15 @@ Pod::Spec.new do |s|
   s.dependency 'ExpoModulesCore'
   s.source_files = '*.{swift,h,mm}'
   s.public_header_files = 'ChromaAnalysisBridge.h'
-  s.vendored_libraries = 'Libraries/lib/*.a'
   s.resource_bundles = { 'ChromaAnalysis' => ['Resources/*.gguf'] }
   s.frameworks = 'Accelerate', 'Foundation', 'ImageIO'
-  s.libraries = 'c++'
+  s.libraries = 'c++', 'mtmd', 'llama', 'ggml', 'ggml-base', 'ggml-cpu', 'ggml-blas', 'vendor-hash'
   s.pod_target_xcconfig = {
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
-    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/Libraries/include"'
+    'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/Libraries/include"',
+    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_TARGET_SRCROOT}/Libraries/$(PLATFORM_NAME)/lib"'
+  }
+  s.user_target_xcconfig = {
+    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/../../modules/chroma-analysis/ios/Libraries/$(PLATFORM_NAME)/lib"'
   }
 end
