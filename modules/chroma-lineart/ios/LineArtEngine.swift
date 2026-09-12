@@ -64,7 +64,8 @@ public final class LineArtEngine {
 
     public init(modelURL: URL) throws {
         let configuration = MLModelConfiguration()
-        configuration.computeUnits = .all
+        // The range-shaped model fails with .all on A16/iOS 26; CPU/GPU preserves its native aspect ratio.
+        configuration.computeUnits = .cpuAndGPU
         do {
             model = try MLModel(contentsOf: modelURL, configuration: configuration)
         } catch {

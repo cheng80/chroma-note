@@ -46,7 +46,12 @@ function harness() {
 }
 
 const a = harness();
+assert.equal(a.render().startupChecked, false);
 assert.equal(a.calls, 0, 'mount must never start the large download');
+a.emit(state('required'));
+assert.equal(a.render().startupChecked, true);
+a.emit(state('checking'));
+assert.equal(a.render().startupChecked, true, 'rechecking must not re-enter startup');
 a.emit(state('required'));
 a.render().start(); a.render().start();
 assert.equal(a.calls, 1, 'double tap must start only once');
@@ -113,4 +118,40 @@ for (const locale of ['ko', 'en']) {
   const wifi = nodes(render('required')).find(node => node.type === 'Notice').props.message;
   assert.match(wifi, locale === 'ko' ? /앱을 열어 두세요/ : /Keep the app open/);
 }
-console.log('useModelAssets.check passed: explicit start, duplicate tap, stale snapshot, pause race, initial failure, unmount, ready, ko/en UI and real progress');
+const gateExports = {}, gateSlots = [];
+let gateState = state('checking'), gateStartupChecked = false, gateIndex = 0, gateEffects = [], splashHides = 0;
+vm.runInNewContext(ts.transpileModule(readFileSync(new URL('./ModelSetupGate.tsx', import.meta.url), 'utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React },
+}).outputText, { exports: gateExports, require(name) {
+  const modules = {
+    react: { ...React, useState(initial) {
+      const key = gateIndex++;
+      gateSlots[key] ??= typeof initial === 'function' ? initial() : initial;
+      return [gateSlots[key], value => { gateSlots[key] = value; }];
+    }, useEffect(effect) { gateEffects.push(effect); } },
+    'expo-splash-screen': { hide() { splashHides++; } },
+    '../services/secure-session': { secureSessionStorage: { getItem: async () => null } },
+    './demo-state': { displayLocale: () => 'ko' },
+    './controller/useLocalActions': { deviceLocale: () => 'ko' },
+    './screens/ModelSetupScreen': { ModelSetupScreen: 'ModelSetupScreen' },
+    './useModelAssets': { useModelAssets: () => ({ state: gateState, startupChecked: gateStartupChecked }) },
+  };
+  assert.ok(name in modules, name); return modules[name];
+} });
+const app = React.createElement('AppContent');
+function gate(status, startupChecked = status !== 'checking') {
+  gateState = state(status); gateStartupChecked = startupChecked; gateIndex = 0; gateEffects = [];
+  const result = gateExports.ModelSetupGate({ children: app });
+  gateEffects.forEach(effect => effect());
+  return result;
+}
+assert.equal(gate('checking'), null, 'local hash check must retain the splash without showing download UI');
+assert.equal(splashHides, 0);
+assert.equal(gate('ready').props.children, app, 'valid local files enter the app directly');
+assert.equal(splashHides, 1);
+gateSlots.length = 0; splashHides = 0;
+assert.equal(gate('checking'), null);
+assert.equal(gate('required').type, 'ModelSetupScreen', 'missing files show download UI after checking');
+assert.equal(gate('checking', true).type, 'ModelSetupScreen', 'explicit retry must not return to the startup splash');
+assert.equal(gate('failed').type, 'ModelSetupScreen', 'integrity errors expose recovery');
+console.log('useModelAssets.check passed: local hash-first splash, direct ready entry, download recovery, lifecycle and ko/en UI');

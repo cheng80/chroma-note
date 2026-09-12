@@ -9,6 +9,8 @@ python3 scripts/prepare-analysis-runtime.py
 npx pod-install
 ```
 
+실기기 라이브러리를 처음 만들거나 갱신할 때는 `python3 scripts/prepare-analysis-runtime.py --platform iphoneos --build`를 사용한다. 실기기는 Metal, 시뮬레이터는 CPU를 사용한다. 이미지 분석은 256 이미지 토큰·2048 문맥 토큰으로 제한하며 선화 입력 해상도는 유지한다. 스케치 실행 전에는 기존 `unloadPhotoAnalysis()`로 VLM 메모리를 해제한다.
+
 준비 스크립트는 `ios/Libraries`에 네이티브 라이브러리·헤더를 준비한다. Qwen GGUF는 앱에 포함하지 않고 `model-manifest.json`과 초기 주소 목록 `model-download.json`을 번들에 넣는다. 앱의 iOS 최소 타깃은 17.0이다. 선화 모듈의 약 8.6MB `LineArt.mlmodelc`는 계속 내장한다.
 
 NAS 배포:
@@ -19,7 +21,7 @@ NAS 배포:
 
 다운로드마다 NAS 주소 목록을 우선 조회한다. 목록이 아직 게시되지 않은 HTTP 404에만 번들 초기 주소를 사용한다. 잘못된 JSON, HTTPS 위반과 다른 서버 오류는 초기 주소로 숨기지 않고 실패로 처리한다.
 
-첫 실행은 `getModelAssetStatus()`로 로컬 파일을 확인한다. 사용자가 `downloadModelAssets()`를 눌러야 대용량 다운로드를 시작하며 상태는 `subscribeModelAssets()`로 전달한다. `pauseModelDownload()`와 백그라운드 진입은 다운로드를 멈추고 OS의 이어받기 정보를 보관한다. 재시도 때 최신 NAS JSON을 읽으며 주소가 달라졌거나 OS 임시 파일이 사라졌다면 해당 파일만 처음부터 받는다. 완성된 다른 파일은 재사용한다.
+앱 시작 시 `getModelAssetStatus()`로 로컬 파일의 크기·SHA-256을 먼저 확인한다. 확인 중에는 기본 스플래시를 유지하고, 정상 파일이면 앱으로 바로 진입하며 누락·손상이면 다운로드 화면을 표시한다. 사용자가 `downloadModelAssets()`를 눌러야 대용량 다운로드를 시작하며 상태는 `subscribeModelAssets()`로 전달한다. `pauseModelDownload()`와 백그라운드 진입은 다운로드를 멈추고 OS의 이어받기 정보를 보관한다. 재시도 때 최신 NAS JSON을 읽으며 주소가 달라졌거나 OS 임시 파일이 사라졌다면 해당 파일만 처음부터 받는다. 완성된 다른 파일은 재사용한다.
 
 `ModelAssetStore`가 URLSession 다운로드, 크기·SHA-256 확인과 원자적 설치를 맡는다. 파일은 백업 제외 `Application Support/chroma-models`에 저장한다. 검증되지 않은 부분 파일은 추론에서 사용하지 않으며 설치 완료 후에는 NAS 연결 없이 재사용한다. 다운로드·검증 완료 전에는 시작 안내를 표시하고 기존 계정·초안 controller를 마운트하지 않는다. 파일 설치와 아래 엔진 메모리 준비는 별도 상태다.
 

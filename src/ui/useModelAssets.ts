@@ -6,6 +6,7 @@ const initialState: ModelAssetState = { status: 'checking', downloadedBytes: 0, 
 export function useModelAssets() {
   const [state, setState] = useState<ModelAssetState>(initialState);
   const [pending, setPending] = useState<'start' | 'pause' | null>(null);
+  const [startupChecked, setStartupChecked] = useState(false);
   const lifecycle = useRef({ alive: false, request: 0, event: 0, pending: null as 'start' | 'pause' | null, state: initialState });
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export function useModelAssets() {
       if (!live.alive) return;
       live.state = next;
       setState(next);
+      if (next.status !== 'checking') setStartupChecked(true);
     };
     let unsubscribe: (() => void) | undefined;
     const event = live.event;
@@ -68,5 +70,5 @@ export function useModelAssets() {
     }
   }, []);
 
-  return { state, pending, start: () => { void run('start'); }, pause: () => { void run('pause'); } };
+  return { state, pending, startupChecked, start: () => { void run('start'); }, pause: () => { void run('pause'); } };
 }

@@ -3,7 +3,7 @@ import { randomUUID } from 'expo-crypto';
 import { convertLineArt } from '../../modules/chroma-lineart';
 import lineArtManifest from '../../modules/chroma-lineart/model-manifest.json';
 import { extractPhotoColors } from '../../modules/chroma-lineart/palette';
-import { analyzePhoto, preparePhotoAnalysis } from '../../modules/chroma-analysis';
+import { analyzePhoto, preparePhotoAnalysis, unloadPhotoAnalysis } from '../../modules/chroma-analysis';
 import type { ActiveJob, DisplayLocale, PhotoInput, PhotoStepResult } from '../domain/record';
 
 export async function processPhotoStep(photo: PhotoInput, job: ActiveJob, locale: DisplayLocale, signal: AbortSignal): Promise<PhotoStepResult> {
@@ -35,6 +35,9 @@ async function executePhotoStep(photo: PhotoInput, job: ActiveJob, locale: Displ
     return { step: 'analysis', analysis: { source: 'device', source_revision: result.inputRevision, status: 'success', model_version: result.modelVersion,
       scene: result.scene, semantic_tags: result.semanticTags, mood: result.moodTags, ai_field_note: '', ai_field_note_edited: null, user_modified_fields: [] } };
   }
+  // Core ML needs its own working memory; do not retain the VLM during sketch conversion.
+  await unloadPhotoAnalysis();
+  if (signal.aborted) throw new Error('photo_cancelled');
   const directory = new Directory(Paths.document, 'chroma-drafts', job.owner_id);
   directory.create({ intermediates: true, idempotent: true });
   const result = await convertLineArt({ ...input, outputDirectory: directory.uri }, {}, signal);

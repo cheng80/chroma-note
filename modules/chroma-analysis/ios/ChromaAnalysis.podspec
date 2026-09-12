@@ -14,14 +14,16 @@ Pod::Spec.new do |s|
   s.source_files = '*.{swift,h,mm}'
   s.public_header_files = 'ChromaAnalysisBridge.h'
   s.resource_bundles = { 'ChromaAnalysis' => ['Resources/*.json'] }
-  s.frameworks = 'Accelerate', 'Foundation', 'ImageIO'
+  s.frameworks = 'Accelerate', 'Foundation', 'ImageIO', 'Metal', 'MetalKit'
   s.libraries = 'c++', 'mtmd', 'llama', 'ggml', 'ggml-base', 'ggml-cpu', 'ggml-blas', 'vendor-hash'
   s.pod_target_xcconfig = {
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/Libraries/include"',
-    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_TARGET_SRCROOT}/Libraries/$(PLATFORM_NAME)/lib"'
+    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_TARGET_SRCROOT}/Libraries/$(PLATFORM_NAME)/lib"',
+    'OTHER_LDFLAGS[sdk=iphoneos*]' => '$(inherited) -lggml-metal'
   }
   s.user_target_xcconfig = {
-    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/../../modules/chroma-analysis/ios/Libraries/$(PLATFORM_NAME)/lib"'
+    'LIBRARY_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/../../modules/chroma-analysis/ios/Libraries/$(PLATFORM_NAME)/lib"',
+    'OTHER_LDFLAGS[sdk=iphoneos*]' => '$(inherited) -lggml-metal'
   }
 end

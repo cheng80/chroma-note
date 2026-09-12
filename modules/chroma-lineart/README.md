@@ -26,6 +26,7 @@ const result = await convertLineArt(
 - URI는 로컬 파일만 허용한다. 원본은 수정하지 않는다. 결과는 초안 폴더의 새 `lineart-UUID.png`이며 이전 PNG를 덮어쓰지 않는다.
 - JPEG/PNG/HEIC 정지 이미지, 30MiB·50MP 상한을 검사한다. EXIF 방향과 sRGB 변환 뒤 4배수 reflection padding을 적용하고 출력에서 제거한다. 출력 PNG는 5MiB 이하다.
 - 모델은 직렬 백그라운드 큐에서 재사용한다. 동시 호출은 `lineart_busy`로 거부한다. 취소는 연산 단계 사이에서 처리되며 진행 중 Core ML 호출을 즉시 끊는다는 뜻은 아니다.
+- Core ML은 `.cpuAndGPU`로 실행한다. iPhone 14 Pro Max의 iOS 26.6.2에서 같은 1024×768 입력이 `.all` 설정의 BNNS reshape 오류로 실패하고 `.cpuAndGPU`에서 1.787초에 성공한 결과를 반영했다. 가중치·종횡비·기본 출력 크기는 유지한다.
 - 호출자가 계정·초안 소유권과 `inputRevision`을 관리한다. 사진/옵션 변경 시 revision을 올리고 기존 결과 확인을 해제한다. 늦은 결과는 현재 revision과 대조한 후 수용해야 한다.
 - 결과 폴더는 OS 백업에서 제외한다. 성공 PNG는 서버 저장 확인 또는 초안 명시 폐기까지 호출자가 보존한다. 네이티브 빌드/모델 부재, 입력 오류, 취소는 성공으로 처리하지 않는다.
 

@@ -1,10 +1,12 @@
 #import "ChromaAnalysisBridge.h"
+#import <TargetConditionals.h>
 
 #include "llama.h"
 #include "mtmd.h"
 #include "mtmd-helper.h"
 
 #include <algorithm>
+#include <climits>
 #include <string>
 #include <vector>
 
@@ -63,7 +65,8 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
   llama_log_set(discardLog, nullptr);
   mtmd_helper_log_set(discardLog, nullptr);
   llama_model_params modelParams = llama_model_default_params();
-  modelParams.n_gpu_layers = 0;
+  const bool useGPU = !TARGET_OS_SIMULATOR && llama_supports_gpu_offload();
+  modelParams.n_gpu_layers = useGPU ? INT_MAX : 0;
   modelParams.progress_callback = keepLoading;
   modelParams.progress_callback_user_data = cancel;
   _model = llama_model_load_from_file(_modelPath.fileSystemRepresentation, modelParams);
@@ -72,7 +75,9 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
     return NO;
   }
   mtmd_context_params visionParams = mtmd_context_params_default();
-  visionParams.use_gpu = false;
+  visionParams.use_gpu = useGPU;
+  // Photo tags and mood need a bounded overview; the separate line-art input stays full size.
+  visionParams.image_max_tokens = 256;
   visionParams.n_threads = (int)std::max(1ul, std::min(8ul, NSProcessInfo.processInfo.processorCount - 1));
   visionParams.warmup = false;
   visionParams.progress_callback = keepLoading;
@@ -107,12 +112,12 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
   if (![self loadWithCancellation:&cancel error:error]) return nil;
 
   llama_context_params contextParams = llama_context_default_params();
-  contextParams.n_ctx = 4096;
-  contextParams.n_batch = 2048;
-  contextParams.n_ubatch = 512;
+  contextParams.n_ctx = 2048;
+  contextParams.n_batch = 512;
+  contextParams.n_ubatch = 128;
   contextParams.n_threads = (int32_t)std::max(1ul, std::min(8ul, NSProcessInfo.processInfo.processorCount - 1));
   contextParams.n_threads_batch = contextParams.n_threads;
-  contextParams.offload_kqv = false;
+  contextParams.offload_kqv = !TARGET_OS_SIMULATOR && llama_supports_gpu_offload();
   contextParams.abort_callback = shouldAbort;
   contextParams.abort_callback_data = &cancel;
   llama_context * context = llama_init_from_model(_model, contextParams);
@@ -151,7 +156,7 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
     return nil;
   }
   llama_pos nPast = 0;
-  status = mtmd_helper_eval_chunks(_vision, context, chunks, 0, 0, 2048, true, &nPast);
+  status = mtmd_helper_eval_chunks(_vision, context, chunks, 0, 0, contextParams.n_batch, true, &nPast);
   mtmd_input_chunks_free(chunks);
   if (status != 0) {
     freeContext();

@@ -1,4 +1,5 @@
 import Foundation
+import Darwin
 import CryptoKit
 
 // The Foundation transport is exercised with tiny HTTPS fixtures, never model weights or NAS writes.
@@ -95,6 +96,23 @@ struct ModelAssetStoreTests {
     let sandbox = FileManager.default.temporaryDirectory.appendingPathComponent("chroma-assets-tests-\(UUID().uuidString)")
     try FileManager.default.createDirectory(at: sandbox, withIntermediateDirectories: true)
     defer { try? FileManager.default.removeItem(at: sandbox) }
+    let large = sandbox.appendingPathComponent("large.gguf")
+    FileManager.default.createFile(atPath: large.path, contents: nil)
+    let writer = try FileHandle(forWritingTo: large)
+    try writer.truncate(atOffset: 256 * 1024 * 1024)
+    try writer.close()
+    let largeFile = ModelAssetManifest.File(key: "large", name: "large.gguf", bytes: 256 * 1024 * 1024,
+      sha256: "a6d72ac7690f53be6ae46ba88506bd97302a093f7108472bd9efc3cefda06484")
+    try autoreleasepool {
+      var before = rusage(), after = rusage()
+      getrusage(RUSAGE_SELF, &before)
+      try ModelAssetStore.verify(large, file: largeFile)
+      getrusage(RUSAGE_SELF, &after)
+      let growth = after.ru_maxrss - before.ru_maxrss
+      print("256 MiB verification peak growth: \(growth / 1024 / 1024) MiB")
+      fflush(stdout)
+      precondition(growth < 64 * 1024 * 1024, "Hash verification retained file-sized temporary buffers")
+    }
     let model = Data("a small model fixture".utf8)
     let vision = Data("a separate vision fixture".utf8)
     func entry(_ role: String, _ data: Data) -> [String: Any] {

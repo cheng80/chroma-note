@@ -270,8 +270,12 @@ final class ModelAssetStore: NSObject, URLSessionDownloadDelegate, URLSessionDat
     var digest = SHA256()
     while true {
       guard !isCancelled() else { throw failure("analysis_cancelled") }
-      guard let data = try handle.read(upToCount: 4 * 1024 * 1024), !data.isEmpty else { break }
-      digest.update(data: data)
+      let hasData = try autoreleasepool {
+        guard let data = try handle.read(upToCount: 4 * 1024 * 1024), !data.isEmpty else { return false }
+        digest.update(data: data)
+        return true
+      }
+      if !hasData { break }
     }
     guard digest.finalize().map({ String(format: "%02x", $0) }).joined() == file.sha256 else {
       throw failure("model_integrity_failed")
