@@ -1,11 +1,11 @@
 ---
 name: scaffold-exercises
-description: Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.
+description: "Scaffold or renumber course exercises using the ai-hero directory conventions."
 ---
 
 # Scaffold Exercises
 
-Create exercise directory structures that pass `pnpm ai-hero-cli internal lint`, then commit with `git commit`.
+Create the requested exercise layout using the course conventions below. Run `pnpm ai-hero-cli internal lint` when that tool is configured; otherwise check the layout and links directly without installing an unrelated framework. Commit only when requested.
 
 ## Directory naming
 
@@ -66,7 +66,7 @@ The linter (`pnpm ai-hero-cli internal lint`) checks:
 
 When renumbering or moving exercises:
 
-1. Use `git mv` (not `mv`) to rename directories - preserves git history
+1. Use `git mv` for tracked paths, or a filesystem move for untracked paths; preserve existing content
 2. Update the numeric prefix to maintain order
 3. Re-run lint after moves
 

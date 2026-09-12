@@ -1,6 +1,6 @@
 ---
 name: git-guardrails-claude-code
-description: Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, branch -D, etc.) before they execute. Use when user wants to prevent destructive git operations, add git safety hooks, or block git push/reset in Claude Code.
+description: "Install or customize Claude Code hooks that block dangerous Git commands."
 ---
 
 # Setup Git Guardrails
@@ -21,7 +21,7 @@ When blocked, Claude sees a message telling it that it does not have authority t
 
 ### 1. Ask scope
 
-Ask the user: install for **this project only** (`.claude/settings.json`) or **all projects** (`~/.claude/settings.json`)?
+Use the requested scope: **this project** (`.claude/settings.json`) or **all projects** (`~/.claude/settings.json`). Ask only if the scope is unspecified.
 
 ### 2. Copy the hook script
 
@@ -82,7 +82,7 @@ If the settings file already exists, merge the hook into the existing `hooks.Pre
 
 ### 4. Ask about customization
 
-Ask if user wants to add or remove any patterns from the blocked list. Edit the copied script accordingly.
+Apply requested pattern customizations to the copied script; otherwise keep the bundled rules.
 
 ### 5. Verify
 

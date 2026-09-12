@@ -12,7 +12,7 @@ The issue may sit in `ready-for-agent` for days or weeks. The codebase will chan
 
 - **Do** describe interfaces, types, and behavioral contracts
 - **Do** name specific types, function signatures, or config shapes that the agent should look for or modify
-- **Don't** reference file paths: they go stale
+- Use file paths as navigation hints when useful; express requirements in behavioral contracts so a moved file does not invalidate the brief
 - **Don't** reference line numbers
 - **Don't** assume the current implementation structure will remain the same
 

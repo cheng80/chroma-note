@@ -35,7 +35,7 @@ In both sub-shapes the floating bottom bar is identical.
 
 ### 1. State the question and pick N
 
-Default to **3 variants**. More than 5 stops being radically different and starts being noise, so cap there.
+Match the requested number of variants. If unspecified, choose enough materially different layouts to resolve the design question; one is sufficient for a specific proposed design.
 
 Write down the plan in one line, in the prototype's location or a top-of-file comment:
 
@@ -89,7 +89,7 @@ Behaviour:
 - Visually distinct from the page (e.g. high-contrast pill, subtle shadow) so it's obviously not part of the design being evaluated.
 - Hidden in production builds: gate on `process.env.NODE_ENV !== 'production'` or an equivalent check, so a stray prototype merge can't ship the bar to users.
 
-Put the switcher in a single shared component so both sub-shapes can reuse it. Locate it wherever shared UI lives in the project.
+Keep the switcher local to the prototype unless multiple prototypes actually share it.
 
 ### 5. Hand it over
 
@@ -97,12 +97,7 @@ Surface the URL (and the `?variant=` keys). The user will flip through whenever 
 
 ### 6. Capture the answer and clean up
 
-Once a variant has won, capture the answer (which variant and why), then capture the prototype the way the [SKILL](SKILL.md) describes. Fold the winner into the real code and move the rest onto the throwaway branch, not into main:
-
-- **Sub-shape A**: fold the winner into the existing page; drop the losing variants and the switcher from main.
-- **Sub-shape B**: promote the winning variant to a real route; drop the throwaway route and the switcher from main.
-
-The full set of variants is the primary source, so it lands on the throwaway branch, not the bin, since variant components and the switcher left in the main branch rot fast and confuse the next reader.
+Record the selected variant, its rationale, and the artifact URL or path. Follow [SKILL.md](SKILL.md) for retention and scope. If integration is also requested, incorporate the selected design and remove task-owned experiment code after preserving user work.
 
 ## Anti-patterns
 

@@ -69,7 +69,7 @@ The reason should be durable. Avoid referencing temporary circumstances ("we're 
 
 ## When to check `.out-of-scope/`
 
-During triage (Step 1: Gather context), read all files in `.out-of-scope/`. When evaluating a new issue:
+When evaluating a request, search `.out-of-scope/` for relevant concepts and read matching records; a queue listing needs no full knowledge-base read:
 
 - Check if the request matches an existing out-of-scope concept
 - Matching is by concept similarity, not keyword: "night theme" matches `dark-mode.md`
