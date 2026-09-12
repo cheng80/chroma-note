@@ -1,9 +1,10 @@
 import React from 'react';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppIcon } from './AppIcon';
 import { useEntranceProgress, usePressScale } from './motion';
+import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
 
 const AnimatedPressable = Reanimated.createAnimatedComponent(Pressable);
@@ -25,7 +26,7 @@ export function ResultConfirmation({ label, checked, onChange, disabled = false 
       <View style={[styles.box, checked && styles.boxChecked, disabled && styles.boxDisabled]}>
         <Reanimated.View style={checkStyle}><AppIcon name="check" size={16} color={disabled ? theme.colors.inkDisabled : theme.colors.inverse} strokeWidth={2.5} /></Reanimated.View>
       </View>
-      <Text style={[styles.label, disabled && styles.disabledText]}>{label}</Text>
+      <SemanticText style={[styles.label, disabled && styles.disabledText]}>{label}</SemanticText>
     </AnimatedPressable>
   );
 }

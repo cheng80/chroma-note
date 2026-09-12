@@ -1,6 +1,7 @@
-import React, { ReactNode, useState } from 'react';
+import React, { forwardRef, ReactNode, useState } from 'react';
 import Reanimated from 'react-native-reanimated';
-import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
 import { AppIcon } from './AppIcon';
 import { usePressScale } from './motion';
@@ -17,15 +18,15 @@ export type SummaryRowProps = {
   accessibilityHint?: string;
 };
 
-export function SummaryRow({ label, value, onPress, disabled = false, style, accessibilityHint }: SummaryRowProps) {
+export const SummaryRow = forwardRef<React.ElementRef<typeof Pressable>, SummaryRowProps>(function SummaryRow({ label, value, onPress, disabled = false, style, accessibilityHint }, ref) {
   const [pressed, setPressedState] = useState(false);
   const { animatedStyle, setPressed } = usePressScale();
   const valueText = typeof value === 'string' || typeof value === 'number';
   const content = (
     <>
       <View style={styles.copy}>
-        <Text style={styles.label}>{label}</Text>
-        {valueText ? <Text style={[styles.value, disabled && styles.disabledText]}>{value}</Text> : value}
+        <SemanticText style={styles.label}>{label}</SemanticText>
+        {valueText ? <SemanticText style={[styles.value, disabled && styles.disabledText]}>{String(value)}</SemanticText> : value}
       </View>
       {onPress ? <AppIcon name="chevron-right" color={theme.colors.inkSecondary} /> : null}
     </>
@@ -34,6 +35,7 @@ export function SummaryRow({ label, value, onPress, disabled = false, style, acc
   return onPress ? (
     <AnimatedPressable
       accessibilityRole="button"
+      ref={ref}
       accessibilityLabel={valueText ? `${label}, ${value}` : undefined}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled }}
@@ -46,7 +48,7 @@ export function SummaryRow({ label, value, onPress, disabled = false, style, acc
       {content}
     </AnimatedPressable>
   ) : <View style={[styles.row, style]}>{content}</View>;
-}
+});
 
 const styles = StyleSheet.create({
   row: {

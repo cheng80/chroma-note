@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { AccessibilityInfo, Platform, View, findNodeHandle } from 'react-native';
 
 type ModalA11yOptions = {
@@ -6,6 +6,14 @@ type ModalA11yOptions = {
   initialFocusRef?: RefObject<unknown | null>;
   restoreFocusRef?: RefObject<unknown | null>;
 };
+
+let restoreFocusTimer: ReturnType<typeof setTimeout> | null = null;
+let activeModalCount = 0;
+
+function cancelRestoreFocus() {
+  if (restoreFocusTimer !== null) clearTimeout(restoreFocusTimer);
+  restoreFocusTimer = null;
+}
 
 function focusTarget(target: unknown) {
   if (Platform.OS === 'web') {
@@ -19,19 +27,46 @@ function focusTarget(target: unknown) {
 
 export function useModalA11y({ visible, initialFocusRef, restoreFocusRef }: ModalA11yOptions) {
   const dialogRef = useRef<View>(null);
+  const visibleRef = useRef(visible);
+  const initialFocusRefRef = useRef(initialFocusRef);
+  const restoreFocusRefRef = useRef(restoreFocusRef);
+  const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useLayoutEffect(() => {
+    visibleRef.current = visible;
+    if (visible) {
+      initialFocusRefRef.current = initialFocusRef;
+      restoreFocusRefRef.current = restoreFocusRef;
+    }
+  }, [visible, initialFocusRef, restoreFocusRef]);
+  const onShow = useCallback(() => {
+    if (!visibleRef.current) return;
+    cancelRestoreFocus();
+    if (focusTimer.current !== null) clearTimeout(focusTimer.current);
+    focusTimer.current = setTimeout(() => {
+      focusTimer.current = null;
+      if (!visibleRef.current) return;
+      if (initialFocusRefRef.current?.current != null) focusTarget(initialFocusRefRef.current.current);
+      else if (Platform.OS !== 'web') focusTarget(dialogRef.current);
+    }, 0);
+  }, []);
 
   useEffect(() => {
     if (!visible) return undefined;
-    const previous = restoreFocusRef?.current;
-    const timer = setTimeout(() => {
-      if (initialFocusRef?.current != null) focusTarget(initialFocusRef.current);
-      else if (Platform.OS !== 'web') focusTarget(dialogRef.current);
-    }, 0);
+    activeModalCount += 1;
+    cancelRestoreFocus();
     return () => {
-      clearTimeout(timer);
-      if (previous != null) setTimeout(() => focusTarget(previous), 0);
+      if (focusTimer.current !== null) clearTimeout(focusTimer.current);
+      const previous = restoreFocusRefRef.current?.current;
+      activeModalCount -= 1;
+      if (activeModalCount === 0 && previous != null) {
+        cancelRestoreFocus();
+        restoreFocusTimer = setTimeout(() => {
+          restoreFocusTimer = null;
+          focusTarget(previous);
+        }, 0);
+      }
     };
-  }, [visible, initialFocusRef, restoreFocusRef]);
+  }, [visible]);
 
-  return dialogRef;
+  return { dialogRef, onShow };
 }

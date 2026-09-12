@@ -1,17 +1,19 @@
-import React, { ReactNode, RefObject, useState } from 'react';
+import React, { ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import {
   KeyboardAvoidingView,
+  Keyboard,
   Modal,
   Platform,
   Pressable,
   ScrollView,
+  UIManager,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
 import { IconButton } from './IconButton';
 import { useModalA11y } from './modalA11y';
@@ -46,10 +48,27 @@ export function Sheet({
   restoreFocusRef,
   style,
 }: SheetProps) {
+  const scroll = useRef<ScrollView>(null);
+  const closeRef = useRef<React.ElementRef<typeof Pressable>>(null);
+  const focusedInput = useRef<number | null>(null);
   const [contentHeight, setContentHeight] = useState(0);
   const [viewportHeight, setViewportHeight] = useState(0);
   const overflows = viewportHeight > 0 && contentHeight > viewportHeight + 1;
-  const dialogRef = useModalA11y({ visible, initialFocusRef, restoreFocusRef });
+  const revealInput = useCallback(() => {
+    const keyboard = Keyboard.metrics();
+    const target = focusedInput.current;
+    if (Platform.OS === 'ios' && keyboard && viewportHeight > 0 && target !== null) {
+      UIManager.measure(target, (_left, _top, _width, height) => {
+        if (focusedInput.current === target) scroll.current?.scrollResponderScrollNativeHandleToKeyboard(target,
+          keyboard.screenY - viewportHeight + theme.spacing.sm - Math.max(0, height - viewportHeight + theme.spacing.sm * 2), true);
+      });
+    }
+  }, [viewportHeight]);
+  useEffect(() => {
+    const listener = Keyboard.addListener('keyboardDidShow', revealInput);
+    return () => listener.remove();
+  }, [revealInput]);
+  const { dialogRef, onShow } = useModalA11y({ visible, initialFocusRef: initialFocusRef ?? closeRef, restoreFocusRef });
   const { progress, reduceMotion } = useEntranceProgress(visible);
   const scrimStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
   const sheetStyle = useAnimatedStyle(() => ({
@@ -58,8 +77,8 @@ export function Sheet({
   }));
 
   return (
-    <Modal transparent visible={visible} animationType="none" onRequestClose={onRequestClose} onDismiss={onDismiss} statusBarTranslucent>
-      <View style={styles.modalRoot}>
+    <Modal transparent visible={visible} animationType="none" onRequestClose={onRequestClose} onShow={onShow} onDismiss={onDismiss} statusBarTranslucent>
+      <SafeAreaProvider style={styles.modalRoot}>
         <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.scrim, scrimStyle]} />
         <Pressable accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={StyleSheet.absoluteFill} onPress={onRequestClose} />
         <KeyboardAvoidingView pointerEvents="box-none" style={styles.alignEnd} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -71,14 +90,16 @@ export function Sheet({
           >
             <View style={styles.header}>
               <SemanticText accessibilityRole="header" style={styles.title}>{title}</SemanticText>
-              <IconButton label={closeLabel} onPress={onRequestClose} icon="x" />
+              <IconButton ref={closeRef} label={closeLabel} onPress={onRequestClose} icon="x" />
             </View>
             <ScrollView
+              ref={scroll}
               style={styles.scroll}
               contentContainerStyle={styles.content}
               keyboardShouldPersistTaps="handled"
+              onFocus={event => { focusedInput.current = event.nativeEvent.target; revealInput(); }}
               onContentSizeChange={(_width, height) => setContentHeight(height)}
-              onLayout={({ nativeEvent }) => setViewportHeight(nativeEvent.layout.height)}
+              onLayout={({ nativeEvent }) => { setViewportHeight(nativeEvent.layout.height); revealInput(); }}
               scrollEnabled={overflows}
               bounces={overflows}
               alwaysBounceVertical={false}
@@ -90,7 +111,7 @@ export function Sheet({
             {footer ? <View style={styles.footer}>{footer}</View> : null}
           </AnimatedSafeAreaView>
         </KeyboardAvoidingView>
-      </View>
+      </SafeAreaProvider>
     </Modal>
   );
 }
@@ -98,9 +119,10 @@ export function Sheet({
 const styles = StyleSheet.create({
   modalRoot: { flex: 1 },
   scrim: { backgroundColor: theme.colors.scrim },
-  alignEnd: { flex: 1, justifyContent: 'flex-end' },
+  alignEnd: { flex: 1, justifyContent: 'flex-end', alignItems: 'center' },
   sheet: {
     width: '100%',
+    maxWidth: theme.contentMaxWidth,
     maxHeight: '88%',
     borderTopLeftRadius: theme.radii.sheet,
     borderTopRightRadius: theme.radii.sheet,

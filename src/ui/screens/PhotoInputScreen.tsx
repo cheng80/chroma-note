@@ -7,20 +7,20 @@ import { displayDate, imageSource, recordCopy } from '../record-copy';
 import { theme } from '../theme';
 import { SemanticText } from '../components/SemanticText';
 
-export function PhotoInputScreen({ locale, images, draft, onUseDemoPhoto, onContinue, onCancel, onRequestReplace }: PhotoInputScreenProps) {
+export function PhotoInputScreen({ locale, images, draft, onUseDemoPhoto, onContinue, onCancel, onRequestReplace, replacePhotoTriggerRef }: PhotoInputScreenProps) {
   const t = recordCopy[locale];
   const hasPhoto = Boolean(draft?.photo);
   const source = draft ? imageSource(draft.photo.local_uri, images.photo) : images.photo;
-  const footer = hasPhoto ? <><Button label={t.continuePhoto} onPress={onContinue} /><Button label={t.replacePhoto} onPress={onRequestReplace} tone="secondary" /></> : <Button label={t.useDemo} onPress={onUseDemoPhoto} />;
+  const footer = hasPhoto ? <><Button label={t.continuePhoto} onPress={onContinue} /><Button ref={replacePhotoTriggerRef} label={t.replacePhoto} onPress={onRequestReplace} tone="secondary" /></> : <Button label={t.useDemo} onPress={onUseDemoPhoto} />;
 
   return (
     <Screen title={t.photoHeader} onBack={onCancel} backLabel={t.back} footer={footer} contentStyle={styles.content}>
-      <Text style={styles.eyebrow}>{t.photoStep}</Text>
+      <SemanticText style={styles.eyebrow}>{t.photoStep}</SemanticText>
       <StampImage source={source} accessibilityLabel={t.selectedPhoto} resizeMode="contain" style={styles.photo} />
       <SemanticText accessibilityRole="header" style={styles.title}>{t.photoTitle}</SemanticText>
       <SemanticText style={styles.body}>{t.photoBody}</SemanticText>
-      {draft?.photo.source === 'demo' ? <Text accessibilityRole="alert" style={styles.body}>{locale === 'ko' ? '예시 컬러 스케치예요. 저장하면 작성한 기록이 실제 계정에 보관돼요.' : 'This is a color sketch example. Saving keeps your writing in your account.'}</Text> : null}
-      {draft ? <View style={styles.dateBlock}><Text style={styles.label}>{t.date}</Text><Text style={styles.date}>{displayDate(draft.fields.diary_date)}</Text><Text style={styles.hint}>{t.dateHint}</Text></View> : null}
+      {draft?.photo.source === 'demo' ? <SemanticText accessibilityRole="alert" style={styles.body}>{locale === 'ko' ? '예시 컬러 스케치예요. 저장하면 작성한 기록이 실제 계정에 보관돼요.' : 'This is a color sketch example. Saving keeps your writing in your account.'}</SemanticText> : null}
+      {draft ? <View style={styles.dateBlock}><SemanticText style={styles.label}>{t.date}</SemanticText><Text style={styles.date}>{displayDate(draft.fields.diary_date)}</Text><SemanticText style={styles.hint}>{t.dateHint}</SemanticText></View> : null}
       <View style={styles.spacer} />
       <SemanticText style={styles.auxiliary}>{t.photoLifetime}</SemanticText>
     </Screen>

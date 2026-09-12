@@ -25,7 +25,7 @@ const toneIcons: Record<NoticeTone, AppIconName> = {
 };
 
 export function Notice({ message, title, tone = 'info', busy = false, style }: NoticeProps) {
-  const { progress } = useEntranceProgress(true, theme.motion.noticeDuration, `${tone}:${title}:${message}`);
+  const { progress, reduceMotion } = useEntranceProgress(true, theme.motion.noticeDuration, `${tone}:${title}:${message}`);
   const animatedStyle = useAnimatedStyle(() => ({ opacity: progress.value }));
   return (
     <Animated.View
@@ -34,7 +34,7 @@ export function Notice({ message, title, tone = 'info', busy = false, style }: N
       accessibilityState={{ busy }}
       style={[styles.notice, toneStyles[tone], style, animatedStyle]}
     >
-      {busy ? <ActivityIndicator color={toneColors[tone]} /> : <AppIcon name={toneIcons[tone]} color={toneColors[tone]} />}
+      {busy && !reduceMotion ? <ActivityIndicator color={toneColors[tone]} /> : <AppIcon name={busy ? 'refresh-cw' : toneIcons[tone]} color={toneColors[tone]} />}
       <View style={styles.body}>
         {title ? <SemanticText style={[styles.title, { color: toneColors[tone] }]}>{title}</SemanticText> : null}
         <SemanticText style={[styles.message, { color: tone === 'info' ? theme.colors.ink : toneColors[tone] }]}>{message}</SemanticText>

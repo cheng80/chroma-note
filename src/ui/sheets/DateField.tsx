@@ -1,6 +1,7 @@
+import { SemanticText } from '../components/SemanticText';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { Keyboard, Platform, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, Platform, StyleSheet, View } from 'react-native';
 
 import { Button } from '../primitives';
 import { displayDate } from '../record-copy';
@@ -39,7 +40,7 @@ export function DateField({ label, locale, value, onChange, onClear, expanded, o
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <SemanticText style={styles.label}>{label}</SemanticText>
       <Button
         label={dateLabel}
         accessibilityLabel={`${label}, ${dateLabel}`}

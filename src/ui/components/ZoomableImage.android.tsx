@@ -15,6 +15,7 @@ import type { DisplayLocale } from '../contract';
 import { theme } from '../theme';
 import { IconButton } from './IconButton';
 import { StampImage } from './StampImage';
+import { LineArtDisclaimer } from './LineArtDisclaimer';
 import { clamp, clampOffset, contentCoordinateAtFocal, offsetForFocal } from './zoomMath';
 
 const MIN_SCALE = 1;
@@ -24,10 +25,11 @@ type ZoomableImageProps = {
   locale: DisplayLocale;
   source: ImageSourcePropType;
   accessibilityLabel: string;
+  showConversionNotice?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
-export function ZoomableImage({ locale, source, accessibilityLabel, style }: ZoomableImageProps) {
+export function ZoomableImage({ locale, source, accessibilityLabel, style, showConversionNotice = false }: ZoomableImageProps) {
   const scale = useSharedValue(MIN_SCALE);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -123,6 +125,7 @@ export function ZoomableImage({ locale, source, accessibilityLabel, style }: Zoo
           </GestureDetector>
         </GestureHandlerRootView>
       </View>
+      {showConversionNotice ? <LineArtDisclaimer locale={locale} /> : null}
       <View style={styles.controls}>
         <IconButton label={labels.zoomOut} disabled={requestedScale <= MIN_SCALE} onPress={() => applyScale(currentTransform.current.scale - 1)}>
           <ZoomOut accessible={false} color={theme.colors.ink} size={20} strokeWidth={2} />
@@ -140,7 +143,7 @@ export function ZoomableImage({ locale, source, accessibilityLabel, style }: Zoo
 
 const styles = StyleSheet.create({
   root: { flex: 1, gap: theme.spacing.md },
-  viewport: { flex: 1, minHeight: 260, overflow: 'hidden', backgroundColor: theme.colors.bgPage },
+  viewport: { flex: 1, minHeight: 0, overflow: 'hidden', backgroundColor: theme.colors.bgPage },
   gestureRoot: { flex: 1 },
   canvas: { alignItems: 'center', justifyContent: 'center' },
   image: { width: '100%', height: '100%', minHeight: 0, backgroundColor: theme.colors.bgPage },

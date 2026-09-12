@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import type { DisplayLocale, SheetChange, SheetState } from '../contract';
 import { Button, Field, Notice, Sheet } from '../primitives';
@@ -7,6 +7,7 @@ import { recordCopy } from '../record-copy';
 import { theme } from '../theme';
 import { DateField } from './DateField';
 import { mergeDatePlaceWorking } from './date-place';
+import { SemanticText } from '../components/SemanticText';
 
 type DatePlaceSheetProps = {
   locale: DisplayLocale;
@@ -17,7 +18,7 @@ type DatePlaceSheetProps = {
   onClose: () => void;
 };
 
-export function DatePlaceSheet({ locale, sheet, onChangeSheet, onApply, onCancel, onClose }: DatePlaceSheetProps) {
+export function DatePlaceSheet({ locale, sheet, onChangeSheet, onApply, onCancel, onClose, restoreFocusRef }: DatePlaceSheetProps & { restoreFocusRef?: React.RefObject<unknown | null> }) {
   const copy = recordCopy[locale];
   const working = useRef(sheet.working);
   const [dateExpanded, setDateExpanded] = useState(false);
@@ -33,11 +34,11 @@ export function DatePlaceSheet({ locale, sheet, onChangeSheet, onApply, onCancel
   const error = sheet.error ? <Notice message={copy.invalid} tone="error" /> : null;
 
   return (
-    <Sheet title={copy.datePlaceTitle} onRequestClose={onClose} footer={footer}>
+    <Sheet title={copy.datePlaceTitle} closeLabel={copy.close} restoreFocusRef={restoreFocusRef} onRequestClose={onClose} footer={footer}>
       <DateField label={copy.dateField} locale={locale} value={sheet.working.diary_date} onChange={updateDate} expanded={dateExpanded} onExpandedChange={setDateExpanded} />
       <Field label={copy.placeField} value={sheet.working.place_name ?? ''} onFocus={() => setDateExpanded(false)} onChangeText={(place_name) => updateWorking({ place_name: place_name || null })} />
       {error}
-      <Text style={styles.hint}>{copy.placeHint}</Text>
+      <SemanticText style={styles.hint}>{copy.placeHint}</SemanticText>
     </Sheet>
   );
 }

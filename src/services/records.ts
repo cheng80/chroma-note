@@ -1,14 +1,17 @@
 import * as Crypto from 'expo-crypto';
 import { File, Paths } from 'expo-file-system';
 import { createClient } from '@supabase/supabase-js';
+import { AppState } from 'react-native';
 
-import type { BookFilter, ColorTag, DemoOwnerId, DemoRecord, RecordFields, SaveAttempt, StampCandidate } from '../ui/contract';
+import type { BookFilter, ColorTag, DemoOwnerId, DemoRecord, RecordFields, SaveAttempt, StampCandidate } from '../domain/record';
+import { boundedFetch } from './network';
 import { getSupabase } from './supabase';
-import { analysisModifiedFields, canonicalJson, decodeCursor, encodeCursor, errorCode, isGeneratedLineArtUri, RecordError, sessionIdFromAccessToken, validCreateSelection, type RecordCursor } from './records-core';
+import { analysisModifiedFields, canonicalJson, decodeCursor, durationMilliseconds, encodeCursor, errorCode, isGeneratedLineArtUri, RecordError, retryAfterMilliseconds, retryDelayMilliseconds, sessionIdFromAccessToken, validCreateSelection, type RecordCursor } from './records-core';
 
 export { RecordError, type RecordErrorCode } from './records-core';
 
 const PAGE_SIZE = 30;
+const REQUEST_TIMEOUT_MS = 30_000;
 const STAMP_BUCKET = 'stamp-images';
 const editableFields = ['diary_date', 'date_source', 'place_name', 'user_note', 'scene', 'semantic_tags', 'mood_tags', 'ai_field_note_edited', 'is_favorite'] as const;
 
@@ -56,10 +59,22 @@ type ScopedClient = ReturnType<typeof getSupabase>;
 type AuthContext = {
   ownerId: DemoOwnerId;
   accessToken: string;
-  refreshToken: string;
   sessionId: string;
   client: ScopedClient;
+  refreshUsed: boolean;
 };
+
+type ShouldContinue = () => boolean;
+
+type PreparedCreate = {
+  ownerId: DemoOwnerId;
+  recordId: string;
+  payload: Record<string, unknown>;
+  payloadHash: string;
+  bytes: Uint8Array;
+};
+
+const preparedCreates = new Map<string, PreparedCreate>();
 
 function publicSupabaseConfig() {
   const baseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL?.trim().replace(/\/$/, '');
@@ -73,44 +88,80 @@ function scopedClient(accessToken: string): ScopedClient {
   return createClient(baseUrl, key, {
     accessToken: async () => accessToken,
     auth: { autoRefreshToken: false, detectSessionInUrl: false, persistSession: false },
+    db: { retry: false },
+    global: { fetch: boundedFetch },
   });
+}
+
+async function currentSession(ownerId: DemoOwnerId, sessionId: string) {
+  const { data, error } = await getSupabase().auth.getSession();
+  if (error) throw asRecordError(error);
+  const current = data.session;
+  if (!current || current.user.id !== ownerId || sessionIdFromAccessToken(current.access_token) !== sessionId) throw new RecordError('unauthorized');
+  return current;
+}
+
+async function syncContext(context: AuthContext) {
+  const session = await currentSession(context.ownerId, context.sessionId);
+  if (session.access_token !== context.accessToken) {
+    context.accessToken = session.access_token;
+    context.client = scopedClient(session.access_token);
+  }
 }
 
 async function contextFromSession(ownerId: DemoOwnerId, session: { access_token?: string; refresh_token?: string } | null | undefined): Promise<AuthContext> {
   if (!session?.access_token || !session.refresh_token) throw new RecordError('unauthorized');
+  const sessionId = sessionIdFromAccessToken(session.access_token);
   const { data, error } = await getSupabase().auth.getUser(session.access_token);
-  if (error || !data.user) throw new RecordError('unauthorized');
+  if (error) throw asRecordError(error);
+  if (!data.user) throw new RecordError('unauthorized');
   requireOwner(ownerId, data.user.id);
+  const current = await currentSession(ownerId, sessionId);
   return {
     ownerId,
-    accessToken: session.access_token,
-    refreshToken: session.refresh_token,
-    sessionId: sessionIdFromAccessToken(session.access_token),
-    client: scopedClient(session.access_token),
+    accessToken: current.access_token,
+    sessionId,
+    client: scopedClient(current.access_token),
+    refreshUsed: false,
   };
 }
 
-async function sessionFor(ownerId: DemoOwnerId) {
+async function sessionFor(ownerId: DemoOwnerId, shouldContinue?: ShouldContinue) {
   const { data, error } = await getSupabase().auth.getSession();
-  if (error) throw new RecordError('unauthorized');
-  return contextFromSession(ownerId, data.session);
+  if (error) throw asRecordError(error);
+  try {
+    return await contextFromSession(ownerId, data.session);
+  } catch (sessionError) {
+    if (errorCode(sessionError) !== 'unauthorized' || !data.session?.refresh_token || shouldContinue?.() === false) throw asRecordError(sessionError);
+    const sessionId = sessionIdFromAccessToken(data.session.access_token);
+    const context = await refreshContext({ ownerId, sessionId });
+    context.refreshUsed = true;
+    return context;
+  }
 }
 
-async function refreshContext(context: AuthContext): Promise<AuthContext> {
-  const { data, error } = await getSupabase().auth.refreshSession({ refresh_token: context.refreshToken });
-  if (error) throw new RecordError('unauthorized');
+async function refreshContext(context: Pick<AuthContext, 'ownerId' | 'sessionId'>): Promise<AuthContext> {
+  await currentSession(context.ownerId, context.sessionId);
+  // Let the SDK read its current session after asynchronous storage/lock waits, never hydrate an old token.
+  const { data, error } = await getSupabase().auth.refreshSession();
+  if (error) throw asRecordError(error);
   const refreshed = await contextFromSession(context.ownerId, data.session);
   if (refreshed.sessionId !== context.sessionId) throw new RecordError('unauthorized');
   return refreshed;
 }
 
-async function onceAfterRefresh<T>(context: AuthContext, request: (context: AuthContext) => Promise<T>, canRefresh = true): Promise<T> {
+async function onceAfterRefresh<T>(context: AuthContext, request: (context: AuthContext) => Promise<T>, shouldContinue?: ShouldContinue): Promise<T> {
   try {
+    await syncContext(context);
     return await request(context);
   } catch (error) {
-    if (!canRefresh || errorCode(error) !== 'unauthorized') throw asRecordError(error);
+    if (context.refreshUsed || errorCode(error) !== 'unauthorized' || shouldContinue?.() === false) throw asRecordError(error);
+    context.refreshUsed = true;
     try {
-      Object.assign(context, await refreshContext(context));
+      const refreshed = await refreshContext(context);
+      Object.assign(context, refreshed, { refreshUsed: true });
+      if (shouldContinue?.() === false) throw asRecordError(error);
+      await syncContext(context);
       return await request(context);
     } catch (retryError) {
       throw asRecordError(retryError);
@@ -119,15 +170,34 @@ async function onceAfterRefresh<T>(context: AuthContext, request: (context: Auth
 }
 
 function asRecordError(error: unknown) {
-  return error instanceof RecordError ? error : new RecordError(errorCode(error));
+  return error instanceof RecordError ? error : new RecordError(errorCode(error), retryAfterMilliseconds(error));
 }
 
-function lifecycleError(code: string | undefined) {
+function lifecycleError(code: string | undefined, source?: unknown) {
   if (code === 'version_conflict' || code === 'payload_hash_conflict') return new RecordError('conflict');
   if (code === 'invalid_image' || code === 'invalid_png' || code === 'image_too_large' || code === 'payload_too_large' || code === 'payload_hash_mismatch') return new RecordError('validation');
   if (code === 'account_locked' || code === 'reauth_required') return new RecordError('forbidden');
   if (code === 'backend_unavailable' || code === 'cleanup_pending') return new RecordError('network');
-  return new RecordError(errorCode({ code }));
+  const mapped = errorCode(source ?? { code });
+  return new RecordError(mapped === 'unknown' ? errorCode({ code }) : mapped, mapped === 'rate_limited' ? retryAfterMilliseconds(source) : undefined);
+}
+
+function wait(milliseconds: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function retryOperation<T>(request: () => Promise<T>, shouldContinue?: ShouldContinue): Promise<T> {
+  for (let retry = 0; ; retry += 1) {
+    if (shouldContinue?.() === false) throw new RecordError('network');
+    try {
+      return await request();
+    } catch (error) {
+      const delay = retryDelayMilliseconds(error, retry);
+      if (delay === null || AppState.currentState !== 'active' || shouldContinue?.() === false) throw asRecordError(error);
+      await wait(delay);
+      if (AppState.currentState !== 'active' || shouldContinue?.() === false) throw asRecordError(error);
+    }
+  }
 }
 
 function assertImageBytes(bytes: Uint8Array) {
@@ -165,27 +235,28 @@ function metadataFor(attempt: SaveAttempt) {
     model_meta: {
       source_revision: snapshot.stamp.input_revision,
       ...(analysis.status === 'success' ? { vlm: { model_id: analysis.model_version } } : {}),
-      line: { model_id: processing.model_id, revision: processing.revision, runtime_version: processing.runtime_version, quantization: processing.quantization, inference_duration_ms: processing.inference_duration_ms },
+      line: { model_id: processing.model_id, revision: processing.revision, runtime_version: processing.runtime_version, quantization: processing.quantization, inference_duration_ms: durationMilliseconds(processing.inference_duration_ms) },
     },
     style_meta: { style_id: 'ink-v1', line_model_style: 'style1', max_edge: processing.max_edge, mask_gain: processing.mask_gain, background: 'white', postprocess_version: processing.postprocess_version, input_dimensions: inputDimensions, output_dimensions: [snapshot.stamp.width, snapshot.stamp.height], fit: 'contain' },
   };
 }
 
-async function invoke(context: AuthContext, action: string, body: Record<string, unknown>, canRefresh = true): Promise<Record<string, unknown>> {
+async function invoke(context: AuthContext, action: string, body: Record<string, unknown>, shouldContinue?: ShouldContinue): Promise<Record<string, unknown>> {
   return onceAfterRefresh(context, async (activeContext) => {
     const { data, error } = await activeContext.client.functions.invoke('record-lifecycle', {
       body: { action, ...body },
       headers: { Authorization: `Bearer ${activeContext.accessToken}` },
+      timeout: REQUEST_TIMEOUT_MS,
     });
     if (error) {
-      const context = (error as { context?: { json?: () => Promise<unknown> } }).context;
-      const response = await context?.json?.().catch(() => null);
+      const responseContext = (error as { context?: { json?: () => Promise<unknown> } }).context;
+      const response = await responseContext?.json?.().catch(() => null);
       const details = response && typeof response === 'object' && 'error' in response ? (response as { error?: unknown }).error : response;
       if (details && typeof details === 'object' && 'code' in details) {
         const code = (details as { code?: string }).code;
-        throw lifecycleError(code);
+        throw lifecycleError(code, error);
       }
-      throw error;
+      throw asRecordError(error);
     }
     if (!data || typeof data !== 'object') throw new RecordError('unknown');
     if ('error' in data && data.error) {
@@ -193,7 +264,7 @@ async function invoke(context: AuthContext, action: string, body: Record<string,
       throw lifecycleError(responseError.code);
     }
     return data as Record<string, unknown>;
-  }, canRefresh);
+  }, shouldContinue);
 }
 
 function authenticatedStamp(path: string, accessToken: string) {
@@ -253,6 +324,27 @@ function reservedRecord(row: StoredRecord, attempt: SaveAttempt) {
   return row;
 }
 
+async function prepareCreate(attempt: SaveAttempt): Promise<PreparedCreate> {
+  const existing = preparedCreates.get(attempt.operation_id);
+  if (existing) {
+    if (existing.ownerId !== attempt.owner_id || existing.recordId !== attempt.record_id) throw new RecordError('conflict');
+    return existing;
+  }
+  const snapshot = attempt.payload_snapshot;
+  if (!validCreateSelection(snapshot.stamp, snapshot.confirmation)) throw new RecordError('validation');
+  const bytes = await finalStampBytes(snapshot.stamp, attempt.owner_id);
+  const payloadSource = {
+    ...snapshot.fields,
+    color_tags: snapshot.color_tags,
+    ...metadataFor(attempt),
+    stamp: { sha256: await sha256(bytes), bytes: bytes.length, width: snapshot.stamp.width, height: snapshot.stamp.height },
+  };
+  const canonicalPayload = canonicalJson(payloadSource);
+  const prepared = { ownerId: attempt.owner_id, recordId: attempt.record_id, payload: JSON.parse(canonicalPayload) as Record<string, unknown>, payloadHash: await sha256(canonicalPayload), bytes };
+  preparedCreates.set(attempt.operation_id, prepared);
+  return prepared;
+}
+
 export async function listRecords(ownerId: DemoOwnerId, filter: BookFilter, cursor?: string): Promise<{ records: DemoRecord[]; cursor: string | null }> {
   const context = await sessionFor(ownerId);
   return onceAfterRefresh(context, async (activeContext) => {
@@ -265,8 +357,8 @@ export async function listRecords(ownerId: DemoOwnerId, filter: BookFilter, curs
     }
     if (filter.favorite_only) query = query.eq('is_favorite', true);
     if (cursor) query = query.or(queryCursor(decodeCursor(cursor)));
-    const { data, error } = await query;
-    if (error) throw error;
+    const { data, error, status } = await query;
+    if (error) throw asRecordError({ ...error, status });
     const rows = (data ?? []) as StoredRecord[];
     const page = rows.slice(0, PAGE_SIZE);
     const last = page.at(-1);
@@ -281,8 +373,8 @@ export async function fetchRecord(ownerId: DemoOwnerId, id: string): Promise<Dem
   try {
     const context = await sessionFor(ownerId);
     return await onceAfterRefresh(context, async (activeContext) => {
-      const { data, error } = await activeContext.client.from('stamp_records').select('*').eq('id', id).eq('status', 'ready').maybeSingle();
-      if (error) throw error;
+      const { data, error, status } = await activeContext.client.from('stamp_records').select('*').eq('id', id).eq('status', 'ready').maybeSingle();
+      if (error) throw asRecordError({ ...error, status });
       return data ? recordFromRow(data as StoredRecord, activeContext.accessToken) : null;
     });
   } catch (error) {
@@ -291,43 +383,56 @@ export async function fetchRecord(ownerId: DemoOwnerId, id: string): Promise<Dem
   }
 }
 
-export async function saveRecord(attempt: SaveAttempt): Promise<DemoRecord> {
+export async function saveRecord(attempt: SaveAttempt, shouldContinue?: ShouldContinue): Promise<DemoRecord> {
+  if (shouldContinue?.() === false) throw new RecordError('network');
   const snapshot = attempt.payload_snapshot;
-  const context = await sessionFor(attempt.owner_id);
+  const context = await sessionFor(attempt.owner_id, shouldContinue);
   if (attempt.base_version !== undefined) {
-    const payload = editable(snapshot.fields);
-    const payload_hash = await sha256(canonicalJson(payload));
-    const data = await invoke(context, 'edit', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash, payload, base_version: attempt.base_version });
+    const canonicalPayload = canonicalJson(editable(snapshot.fields));
+    const payload = JSON.parse(canonicalPayload) as Record<string, unknown>;
+    const payload_hash = await sha256(canonicalPayload);
+    const data = await retryOperation(() => invoke(context, 'edit', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash, payload, base_version: attempt.base_version }, shouldContinue), shouldContinue);
     if (!data.record) throw new RecordError('unknown');
     return recordFromRow(savedRecord(data.record as StoredRecord, attempt, payload_hash), context.accessToken);
   }
 
-  if (!validCreateSelection(snapshot.stamp, snapshot.confirmation)) throw new RecordError('validation');
-  const bytes = await finalStampBytes(snapshot.stamp, attempt.owner_id);
-  const payload = {
-    ...snapshot.fields,
-    color_tags: snapshot.color_tags,
-    ...metadataFor(attempt),
-    stamp: { sha256: await sha256(bytes), bytes: bytes.length, width: snapshot.stamp.width, height: snapshot.stamp.height },
-  };
-  const payload_hash = await sha256(canonicalJson(payload));
-  const began = await invoke(context, 'begin', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash, payload });
+  const prepared = await prepareCreate(attempt);
+  const { bytes, payload, payloadHash: payload_hash } = prepared;
+  const began = await retryOperation(() => invoke(context, 'begin', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash, payload }, shouldContinue), shouldContinue);
   const begunRecord = began.record as StoredRecord | undefined;
   if (!begunRecord) throw new RecordError('unknown');
   const reserved = reservedRecord(begunRecord, attempt);
-  if (reserved.status === 'ready') return recordFromRow(savedRecord(reserved, attempt, payload_hash), context.accessToken);
+  if (reserved.status === 'ready') {
+    preparedCreates.delete(attempt.operation_id);
+    return recordFromRow(savedRecord(reserved, attempt, payload_hash), context.accessToken);
+  }
 
-  await onceAfterRefresh(context, async (activeContext) => {
+  await retryOperation(() => onceAfterRefresh(context, async (activeContext) => {
     const { error } = await activeContext.client.storage.from(STAMP_BUCKET).upload(reserved.stamp_image_path, bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength), {
       contentType: 'image/png',
       headers: { Authorization: `Bearer ${activeContext.accessToken}` },
       upsert: false,
     });
     if (error && errorCode(error) !== 'conflict' && !/already exists/i.test(error.message)) throw error;
-  });
-  const finalized = await invoke(context, 'finalize', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash });
+  }, shouldContinue), shouldContinue);
+  const finalized = await retryOperation(() => invoke(context, 'finalize', { record_id: attempt.record_id, operation_id: attempt.operation_id, payload_hash }, shouldContinue), shouldContinue);
   if (!finalized.record) throw new RecordError('unknown');
-  return recordFromRow(savedRecord(finalized.record as StoredRecord, attempt, payload_hash), context.accessToken);
+  const record = recordFromRow(savedRecord(finalized.record as StoredRecord, attempt, payload_hash), context.accessToken);
+  preparedCreates.delete(attempt.operation_id);
+  return record;
+}
+
+export async function abortSave(attempt: SaveAttempt, shouldContinue?: ShouldContinue): Promise<void> {
+  if (attempt.base_version !== undefined || ['saved', 'demo_saved'].includes(attempt.state)) throw new RecordError('conflict');
+  if (shouldContinue?.() === false) throw new RecordError('network');
+  const prepared = await prepareCreate(attempt);
+  const context = await sessionFor(attempt.owner_id, shouldContinue);
+  await retryOperation(() => invoke(context, 'abort', {
+    record_id: attempt.record_id,
+    operation_id: attempt.operation_id,
+    payload_hash: prepared.payloadHash,
+  }, shouldContinue), shouldContinue);
+  preparedCreates.delete(attempt.operation_id);
 }
 
 export async function setFavorite(record: DemoRecord): Promise<DemoRecord> {
@@ -335,7 +440,7 @@ export async function setFavorite(record: DemoRecord): Promise<DemoRecord> {
   const payload = { is_favorite: !record.fields.is_favorite };
   const operationId = Crypto.randomUUID();
   const payloadHash = await sha256(canonicalJson(payload));
-  const data = await invoke(context, 'edit', { record_id: record.id, operation_id: operationId, payload_hash: payloadHash, payload, base_version: record.version });
+  const data = await retryOperation(() => invoke(context, 'edit', { record_id: record.id, operation_id: operationId, payload_hash: payloadHash, payload, base_version: record.version }));
   if (!data.record) throw new RecordError('unknown');
   const row = data.record as StoredRecord;
   if (row.id !== record.id || row.user_id !== record.user_id || row.status !== 'ready' || row.last_operation_id !== operationId || row.payload_hash !== payloadHash) throw new RecordError('conflict');
@@ -345,5 +450,6 @@ export async function setFavorite(record: DemoRecord): Promise<DemoRecord> {
 export async function deleteRecord(ownerId: DemoOwnerId, id: string, baseVersion: number): Promise<void> {
   const context = await sessionFor(ownerId);
   const payload = {};
-  await invoke(context, 'delete', { record_id: id, operation_id: id, payload_hash: await sha256(canonicalJson(payload)), payload, base_version: baseVersion });
+  const payloadHash = await sha256(canonicalJson(payload));
+  await retryOperation(() => invoke(context, 'delete', { record_id: id, operation_id: id, payload_hash: payloadHash, payload, base_version: baseVersion }));
 }

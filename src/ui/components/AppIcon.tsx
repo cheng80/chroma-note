@@ -14,6 +14,7 @@ import {
   Info,
   RefreshCw,
   Settings,
+  SlidersHorizontal,
   Trash2,
   TriangleAlert,
   X,
@@ -37,6 +38,7 @@ export type AppIconName =
   | 'info'
   | 'refresh-cw'
   | 'settings'
+  | 'sliders-horizontal'
   | 'trash-2'
   | 'triangle-alert'
   | 'x';
@@ -57,6 +59,7 @@ const icons: Record<AppIconName, LucideIcon> = {
   info: Info,
   'refresh-cw': RefreshCw,
   settings: Settings,
+  'sliders-horizontal': SlidersHorizontal,
   'trash-2': Trash2,
   'triangle-alert': TriangleAlert,
   x: X,

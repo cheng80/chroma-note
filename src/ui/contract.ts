@@ -1,4 +1,21 @@
-import type { ImageSourcePropType } from 'react-native';
+import type { ImageSourcePropType, View } from 'react-native';
+import type { RefObject } from 'react';
+import type {
+  DisplayLocale,
+  DraftKind,
+  DemoSession,
+  ColorResult,
+  RecordFields,
+  DemoErrorCode,
+  Draft,
+  DemoRecord,
+  BookFilter,
+  SaveAttempt,
+  ModelStatus,
+  ActiveJob,
+} from '../domain/record';
+
+export type * from '../domain/record';
 
 export const DEMO_CODE = '123456';
 export const DEMO_IMAGE_WIDTH = 1264;
@@ -8,165 +25,7 @@ export const MEMORY_NOTICE = {
   en: 'Changes remain while you browse, then reset when the app restarts.',
 } as const;
 
-export type DisplayLocale = 'ko' | 'en';
 export type LocalePreference = 'system' | DisplayLocale;
-export type DemoOwnerId = string;
-export type DraftKind = 'new' | 'edit';
-
-export interface DemoSession {
-  source: 'demo' | 'supabase';
-  owner_id: DemoOwnerId;
-  generation: number;
-  email: string;
-  locale: DisplayLocale;
-}
-
-export interface PhotoInput {
-  local_uri: string;
-  width: number;
-  height: number;
-  input_revision: number;
-  source: 'demo' | 'device';
-}
-
-export interface ColorTag {
-  hex: string;
-  rgb: [number, number, number];
-  weight: number;
-}
-
-export interface ColorResult {
-  source: 'demo' | 'device' | 'supabase';
-  source_revision: number;
-  tags: ColorTag[];
-}
-
-export type DateSource = 'exif' | 'device' | 'user';
-
-export interface RecordFields {
-  diary_date: string;
-  date_source: DateSource;
-  place_name: string | null;
-  user_note: string;
-  scene: string | null;
-  semantic_tags: string[];
-  mood_tags: string[];
-  ai_field_note: string;
-  ai_field_note_edited: string | null;
-  is_favorite: boolean;
-}
-
-export type RecordFieldKey = keyof RecordFields;
-
-export interface Analysis {
-  source: 'demo' | 'device';
-  model_version?: string;
-  source_revision: number;
-  status: 'success' | 'skipped';
-  scene: string | null;
-  semantic_tags: string[];
-  mood: string[];
-  ai_field_note: string;
-  ai_field_note_edited: string | null;
-  user_modified_fields: RecordFieldKey[];
-}
-
-export interface StampCandidate {
-  candidate_id: string;
-  input_revision: number;
-  local_uri: string;
-  width: number;
-  height: number;
-  source: 'demo' | 'supabase' | 'device';
-  image_headers?: Record<string, string>;
-  processing?: {
-    model_id: string;
-    revision: string;
-    runtime_version: string;
-    quantization: string;
-    inference_duration_ms: number;
-    max_edge: number;
-    mask_gain: number;
-    postprocess_version: string;
-  };
-}
-
-export interface CandidateConfirmation {
-  input_revision: number;
-  candidate_id: string;
-}
-
-export type DraftStage =
-  | 'photo_ready'
-  | 'preparing'
-  | 'colors'
-  | 'analysis'
-  | 'stamp'
-  | 'compare'
-  | 'summary'
-  | 'save_pending'
-  | 'interrupted';
-
-export type DemoErrorCode =
-  | 'email_invalid'
-  | 'send_failed'
-  | 'otp_invalid'
-  | 'otp_expired'
-  | 'rate_limited'
-  | 'prepare_failed'
-  | 'color_failed'
-  | 'analysis_failed'
-  | 'stamp_failed'
-  | 'draft_failed'
-  | 'offline'
-  | 'save_failed'
-  | 'save_uncertain'
-  | 'conflict'
-  | 'not_found'
-  | 'image_missing'
-  | 'validation_failed'
-  | 'delete_failed'
-  | 'canceled'
-  | 'interrupted';
-
-export interface Draft {
-  draft_id: string;
-  owner_id: DemoOwnerId;
-  record_id: string;
-  kind: DraftKind;
-  input_revision: number;
-  stage: DraftStage;
-  photo: PhotoInput;
-  colors: ColorResult | null;
-  analysis: Analysis | null;
-  selected_candidate: StampCandidate | null;
-  pending_candidate?: StampCandidate | null;
-  confirmation: CandidateConfirmation | null;
-  fields: RecordFields;
-  base_record_version?: number;
-  operation_id?: string;
-  error_code?: DemoErrorCode;
-}
-
-export interface DemoRecord {
-  source: 'demo' | 'supabase';
-  id: string;
-  user_id: DemoOwnerId;
-  status: 'ready';
-  version: number;
-  stamp: StampCandidate;
-  color_tags: ColorTag[];
-  fields: RecordFields;
-  created_at: string;
-}
-
-export interface BookFilter {
-  start_date: string | null;
-  end_date: string | null;
-  semantic_tag: string | null;
-  favorite_only: boolean;
-}
-
 export type BookListState =
   | 'loading'
   | 'ready'
@@ -174,56 +33,6 @@ export type BookListState =
   | 'filter-empty'
   | 'partial-cache'
   | 'error';
-
-export interface SavePayloadSnapshot {
-  stamp: StampCandidate;
-  color_tags: ColorTag[];
-  confirmation: CandidateConfirmation | null;
-  fields: RecordFields;
-  analysis?: Analysis;
-  input_dimensions?: [number, number];
-  locale?: DisplayLocale;
-}
-
-export type SaveState =
-  | 'pending'
-  | 'uploading'
-  | 'finalizing'
-  | 'uncertain'
-  | 'failed'
-  | 'conflict'
-  | 'saved'
-  | 'demo_saved';
-
-export interface SaveAttempt {
-  operation_id: string;
-  draft_id: string;
-  record_id: string;
-  owner_id: DemoOwnerId;
-  base_version?: number;
-  payload_snapshot: SavePayloadSnapshot;
-  state: SaveState;
-  error_code?: DemoErrorCode;
-}
-
-export type ModelStatus =
-  | 'not-connected'
-  | 'unprepared'
-  | 'preparing'
-  | 'ready'
-  | 'failed';
-
-export type ProcessStep = 'prepare' | 'colors' | 'analysis' | 'stamp';
-
-export interface ActiveJob {
-  job_id: string;
-  owner_id: DemoOwnerId;
-  generation: number;
-  input_revision: number;
-  step: ProcessStep;
-  status: 'running' | 'failed';
-  error_code?: DemoErrorCode;
-}
 
 export type AnalysisSheetValue = Pick<
   RecordFields,
@@ -269,6 +78,7 @@ export type SheetChange =
 export type DialogState =
   | null
   | { kind: 'discard-draft' }
+  | { kind: 'discard-save'; draft_id: string }
   | { kind: 'replace-photo'; step: 'keep' | 'discard' }
   | { kind: 'adopt-candidate'; candidate_id: string }
   | { kind: 'delete-record'; record_id: string }
@@ -347,23 +157,6 @@ export interface DemoState {
   account_deletion: AccountDeletionStatus;
 }
 
-export type DemoServiceResult<T> =
-  | {
-      source: 'demo';
-      outcome: 'success';
-      value: T;
-      job_id?: string;
-      input_revision?: number;
-    }
-  | {
-      source: 'demo';
-      outcome: 'failure' | 'canceled' | 'uncertain' | 'conflict';
-      error_code: DemoErrorCode;
-      value?: T;
-      job_id?: string;
-      input_revision?: number;
-    };
-
 export interface DemoImageSources {
   photo: ImageSourcePropType;
   stamp: ImageSourcePropType;
@@ -407,6 +200,7 @@ export interface BookScreenProps {
   drafts: Draft[];
   filter: BookFilter;
   list_state: BookListState;
+  pending_deletions?: string[];
   model_status: ModelStatus;
   save_attempt: SaveAttempt | null;
   sheet: SheetState;
@@ -415,6 +209,7 @@ export interface BookScreenProps {
   onOpenSettings: () => void;
   onStartRecord: () => void;
   onResumeDraft: (draft_id: string) => void;
+  onDeleteDraft: (draft_id: string) => void;
   onOpenRecord: (record_id: string) => void;
   onToggleFavorite: (record_id: string) => void;
   onOpenFilter: () => void;
@@ -424,6 +219,7 @@ export interface BookScreenProps {
   onRequestCloseSheet: () => void;
   onLoadMore: () => void;
   onRetry: () => void;
+  importTriggerRef?: RefObject<View | null>;
 }
 
 export interface DetailScreenProps {
@@ -440,6 +236,7 @@ export interface DetailScreenProps {
   onRequestDelete: () => void;
   onToggleFavorite: () => void;
   onRetryImage: () => void;
+  actionsTriggerRef?: RefObject<View | null>;
 }
 
 export interface SettingsScreenProps {
@@ -453,8 +250,10 @@ export interface SettingsScreenProps {
   onChangeLocale: (preference: LocalePreference) => void;
   onChangeScenario: (scenario: DemoScenario) => void;
   onLogout: () => void;
+  onRetryModel?: () => void;
   onDeleteAccount: () => void;
   onRetryAccountDeletion: () => void;
+  logoutTriggerRef?: RefObject<View | null>;
 }
 
 export interface PhotoInputScreenProps {
@@ -465,6 +264,7 @@ export interface PhotoInputScreenProps {
   onContinue: () => void;
   onCancel: () => void;
   onRequestReplace: () => void;
+  replacePhotoTriggerRef?: RefObject<View | null>;
 }
 
 export interface ProcessingScreenProps {
@@ -477,6 +277,7 @@ export interface ProcessingScreenProps {
   onRetry: () => void;
   onSkipAnalysis: () => void;
   onChangePhoto: () => void;
+  replacePhotoTriggerRef?: RefObject<View | null>;
 }
 
 export interface CompareScreenProps {
@@ -492,6 +293,7 @@ export interface CompareScreenProps {
   onConfirmChange: (checked: boolean) => void;
   onContinue: () => void;
   onRequestReplacePhoto: () => void;
+  replacePhotoTriggerRef?: RefObject<View | null>;
 }
 
 export interface RecordSummaryScreenProps {
@@ -511,10 +313,13 @@ export interface RecordSummaryScreenProps {
   onRequestCaption: () => void;
   onSave: () => void;
   onRetrySave: () => void;
+  onDiscardSave: () => void;
+  discardSaveTriggerRef?: RefObject<View | null>;
 }
 
 export interface ImageViewerScreenProps {
   locale: DisplayLocale;
+  showConversionNotice?: boolean;
   source: ImageSourcePropType;
   accessibilityLabel: string;
   aspectRatio: number;

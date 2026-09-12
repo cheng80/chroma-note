@@ -2,15 +2,20 @@
   "model_id": "Qwen/Qwen3-VL-4B-Instruct",
   "runtime": "llama.cpp",
   "runtime_revision": "1945e092030f8668ff93382799502d01490e564d",
-  "prompt_version": "vlm-prompt-v4-app1",
+  "prompt_version": "vlm-prompt-v4-app3",
   "quantization": "Q4_K_M-compatible",
+  "delivery": {
+    "catalog_url": "https://web.cheng80.synology.me/ai_model/model-download.json"
+  },
   "files": {
     "model": {
+      "key": "qwen3-vl-4b.model",
       "name": "Qwen3VL-4B-Instruct-Q4_K_M-compatible.gguf",
       "bytes": 2496537376,
       "sha256": "e92ef378e04d6519cb1f0274e7d5bd7d902efe572edaa24d96193a9e10bd8f09"
     },
     "vision": {
+      "key": "qwen3-vl-4b.vision",
       "name": "mmproj-Qwen3VL-4B-Instruct-Q8_0.gguf",
       "bytes": 453974304,
       "sha256": "30ba2c7dd3127a4561b6cba9d13d0f711c91bdb38742e2f56d73c8cb596bd06d"

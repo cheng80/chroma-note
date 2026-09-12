@@ -23,7 +23,7 @@ for foreground, background in (
     ('inkDisabled', 'bgDisabled'), ('inverse', 'accent'), ('inverse', 'accentPressed'),
     ('inverse', 'danger'), ('accent', 'accentSubtle'), ('warning', 'warningSubtle'),
     ('danger', 'dangerSubtle'), ('success', 'successSubtle'), ('success', 'bgPage'),
-    ('danger', 'bgSurface'),
+    ('danger', 'bgSurface'), ('info', 'bgPage'), ('info', 'bgSurface'),
 ):
     checks.append((foreground, background, 4.5))
 checks.extend((foreground, background, 3) for foreground, background in (

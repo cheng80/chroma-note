@@ -4,7 +4,8 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { randomUUID } from 'expo-crypto';
 import { requireOptionalNativeModule } from 'expo';
 import { Platform } from 'react-native';
-import type { PhotoInput } from '../ui/contract';
+import type { PhotoInput } from '../domain/record';
+export { photoInputFailure, type PhotoInputErrorCode, type PhotoInputFailure } from './photo-input-core';
 
 type ImportedPhoto = PhotoInput & { captured_date?: string };
 type NativePhotoImporter = {
@@ -17,7 +18,7 @@ const OWNER_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0
 export async function pickPhoto(ownerId: string, revision: number): Promise<ImportedPhoto | null> {
   if (!OWNER_ID.test(ownerId)) throw new Error('invalid_owner');
   if (!Number.isSafeInteger(revision) || revision < 1) throw new Error('invalid_revision');
-  const result = await launchImageLibraryAsync({ mediaTypes: ['images'], allowsMultipleSelection: false, allowsEditing: false, exif: false, base64: false, quality: 1, preferredAssetRepresentationMode: UIImagePickerPreferredAssetRepresentationMode.Current });
+  const result = await launchImageLibraryAsync({ mediaTypes: ['images'], allowsMultipleSelection: false, allowsEditing: false, exif: false, base64: false, quality: 1, preferredAssetRepresentationMode: UIImagePickerPreferredAssetRepresentationMode.Current, shouldDownloadFromNetwork: true });
   if (result.canceled || !result.assets[0]) return null;
   const asset = result.assets[0];
   try {

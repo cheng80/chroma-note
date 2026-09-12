@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Reanimated, { interpolate, useAnimatedStyle } from 'react-native-reanimated';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { RecordSummaryScreenProps, SaveAttempt } from '../contract';
 import { RecordArtwork } from '../components/RecordArtwork';
+import { SemanticText } from '../components/SemanticText';
 import { AppIcon } from '../components/AppIcon';
 import { useEntranceProgress } from '../components/motion';
 import { Button, IconButton, Notice, Screen, SummaryRow } from '../primitives';
 import { displayDate, fillCount, imageSource, recordCopy } from '../record-copy';
+import { recordWriting } from '../record-writing';
 import { SummarySheet } from '../sheets/SummarySheet';
 import { theme } from '../theme';
 
@@ -25,15 +27,24 @@ function OneLine({ children }: { children: string }) {
   return <Text numberOfLines={1} ellipsizeMode="tail" style={styles.rowValue}>{children}</Text>;
 }
 
-export function RecordSummaryScreen({ locale, images, draft, sheet, save_attempt, blocking_reason, onBack, onClose, onOpenSheet, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onRequestCaption, onSave, onRetrySave }: RecordSummaryScreenProps) {
+export function RecordSummaryScreen({ locale, images, draft, sheet, save_attempt, blocking_reason, onBack, onClose, onOpenSheet, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onRequestCaption, onSave, onRetrySave, onDiscardSave, discardSaveTriggerRef }: RecordSummaryScreenProps) {
   const t = recordCopy[locale];
+  const analysisRef = useRef<View>(null);
+  const datePlaceRef = useRef<View>(null);
+  const colorsRef = useRef<View>(null);
+  const sheetRestoreRef = useRef<View>(null);
+  const openSheet = (kind: 'analysis' | 'datePlace' | 'colors', ref: React.RefObject<View | null>) => { sheetRestoreRef.current = ref.current; onOpenSheet(kind); };
+  const editing = draft.base_record_version !== undefined;
+  const title = editing ? locale === 'ko' ? '기록 편집' : 'Edit record' : t.summaryHeader;
+  const saveLabel = editing ? locale === 'ko' ? '변경 저장' : 'Save changes' : t.save;
+  const saveHint = editing ? locale === 'ko' ? '수정한 글과 날짜를 저장해요. 컬러 스케치와 대표색은 유지돼요.' : 'Save your writing and date changes. The color sketch and colors stay the same.' : t.saveHint;
   const busy = isSaving(save_attempt);
   const saveFailed = save_attempt?.state === 'failed' || save_attempt?.state === 'uncertain' || save_attempt?.state === 'conflict';
   const canEdit = !save_attempt || save_attempt.state === 'saved' || save_attempt.state === 'demo_saved';
   const source = draft.selected_candidate ? imageSource(draft.selected_candidate.local_uri, images.stamp, draft.selected_candidate.image_headers) : images.stamp;
   const tagCount = draft.fields.semantic_tags.length + draft.fields.mood_tags.length;
-  const writingSummary = (draft.fields.ai_field_note_edited ?? draft.fields.ai_field_note)
-    || [draft.fields.user_note.trim() ? locale === 'ko' ? '내 메모' : 'My note' : '', tagCount ? locale === 'ko' ? `태그 ${tagCount}개` : `${tagCount} tags` : ''].filter(Boolean).join(', ')
+  const writingSummary = recordWriting(draft.fields)
+    || (tagCount ? locale === 'ko' ? `태그 ${tagCount}개` : `${tagCount} tags` : '')
     || t.writingEmpty;
   const datePlace = draft.fields.diary_date ? `${displayDate(draft.fields.diary_date)}${draft.fields.place_name ? `, ${draft.fields.place_name}` : ''}` : t.dateEmpty;
   const { progress, reduceMotion } = useEntranceProgress(true);
@@ -46,24 +57,25 @@ export function RecordSummaryScreen({ locale, images, draft, sheet, save_attempt
     <Notice message={saveFailureMessage(save_attempt, locale)} tone="error" />
     <Button label={locale === 'ko' ? '다시 저장' : 'Save again'} onPress={onRetrySave} />
     <Button label={locale === 'ko' ? '초안으로 나가기' : 'Leave and keep draft'} onPress={onClose} tone="secondary" />
+    <Button ref={discardSaveTriggerRef} label={locale === 'ko' ? '초안 폐기' : 'Discard draft'} onPress={onDiscardSave} tone="subtle" />
   </> : <>
-    {blocking_reason ? <Notice message={blocking_reason} tone="warning" /> : null}
-    <Text style={styles.saveHint}>{t.saveHint}</Text>
-    <Button label={busy ? t.saving : t.save} onPress={onSave} busy={busy} disabled={Boolean(blocking_reason) || busy} />
+    {blocking_reason && !busy ? <Notice message={blocking_reason} tone="warning" /> : null}
+    <SemanticText style={styles.saveHint}>{saveHint}</SemanticText>
+    <Button label={busy ? t.saving : saveLabel} onPress={onSave} busy={busy} disabled={Boolean(blocking_reason) || busy} />
   </>;
 
   return (
     <>
-      <Screen title={t.summaryHeader} onBack={canEdit ? onBack : undefined} backLabel={t.back} actions={canEdit ? <IconButton label={t.close} onPress={onClose}><AppIcon name="x" /></IconButton> : undefined} footer={footer} contentStyle={styles.content}>
+      <Screen title={title} onBack={canEdit ? onBack : undefined} backLabel={t.back} actions={canEdit ? <IconButton label={t.close} onPress={onClose}><AppIcon name="x" /></IconButton> : undefined} footer={footer} contentStyle={styles.content}>
         <Reanimated.View style={[styles.result, resultStyle]}>
-          <View style={styles.confirmedRow}><AppIcon name="check" size={16} color={theme.colors.success} /><Text style={styles.confirmed}>{t.summaryConfirmed}</Text></View>
+          <View style={styles.confirmedRow}><AppIcon name="check" size={16} color={theme.colors.success} /><SemanticText style={styles.confirmed}>{t.summaryConfirmed}</SemanticText></View>
           <RecordArtwork fields={draft.fields} source={source} locale={locale} aspectRatio={draft.selected_candidate ? draft.selected_candidate.width / draft.selected_candidate.height : 1} />
         </Reanimated.View>
-        <SummaryRow label={t.writing} value={<OneLine>{writingSummary}</OneLine>} onPress={canEdit ? () => onOpenSheet('analysis') : undefined} />
-        <SummaryRow label={t.datePlace} value={<OneLine>{datePlace}</OneLine>} onPress={canEdit ? () => onOpenSheet('datePlace') : undefined} />
-        <SummaryRow label={t.colors} value={<OneLine>{draft.colors ? fillCount(t.colorsValue, draft.colors.tags.length) : t.colorsEmpty}</OneLine>} onPress={canEdit && draft.colors ? () => onOpenSheet('colors') : undefined} />
+        <SummaryRow ref={analysisRef} label={t.writing} value={<OneLine>{writingSummary}</OneLine>} onPress={canEdit ? () => openSheet('analysis', analysisRef) : undefined} />
+        <SummaryRow ref={datePlaceRef} label={t.datePlace} value={<OneLine>{datePlace}</OneLine>} onPress={canEdit ? () => openSheet('datePlace', datePlaceRef) : undefined} />
+        <SummaryRow ref={colorsRef} label={t.colors} value={<OneLine>{draft.colors ? fillCount(t.colorsValue, draft.colors.tags.length) : t.colorsEmpty}</OneLine>} onPress={canEdit && draft.colors ? () => openSheet('colors', colorsRef) : undefined} />
       </Screen>
-      <SummarySheet locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} onRequestCaption={onRequestCaption} />
+      <SummarySheet restoreFocusRef={sheetRestoreRef} locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} onRequestCaption={onRequestCaption} />
     </>
   );
 }

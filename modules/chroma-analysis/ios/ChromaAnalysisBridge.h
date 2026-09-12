@@ -5,6 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ChromaAnalysisBridge : NSObject
 - (instancetype)initWithModelPath:(NSString *)modelPath visionPath:(NSString *)visionPath;
 - (nullable NSNumber *)prepareWithError:(NSError **)error;
+- (nullable NSNumber *)prepareWithIsCancelled:(BOOL (^)(void))isCancelled error:(NSError **)error NS_SWIFT_NAME(prepare(isCancelled:));
 - (nullable NSString *)generateForImagePath:(NSString *)imagePath
                                      prompt:(NSString *)prompt
                                   maxTokens:(NSInteger)maxTokens
