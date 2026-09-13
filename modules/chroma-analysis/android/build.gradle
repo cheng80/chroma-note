@@ -1,0 +1,28 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.cheng80.chromaanalysis'
+version = '1.0.0'
+
+android {
+  namespace 'com.cheng80.chromaanalysis'
+  defaultConfig {
+    versionCode 1
+    versionName '1.0.0'
+    ndk { abiFilters(*((project.findProperty('reactNativeArchitectures') ?: 'arm64-v8a,x86_64').split(','))) }
+    consumerProguardFiles 'consumer-rules.pro'
+    externalNativeBuild {
+      cmake { cppFlags '-std=c++17'; arguments '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON' }
+    }
+  }
+  externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt'; version '3.22.1' } }
+  sourceSets.main.assets.srcDir layout.buildDirectory.dir('generated/model-assets')
+}
+
+def syncModelManifests = tasks.register('syncModelManifests', Copy) {
+  from('..') { include 'model-manifest.json', 'model-download.json' }
+  into layout.buildDirectory.dir('generated/model-assets/chroma-analysis')
+}
+tasks.named('preBuild').configure { dependsOn syncModelManifests }

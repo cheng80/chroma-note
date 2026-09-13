@@ -14,6 +14,7 @@ expo-env.d.ts
 .kotlin/
 *.orig.*
 *.jks
+key.properties
 *.p8
 *.p12
 *.key
@@ -59,6 +60,12 @@ example
 
 # Downloaded weights and generated model builds
 /modules/chroma-lineart/.model-cache/
+/modules/chroma-analysis/.model-cache/
+/modules/chroma-analysis/android/.cxx/
+/modules/chroma-analysis/android/build/
+/modules/chroma-lineart/android/.cxx/
+/modules/chroma-lineart/android/build/
+/modules/chroma-lineart/android/src/main/assets/chroma-lineart/LineArt.onnx
 /modules/chroma-lineart/ios/Resources/LineArt.mlmodelc/
 /modules/chroma-lineart/tests/.build/
 /modules/chroma-analysis/ios/Resources/

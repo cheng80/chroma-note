@@ -1,5 +1,6 @@
 import { Directory, File, Paths } from 'expo-file-system';
 import { randomUUID } from 'expo-crypto';
+import { Platform } from 'react-native';
 import { convertLineArt } from '../../modules/chroma-lineart';
 import lineArtManifest from '../../modules/chroma-lineart/model-manifest.json';
 import { extractPhotoColors } from '../../modules/chroma-lineart/palette';
@@ -35,13 +36,13 @@ async function executePhotoStep(photo: PhotoInput, job: ActiveJob, locale: Displ
     return { step: 'analysis', analysis: { source: 'device', source_revision: result.inputRevision, status: 'success', model_version: result.modelVersion,
       scene: result.scene, semantic_tags: result.semanticTags, mood: result.moodTags, ai_field_note: '', ai_field_note_edited: null, user_modified_fields: [] } };
   }
-  // Core ML needs its own working memory; do not retain the VLM during sketch conversion.
+  // Sketch inference needs its own working memory; release the VLM first.
   await unloadPhotoAnalysis();
   if (signal.aborted) throw new Error('photo_cancelled');
   const directory = new Directory(Paths.document, 'chroma-drafts', job.owner_id);
   directory.create({ intermediates: true, idempotent: true });
   const result = await convertLineArt({ ...input, outputDirectory: directory.uri }, {}, signal);
   return { step: 'stamp', stamp: { source: 'device', candidate_id: randomUUID(), input_revision: result.inputRevision, local_uri: result.uri, width: result.width, height: result.height,
-    processing: { model_id: 'informative-drawings/style1', revision: lineArtManifest.source.author_weights.revision, runtime_version: 'CoreML-iOS17', quantization: 'fp16', inference_duration_ms: result.durationMs,
+    processing: { model_id: 'informative-drawings/style1', revision: lineArtManifest.source.author_weights.revision, runtime_version: Platform.OS === 'android' ? 'ONNXRuntime-1.24.3-Android' : 'CoreML-iOS17', quantization: 'fp16', inference_duration_ms: result.durationMs,
       max_edge: result.options.maxEdge, mask_gain: result.options.lineGain, postprocess_version: 'source-rgb-mask-v1' } } };
 }

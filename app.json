@@ -14,6 +14,8 @@
       "bundleIdentifier": "com.cheng80.chromanote"
     },
     "android": {
+      "package": "com.cheng80.chromanote",
+      "allowBackup": false,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -61,7 +63,9 @@
         }
       ],
       "expo-localization",
-      "./plugins/with-private-http-cache"
+      "./plugins/with-private-http-cache",
+      "./plugins/with-android-signing",
+      "./plugins/with-private-android-data"
     ],
     "experiments": {
       "typedRoutes": true,

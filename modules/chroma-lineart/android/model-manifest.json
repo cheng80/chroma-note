@@ -1,0 +1,388 @@
+{
+  "format": 1,
+  "source": {
+    "author_code": {
+      "url": "https://raw.githubusercontent.com/carolineec/informative-drawings/2349aee4daf7cb01d8de645b0bbb4f4392fd1395/model.py",
+      "sha256": "b5767c84166752f5f6185d4a65b3be3c1524bfaf0c524172b7636afe1a42e4f3",
+      "revision": "2349aee4daf7cb01d8de645b0bbb4f4392fd1395"
+    },
+    "author_weights": {
+      "url": "https://huggingface.co/spaces/carolineec/informativedrawings/resolve/bd4b4299be505803e036203a39c02024b4cfee11/model.pth",
+      "revision": "bd4b4299be505803e036203a39c02024b4cfee11",
+      "sha256": "c686ced2a666b4850b4bb6ccf0748031c3eda9f822de73a34b8979970d90f0c6",
+      "bytes": 17173511
+    }
+  },
+  "model": "Informative Drawings style 1, Generator(3, 1, 3)",
+  "onnx_opset": 17,
+  "storage": "float16 initializers + Cast to float32; float32 operations and I/O",
+  "input": "image: float32 NCHW 1x3xHxW, reflection pad bottom/right to multiples of 4, 16...1536",
+  "output": "line: float32 1x1xHxW, [0,1]",
+  "runtime": "onnxruntime-android:1.24.3 CPU",
+  "bytes": 8638398,
+  "weight_bytes": 8581890,
+  "sha256": "c9b90a93097a811c537380fc98ab1376d2b8769de9cdcda46cdd8632df5bebd9",
+  "dependencies": {
+    "torch": "2.14.0",
+    "torchvision": "0.29.0",
+    "numpy": "2.5.3",
+    "pillow": "12.3.0",
+    "onnx": "1.20.1",
+    "onnxruntime": "1.24.3"
+  },
+  "reference_image_sha256": "5e55082243e1acf2a43c0b4b771b8eba317b83ceef7c63e423491a83935e257d",
+  "validation": [
+    {
+      "id": "synthetic_16x16",
+      "padded_nchw": [
+        1,
+        3,
+        16,
+        16
+      ],
+      "mae": 1.0668067261576653e-05,
+      "p99_error": 0.0001333564578089863,
+      "max_error": 0.0003514289855957031,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.0,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 0
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 0
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.0,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 0
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.0,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 0
+        }
+      ]
+    },
+    {
+      "id": "synthetic_1536x16",
+      "padded_nchw": [
+        1,
+        3,
+        16,
+        1536
+      ],
+      "mae": 1.2204659469716717e-05,
+      "p99_error": 0.00011970102787017822,
+      "max_error": 0.00044077634811401367,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00016276041666666666,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0017225477430555555,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.002956814236111111,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.006456163194444444,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_16x1536",
+      "padded_nchw": [
+        1,
+        3,
+        1536,
+        16
+      ],
+      "mae": 1.4746920896868687e-05,
+      "p99_error": 0.00017726421356201172,
+      "max_error": 0.0004661679267883301,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.000244140625,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0028076171875,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.004638671875,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.005506727430555556,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_101x151",
+      "padded_nchw": [
+        1,
+        3,
+        152,
+        104
+      ],
+      "mae": 1.0741146070358809e-05,
+      "p99_error": 0.0001084983377950266,
+      "max_error": 0.00034362077713012695,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00015299543199353047,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.001289532926802614,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.0023605009507573272,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.003584464406705571,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_151x101",
+      "padded_nchw": [
+        1,
+        3,
+        104,
+        152
+      ],
+      "mae": 1.2281796443858184e-05,
+      "p99_error": 0.00011406659905333072,
+      "max_error": 0.00040656328201293945,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00015299543199353047,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0017048062422136254,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.002906913207877079,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.004043450702686162,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_257x257",
+      "padded_nchw": [
+        1,
+        3,
+        260,
+        260
+      ],
+      "mae": 1.2096393220417667e-05,
+      "p99_error": 0.000112147034087684,
+      "max_error": 0.0005287528038024902,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00013626247180123846,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0017815056498458215,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.0029927276214123857,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.004340212064780189,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_509x1021",
+      "padded_nchw": [
+        1,
+        3,
+        1024,
+        512
+      ],
+      "mae": 1.2953931218362413e-05,
+      "p99_error": 0.00012344121932983398,
+      "max_error": 0.0007712841033935547,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00021423069053478778,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.001996707004894594,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.0032743942370661427,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.005176172672502208,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "synthetic_1021x509",
+      "padded_nchw": [
+        1,
+        3,
+        512,
+        1024
+      ],
+      "mae": 1.3823053450323641e-05,
+      "p99_error": 0.00012677907943725586,
+      "max_error": 0.001175999641418457,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00024181128841800896,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0022250486989975416,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.0036297349632825274,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.005260838693911166,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    },
+    {
+      "id": "local_reference_image",
+      "padded_nchw": [
+        1,
+        3,
+        848,
+        1264
+      ],
+      "mae": 1.093881201086333e-05,
+      "p99_error": 0.00013142824172973633,
+      "max_error": 0.0005764961242675781,
+      "repeat_byte_equal": true,
+      "rgb": [
+        {
+          "gain": 0.1,
+          "mae_byte": 0.00015704611495900007,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.0,
+          "mae_byte": 0.0015328322784810126,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 1
+        },
+        {
+          "gain": 1.8,
+          "mae_byte": 0.000967155282222753,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 2
+        },
+        {
+          "gain": 4.0,
+          "mae_byte": 0.0005174747233500517,
+          "p99_error_byte": 0.0,
+          "max_error_byte": 4
+        }
+      ]
+    }
+  ],
+  "validation_scope": "Local PyTorch CPU vs ONNX Runtime CPU. Android device performance and decoder parity are separate."
+}

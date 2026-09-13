@@ -26,7 +26,9 @@ export const recordCopy = {
 export type RecordCopy = (typeof recordCopy)[DisplayLocale];
 
 export function imageSource(uri: string, fallback: ImageSourcePropType, headers?: Record<string, string>): ImageSourcePropType {
-  return uri && !uri.startsWith('demo-') && uri !== 'demo' ? { uri, headers } : fallback;
+  if (!uri || uri.startsWith('demo-') || uri === 'demo') return fallback;
+  // React Native 0.86 Android forwards headers only from an array source.
+  return headers ? [{ uri, headers }] : { uri };
 }
 
 export function fillCount(template: string, count: number): string {

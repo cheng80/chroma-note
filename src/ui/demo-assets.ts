@@ -3,13 +3,13 @@ import type { DemoImageAsset, DemoImageSources } from './contract';
 
 export const demoAssets: { photo: DemoImageAsset; stamp: DemoImageAsset } = {
   photo: {
-    source: require('../../design/images/generated-1788887280309.png'),
+    source: require('../../assets/images/demo-source-photo.jpg'),
     width: DEMO_IMAGE_WIDTH,
     height: DEMO_IMAGE_HEIGHT,
     aspect_ratio: DEMO_IMAGE_WIDTH / DEMO_IMAGE_HEIGHT,
   },
   stamp: {
-    source: require('../../design/images/generated-1788887279815.png'),
+    source: require('../../assets/images/demo-stamp.jpg'),
     width: DEMO_IMAGE_WIDTH,
     height: DEMO_IMAGE_HEIGHT,
     aspect_ratio: DEMO_IMAGE_WIDTH / DEMO_IMAGE_HEIGHT,

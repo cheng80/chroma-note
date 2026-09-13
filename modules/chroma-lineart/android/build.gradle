@@ -1,0 +1,46 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'expo.modules.chromalineart'
+version = '1.0.0'
+
+android {
+  namespace 'expo.modules.chromalineart'
+  defaultConfig {
+    versionCode 1
+    versionName '1.0.0'
+    testInstrumentationRunner 'expo.modules.chromalineart.LineArtInstrumentation'
+    consumerProguardFiles 'consumer-rules.pro'
+  }
+  sourceSets.androidTest.java.srcDirs += ['../tests/android/device']
+  androidResources { noCompress += ['onnx'] }
+}
+
+dependencies {
+  implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.24.3'
+  implementation 'androidx.exifinterface:exifinterface:1.4.1'
+}
+
+tasks.register('verifyLineArtModel') {
+  def model = file('src/main/assets/chroma-lineart/LineArt.onnx')
+  def manifest = file('model-manifest.json')
+  inputs.files(model, manifest)
+  doLast {
+    if (!model.isFile() || !manifest.isFile()) {
+      throw new GradleException('Run scripts/prepare-lineart-android.py before building ChromaLineArt.')
+    }
+    def expected = new groovy.json.JsonSlurper().parse(manifest)
+    def digest = java.security.MessageDigest.getInstance('SHA-256')
+    model.withInputStream { input ->
+      byte[] buffer = new byte[65536]
+      int count
+      while ((count = input.read(buffer)) > 0) digest.update(buffer, 0, count)
+    }
+    if (model.length() != expected.bytes || digest.digest().encodeHex().toString() != expected.sha256) {
+      throw new GradleException('ChromaLineArt model does not match android/model-manifest.json.')
+    }
+  }
+}
+tasks.named('preBuild').configure { dependsOn 'verifyLineArtModel' }

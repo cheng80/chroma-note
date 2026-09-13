@@ -1,0 +1,11 @@
+# Chroma Note Android 릴리즈 서명 설정 예시
+# 앱 식별자: com.cheng80.chromanote
+# 1. 프로젝트 루트에서 이 파일을 key.properties로 복사합니다.
+# 2. 아래 두 비밀번호를 실제 값으로 수정합니다.
+# 3. key.properties는 Git에서 제외됩니다.
+# Android 릴리즈 빌드는 루트의 key.properties를 읽습니다. storeFile의 상대 경로도 프로젝트 루트 기준입니다.
+
+storePassword=REPLACE_WITH_KEYSTORE_PASSWORD
+keyPassword=REPLACE_WITH_KEY_PASSWORD
+keyAlias=chromanote_keystore
+storeFile=/Users/cheng80/android_keystore/chromanote_keystore.jks

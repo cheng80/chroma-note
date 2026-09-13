@@ -1,0 +1,1 @@
+-keep class com.cheng80.chromaanalysis.AnalysisEngine { *; }

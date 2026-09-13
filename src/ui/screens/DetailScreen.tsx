@@ -1,11 +1,12 @@
 import { SemanticText } from '../components/SemanticText';
 import React, { useRef, useState } from 'react';
-import { ImageSourcePropType, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button, IconButton, Notice } from '../primitives';
 import { RecordExportModal } from '../components/RecordExportModal';
 import { RecordArtwork } from '../components/RecordArtwork';
 import { imageSource as sourceFor } from '../record-copy';
+import { demoImages } from '../demo-assets';
 import { AppIcon } from '../components/AppIcon';
 import { useModalA11y } from '../components/modalA11y';
 import { ZoomableImage } from '../components/ZoomableImage';
@@ -15,7 +16,7 @@ import { getBasicCopy } from '../basic-copy';
 import { theme } from '../theme';
 import type { DetailScreenProps } from '../contract';
 
-const designStamp = require('../../../design/images/generated-1788887279815.png') as ImageSourcePropType;
+const designStamp = demoImages.stamp;
 
 export function DetailScreen({ locale, images: _images, record, sheet, image_missing, onBack, onOpenRead: _onOpenRead, onOpenActions, onRequestCloseSheet, onEdit, onRequestDelete, onToggleFavorite, onRetryImage, actionsTriggerRef }: DetailScreenProps) {
   const copy = getBasicCopy(locale);

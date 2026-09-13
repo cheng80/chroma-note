@@ -25,7 +25,7 @@ export async function pickPhoto(ownerId: string, revision: number): Promise<Impo
     if (asset.type !== 'image') throw new Error('unsupported_photo');
     const directory = new Directory(Paths.document, 'chroma-drafts', ownerId);
     directory.create({ intermediates: true, idempotent: true });
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios' || Platform.OS === 'android') {
       const native = requireOptionalNativeModule<NativePhotoImporter>('ChromaLineArt');
       if (!native) throw new Error('native_build_required');
       const normalized = await native.normalizePhotoAsync(asset.uri, directory.uri);
