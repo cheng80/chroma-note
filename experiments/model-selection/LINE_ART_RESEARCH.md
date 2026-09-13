@@ -1,5 +1,7 @@
 # 사진 → 선화 스탬프: 모바일 후보 조사와 실제 변환 결과
 
+> 2026-09-14 정리: 사용자 요청으로 종료된 실험 실행기·전용 테스트·평가 사진·원시 결과·임시 빌드를 삭제했다. 아래 수치와 판정은 당시 검증 기록이며 과거 명령·삭제된 경로로 현재 재실행할 수 있다는 뜻이 아니다. 현재 모델 준비와 보존 범위는 [안내](README.md)를 따른다.
+
 > 현재 기준: 스타일 1 선에 원본 RGB 마스킹, 흰 배경, 색면·5색 축소·외곽선 강조 없음. **2026-09-11 사용자가 이 변환을 제품 기능으로 확정하고 입력·옵션 모듈화를 요청했다.** 아래 미채택·실험 후보 표기는 각 측정 당시 판단이며 현재 채택을 보류하는 조건이 아니다. 최신 기기 결과는 §11~12이며 앱 통합·Android·품질 회귀 검증은 별도로 남아 있다. 제품 모듈은 [chroma-lineart](../../modules/chroma-lineart/README.md)를 따른다.
 
 > **산출물 가용성 — 2026-09-11:** 최신 결과 HTML 경로는 `data/line-art-20260910/ipad-resolution-final/index.html`이지만 현재 로컬 파일이 없다. 프로젝트·임시 보관 경로·휴지통 조회에서도 확인하지 못했다. 아래 역사적 링크를 현재 열 수 있는 증거로 안내하지 않으며, 복원 전에는 이 문서의 당시 수치와 파일의 존재 여부를 구분한다.
@@ -199,7 +201,7 @@ peak RSS는 Python·PyTorch·버퍼를 포함한 **Mac 프로세스 전체 최�
 
 ### 재실행과 작업 경계
 
-[최소 실행기](run_lineart.py)는 기존 Python 환경의 torch·numpy·Pillow를 재사용했다. 별도 학습 환경·CLIP·깊이 모델·웹 데모 서버는 설치하지 않았다. `vendor/`의 저자 코드·LICENSE와 고정 가중치는 로컬에만 보존하며 결과 ZIP에는 포함하지 않는다.
+최소 실행기 (`run_lineart.py`, 2026-09-14 삭제)는 기존 Python 환경의 torch·numpy·Pillow를 재사용했다. 별도 학습 환경·CLIP·깊이 모델·웹 데모 서버는 설치하지 않았다. `vendor/`의 저자 코드·LICENSE와 고정 가중치는 로컬에만 보존하며 결과 ZIP에는 포함하지 않는다.
 
 ```sh
 python run_lineart.py --self-test
@@ -232,7 +234,7 @@ python run_lineart.py --manifest data/line-art-20260910/inputs.json --vendor dat
 
 사용자가 원본을 약 5색으로 단순화해 옅게 겹치고 사물 외곽은 굵게, 내부 선은 줄이는 후처리를 명시적으로 요청했다. 이 요청에 따라 기존 선화 위에 로컬 색면·선 레이어를 합성했다. 앞선 원출력만 비교하던 실험 경계를 이번 요청 범위에서 확장한 것이며 모델을 교체하거나 학습한 결과는 아니다.
 
-[실행기](colorize_lineart.py)는 기존 설치된 OpenCV·NumPy·Pillow를 사용한다. 입력은 §8의 원본 정규화 PNG와 스타일 1 선화다. 사진별 동일 설정으로 처리하며 사진마다 다른 설정을 골라 묶지 않았다.
+실행기 (`colorize_lineart.py`, 2026-09-14 삭제)는 기존 설치된 OpenCV·NumPy·Pillow를 사용한다. 입력은 §8의 원본 정규화 PNG와 스타일 1 선화다. 사진별 동일 설정으로 처리하며 사진마다 다른 설정을 골라 묶지 않았다.
 
 - **색면:** 축소한 원본의 잔질감을 줄이고 Lab 공간에서 색 차이에 가중치를 주어 5색을 추출·할당했다. 미세한 색 조각을 정리한 뒤 종이색에 25% 농도로 겹친다. 실제 색면 PNG는 5색이며 검정 선의 농도·경계 혼합까지 포함한 최종 PNG의 총 색 수가 5라는 뜻은 아니다.
 - **선:** 원본의 큰 색·명암 경계와 겹치는 강한 모델 선만 굵게 하고, 작은 끊김을 닫은 뒤 반경 1px만큼 확장했다. 내부 선은 약한 값을 제거하고 최대 20% 농도로 남겼다. 단순한 첫 굵기 확장은 잔선을 과도하게 키워 제외했고, 원본 경계를 직접 다각형 선으로 그린 시도도 형태가 거칠어 제외했다. 최종 검토 대상은 `color-layer-clean/` 한 설정의 5장이다.
@@ -252,7 +254,7 @@ python colorize_lineart.py --input data/line-art-20260910/style1-detail --output
 
 색면·5색 축소·외곽 강조를 제거하고 §8의 `style1-detail/` 원출력으로 돌아갔다. 각 선 픽셀에 같은 위치의 정규화 원본 RGB를 그대로 넣고 흰 배경에 합성했다. 채도나 색상도 임의 변환하지 않는다. 색을 또렷하게 보이게 하는 처리는 `alpha = min(255, round((255 - line) × 1.8))`뿐이다. 픽셀별 농도 조절이므로 선의 비영역/영역 경계를 확장하거나 내부 선을 따로 줄이지 않는다. 밝은 원본색의 선은 흰 배경에서 약해질 수 있다.
 
-실행기 [colorize_lineart.py](colorize_lineart.py)에서 기존 영역 추출·팔레트·선 확장 코드를 제거했다. 후처리는 Pillow만 사용하며, 모델을 다시 실행하지 않았다. Mac의 마스크·합성만 사진당 1.0–4.3ms로 측정했으며 모델 추론·디코딩·파일 저장·모바일 실행 값은 아니다. [실행 기록](data/line-art-20260910/source-color-lines/run.json)
+실행기 colorize_lineart.py (`colorize_lineart.py`, 2026-09-14 삭제)에서 기존 영역 추출·팔레트·선 확장 코드를 제거했다. 후처리는 Pillow만 사용하며, 모델을 다시 실행하지 않았다. Mac의 마스크·합성만 사진당 1.0–4.3ms로 측정했으며 모델 추론·디코딩·파일 저장·모바일 실행 값은 아니다. [실행 기록](data/line-art-20260910/source-color-lines/run.json)
 
 실제 5장에서 **이전 선화와 비영역/영역 픽셀 일치**, **선 픽셀 RGB가 원본과 완전 일치**, **색이 없는 곳의 흰 배경**, **크기 유지**를 검사했다. 투명 선 PNG는 완전 투명한 픽셀의 숨은 RGB를 지웠다. 자체 검사에서 반복 일치와 크기 불일치 거부도 확인했다. 이전 5색 결과와 앱 코드를 덮어쓰지 않았다. iPhone·Android 실행과 제품 품질 통과는 아직 미검증이다.
 
@@ -267,7 +269,7 @@ python colorize_lineart.py --input data/line-art-20260910/style1-detail --output
 
 ### Core ML 변환 검증
 
-- [변환 실행기](export_lineart_coreml.py)는 기존 저자 코드·가중치 SHA-256을 확인하고 `Generator(3,1,3)`을 Core ML ML Program FP16으로 변환했다. 입력 `image`는 Float32 NCHW, 출력 `line`은 Float32 NCHW다. 현재 5장에 필요한 `[1,3,428,640]`, `[1,3,1024,832]` 두 모양을 열거했으며 임의 사진 크기 전체를 지원하는 제품 모델은 아니다. [Apple 변환](https://apple.github.io/coremltools/docs-guides/source/convert-pytorch-workflow.html), [열거형 입력 모양](https://apple.github.io/coremltools/docs-guides/source/flexible-inputs.html)
+- 변환 실행기 (`export_lineart_coreml.py`, 2026-09-14 삭제)는 기존 저자 코드·가중치 SHA-256을 확인하고 `Generator(3,1,3)`을 Core ML ML Program FP16으로 변환했다. 입력 `image`는 Float32 NCHW, 출력 `line`은 Float32 NCHW다. 현재 5장에 필요한 `[1,3,428,640]`, `[1,3,1024,832]` 두 모양을 열거했으며 임의 사진 크기 전체를 지원하는 제품 모델은 아니다. [Apple 변환](https://apple.github.io/coremltools/docs-guides/source/convert-pytorch-workflow.html), [열거형 입력 모양](https://apple.github.io/coremltools/docs-guides/source/flexible-inputs.html)
 - `coremltools 9.0`, `torch 2.14.0`. 변환 도구가 이 Torch 버전을 공식 시험하지 않았다는 경고가 나왔지만 실제 변환·로드·5장 추론·수치 대조를 완료했다. 실패나 경고를 숨기고 지원 버전으로 간주하지 않는다.
 - 정규화 입력은 §8과 같은 PNG이며 새 PyTorch 결과가 기존 선화와 픽셀 단위로 같은지 먼저 확인했다. FP16 Core ML과 PyTorch의 평균 오차는 사진별 **0.000368~0.000636**, 8비트 선화 평균 차이는 **0.104~0.154단계 / 255**다. 두 입력 모양·유한값·출력 범위를 통과했다. 수치 일치는 새로운 품질 채택 판정을 대신하지 않는다.
 - [변환 기록](data/line-art-20260910/coreml-fp16/conversion.json), [변환 모델](data/line-art-20260910/coreml-fp16/LineArt.mlpackage). 컴파일된 `LineArt.mlmodelc` 파일 합계 **8,617,493 bytes**. 모델 변환·사전 컴파일은 Mac에서 했으며 휴대폰 변환 시간에 포함하지 않는다.
@@ -292,7 +294,7 @@ python colorize_lineart.py --input data/line-art-20260910/style1-detail --output
 
 ### 결과 보존 확인·한계
 
-- [검증 실행기](verify_lineart_phone.py): 실기기·완료 플래그, 40개 고유 실행, 단계 시간 합계, 크기·선화 비퇴화, 원본 RGB 선 합성, 반복 안정성을 검사했다. **40회 출력이 동일 입력별로 픽셀 일치**했고, 10개 최초 결과의 Swift 색 합성이 Python `compose`와 픽셀 일치했다.
+- 검증 실행기 (`verify_lineart_phone.py`, 2026-09-14 삭제): 실기기·완료 플래그, 40개 고유 실행, 단계 시간 합계, 크기·선화 비퇴화, 원본 RGB 선 합성, 반복 안정성을 검사했다. **40회 출력이 동일 입력별로 픽셀 일치**했고, 10개 최초 결과의 Swift 색 합성이 Python `compose`와 픽셀 일치했다.
 - 정확한 정규화 PNG를 iPhone에서 디코딩한 RGB는 기존 입력과 완전히 일치한다. 이때 기존 PyTorch 선화와의 평균 차이는 사진별 **0.104~0.160/255**, 99백분위 차이는 모두 **1/255**, 최대 **2~4/255**다. Core ML 변환 때문에 주요 디테일이 무너지는 문제는 이번 5장에서 관찰하지 않았다.
 - 원본 직접 입력은 ImageIO의 JPEG 디코딩·축소가 기존 Pillow 전처리와 달라 RGB 평균 차이 **1.24~3.82/255**, 카페 선화 평균 차이 **2.87/255**(99백분위 34/255)가 있다. 동일 입력 수치 대조와 섞지 않는다. 카페 두 경로를 직접 열어 큰 구도·원본색 선 표현을 확인했으며 일부 미세선 차이가 남는다. 이 전처리 차이는 후속 품질 개선 대상이다.
 - 현재 모델은 이 5장의 패딩 후 두 모양만 받는다. 임의 사진 크기·시뮬레이터·제품 Expo 앱·Android·peak 메모리·장시간 발열/배터리는 이번 실행으로 검증하지 않았다. Android 연결 기기는 없었다. 이 수치를 모든 모바일의 성능으로 확대하지 않는다.
@@ -300,7 +302,7 @@ python colorize_lineart.py --input data/line-art-20260910/style1-detail --output
 
 ### 재실행
 
-[iOS 실행기](ios-lineart/LineArtBench.swift), [빌드](ios-lineart/build.py)를 사용한다. 로컬 개발용 wildcard 프로파일과 그 프로파일에 포함된 서명 인증서가 필요하다. `build.py --data <실험 data 경로> --output <새 빌드 경로> --profile <로컬 프로파일> --identity <인증서 SHA-1>`로 별도 앱을 만들고 실제 기기에 설치·실행한다. 앱은 자동 측정 후 Documents의 새 `run-<시각>/`에 결과를 저장한다. `devicectl device copy from`으로 가져온 폴더에 `verify_lineart_phone.py --data <실험 data 경로> --phone <가져온 폴더>`를 실행한다. 개인 프로파일과 서명 앱은 결과 ZIP·Git에 넣지 않는다.
+iOS 실행기 (`ios-lineart/LineArtBench.swift`, 2026-09-14 삭제), 빌드 (`ios-lineart/build.py`, 2026-09-14 삭제)를 사용한다. 로컬 개발용 wildcard 프로파일과 그 프로파일에 포함된 서명 인증서가 필요하다. `build.py --data <실험 data 경로> --output <새 빌드 경로> --profile <로컬 프로파일> --identity <인증서 SHA-1>`로 별도 앱을 만들고 실제 기기에 설치·실행한다. 앱은 자동 측정 후 Documents의 새 `run-<시각>/`에 결과를 저장한다. `devicectl device copy from`으로 가져온 폴더에 `verify_lineart_phone.py --data <실험 data 경로> --phone <가져온 폴더>`를 실행한다. 개인 프로파일과 서명 앱은 결과 ZIP·Git에 넣지 않는다.
 
 ## 12. iPad mini 6에서 1024px→1536px 비교 — 2026-09-10
 
@@ -343,6 +345,6 @@ python colorize_lineart.py --input data/line-art-20260910/style1-detail --output
 - 12회 모두 크기·유한값·범위·단계 시간 합계·native 색 합성을 확인했다. 해상도별 6회 결과는 픽셀 단위로 일치하며, 선 RGB 합성은 기존 Python `compose`와 일치한다. [검증 요약](data/line-art-20260910/ipad-resolution-final/summary.json)
 - [1024px 원기록](data/line-art-20260910/ipad-1024-run/run.json), [1536px 원기록](data/line-art-20260910/ipad-1536-run/run.json), [전체·같은 배율 확대 비교](data/line-art-20260910/ipad-resolution-final/index.html), [로컬 결과 ZIP](data/line-art-20260910/ipad-resolution-final/results.zip). 브라우저에서 15개 이미지 로드와 390px 화면 가로 넘침 없음을 확인했다.
 
-재실행: `export_lineart_coreml.py --edge 1536 --reference-device mps --data <data> --output <새 모델 경로>`로 변환·검증한다. 컴파일 후 `ios-lineart/build.py --model <LineArt.mlmodelc> ...`로 동일 실행기를 빌드한다. `BENCH_CASE=L02`, `BENCH_EDGE=1024` 또는 `1536` 환경변수를 실제 기기 실행에 전달하면 각 6회 변환한다. 환경변수를 생략하면 §11의 기본 40회 검증 경로를 유지한다. [비교 생성·검증 실행기](compare_lineart_resolution.py)에 `--baseline <1024 실행 폴더> --detail <1536 실행 폴더> --output <새 비교 폴더>`를 전달한다.
+재실행: `export_lineart_coreml.py --edge 1536 --reference-device mps --data <data> --output <새 모델 경로>`로 변환·검증한다. 컴파일 후 `ios-lineart/build.py --model <LineArt.mlmodelc> ...`로 동일 실행기를 빌드한다. `BENCH_CASE=L02`, `BENCH_EDGE=1024` 또는 `1536` 환경변수를 실제 기기 실행에 전달하면 각 6회 변환한다. 환경변수를 생략하면 §11의 기본 40회 검증 경로를 유지한다. 비교 생성·검증 실행기 (`compare_lineart_resolution.py`, 2026-09-14 삭제)에 `--baseline <1024 실행 폴더> --detail <1536 실행 폴더> --output <새 비교 폴더>`를 전달한다.
 
 제품 앱·Supabase·로그인·DreamLite·원본 저장소는 수정하지 않았다. 커밋·push·PR은 하지 않았다. iPad 카페 1장 이외의 새 해상도 품질·임의 입력 모양·Android·시뮬레이터·전체 앱 통합은 이 결과로 검증하지 않는다.

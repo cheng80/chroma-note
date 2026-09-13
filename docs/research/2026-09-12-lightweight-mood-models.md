@@ -4,7 +4,7 @@
 
 ## 판단
 
-2026-09-12 후속 정리: 사용자 요청으로 LFM과 다른 미사용 실험 가중치를 삭제했다. 아래 파일 크기·revision은 조사 근거로 유지하며 다운로드 파일의 현재 보유를 뜻하지 않는다. [삭제·보존 기록](../../experiments/model-selection/data/model-cleanup-20260912.json)
+2026-09-12 후속 정리: 사용자 요청으로 LFM과 다른 미사용 실험 가중치를 삭제했다. 아래 파일 크기·revision은 조사 근거로 유지하며 다운로드 파일의 현재 보유를 뜻하지 않는다. 삭제·보존 기록 (`../../experiments/model-selection/data/model-cleanup-20260912.json`, 2026-09-14 삭제)
 
 - **LFM2.5-VL-450M은 현재 앱 설정에서 교체 보류다.** 한국어 지원·파일 용량 근거로 우선 실행했으나 사진 5장의 현재 앱 태그/문구 형식은 0/5·0/5, 짧은 지시문은 0/5·2/5였다. 사실성 오류도 남았다. Qwen3.5-0.8B는 다른 계열의 이미지→문구 생성 비교 후보이며 아직 실행하지 않았다. [LFM 실측](../../experiments/model-selection/SMOKE_RESULTS.md#lfm25-vl-450m과-현재-qwen3-vl-4b-5장-비교), [Qwen 공식 카드](https://huggingface.co/Qwen/Qwen3.5-0.8B)
 - 작은 두 모델의 한국어 문구나 사진 근거가 부족하면 **LFM2.5-VL-1.6B, Qwen3.5-2B**를 후속 비교한다. 큰 모델이라고 품질 통과를 보장하지 않는다.

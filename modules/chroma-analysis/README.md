@@ -5,11 +5,13 @@
 iOS 준비:
 
 ```sh
-python3 scripts/prepare-analysis-runtime.py
+python3 scripts/prepare-analysis-runtime.py --build
 npx pod-install
 ```
 
 실기기 라이브러리를 처음 만들거나 갱신할 때는 `python3 scripts/prepare-analysis-runtime.py --platform iphoneos --build`를 사용한다. 실기기는 Metal, 시뮬레이터는 CPU를 사용한다. 이미지 분석은 256 이미지 토큰·2048 문맥 토큰으로 제한하며 선화 입력 해상도는 유지한다. 스케치 실행 전에는 기존 `unloadPhotoAnalysis()`로 VLM 메모리를 해제한다.
+
+2026-09-14에 재생성 가능한 llama.cpp·Vulkan 소스 캐시, iOS 라이브러리, Android 중간 파일과 Pods를 정리했다. `--build`는 소스가 없으면 공식 저장소에서 manifest의 고정 리비전을 임시 폴더에 받은 뒤 검증·게시하고 라이브러리를 빌드한다. 기존 소스의 리비전 불일치나 로컬 변경은 덮어쓰지 않고 거부한다. 소스와 라이브러리가 준비된 이후에만 `--build`를 생략할 수 있다. 모델 GGUF 원본은 유지하며 재다운로드하지 않는다.
 
 준비 스크립트는 `ios/Libraries`에 네이티브 라이브러리·헤더를 준비한다. Qwen GGUF는 앱에 포함하지 않고 `model-manifest.json`과 초기 주소 목록 `model-download.json`을 번들에 넣는다. 앱의 iOS 최소 타깃은 17.0이다. 선화 모듈의 약 8.6MB `LineArt.mlmodelc`는 계속 내장한다.
 

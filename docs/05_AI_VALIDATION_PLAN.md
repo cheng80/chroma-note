@@ -37,7 +37,7 @@
 
 SmolVLM2 500M과 고정 ontology 어댑터를 iPad mini 6 태그 분석의 1차 제품 후보로 평가했으나, 현재 50장 결과는 `QUALITY_FAIL`이므로 제품 채택 후보로 확정하지 않는다. 해당 실행은 수정·삭제 가능한 보조 제안 실험으로만 유지한다. FastVLM 0.5B는 연구 전용 성능 기준점, Qwen3-VL 4B는 품질 우선 대안이다. 처음부터 모든 모델을 설치하지 않는다. 외부 속도 수치는 실행 환경·입력 조건이 다르므로 합격 근거로 사용하지 않는다.
 
-2026-09-10 SmolVLM2 고정 ontology 결과는 [실험 결과](../experiments/model-selection/SMOKE_RESULTS.md)와 [summary.json](../experiments/model-selection/data/plan01-vlm-smolvlm2-20260910T025411Z/summary.json)을 따른다. 총 50건(실행 50/50 PASS)에서 태그 precision은 0.7826으로 0.9 게이트에 미달했고, frozen core는 0.675, holdout core는 0.4였다. peak RSS와 대표색은 각각 `NOT_RUN`이다. 후속 `plan01-vlm-smolvlm2-20260910T113000Z`·`plan01-vlm-smolvlm2-20260910T113500Z`는 전 건 모델 로드 실패로 품질을 평가하지 못했으며 위 품질 결과와 합산하지 않는다.
+2026-09-10 SmolVLM2 고정 ontology 결과는 [실험 결과](../experiments/model-selection/SMOKE_RESULTS.md)와 summary.json (`../experiments/model-selection/data/plan01-vlm-smolvlm2-20260910T025411Z/summary.json`, 2026-09-14 삭제)을 따른다. 총 50건(실행 50/50 PASS)에서 태그 precision은 0.7826으로 0.9 게이트에 미달했고, frozen core는 0.675, holdout core는 0.4였다. peak RSS와 대표색은 각각 `NOT_RUN`이다. 후속 `plan01-vlm-smolvlm2-20260910T113000Z`·`plan01-vlm-smolvlm2-20260910T113500Z`는 전 건 모델 로드 실패로 품질을 평가하지 못했으며 위 품질 결과와 합산하지 않는다.
 
 ### 선화 모델
 

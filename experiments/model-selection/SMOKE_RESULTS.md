@@ -1,5 +1,7 @@
 # VLM 로컬 smoke 실측 결과
 
+> 2026-09-14 정리: 사용자 요청으로 종료된 실험 실행기·전용 테스트·평가 사진·원시 결과·임시 빌드를 삭제했다. 아래 수치와 판정은 당시 검증 기록이며 과거 명령·삭제된 경로로 현재 재실행할 수 있다는 뜻이 아니다. 현재 모델 준비와 보존 범위는 [안내](README.md)를 따른다.
+
 2026-09-12 · 이 문서는 사진 이해·태그·사용자 요청 문구 VLM 검증만 보존한다. 이미지 생성형 Stamp 실험과 출력은 현재 컬러 선화 방향에 맞지 않아 삭제했다. 선화 실측은 [LINE_ART_RESEARCH.md](LINE_ART_RESEARCH.md)에서 관리한다.
 
 ## LFM2.5-VL-450M과 현재 Qwen3-VL 4B, 5장 비교
@@ -41,14 +43,14 @@ Qwen의 p003 문구는 현재 앱 검사에 통과했지만 `улиц`라는 키
 
 ### 재현과 결과 보기
 
-[실행기](compare_vlm_sim.mjs), [네이티브 진입점](ios-vlm-bench.mm). iOS Simulator 라이브러리와 사진 5장을 사용하며 기존 결과 폴더는 덮어쓰지 않는다. **2026-09-12 후속 삭제 요청으로 LFM 가중치는 제거했다.** 아래 비교를 다시 실행하려면 기록한 revision·SHA-256의 LFM 본체와 mmproj를 다시 준비해야 한다. 현재 비교 결과·원문·평가는 보존했다.
+실행기 (`compare_vlm_sim.mjs`, 2026-09-14 삭제), 네이티브 진입점 (`ios-vlm-bench.mm`, 2026-09-14 삭제). iOS Simulator 라이브러리와 사진 5장을 사용하며 기존 결과 폴더는 덮어쓰지 않는다. **2026-09-12 후속 삭제 요청으로 LFM 가중치는 제거했다.** 2026-09-14에는 실행기와 원시 결과도 제거했다. 아래 명령은 당시 실행 기록이며, 비교 수치와 판정만 문서에 유지한다.
 
 ```sh
 node --experimental-strip-types experiments/model-selection/compare_vlm_sim.mjs --out experiments/model-selection/data/lfm-qwen-new-standard
 node --experimental-strip-types experiments/model-selection/compare_vlm_sim.mjs --concise --out experiments/model-selection/data/lfm-qwen-new-concise
 ```
 
-실제 결과는 `data/lfm-qwen-sim-20260912-01/`, `data/lfm-qwen-sim-20260912-concise/`다. 각 폴더에 환경·소스/사진 hash·모델 manifest·요청별 시간/메모리·첫 출력/보정 출력이 있다. 사진과 두 모델의 결과는 [5장 비교 페이지](data/lfm-qwen-five-photos-report/index.html)에서 본다. 페이지의 설명과 문구에는 설치된 `semantic-wrap` 0.4.0을 적용했으며 두 조건 각각 사진 5장, 좁은/넓은 화면의 원문 보존과 가로 넘침 없음을 확인했다.
+실제 결과는 `data/lfm-qwen-sim-20260912-01/`, `data/lfm-qwen-sim-20260912-concise/`다. 각 폴더에 환경·소스/사진 hash·모델 manifest·요청별 시간/메모리·첫 출력/보정 출력이 있다. 사진과 두 모델의 결과는 5장 비교 페이지 (`data/lfm-qwen-five-photos-report/index.html`, 2026-09-14 삭제)에서 본다. 페이지의 설명과 문구에는 설치된 `semantic-wrap` 0.4.0을 적용했으며 두 조건 각각 사진 5장, 좁은/넓은 화면의 원문 보존과 가로 넘침 없음을 확인했다.
 
 ## 검증 범위
 
@@ -87,14 +89,10 @@ SmolVLM2의 고정 ontology adapter는 구조·금칙어·중복 검사를 통�
 
 모델 출처는 [Qwen 2B](https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct), [Qwen 4B](https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct), [SmolVLM 원본](https://huggingface.co/HuggingFaceTB/SmolVLM-500M-Instruct), [SmolVLM GGUF](https://huggingface.co/ggml-org/SmolVLM-500M-Instruct-GGUF)다. 당시 Apache-2.0 표기를 확인했으며 앱 변환·재배포 시 정확한 LICENSE/NOTICE 동봉 검증은 남아 있다. 저장소 revision과 Ollama digest는 서로 다른 식별자다.
 
-## 재현 자료
+## 현재 보존 자료
 
-평가 사진·annotation·VLM 실행 결과는 Git 제외 `data/`에 둔다. 2026-09-12 사용자 요청으로 미사용 가중치와 중복 캐시 약 12.33GB를 삭제했다. LFM, SmolVLM 계열, Ollama 실험 모델 3개와 손상 Qwen 파일은 제거했고 현재 앱·재빌드용 Qwen 및 선화 모델을 보존했다. 아래 경로 중 폐기 모델 폴더에는 실행 로그·구성 메타데이터만 남으며 가중치가 있다고 간주하지 않는다. [삭제·보존 검증 기록](data/model-cleanup-20260912.json)
+2026-09-12에 LFM, SmolVLM 계열, Ollama 실험 모델과 손상 Qwen 등 약 12.33GB를 정리했다. 2026-09-14에는 추가된 Android 2B 후보와 종료된 실험 자료를 제거했다. 당시 비교·실패 판정은 이 문서에 유지하며 평가 사진·원시 결과·실행기는 더 이상 로컬에 보존하지 않는다.
 
-- `data/ios-smoke/models/`의 현재 Qwen3-VL mmproj GGUF
-- `data/ios-smoke/qwen3vl-compat/`의 Qwen 호환 준비 자료
-- `data/ios-smoke/fastvlm-0.5b/`, `data/ios-smoke/smolvlm2-500m/`, `data/ios-smoke/gemma3n/`
-- `data/plan01-vlm-*`, `data/plan01-vision-smoke-*`
-- `data/reference-cafe/`의 `json-*`, `smolvlm2-*`, `vlm-*`, `gemma3n-*` 결과
+현재 `data/ios-smoke/models/`에는 Qwen3-VL 4B 비전 GGUF, `data/ios-smoke/qwen3vl-compat/`에는 정상 본체와 변환 manifest만 남긴다. 같은 날 후속 요청으로 고정 llama.cpp·iOS 라이브러리 빌드와 선화 원본·변환 캐시도 제거했다. 선화 모델은 보존된 제품 모듈의 iOS·Android 실행 자산을 사용한다. [현재 준비 범위](README.md)
 
 이미지 생성형 Stamp의 DreamLite·SD-Turbo·LCM·결정적 후처리·통합 실행 자료와 관련 모델은 2026-09-10 정리했다.

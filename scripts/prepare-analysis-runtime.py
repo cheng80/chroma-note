@@ -7,6 +7,7 @@ import json
 import filecmp
 import shutil
 import subprocess
+import tempfile
 from argparse import ArgumentParser
 from pathlib import Path
 
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULE = ROOT / "modules/chroma-analysis"
 IOS_SMOKE = ROOT / "experiments/model-selection/data/ios-smoke"
 LLAMA = IOS_SMOKE / "vendor/llama.cpp"
+RUNTIME_REPOSITORY = "https://github.com/ggml-org/llama.cpp.git"
 PLATFORMS = {
     "iphonesimulator": "build-ios-sim-cli",
     "iphoneos": "build-ios-device-cli",
@@ -31,12 +33,38 @@ LIBRARIES = [
 
 METAL_LIBRARY = "ggml/src/ggml-metal/libggml-metal.a"
 
-HEADERS = [
-    LLAMA / "include/llama.h",
-    LLAMA / "tools/mtmd/mtmd.h",
-    LLAMA / "tools/mtmd/mtmd-helper.h",
-    *sorted((LLAMA / "ggml/include").glob("*.h")),
-]
+def runtime_headers(source: Path) -> list[Path]:
+    return [
+        source / "include/llama.h",
+        source / "tools/mtmd/mtmd.h",
+        source / "tools/mtmd/mtmd-helper.h",
+        *sorted((source / "ggml/include").glob("*.h")),
+    ]
+
+
+def verify_runtime_source(source: Path, revision: str) -> None:
+    actual = subprocess.check_output(
+        ["git", "-C", str(source), "rev-parse", "HEAD"], text=True
+    ).strip()
+    dirty = subprocess.check_output(
+        ["git", "-C", str(source), "status", "--porcelain"], text=True
+    ).strip()
+    if actual != revision or dirty:
+        raise SystemExit("runtime source differs from the manifest pin; preserve local edits and prepare a clean checkout")
+
+
+def prepare_runtime_source(revision: str, destination: Path = LLAMA,
+                           repository: str = RUNTIME_REPOSITORY) -> None:
+    if not destination.exists():
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix=".llama-prepare-", dir=destination.parent) as temporary:
+            staged = Path(temporary) / "llama.cpp"
+            subprocess.run(["git", "init", "--quiet", str(staged)], check=True)
+            subprocess.run(["git", "-C", str(staged), "fetch", "--depth", "1", repository, revision], check=True)
+            subprocess.run(["git", "-C", str(staged), "checkout", "--quiet", "--detach", "FETCH_HEAD"], check=True)
+            verify_runtime_source(staged, revision)
+            staged.rename(destination)
+    verify_runtime_source(destination, revision)
 
 def checked_copy(source: Path, target: Path) -> None:
     if not source.is_file():
@@ -70,11 +98,9 @@ def main() -> None:
     platform = args.platform
     build = IOS_SMOKE / PLATFORMS[platform]
     manifest = json.loads((MODULE / "model-manifest.json").read_text())
-    revision = subprocess.run(
-        ["git", "-C", str(LLAMA), "rev-parse", "HEAD"], check=True, capture_output=True, text=True
-    ).stdout.strip()
-    if manifest["runtime_revision"] != revision:
-        raise SystemExit("runtime revision is not pinned")
+    if not LLAMA.exists() and not args.build:
+        raise SystemExit("runtime cache is missing; rerun with --build to restore the pinned source and libraries")
+    prepare_runtime_source(manifest["runtime_revision"])
     resources = MODULE / "ios/Resources"
     resources.mkdir(parents=True, exist_ok=True)
     for name in ("model-manifest.json", "model-download.json"):
@@ -85,7 +111,7 @@ def main() -> None:
         library_path = Path(library)
         source = build / library_path.parent / f"Release-{platform}" / library_path.name
         checked_copy(source, MODULE / "ios/Libraries" / platform / "lib" / source.name)
-    for source in HEADERS:
+    for source in runtime_headers(LLAMA):
         checked_copy(source, MODULE / "ios/Libraries/include" / source.name)
     print(f"Prepared pinned llama.cpp {platform} libraries and headers. Models download in the app.")
 

@@ -44,6 +44,7 @@ xcrun --sdk macosx swiftc -O -parse-as-library \
 macOS/Xcode와 Python 3.11 이상이 필요하다. 변환 도구의 검증 버전은 [manifest](model-manifest.json)의 `prepared_with.dependencies`를 따른다. 기존 격리 환경이 없으면 별도 가상환경을 만든다. 모델은 고정된 저자 공개 URL에서 SHA-256 검증 후 가져오며 사진은 업로드하지 않는다.
 
 ```sh
+python3.12 -m venv experiments/model-selection/.venv
 experiments/model-selection/.venv/bin/pip install -r modules/chroma-lineart/requirements-prepare.txt
 experiments/model-selection/.venv/bin/python scripts/prepare-lineart-model.py
 npx expo prebuild --platform ios --no-install
@@ -51,6 +52,8 @@ cd ios && pod install
 ```
 
 결과는 `modules/chroma-lineart/ios/Resources/LineArt.mlmodelc`다. 원본 가중치·변환 캐시·컴파일 결과는 Git 제외이며 `expo-module.config.json`과 Pod 리소스 번들로 연결한다. 네이티브 빌드는 기존 iPhone의 ID를 명시해 실행한다. iPad를 자동 실행하지 않는다. 배포 시 [저자 사용조건](THIRD_PARTY_NOTICES.md)을 확인한다.
+
+2026-09-14 정리 후에도 iOS `LineArt.mlmodelc`와 Android `LineArt.onnx`는 보존했다. Python 가상환경과 원본·변환 캐시는 제거했으므로 모델을 다시 변환하거나 Python 검사를 실행할 때만 위 환경을 만든다. 원본 코드·가중치는 준비 스크립트가 고정 URL에서 받아 기존 SHA-256을 검사한다. 이미 보존된 모델로 앱을 빌드할 때는 Python 환경이 필요 없다.
 
 빌드·설치 후 실제 설치된 `.app/ChromaLineArt.bundle/LineArt.mlmodelc` 포함 여부를 확인하고, 앱을 새로 시작한 상태에서 아래 `tests/native-bridge.ts`의 `checkNativeLineArt()`로 모델 로딩부터 PNG 생성까지 검증한다.
 
@@ -73,7 +76,7 @@ npx tsc --noEmit
 Android는 동일 저자 코드·style1 가중치를 ONNX opset 17로 변환한다. 가중치만 FP16으로 저장하고 `Cast` 뒤 FP32 CPU 연산을 수행한다. crop·upscale 없이 우측/아래쪽 reflection pad4, 원본 RGB/흰색 합성, `lineGain`의 ties-to-even 반올림을 유지한다. `onnxruntime-android:1.24.3`, 기존 Expo 사진 모듈과 같은 `exifinterface:1.4.1`만 Gradle에 추가한다. 모델 실행에는 네트워크가 필요 없다.
 
 ```sh
-experiments/model-selection/.venv/bin/pip install 'onnx==1.20.1' 'onnxruntime==1.24.3'
+experiments/model-selection/.venv/bin/pip install 'torchvision==0.29.0' 'onnx==1.20.1' 'onnxruntime==1.24.3'
 experiments/model-selection/.venv/bin/python scripts/prepare-lineart-android.py
 experiments/model-selection/.venv/bin/python modules/chroma-lineart/tests/android/run-checks.py
 ```
