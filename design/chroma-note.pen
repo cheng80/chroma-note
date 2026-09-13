@@ -338,6 +338,53 @@
                   "fontWeight": "normal"
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "dzG0D",
+              "name": "Favorite",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 8,
+                  "id": "XHaDX",
+                  "name": "Favorite swatch",
+                  "fill": "$favorite-solid",
+                  "width": "fill_container",
+                  "height": 68,
+                  "stroke": "#0000001A",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "o9ysE",
+                  "name": "Favorite role",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "즐겨찾기",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "O8nyfz",
+                  "name": "Favorite token",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "$favorite-solid",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "normal"
+                }
+              ]
             }
           ]
         },
@@ -4784,7 +4831,7 @@
                   "content": "원본과 기록"
                 },
                 "FC5B2": {
-                  "content": "완성된 컬러 스케치와 기록은 계정에 보관해요. 기기에 내려받은 이미지는 계정당 최대 200MiB까지 보관해요."
+                  "content": "완성된 컬러 스케치와 기록은 계정에 보관해요. 기기에 내려받은 이미지는 계정당 최대 약 210MB까지 보관해요."
                 }
               }
             },
@@ -11716,6 +11763,403 @@
           "fontFamily": "$font-body",
           "fontSize": 14,
           "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "yXEQU",
+          "name": "Favorite selection motion",
+          "metadata": {
+            "type": "motion-spec",
+            "component": "FavoriteIcon",
+            "selectedColor": "$favorite-solid",
+            "scale": [
+              0.7,
+              1.6,
+              1
+            ],
+            "popDurationMs": 180,
+            "burstDurationMs": 700,
+            "particles": 7,
+            "spring": {
+              "stiffness": 230,
+              "damping": 12,
+              "mass": 0.7
+            },
+            "deselect": "fade fill only",
+            "restore": "no selection animation"
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "T2K9Ev",
+              "name": "Favorite motion title",
+              "fill": "$text-primary",
+              "content": "즐겨찾기",
+              "fontFamily": "$font-body",
+              "fontSize": 20,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "Dzj8S",
+              "name": "Favorite motion sequence",
+              "width": "fill_container",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "E2FLRQ",
+                  "name": "Favorite / 선택 전",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "idlV6",
+                      "name": "Phase label / 선택 전",
+                      "fill": "$text-primary",
+                      "content": "선택 전",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z1wd7l",
+                      "name": "Heart stage / 선택 전",
+                      "width": "fill_container",
+                      "height": 80,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "rLy7Q",
+                          "name": "Heart sample / 선택 전",
+                          "width": 80,
+                          "height": 80,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "j2AFVO",
+                              "x": 30,
+                              "y": 30,
+                              "name": "Lucide heart / 선택 전",
+                              "metadata": {
+                                "type": "icon-source",
+                                "library": "lucide-react-native",
+                                "version": "1.43.0",
+                                "icon": "heart",
+                                "license": "ISC"
+                              },
+                              "geometry": "M2 9.5a5.5 5.5 0 0 1 9.591-3.676 0.56 0.56 0 0 0 0.818 0 5.49 5.49 0 0 1 9.591 3.676c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 0.019l-5.508-5.332c-1.5-1.5-3-3.2-3-5.5",
+                              "viewBox": [
+                                0,
+                                0,
+                                24,
+                                24
+                              ],
+                              "fill": "#00000000",
+                              "width": 20,
+                              "height": 20,
+                              "stroke": "$text-primary",
+                              "strokeWidth": 1.6666666666666667,
+                              "strokeLinejoin": "round",
+                              "strokeLinecap": "round"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "NfhQ4",
+                      "name": "Motion note / 선택 전",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기본 하트 윤곽",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cuG9Z",
+                  "name": "Favorite / 선택 순간",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gNvH3",
+                      "name": "Phase label / 선택 순간",
+                      "fill": "$text-primary",
+                      "content": "선택 순간",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "u9rgG",
+                      "name": "Heart stage / 선택 순간",
+                      "width": "fill_container",
+                      "height": 80,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JfA0i",
+                          "name": "Heart sample / 선택 순간",
+                          "width": 80,
+                          "height": 80,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "HABJW",
+                              "x": 24.140408163265306,
+                              "y": 24.140408163265306,
+                              "name": "Expanding favorite ring",
+                              "opacity": 0.37257142857142866,
+                              "width": 31.719183673469384,
+                              "height": 31.719183673469384,
+                              "stroke": "$favorite-solid",
+                              "strokeWidth": 3.9648979591836726
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "Aac35",
+                              "x": 38.492979591836736,
+                              "y": 17.7370612244898,
+                              "name": "Burst particle 1",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#F2B34A",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "IdYqp",
+                              "x": 54.720610018965,
+                              "y": 25.55187616158355,
+                              "name": "Burst particle 2",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#F58C9D",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "SCU43",
+                              "x": 58.72850375113065,
+                              "y": 43.111605932059796,
+                              "name": "Burst particle 3",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#83A9D5",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "cAGj5",
+                              "x": 47.49863506188003,
+                              "y": 57.19341586554034,
+                              "name": "Burst particle 4",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#B388C6",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "hshCo",
+                              "x": 29.487324121793446,
+                              "y": 57.19341586554034,
+                              "name": "Burst particle 5",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#7BAE96",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "W2DNr",
+                              "x": 18.257455432542823,
+                              "y": 43.111605932059796,
+                              "name": "Burst particle 6",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#F2B34A",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "ellipse",
+                              "id": "AdUna",
+                              "x": 22.26534916470847,
+                              "y": 25.55187616158355,
+                              "name": "Burst particle 7",
+                              "opacity": 0.9933061224489798,
+                              "fill": "#F58C9D",
+                              "width": 3.0140408163265304,
+                              "height": 3.0140408163265304
+                            },
+                            {
+                              "type": "path",
+                              "id": "DuWhW",
+                              "x": 24,
+                              "y": 24,
+                              "name": "Lucide heart / 선택 순간",
+                              "metadata": {
+                                "type": "icon-source",
+                                "library": "lucide-react-native",
+                                "version": "1.43.0",
+                                "icon": "heart",
+                                "license": "ISC"
+                              },
+                              "geometry": "M2 9.5a5.5 5.5 0 0 1 9.591-3.676 0.56 0.56 0 0 0 0.818 0 5.49 5.49 0 0 1 9.591 3.676c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 0.019l-5.508-5.332c-1.5-1.5-3-3.2-3-5.5",
+                              "viewBox": [
+                                0,
+                                0,
+                                24,
+                                24
+                              ],
+                              "fill": "$favorite-solid",
+                              "width": 32,
+                              "height": 32,
+                              "stroke": "$favorite-solid",
+                              "strokeWidth": 2.6666666666666665,
+                              "strokeLinejoin": "round",
+                              "strokeLinecap": "round"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "xtnGy",
+                      "name": "Motion note / 선택 순간",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "180ms 동안 0.7배에서 1.6배로 확대",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mixDM",
+                  "name": "Favorite / 선택 완료",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LZ3U1",
+                      "name": "Phase label / 선택 완료",
+                      "fill": "$text-primary",
+                      "content": "선택 완료",
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qshnT",
+                      "name": "Heart stage / 선택 완료",
+                      "width": "fill_container",
+                      "height": 80,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "zSFms",
+                          "name": "Heart sample / 선택 완료",
+                          "width": 80,
+                          "height": 80,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "path",
+                              "id": "Kg2aS",
+                              "x": 30,
+                              "y": 30,
+                              "name": "Lucide heart / 선택 완료",
+                              "metadata": {
+                                "type": "icon-source",
+                                "library": "lucide-react-native",
+                                "version": "1.43.0",
+                                "icon": "heart",
+                                "license": "ISC"
+                              },
+                              "geometry": "M2 9.5a5.5 5.5 0 0 1 9.591-3.676 0.56 0.56 0 0 0 0.818 0 5.49 5.49 0 0 1 9.591 3.676c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 0.019l-5.508-5.332c-1.5-1.5-3-3.2-3-5.5",
+                              "viewBox": [
+                                0,
+                                0,
+                                24,
+                                24
+                              ],
+                              "fill": "$favorite-solid",
+                              "width": 20,
+                              "height": 20,
+                              "stroke": "$favorite-solid",
+                              "strokeWidth": 1.6666666666666667,
+                              "strokeLinejoin": "round",
+                              "strokeLinecap": "round"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "L4LkPA",
+                      "name": "Motion note / 선택 완료",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "700ms 뒤 파동과 입자가 사라짐",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "U5pCoW",
+              "name": "Favorite motion behavior",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "하트는 스프링으로 기본 크기로 돌아옵니다. 해제 시 채움만 사라지며, 저장된 즐겨찾기를 다시 열 때는 선택 효과를 재생하지 않습니다.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
         }
       ]
     },
@@ -22900,6 +23344,14 @@
     "info-text": {
       "type": "color",
       "value": "#35658A"
+    },
+    "coral-500": {
+      "type": "color",
+      "value": "#EF5268"
+    },
+    "favorite-solid": {
+      "type": "color",
+      "value": "$coral-500"
     }
   },
   "fileToken": "86340261-019e-4da0-a687-5bf51771ebb3"

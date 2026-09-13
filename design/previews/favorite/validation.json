@@ -1,0 +1,94 @@
+{
+  "roots": 63,
+  "reusable": 15,
+  "placeholders": [],
+  "clipping": [],
+  "overlaps": [],
+  "favorite": {
+    "type": "color",
+    "value": "$coral-500"
+  },
+  "coral": {
+    "type": "color",
+    "value": "#EF5268"
+  },
+  "danger": {
+    "type": "color",
+    "value": "$red-800"
+  },
+  "red": {
+    "type": "color",
+    "value": "#9B3535"
+  },
+  "selectedHeart": {
+    "type": "path",
+    "id": "Kg2aS",
+    "x": 30,
+    "y": 30,
+    "name": "Lucide heart / 선택 완료",
+    "metadata": {
+      "type": "icon-source",
+      "library": "lucide-react-native",
+      "version": "1.43.0",
+      "icon": "heart",
+      "license": "ISC"
+    },
+    "geometry": "...",
+    "viewBox": [
+      0,
+      0,
+      24,
+      24
+    ],
+    "fill": "#EF5268",
+    "width": 20,
+    "height": 20,
+    "stroke": "#EF5268",
+    "strokeWidth": 1.6666666666666667,
+    "strokeLinejoin": "round",
+    "strokeLinecap": "round"
+  },
+  "motion": {
+    "type": "motion-spec",
+    "component": "FavoriteIcon",
+    "selectedColor": "$favorite-solid",
+    "scale": [
+      0.7,
+      1.6,
+      1
+    ],
+    "popDurationMs": 180,
+    "burstDurationMs": 700,
+    "particles": 7,
+    "spring": {
+      "stiffness": 230,
+      "damping": 12,
+      "mass": 0.7
+    },
+    "deselect": "fade fill only",
+    "restore": "no selection animation"
+  },
+  "changedRoots": [
+    {
+      "id": "VqCCu",
+      "x": 0,
+      "y": 0,
+      "width": 1200,
+      "height": 741
+    },
+    {
+      "id": "D7PEO",
+      "x": 3820,
+      "y": 0,
+      "width": 1100,
+      "height": 718
+    }
+  ],
+  "date": "2026-09-13",
+  "scope": "Favorite color foundations and interaction states",
+  "saved": true,
+  "saveEvidence": "Pen Cmd+S removed Edited state from chroma-note.pen",
+  "appColorMatches": true,
+  "visualReview": "Foundation swatch and interaction states rendered without clipping or overlap",
+  "motionSamples": "Static design stages; native animation already verified in motion-20260913/handoff-verification.json"
+}

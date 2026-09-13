@@ -13,7 +13,7 @@
 | 02 Image fixtures | 디자인용 사진·선화와 품질 근거로 사용하지 않는다는 안내 |
 | 03 States | 인증·사진·모델·Book·저장·삭제의 오류/복구 카드 18개 |
 | 04 Confirmations | 초안 폐기, 사진 교체, 재인증 후 계정 영구 삭제 |
-| 05 Interaction states | 기본·초점·눌림·비활성·처리 중, 입력 오류 |
+| 05 Interaction states | 기본·초점·눌림·비활성·처리 중, 입력 오류, 즐겨찾기 선택과 팝 모션 |
 | 06 Mobile flow | 비교→요약, 영역별 시트, 중앙 모달, 필수 safe area·키보드 계약 |
 | 07 Startup flow | 스플래시 유지와 시작 파일 검사, 다운로드·이어받기·검증·오류 복구, 요청 처리 중 버튼 |
 
@@ -82,3 +82,7 @@ Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이�
 생성 프롬프트: “Create one polished mobile app splash illustration for Chroma Note, a quiet photo diary that turns the original colors of everyday photographs into delicate colored line drawings. Transparent PNG background, square composition, 1024 by 1024. Centered small still-life vignette drawn only with expressive fine colored ink contours: a warm ceramic coffee cup and saucer beside a simple open notebook and one small leafy branch, viewed at a gentle three-quarter angle. A few loose contour strokes suggest an ordinary moment being remembered. Refined Korean editorial stationery aesthetic, airy, restrained, organic, calm, mature. Muted deep blue #294B63, sage green, dusty terracotta, warm ochre and soft charcoal; limited harmonious palette. No filled color blocks, no photographic surfaces, no gradients, no watercolor washes, no shadows, no backdrop, no border or app icon tile. Crisp clean confident linework that remains legible when displayed at 220 pixels wide. Entire artwork within the central 75 percent of the square with generous clear transparent margins. No text, letters, logo, watermark or UI. This will be centered on a solid warm paper-colored #F7F3EA launch screen; keep the alpha background genuinely transparent, not a checkerboard painting. Deliver a finished raster illustration, not a mockup of a phone.”
 
 스플래시 00s는 앱과 같은 원본 이미지를 참조한다. 새 레이어의 첫 내보내기가 비어 보이던 문제는 렌더링 완료 후 다시 내보내 정상 표시를 확인했다. [실제 iPhone 시작 캡처](../experiments/model-selection/data/model-delivery-20260913/splash-native.png)와 중앙 280pt·contain 배치를 대조했다. 최신 `ModelSetupGate`의 시작 파일 검사 중 스플래시 유지와 정상·누락·손상 분기를 보드에 기록했다. 이번 상태 주입 검증은 스플래시 표시 시간을 재검증한 것이 아니며, 해당 동작은 현재 소스 대조와 기존 시작 캡처를 근거로 한다.
+
+2026-09-13 즐겨찾기 동기화: `coral-500 #EF5268` → `favorite-solid`를 추가하고 파운데이션의 즐겨찾기 색 견본을 앱과 맞췄다. 기존 Interaction states에 Lucide 하트의 선택 전·1.6배 확대 순간·선택 완료 시안을 배치했다. 180ms 확대와 스프링 복귀, 파동·입자 7개의 700ms 확산, 해제·복원 규칙을 함께 기록했다. Pen 앱에서 저장했고 루트 63개·재사용 15개·placeholder 0개와 변경 영역의 잘림·겹침 0개를 확인했다. 시안은 정지된 단계 표현이며 실제 모션 검증은 프로젝트 현황을 따른다.
+
+- [즐겨찾기 색상](previews/favorite/VqCCu.png) · [즐겨찾기 모션 시안](previews/favorite/D7PEO.png) · [검증 결과](previews/favorite/validation.json)
