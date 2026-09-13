@@ -39,10 +39,10 @@ function DraftActions({ locale, drafts, onResumeDraft, onDeleteDraft }: Pick<Boo
   </View>)}</>;
 }
 
-function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onRetry, refreshing, importTriggerRef }: Pick<BookScreenProps, 'locale' | 'drafts' | 'save_attempt' | 'onOpenSettings' | 'onStartRecord' | 'onResumeDraft' | 'onDeleteDraft' | 'onRetry' | 'refreshing' | 'importTriggerRef'>) {
+function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onRetry, pullRefreshing, importTriggerRef }: Pick<BookScreenProps, 'locale' | 'drafts' | 'save_attempt' | 'onOpenSettings' | 'onStartRecord' | 'onResumeDraft' | 'onDeleteDraft' | 'onRetry' | 'pullRefreshing' | 'importTriggerRef'>) {
   const copy = getBasicCopy(locale);
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
-    <ScrollView refreshControl={<RefreshControl refreshing={Boolean(refreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.emptyContent} showsVerticalScrollIndicator={false}>
+    <ScrollView refreshControl={<RefreshControl refreshing={Boolean(pullRefreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.emptyContent} showsVerticalScrollIndicator={false}>
       <View style={styles.brandHeader}><SemanticText accessibilityRole="header" style={styles.brand}>{copy.brand}</SemanticText><IconButton label={copy.settings} onPress={onOpenSettings}><AppIcon name="settings" size={20} color={theme.colors.ink} /></IconButton></View>
       <View style={styles.emptyExample}><StampImage source={designStamp} accessibilityLabel={copy.designExample} style={styles.emptyImage} /><SemanticText style={styles.emptyCaption}>{copy.designExample}</SemanticText></View>
       <SemanticText accessibilityRole="header" style={styles.emptyHeading}>{copy.emptyTitle}</SemanticText>
@@ -57,7 +57,7 @@ function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord
 
 function activeFilter(filter: BookFilter) { return Boolean(filter.start_date || filter.end_date || filter.semantic_tag || filter.favorite_only); }
 
-export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, pending_deletions = [], model_status: _modelStatus, save_attempt, sheet, has_more, refreshing, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry, importTriggerRef }: BookScreenProps) {
+export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, pending_deletions = [], model_status: _modelStatus, save_attempt, sheet, has_more, refreshing, pullRefreshing, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry, importTriggerRef }: BookScreenProps) {
   const copy = getBasicCopy(locale);
   const { width, fontScale } = useWindowDimensions();
   const [measuredGridWidth, setMeasuredGridWidth] = useState(0);
@@ -77,7 +77,7 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
     onOpenFilter();
   };
   const showRecordCount = list_state === 'ready' || list_state === 'partial-cache';
-  if (list_state === 'empty') return <EmptyBook locale={locale} drafts={drafts} save_attempt={save_attempt} onOpenSettings={onOpenSettings} onStartRecord={onStartRecord} importTriggerRef={importTriggerRef} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} onRetry={onRetry} refreshing={refreshing} />;
+  if (list_state === 'empty') return <EmptyBook locale={locale} drafts={drafts} save_attempt={save_attempt} onOpenSettings={onOpenSettings} onStartRecord={onStartRecord} importTriggerRef={importTriggerRef} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} onRetry={onRetry} pullRefreshing={pullRefreshing} />;
 
   const content = list_state === 'filter-empty' ? <View style={styles.emptyState}><SemanticText style={styles.emptyStateTitle}>{copy.noResults}</SemanticText><SemanticText style={styles.bodyMuted}>{copy.noResultsBody}</SemanticText><Button ref={emptyFilterRef} label={copy.filter} onPress={() => openFilterFrom(emptyFilterRef)} tone="secondary" /></View>
     : list_state === 'error' ? <View style={styles.emptyState}><Notice message={copy.listError} tone="error" /><Button label={copy.retry} onPress={onRetry} tone="secondary" /></View>
@@ -90,7 +90,7 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
 
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
     <View style={styles.flex}>
-      <ScrollView refreshControl={<RefreshControl refreshing={Boolean(refreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView refreshControl={<RefreshControl refreshing={Boolean(pullRefreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.brandHeader}><SemanticText accessibilityRole="header" style={styles.brand}>{compact ? 'Book' : copy.brand}</SemanticText><View style={styles.filters}><IconButton label={copy.settings} onPress={onOpenSettings}><AppIcon name="settings" size={20} color={theme.colors.ink} /></IconButton>{compact ? <IconButton ref={activeFilterRef} label={copy.filter} accessibilityHint={isActive ? locale === 'ko' ? '필터가 적용되어 있어요.' : 'Filters are applied.' : undefined} onPress={() => openFilterFrom(activeFilterRef)}><AppIcon name="sliders-horizontal" size={20} color={isActive ? theme.colors.accent : theme.colors.ink} /></IconButton> : null}</View></View>
         {!compact ? <><View style={styles.intro}><SemanticText accessibilityRole="header" style={styles.heading}>{copy.bookHeading}</SemanticText><SemanticText style={styles.bodyMuted}>{copy.bookLead}</SemanticText></View>
         <View style={styles.filters}><FilterChip ref={allFilterRef} label={copy.all} selected={!isActive} onPress={() => openFilterFrom(allFilterRef)} /><FilterChip ref={dateFilterRef} label={copy.date} selected={Boolean(filter.start_date || filter.end_date)} onPress={() => openFilterFrom(dateFilterRef)} /><FilterChip ref={activeFilterRef} label={copy.filter} selected={isActive} onPress={() => openFilterFrom(activeFilterRef)} /></View></> : null}

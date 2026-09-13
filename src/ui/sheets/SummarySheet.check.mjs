@@ -11,6 +11,7 @@ const modules = {
   'react-native': { StyleSheet: { create: value => value }, Text: 'Text', View: 'View' },
   '../components/Palette': { Palette: 'Palette' },
   '../components/SemanticText': { SemanticText: 'SemanticText' },
+  '../components/LoadingSkeleton': { LoadingSkeleton: 'LoadingSkeleton' },
   '../primitives': { Button: 'Button', Field: 'Field', Notice: 'Notice', Sheet: 'Sheet' },
   '../record-copy': { recordCopy },
   '../theme': { theme: { colors: {}, typography: {}, spacing: {} } },

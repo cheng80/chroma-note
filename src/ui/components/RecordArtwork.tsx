@@ -31,7 +31,7 @@ export function RecordArtwork({ fields, source, locale, aspectRatio = 1, exportM
   const { animatedStyle, setPressed } = usePressScale();
   const writing = recordWriting(fields);
   const tags = [...fields.semantic_tags, ...fields.mood_tags];
-  const image = <StampImage source={source} resizeMode="contain" style={[styles.imageFrame, { aspectRatio }]} accessibilityLabel={locale === 'ko' ? '기록의 컬러 스케치' : 'Record color sketch'} onLoad={onImageLoad} onError={onImageError} />;
+  const image = <StampImage source={source} reveal={exportMode ? 'none' : 'fade'} resizeMode="contain" style={[styles.imageFrame, { aspectRatio }]} accessibilityLabel={locale === 'ko' ? '기록의 컬러 스케치' : 'Record color sketch'} onLoad={onImageLoad} onError={onImageError} />;
   return <View collapsable={false} style={[styles.paper, !exportMode && styles.card]}>
     {imageMissing ? null : <View>
       {onImagePress && !exportMode ? <AnimatedPressable ref={imageButtonRef} accessibilityRole="button" accessibilityLabel={locale === 'ko' ? '컬러 스케치 이미지 확대' : 'Enlarge color sketch'} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={onImagePress} style={animatedStyle}>{image}</AnimatedPressable> : image}

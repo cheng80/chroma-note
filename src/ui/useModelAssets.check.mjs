@@ -86,6 +86,8 @@ vm.runInNewContext(ts.transpileModule(screenSource, { compilerOptions: {
   const modules = {
     react: React,
     'react-native': { View: 'View', StyleSheet: { create: value => value } },
+    'react-native-reanimated': { default: { View: 'AnimatedView' } },
+    '../components/motion': { useLiveReduceMotion: () => false },
     '../primitives': { Screen: 'Screen', Button: 'Button', Notice: 'Notice' },
     '../components/ProcessingStep': { ProcessingStep: 'ProcessingStep' },
     '../components/SemanticText': { SemanticText: 'SemanticText' },
@@ -154,4 +156,88 @@ assert.equal(gate('checking'), null);
 assert.equal(gate('required').type, 'ModelSetupScreen', 'missing files show download UI after checking');
 assert.equal(gate('checking', true).type, 'ModelSetupScreen', 'explicit retry must not return to the startup splash');
 assert.equal(gate('failed').type, 'ModelSetupScreen', 'integrity errors expose recovery');
-console.log('useModelAssets.check passed: local hash-first splash, direct ready entry, download recovery, lifecycle and ko/en UI');
+// Run the actual feedback component effects across mounts and status updates.
+function feedbackHarness(name, initialReduced = false) {
+  const slots = [], springs = [];
+  let index = 0, effects = [], reduced = initialReduced;
+  const slot = create => slots[index++] ??= create();
+  const exports = {};
+  const component = readFileSync(new URL(`./components/${name}.tsx`, import.meta.url), 'utf8');
+  const modules = {
+    react: { ...React,
+      useRef: initial => slot(() => ({ current: initial })),
+      useEffect(effect, deps) {
+        const saved = slot(() => ({}));
+        if (!saved.deps || deps.some((value, i) => value !== saved.deps[i])) {
+          saved.deps = deps;
+          effects.push(() => { saved.cleanup?.(); saved.cleanup = effect(); });
+        }
+      },
+    },
+    'react-native': { View: 'View', ActivityIndicator: 'ActivityIndicator', StyleSheet: { create: value => value },
+      AppState: { currentState: 'active', addEventListener: () => ({ remove() {} }) },
+    },
+    'react-native-reanimated': { default: { View: 'AnimatedView' },
+      cancelAnimation() {}, Easing: { linear() {} }, ReduceMotion: { Always: 'always', Never: 'never' },
+      useAnimatedStyle: () => ({}),
+      useSharedValue: initial => slot(() => {
+        let value = initial;
+        return { get value() { return value; }, set value(next) {
+          if (next?.spring) { springs.push({ from: value, to: next.to }); value = next.to; }
+          else value = next;
+        } };
+      }),
+      withSpring: to => ({ spring: true, to }), withTiming: value => value, withRepeat: value => value,
+    },
+    './motion': { useEntranceProgress: () => ({ progress: { value: 1 }, reduceMotion: reduced }) },
+    './AppIcon': { AppIcon: 'AppIcon' }, './SemanticText': { SemanticText: 'SemanticText' },
+    '../theme': { theme: { typography: { secondary: {} }, motion: {}, colors: {}, spacing: {}, radii: {} } },
+  };
+  vm.runInNewContext(ts.transpileModule(component, { compilerOptions: {
+    module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React,
+  } }).outputText, { exports, require(id) { assert.ok(id in modules, id); return modules[id]; } });
+  return {
+    render(props) { index = 0; exports[name](props); effects.splice(0).forEach(effect => effect()); },
+    get checkPops() { return springs.filter(spring => spring.from === 0.7 && spring.to === 1).length; },
+    setReduced(value) { reduced = value; },
+    unmount() { slots.forEach(saved => saved.cleanup?.()); },
+  };
+}
+const stepFeedback = feedbackHarness('ProcessingStep');
+const renderStep = status => stepFeedback.render({ label: 'Step', status, statusLabel: status });
+renderStep('done');
+assert.equal(stepFeedback.checkPops, 0, 'an initially completed step must not replay completion');
+renderStep('active'); renderStep('done');
+assert.equal(stepFeedback.checkPops, 1, 'the actual active-to-done transition pops the check once');
+renderStep('done');
+assert.equal(stepFeedback.checkPops, 1, 'unchanged done status must not replay completion');
+renderStep('active'); renderStep('error');
+assert.equal(stepFeedback.checkPops, 1, 'an error must not animate as success');
+stepFeedback.setReduced(true); renderStep('done');
+stepFeedback.setReduced(false); renderStep('done');
+assert.equal(stepFeedback.checkPops, 1, 'reduced completion and re-enabling motion must not replay success');
+stepFeedback.unmount();
+
+const successNotice = feedbackHarness('Notice');
+successNotice.render({ message: 'Saved', tone: 'success' });
+assert.equal(successNotice.checkPops, 1, 'a conditionally mounted explicit success notice pops on arrival');
+successNotice.render({ message: 'Saved', tone: 'success' });
+successNotice.render({ message: 'Saved record', tone: 'success' });
+assert.equal(successNotice.checkPops, 1, 'rerenders and copy changes must not repeat the success check');
+successNotice.unmount();
+const busyNotice = feedbackHarness('Notice');
+busyNotice.render({ message: 'Checking', busy: true });
+busyNotice.render({ message: 'Stopped', busy: false });
+assert.equal(busyNotice.checkPops, 0, 'busy=false alone is not success');
+busyNotice.render({ message: 'Checking', tone: 'success', busy: true });
+assert.equal(busyNotice.checkPops, 0, 'busy success tone must still show processing');
+busyNotice.render({ message: 'Saved', tone: 'success', busy: false });
+assert.equal(busyNotice.checkPops, 1, 'explicit non-busy success triggers its check');
+busyNotice.unmount();
+const reducedNotice = feedbackHarness('Notice', true);
+reducedNotice.render({ message: 'Saved', tone: 'success' });
+reducedNotice.setReduced(false);
+reducedNotice.render({ message: 'Saved', tone: 'success' });
+assert.equal(reducedNotice.checkPops, 0, 'reduced initial success must not animate or replay when motion returns');
+reducedNotice.unmount();
+console.log('useModelAssets.check passed: local hash-first splash, direct ready entry, download recovery, lifecycle, ko/en UI and real success feedback');

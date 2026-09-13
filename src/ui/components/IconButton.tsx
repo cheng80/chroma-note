@@ -34,7 +34,7 @@ export const IconButton = forwardRef<React.ElementRef<typeof Pressable>, IconBut
   testID,
 }: IconButtonProps, ref) {
   const [focused, setFocused] = useState(false);
-  const { animatedStyle, setPressed } = usePressScale();
+  const { animatedStyle, setPressed } = usePressScale(disabled);
 
   return (
     <AnimatedPressable

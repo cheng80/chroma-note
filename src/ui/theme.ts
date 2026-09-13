@@ -17,6 +17,7 @@ export const theme = {
     accentPressed: '#1D3C52',
     accentSubtle: '#E8EFF3',
     info: '#35658A',
+    favorite: '#EF5268',
     danger: '#9B3535',
     dangerSubtle: '#F9ECE8',
     warning: '#79551D',
@@ -62,7 +63,9 @@ export const theme = {
   },
   motion: {
     pressScale: 0.96,
-    pressDuration: 140,
+    pressDuration: 110,
+    releaseDuration: 360,
+    errorDuration: 600,
     enterDuration: 180,
     noticeDuration: 140,
     loadingDuration: 900,

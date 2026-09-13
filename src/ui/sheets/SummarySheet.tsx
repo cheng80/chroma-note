@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { DisplayLocale, SheetChange, SheetState } from '../contract';
 import { Palette } from '../components/Palette';
 import { SemanticText } from '../components/SemanticText';
+import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { Button, Field, Notice, Sheet } from '../primitives';
 import { recordCopy } from '../record-copy';
 import { theme } from '../theme';
@@ -43,6 +44,8 @@ function AnalysisEditor({ locale, sheet, onChange, onRequestCaption }: {
       <SemanticText style={styles.auxiliary}>{t.memoHint}</SemanticText>
       <SemanticText style={[styles.auxiliary, styles.aiDisclaimer]}>{t.aiWritingHint}</SemanticText>
       {sheet.caption_status === 'error' ? <Notice message={t.suggestFailed} tone="error" /> : null}
+      {sheet.caption_status === 'pending' ? <View style={styles.captionSkeleton}><LoadingSkeleton style={styles.skeletonLine} /><LoadingSkeleton style={[styles.skeletonLine, styles.shortLine]} /></View> : null}
+      {sheet.caption_status === 'success' ? <Notice message={locale === 'ko' ? '글에 새 문구를 더했어요.' : 'Added a new caption to your writing.'} tone="success" /> : null}
       <Button label={sheet.caption_status === 'pending' ? t.suggesting : sheet.caption_status === 'error' ? t.suggestRetry : t.suggest} onPress={onRequestCaption} busy={sheet.caption_status === 'pending'} tone="secondary" />
     </View>
     <View style={styles.editorSection}>
@@ -92,4 +95,7 @@ const styles = StyleSheet.create({
   sectionTitle: { color: theme.colors.ink, fontFamily: theme.typography.fontFamily, fontSize: 14, lineHeight: 21, fontWeight: '600' },
   editorSection: { gap: theme.spacing.md, paddingVertical: theme.spacing.sm },
   memoField: { minHeight: 240, textAlignVertical: 'top' },
+  captionSkeleton: { gap: 10, paddingVertical: 4 },
+  skeletonLine: { height: 12, borderRadius: 6 },
+  shortLine: { width: '65%' },
 });

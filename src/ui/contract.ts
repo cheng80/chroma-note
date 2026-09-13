@@ -206,6 +206,7 @@ export interface BookScreenProps {
   sheet: SheetState;
   has_more: boolean;
   refreshing?: boolean;
+  pullRefreshing?: boolean;
   onOpenSettings: () => void;
   onStartRecord: () => void;
   onResumeDraft: (draft_id: string) => void;

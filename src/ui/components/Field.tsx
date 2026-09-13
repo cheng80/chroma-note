@@ -1,7 +1,11 @@
 import React, { forwardRef, useState } from 'react';
 import { StyleProp, StyleSheet, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { useFieldFeedback } from './motion';
 import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 type Style = StyleProp<ViewStyle>;
 
@@ -17,10 +21,11 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field(
   ref,
 ) {
   const [focused, setFocused] = useState(false);
+  const animatedStyle = useFieldFeedback(focused && props.editable !== false, error);
   return (
     <View style={[styles.container, containerStyle]}>
       <SemanticText style={styles.label}>{label}</SemanticText>
-      <TextInput
+      <AnimatedTextInput
         ref={ref}
         {...props}
         accessibilityLabel={props.accessibilityLabel ?? label}
@@ -34,7 +39,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field(
           setFocused(false);
           onBlur?.(event);
         }}
-        style={[styles.field, focused && styles.focused, error && styles.errorField, props.style]}
+        style={[styles.field, animatedStyle, props.style]}
         placeholderTextColor={props.placeholderTextColor ?? theme.colors.inkSecondary}
       />
       {error ? <SemanticText accessibilityRole="alert" style={styles.errorText}>{error}</SemanticText> : hint ? <SemanticText style={styles.hint}>{hint}</SemanticText> : null}
@@ -54,18 +59,16 @@ const styles = StyleSheet.create({
   field: {
     minHeight: theme.buttonHeight,
     borderRadius: theme.radii.field,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.borderControl,
     backgroundColor: theme.colors.bgSurface,
     color: theme.colors.ink,
     fontFamily: theme.typography.fontFamily,
     fontSize: theme.typography.body.fontSize,
     lineHeight: theme.typography.body.lineHeight,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: 14,
+    paddingHorizontal: theme.spacing.lg - 1,
+    paddingVertical: 13,
   },
-  focused: { borderColor: theme.colors.borderFocus, borderWidth: 2 },
-  errorField: { borderColor: theme.colors.danger },
   hint: {
     color: theme.colors.inkSecondary,
     fontFamily: theme.typography.fontFamily,

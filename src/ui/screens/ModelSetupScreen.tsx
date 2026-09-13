@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Animated, { cancelAnimation, Easing, ReduceMotion, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { StyleSheet, View } from 'react-native';
 import type { ModelAssetState } from '../../../modules/chroma-analysis';
 import type { DisplayLocale } from '../contract';
 import { Button, Notice, Screen } from '../primitives';
+import { useLiveReduceMotion } from '../components/motion';
 import { ProcessingStep } from '../components/ProcessingStep';
 import { SemanticText } from '../components/SemanticText';
 import { theme } from '../theme';
@@ -21,7 +23,7 @@ const copy = {
     service: '다운로드 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
     network: '다운로드하지 못했어요. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.',
     integrity: '파일 확인에 실패했어요. 다시 다운로드해 주세요.',
-    unsupported: '이 기기에서는 아직 AI 다운로드를 지원하지 않아요. 현재는 iOS 앱에서 사용할 수 있어요.',
+    unsupported: '이 기기에서는 AI 기능을 사용할 수 없어요.',
     native: 'AI 다운로드 기능이 포함된 앱으로 업데이트해 주세요.',
     failed: 'AI 준비를 완료하지 못했어요. 다시 시도해 주세요.',
   },
@@ -38,7 +40,7 @@ const copy = {
     service: 'The download service is unavailable. Please try again later.',
     network: 'Download failed. Check your internet connection and try again.',
     integrity: 'File verification failed. Please download again.',
-    unsupported: 'AI downloads are not yet supported on this device. Use the iOS app.',
+    unsupported: 'AI features are not supported on this device.',
     native: 'Please update to an app version that includes AI downloads.',
     failed: 'Could not prepare AI. Please try again.',
   },
@@ -51,6 +53,22 @@ type Props = {
   start: () => void;
   pause: () => void;
 };
+
+function DownloadFill({ progress, paused }: { progress: number; paused: boolean }) {
+  const reduceMotion = useLiveReduceMotion();
+  const displayed = useSharedValue(progress);
+  useEffect(() => {
+    cancelAnimation(displayed);
+    displayed.value = reduceMotion || paused ? progress : withTiming(progress, {
+      duration: theme.motion.enterDuration,
+      easing: Easing.out(Easing.cubic),
+      reduceMotion: ReduceMotion.Never,
+    });
+    return () => cancelAnimation(displayed);
+  }, [displayed, paused, progress, reduceMotion]);
+  const animatedStyle = useAnimatedStyle(() => ({ width: `${displayed.value * 100}%` as `${number}%` }));
+  return <Animated.View style={[styles.fill, paused && styles.pausedFill, animatedStyle]} />;
+}
 
 export function ModelSetupScreen({ locale, state, pending, start, pause }: Props) {
   const t = copy[locale];
@@ -84,7 +102,7 @@ export function ModelSetupScreen({ locale, state, pending, start, pause }: Props
       {state.status === 'downloading' ? <ProcessingStep label={state.currentFile === 'model' ? t.model : state.currentFile === 'vision' ? t.vision : t.downloading} status="active" statusLabel={t.active} /> : null}
       {showProgress ? <View style={styles.progressGroup}>
         <View style={styles.track} accessibilityRole="progressbar" accessibilityLabel={t.downloading} accessibilityValue={{ min: 0, max: total, now: downloaded }}>
-          <View style={[styles.fill, { width: `${progress * 100}%` }]} />
+          <DownloadFill progress={progress} paused={state.status === 'paused'} />
         </View>
         <SemanticText style={styles.detail}>{`${formatBytes(downloaded)} / ${formatBytes(total)} (${Math.floor(progress * 100)}%)`}</SemanticText>
       </View> : null}
@@ -99,5 +117,6 @@ const styles = StyleSheet.create({
   detail: { ...theme.typography.secondary, color: theme.colors.inkSecondary, fontFamily: theme.typography.fontFamily },
   progressGroup: { gap: theme.spacing.sm },
   track: { height: 8, borderRadius: theme.radii.round, overflow: 'hidden', backgroundColor: theme.colors.bgSunken },
+  pausedFill: { backgroundColor: theme.colors.inkSecondary },
   fill: { height: '100%', backgroundColor: theme.colors.accent },
 });

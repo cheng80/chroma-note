@@ -1,9 +1,9 @@
 import React from 'react';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import Reanimated from 'react-native-reanimated';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppIcon } from './AppIcon';
-import { useEntranceProgress, usePressScale } from './motion';
+import { useSelectionProgress, usePressScale } from './motion';
 import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
 
@@ -17,9 +17,8 @@ type ResultConfirmationProps = {
 };
 
 export function ResultConfirmation({ label, checked, onChange, disabled = false }: ResultConfirmationProps) {
-  const { progress } = useEntranceProgress(checked, theme.motion.noticeDuration);
-  const { animatedStyle, setPressed } = usePressScale();
-  const checkStyle = useAnimatedStyle(() => ({ opacity: progress.value, transform: [{ scale: progress.value }] }));
+  const checkStyle = useSelectionProgress(checked);
+  const { animatedStyle, setPressed } = usePressScale(disabled);
 
   return (
     <AnimatedPressable accessibilityRole="checkbox" accessibilityLabel={label} accessibilityState={{ checked, disabled }} disabled={disabled} hitSlop={4} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => onChange(!checked)} style={[styles.root, animatedStyle]}>

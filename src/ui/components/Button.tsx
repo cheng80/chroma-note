@@ -3,7 +3,7 @@ import Animated from 'react-native-reanimated';
 import { AccessibilityState, ActivityIndicator, Pressable, StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import { SemanticText } from './SemanticText';
 import { theme } from '../theme';
-import { usePressScale, useEntranceProgress } from './motion';
+import { usePressScale, useLiveReduceMotion } from './motion';
 import { AppIcon } from './AppIcon';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -40,9 +40,9 @@ export const Button = forwardRef<React.ElementRef<typeof Pressable>, ButtonProps
 }: ButtonProps, ref) {
   const [focused, setFocused] = useState(false);
   const [pressed, setPressedState] = useState(false);
-  const { animatedStyle, setPressed } = usePressScale();
-  const { reduceMotion } = useEntranceProgress(true);
   const inactive = disabled || busy;
+  const { animatedStyle, setPressed } = usePressScale(inactive);
+  const reduceMotion = useLiveReduceMotion();
 
   return (
     <AnimatedPressable
@@ -70,7 +70,7 @@ export const Button = forwardRef<React.ElementRef<typeof Pressable>, ButtonProps
         toneStyles[tone],
         busy && styles.buttonBusy,
         disabled && styles.buttonDisabled,
-        pressed && pressedToneStyles[tone],
+        pressed && !inactive && pressedToneStyles[tone],
         focused && styles.focused,
         style,
         animatedStyle,

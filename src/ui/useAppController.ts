@@ -62,7 +62,7 @@ export function useAppController() {
   const authenticatedImage = state.records.find(item => item.id === draft?.record_id)?.stamp.image_headers ?? state.records[0]?.stamp.image_headers;
   const displayDraft = draft?.selected_candidate?.source === 'supabase' ? { ...draft, selected_candidate: { ...draft.selected_candidate, image_headers: authenticatedImage } } : draft;
   return { state, send, images: demoImages, assets: demoAssets, visibleRecords: state.records, draft: displayDraft, record,
-    pendingDeletions: collection.pendingDeletions, hasMore: collection.hasMore, refreshing: collection.refreshing,
+    pendingDeletions: collection.pendingDeletions, hasMore: collection.hasMore, refreshing: collection.refreshing, pullRefreshing: collection.pullRefreshing,
     canSaveBeforeLogout: collection.online && Object.values(state.drafts).filter(d => d !== null).every(isSaveableDraft) && !['conflict', 'failed'].includes(state.save_attempt?.state ?? ''),
     sessionRestoreStatus: session.sessionRestoreStatus, retrySessionRestore: session.retrySessionRestore,
     beginSessionReauthentication: session.beginSessionReauthentication, resendSeconds: session.resendSeconds };

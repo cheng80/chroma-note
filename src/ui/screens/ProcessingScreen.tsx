@@ -31,7 +31,7 @@ export function ProcessingScreen({ locale, images, draft, active_job, model_stat
   return (
     <Screen title={preparing ? t.preparingHeader : t.processingHeader} onBack={onCancel} backLabel={t.back} footer={footer} contentStyle={styles.content}>
       {failed ? <Notice message={error} tone="error" /> : null}
-      <StampImage source={source} accessibilityLabel={locale === 'ko' ? '처리 중인 원본 사진' : 'Photo being processed'} resizeMode="contain" style={styles.photo} />
+      <StampImage source={source} processing={!failed && Boolean(active_job)} accessibilityLabel={locale === 'ko' ? '처리 중인 원본 사진' : 'Photo being processed'} resizeMode="contain" style={styles.photo} />
       {!failed ? <><SemanticText accessibilityRole="header" style={styles.title}>{preparing ? t.preparingTitle : t.processingTitle}</SemanticText>
         <SemanticText style={styles.body}>{preparing ? t.preparingBody : t.processingBody}</SemanticText></> : null}
       {preparing ? <ProcessingStep label={t.preparingNotice} status="active" statusLabel={t.stepStatus.active} /> : <>{steps.map((step, index) => { const status = statusFor(step, index); return <ProcessingStep key={step} label={t.steps[step]} status={status} statusLabel={t.stepStatus[status]} />; })}</>}

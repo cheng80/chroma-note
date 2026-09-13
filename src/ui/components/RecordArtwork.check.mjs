@@ -38,6 +38,7 @@ for (const locale of ['ko', 'en']) {
   const output = render({ exportMode: true, onImagePress() {} });
   assert.equal(output.filter(node => node.type === 'LineArtDisclaimer').length, 0, 'export must omit the conversion notice');
   assert.equal(output.filter(node => node.type === 'StampImage').length, 1);
+  assert.equal(output.find(node => node.type === 'StampImage').props.reveal, 'none', 'capture must never contain an image fade, skeleton or completion badge');
   assert.equal(output.filter(node => node.type === 'Pressable').length, 0);
   assert.equal(render({ imageMissing: true }).filter(node => node.type === 'LineArtDisclaimer').length, 0);
   for (const value of ['Memo\n\nAI writing', 'Place', '#Object', '#Calm']) {

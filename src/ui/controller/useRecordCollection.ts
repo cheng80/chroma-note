@@ -15,16 +15,16 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
   const reportedConflicts = useRef(new Set<string>());
   const [online, setOnline] = useState(false);
   const [pendingDeletions, setPendingDeletions] = useState<string[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshKind, setRefreshKind] = useState<'pull' | 'background' | null>(null);
   const [hasMore, setHasMore] = useState(false);
 
-  const refresh = useCallback(async (more = false) => {
+  const refresh = useCallback(async (more = false, fromGesture = false) => {
     const snapshot = getState();
     const session = snapshot.session;
     if (!session || (more && !cursor.current)) return;
     let request = operations.request(session, true);
     if (!request) return;
-    setRefreshing(true);
+    setRefreshKind(fromGesture ? 'pull' : 'background');
     try {
       const deletions = await readRecordDeletions(session.owner_id);
       if (!operations.accepts(request)) return;
@@ -88,7 +88,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
         const cachedState = bookState({ ...getState(), records: cached });
         await apply({ ...cachedState, book_state: cachedState.book_state === 'ready' ? 'partial-cache' : cachedState.book_state }, false);
       });
-    } finally { if (isMounted() && request && operations.isLatest(request)) setRefreshing(false); }
+    } finally { if (isMounted() && request && operations.isLatest(request)) setRefreshKind(null); }
   }, [apply, enqueue, getState, isCurrent, isMounted, notice, operations, rejectSession]);
 
   const sessionChanged = useCallback((refreshRecords: boolean) => {
@@ -102,7 +102,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
       reportedConflicts.current.clear();
       setOnline(false);
       setPendingDeletions([]);
-      setRefreshing(false);
+      setRefreshKind(null);
     }
     if (session && refreshRecords) void refresh();
   }, [getState, operations, refresh]);
@@ -112,7 +112,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
     const session = s.session;
     if (!session) return false;
     if (action.type === 'retry-book' || action.type === 'retry-image' || action.type === 'load-more') {
-      void refresh(action.type === 'load-more');
+      void refresh(action.type === 'load-more', action.type === 'retry-book');
       return true;
     }
     if (action.type === 'open-detail') {
@@ -168,5 +168,5 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
     return true;
   }, [apply, enqueue, getState, isCurrent, notice, operations, refresh, rejectSession]);
 
-  return { handle, refresh, sessionChanged, online, pendingDeletions, refreshing, hasMore };
+  return { handle, refresh, sessionChanged, online, pendingDeletions, refreshing: refreshKind !== null, pullRefreshing: refreshKind === 'pull', hasMore };
 }

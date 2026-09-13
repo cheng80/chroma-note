@@ -42,7 +42,7 @@ export function CompareScreen({ locale, images, draft, active_tab, busy, blockin
         <IconButton label={t.openOriginal} onPress={onOpenOriginal}><AppIcon name="expand" /></IconButton>
       </View>
         <Reanimated.View style={imageStyle}>
-          <StampImage source={source} accessibilityLabel={active_tab === 'photo' ? t.photo : t.stamp} resizeMode="contain" style={styles.image} />
+          <StampImage source={source} reveal={active_tab === 'stamp' ? 'pop' : 'fade'} completionLabel={locale === 'ko' ? '컬러 스케치가 완성됐어요.' : 'Your color sketch is ready.'} accessibilityLabel={active_tab === 'photo' ? t.photo : t.stamp} resizeMode="contain" style={styles.image} />
           {active_tab === 'stamp' && selected ? <LineArtDisclaimer locale={locale} /> : null}
         </Reanimated.View>
         <SemanticText style={styles.hint}>{t.compareHint}</SemanticText>
