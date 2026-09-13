@@ -51,7 +51,7 @@ class ChromaAnalysisModule : Module() {
     }
     AsyncFunction("unloadAsync") { promise: Promise ->
       val accepted = synchronized(lock) {
-        if (activeJob != null || unloading || destroyed) false else { unloading = true; true }
+        if ((activeJob != null && !cancelled) || unloading || destroyed) false else { unloading = true; true }
       }
       if (!accepted) promise.reject("analysis_busy", "analysis_busy", null)
       else work.execute {
@@ -98,7 +98,7 @@ class ChromaAnalysisModule : Module() {
         promise.resolve(result)
       } catch (error: Throwable) {
         synchronized(lock) {
-          if (errorCode(error) in setOf("analysis_model_load_failed", "analysis_vision_load_failed", "analysis_out_of_memory", "analysis_tokenize_failed", "analysis_image_eval_failed", "analysis_decode_failed")) {
+          if (cancelled || errorCode(error) in setOf("analysis_model_load_failed", "analysis_vision_load_failed", "analysis_out_of_memory", "analysis_tokenize_failed", "analysis_image_eval_failed", "analysis_decode_failed")) {
             engine?.close(); engine = null
           }
           if (activeJob == id) activeJob = null

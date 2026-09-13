@@ -2,6 +2,8 @@
 #include "llama.h"
 #include "mtmd.h"
 #include "mtmd-helper.h"
+// The batching helper is tied to our manifest-pinned llama.cpp revision.
+#include "mtmd-helper-common.h"
 #include "gpu-policy.h"
 #include <android/log.h>
 #include <dlfcn.h>
@@ -15,6 +17,8 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <sys/stat.h>
+#include <sys/sysinfo.h>
 #include <vector>
 
 // The pinned backend calls this Vulkan 1.1 entry directly. Resolve it at runtime
@@ -36,16 +40,23 @@ struct Engine {
     llama_model * model = nullptr;
     mtmd_context * vision = nullptr;
     ggml_backend_dev_t gpu = nullptr;
+    ggml_backend_dev_t visionGpu = nullptr;
+    bool memoryConstrained = false;
+    unsigned graphNodes = 0;
     bool gpuRejected = false;
     std::string modelPath, visionPath;
     void unload() {
         if (vision) mtmd_free(vision);
         if (model) llama_model_free(model);
-        vision = nullptr; model = nullptr; gpu = nullptr;
+        vision = nullptr; model = nullptr; gpu = nullptr; visionGpu = nullptr;
     }
     ~Engine() { unload(); }
     void check() const { if (cancelled.load()) throw std::runtime_error("analysis_cancelled"); }
 };
+
+const char * backendName(const Engine & e) {
+    return e.gpu ? "vulkan" : e.visionGpu ? "cpu+vulkan_vision" : "cpu";
+}
 
 using Clock = std::chrono::steady_clock;
 long long elapsed(Clock::time_point start) {
@@ -57,7 +68,8 @@ ggml_backend_dev_t selectGpu() {
         auto type = ggml_backend_dev_type(device);
         if (chroma::hardwareVulkan(ggml_backend_reg_name(ggml_backend_dev_backend_reg(device)),
                                   ggml_backend_dev_description(device),
-                                  type == GGML_BACKEND_DEVICE_TYPE_GPU || type == GGML_BACKEND_DEVICE_TYPE_IGPU)) return device;
+                                  type == GGML_BACKEND_DEVICE_TYPE_GPU || type == GGML_BACKEND_DEVICE_TYPE_IGPU) &&
+            !chroma::preferCpu(ggml_backend_dev_description(device))) return device;
     }
     return nullptr;
 }
@@ -65,6 +77,12 @@ ggml_backend_dev_t selectGpu() {
 void discardLog(ggml_log_level, const char *, void *) {}
 bool keepLoading(float, void * data) { return !static_cast<Engine *>(data)->cancelled.load(); }
 bool abortDecode(void * data) { return static_cast<Engine *>(data)->cancelled.load(); }
+bool checkGraph(ggml_tensor *, bool ask, void * data) {
+    auto & e = *static_cast<Engine *>(data);
+    // Split vision and language graphs at bounded intervals so a timed-out job can
+    // finish cancellation before the following sketch asks to reclaim memory.
+    return ask ? e.cancelled.load() || ++e.graphNodes % 32 == 0 : !e.cancelled.load();
+}
 int threadCount() { return static_cast<int>(std::max(1u, std::min(6u, std::max(2u, std::thread::hardware_concurrency()) - 1))); }
 Engine & engine(jlong handle) {
     if (!handle) throw std::runtime_error("analysis_model_load_failed");
@@ -95,6 +113,19 @@ void rejectCurrent(JNIEnv * env) {
     catch (...) { reject(env, "analysis_failed"); }
 }
 
+llama_model * loadLanguage(Engine & e, ggml_backend_dev_t gpu, int layers) {
+    ggml_backend_dev_t devices[] = {gpu, nullptr};
+    auto params = llama_model_default_params();
+    params.devices = devices;
+    params.n_gpu_layers = layers;
+    params.split_mode = LLAMA_SPLIT_MODE_NONE;
+    params.load_mode = LLAMA_LOAD_MODE_MMAP;
+    params.use_extra_bufts = !e.memoryConstrained;
+    params.progress_callback = keepLoading;
+    params.progress_callback_user_data = &e;
+    return llama_model_load_from_file(e.modelPath.c_str(), params);
+}
+
 void prepare(Engine & e, const std::string & modelPath, const std::string & visionPath) {
     e.check();
     if (e.model && e.vision) return;
@@ -115,35 +146,45 @@ void prepare(Engine & e, const std::string & modelPath, const std::string & visi
     });
     e.unload();
     e.modelPath = modelPath; e.visionPath = visionPath;
-    e.gpu = e.gpuRejected ? nullptr : selectGpu();
+    struct sysinfo memory {};
+    struct stat modelFile {}, visionFile {};
+    const bool measured = sysinfo(&memory) == 0 && stat(modelPath.c_str(), &modelFile) == 0 &&
+                          stat(visionPath.c_str(), &visionFile) == 0 && modelFile.st_size > 0 && visionFile.st_size > 0;
+    const uint64_t totalMemory = measured ? static_cast<uint64_t>(memory.totalram) * memory.mem_unit : 0;
+    const uint64_t weightBytes = measured ? static_cast<uint64_t>(modelFile.st_size) + visionFile.st_size : 0;
+    const bool visionFits = measured && chroma::fitsGpuMemory(totalMemory, visionFile.st_size);
+    auto availableGpu = e.gpuRejected || !visionFits ? nullptr : selectGpu();
+    e.memoryConstrained = chroma::stageModels(totalMemory, weightBytes);
+    e.gpu = !e.memoryConstrained ? availableGpu : nullptr;
+    e.visionGpu = availableGpu;
+    __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s memory_policy=%s ram_mib=%llu weights_mib=%llu",
+                        backendName(e), e.memoryConstrained ? "staged" : "gpu_eligible",
+                        static_cast<unsigned long long>(totalMemory / (1024 * 1024)),
+                        static_cast<unsigned long long>(weightBytes / (1024 * 1024)));
     auto started = Clock::now();
     try {
-        ggml_backend_dev_t devices[] = {e.gpu, nullptr};
-        auto modelParams = llama_model_default_params();
-        modelParams.devices = devices; // An empty list explicitly excludes GPU on CPU fallback.
-        modelParams.n_gpu_layers = e.gpu ? 999 : 0;
-        modelParams.split_mode = LLAMA_SPLIT_MODE_NONE;
-        modelParams.load_mode = LLAMA_LOAD_MODE_MMAP;
-        modelParams.progress_callback = keepLoading;
-        modelParams.progress_callback_user_data = &e;
-        e.model = llama_model_load_from_file(modelPath.c_str(), modelParams);
+        e.model = loadLanguage(e, e.gpu, e.gpu ? 999 : 0);
         e.check();
         if (!e.model) throw std::runtime_error("analysis_model_load_failed");
         auto visionParams = mtmd_context_params_default();
-        visionParams.use_gpu = e.gpu != nullptr;
-        visionParams.device = e.gpu;
+        visionParams.use_gpu = e.visionGpu != nullptr;
+        visionParams.device = e.visionGpu;
         visionParams.image_max_tokens = 256;
         visionParams.n_threads = threadCount();
         visionParams.warmup = false;
         visionParams.progress_callback = keepLoading;
         visionParams.progress_callback_user_data = &e;
+        if (e.memoryConstrained) {
+            visionParams.cb_eval = checkGraph;
+            visionParams.cb_eval_user_data = &e;
+        }
         e.vision = mtmd_init_from_file(visionPath.c_str(), e.model, visionParams);
         e.check();
         if (!e.vision || !mtmd_support_vision(e.vision)) throw std::runtime_error("analysis_vision_load_failed");
         __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s prepare_ms=%lld",
-                            e.gpu ? "vulkan" : "cpu", elapsed(started));
+                            backendName(e), elapsed(started));
     } catch (...) {
-        bool retry = e.gpu && !e.cancelled.load();
+        bool retry = (e.gpu || e.visionGpu) && !e.cancelled.load();
         e.unload();
         if (!retry) throw;
         e.gpuRejected = true;
@@ -162,23 +203,111 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
     return size > 0 ? std::string(buffer.data(), static_cast<size_t>(size)) : std::string();
 }
 
+struct EncodedImage {
+    std::vector<float> embeddings;
+    std::vector<mtmd_decoder_pos> positions;
+    int tokens = 0;
+    llama_pos positionCount = 0;
+    bool nonCausal = false;
+};
+
+std::vector<EncodedImage> encodeImages(Engine & e, const mtmd_input_chunks * chunks) {
+    const auto started = Clock::now();
+    const int width = llama_model_n_embd_inp(e.model);
+    std::vector<EncodedImage> images(mtmd_input_chunks_size(chunks));
+    llama_pos position = 0;
+    for (size_t i = 0; i < images.size(); ++i) {
+        e.check();
+        const auto chunk = mtmd_input_chunks_get(chunks, i);
+        const auto type = mtmd_input_chunk_get_type(chunk);
+        if (type == MTMD_INPUT_CHUNK_TYPE_IMAGE) {
+            auto & image = images[i];
+            image.tokens = static_cast<int>(mtmd_input_chunk_get_n_tokens(chunk));
+            image.positionCount = mtmd_input_chunk_get_n_pos(chunk);
+            if (width <= 0 || image.tokens <= 0 || image.tokens > 2048) throw std::runtime_error("analysis_invalid_image");
+            image.nonCausal = mtmd_decode_use_non_causal(e.vision, chunk);
+            if (mtmd_decode_use_mrope(e.vision)) {
+                image.positions.resize(image.tokens);
+                mtmd_helper_image_get_decoder_pos(mtmd_input_chunk_get_tokens_image(chunk), position, image.positions.data());
+            }
+            e.graphNodes = 0;
+            __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s vision_start tokens=%d width=%d", backendName(e), image.tokens, width);
+            const int status = mtmd_encode_chunk(e.vision, chunk);
+            e.check();
+            if (status != 0) throw std::runtime_error("analysis_image_eval_failed");
+            const float * data = mtmd_get_output_embd(e.vision);
+            if (!data) throw std::runtime_error("analysis_image_eval_failed");
+            image.embeddings.assign(data, data + static_cast<size_t>(image.tokens) * width);
+        } else if (type != MTMD_INPUT_CHUNK_TYPE_TEXT) {
+            throw std::runtime_error("analysis_invalid_image");
+        }
+        position += mtmd_input_chunk_get_n_pos(chunk);
+    }
+    __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s vision_ms=%lld release=vision_before_language",
+                        backendName(e), elapsed(started));
+    mtmd_free(e.vision);
+    e.vision = nullptr;
+    e.visionGpu = nullptr;
+    return images;
+}
+
+int decodeImage(llama_context * context, EncodedImage & image, int batchSize, llama_pos & position) {
+    decode_embd_batch batch(image.embeddings.data(), image.tokens, image.positions.empty() ? 1 : 4,
+                           llama_model_n_embd_inp(llama_get_model(context)));
+    if (image.positions.empty()) batch.set_position_normal(position, 0);
+    else batch.set_position_mrope_2d(image.positions, 0);
+    if (image.nonCausal) llama_set_causal_attn(context, false);
+    int status = 0;
+    for (int offset = 0; offset < image.tokens && status == 0; offset += batchSize) {
+        status = llama_decode(context, batch.get_view(offset, std::min(batchSize, image.tokens - offset)));
+    }
+    if (image.nonCausal) llama_set_causal_attn(context, true);
+    if (status == 0) position += image.positionCount;
+    return status;
+}
+
+void prepareLanguageGpu(Engine & e) {
+    if (!e.memoryConstrained || e.gpuRejected) return;
+    struct sysinfo memory {};
+    struct stat modelFile {};
+    if (sysinfo(&memory) != 0 || stat(e.modelPath.c_str(), &modelFile) != 0 || modelFile.st_size <= 0) return;
+    const int totalLayers = llama_model_n_layer(e.model);
+    const int layers = chroma::languageGpuLayers(static_cast<uint64_t>(memory.totalram) * memory.mem_unit,
+                                               modelFile.st_size, totalLayers);
+    auto gpu = layers > 0 ? selectGpu() : nullptr;
+    if (!gpu) return;
+    e.check();
+    const auto started = Clock::now();
+    // The image embeddings own their data now; the vision GPU allocation and
+    // old CPU weight mapping are both gone before loading language GPU layers.
+    llama_model_free(e.model);
+    e.model = nullptr;
+    e.gpu = gpu;
+    e.model = loadLanguage(e, gpu, layers);
+    e.check();
+    if (!e.model) throw std::runtime_error("analysis_model_load_failed");
+    __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=vulkan language_gpu_layers=%d/%d language_load_ms=%lld",
+                        layers, totalLayers + 1, elapsed(started));
+}
+
 std::string generate(Engine & e, const std::string & imagePath, const std::string & prompt, int maxTokens) {
     auto started = Clock::now();
     e.check();
     if (!e.model || !e.vision) throw std::runtime_error("analysis_model_load_failed");
     auto contextParams = llama_context_default_params();
     contextParams.n_ctx = 2048;
-    contextParams.n_batch = 512;
-    contextParams.n_ubatch = 128;
+    contextParams.n_batch = e.memoryConstrained ? 256 : 512;
+    contextParams.n_ubatch = e.memoryConstrained ? 64 : 128;
     contextParams.n_threads = threadCount();
     contextParams.n_threads_batch = threadCount();
     contextParams.offload_kqv = e.gpu != nullptr;
     contextParams.op_offload = e.gpu != nullptr;
     contextParams.abort_callback = abortDecode;
     contextParams.abort_callback_data = &e;
-    std::unique_ptr<llama_context, decltype(&llama_free)> context(llama_init_from_model(e.model, contextParams), llama_free);
-    if (!context) throw std::runtime_error("analysis_out_of_memory");
-
+    if (e.memoryConstrained) {
+        contextParams.cb_eval = checkGraph;
+        contextParams.cb_eval_user_data = &e;
+    }
     auto image = mtmd_helper_bitmap_init_from_file(e.vision, imagePath.c_str(), false, mtmd_helper_init_opt_default());
     std::unique_ptr<mtmd_bitmap, decltype(&mtmd_bitmap_free)> bitmap(image.bitmap, mtmd_bitmap_free);
     if (image.video_ctx) mtmd_helper_video_free(image.video_ctx);
@@ -195,13 +324,38 @@ std::string generate(Engine & e, const std::string & imagePath, const std::strin
     std::unique_ptr<mtmd_input_chunks, decltype(&mtmd_input_chunks_free)> chunks(mtmd_input_chunks_init(), mtmd_input_chunks_free);
     if (!chunks || mtmd_tokenize(e.vision, chunks.get(), &input, bitmaps, 1) != 0) throw std::runtime_error("analysis_tokenize_failed");
     bitmap.reset();
+    auto encodedImages = e.memoryConstrained ? encodeImages(e, chunks.get()) : std::vector<EncodedImage>{};
+    e.check();
+    prepareLanguageGpu(e);
+    contextParams.offload_kqv = e.gpu != nullptr;
+    contextParams.op_offload = e.gpu != nullptr;
+    const auto contextStarted = Clock::now();
+    std::unique_ptr<llama_context, decltype(&llama_free)> context(llama_init_from_model(e.model, contextParams), llama_free);
+    if (!context) throw std::runtime_error("analysis_out_of_memory");
+    __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s context_ms=%lld", backendName(e), elapsed(contextStarted));
     llama_pos nPast = 0;
     e.check();
-    int status = mtmd_helper_eval_chunks(e.vision, context.get(), chunks.get(), 0, 0, contextParams.n_batch, true, &nPast);
+    int status = 0;
+    if (e.memoryConstrained) {
+        for (size_t i = 0; i < encodedImages.size(); ++i) {
+            e.check();
+            auto & encoded = encodedImages[i];
+            // The pinned text helper never accesses the vision context.
+            status = encoded.embeddings.empty()
+                ? mtmd_helper_eval_chunk_single(nullptr, context.get(), mtmd_input_chunks_get(chunks.get(), i),
+                    nPast, 0, contextParams.n_batch, i + 1 == encodedImages.size(), &nPast)
+                : decodeImage(context.get(), encoded, contextParams.n_batch, nPast);
+            if (status != 0) break;
+        }
+        encodedImages.clear();
+    } else {
+        status = mtmd_helper_eval_chunks(e.vision, context.get(), chunks.get(), 0, 0, contextParams.n_batch, true, &nPast);
+    }
     chunks.reset();
     e.check();
     if (status != 0) throw std::runtime_error("analysis_image_eval_failed");
     auto prefillMs = elapsed(started);
+    __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis", "backend=%s prefill_ms=%lld input_tokens=%d", backendName(e), prefillMs, nPast);
 
     std::unique_ptr<llama_sampler, decltype(&llama_sampler_free)> sampler(llama_sampler_chain_init(llama_sampler_chain_default_params()), llama_sampler_free);
     if (!sampler) throw std::runtime_error("analysis_out_of_memory");
@@ -225,7 +379,7 @@ std::string generate(Engine & e, const std::string & imagePath, const std::strin
     if (output.empty()) throw std::runtime_error("analysis_no_valid_output");
     __android_log_print(ANDROID_LOG_INFO, "ChromaAnalysis",
                         "backend=%s prefill_ms=%lld decode_ms=%lld total_ms=%lld output_tokens=%d",
-                        e.gpu ? "vulkan" : "cpu", prefillMs, elapsed(started) - prefillMs,
+                        backendName(e), prefillMs, elapsed(started) - prefillMs,
                         elapsed(started), generatedTokens);
     return output;
 }
@@ -261,7 +415,7 @@ Java_com_cheng80_chromaanalysis_AnalysisEngine_nativeGenerate(JNIEnv * env, jobj
         std::string output;
         try { output = generate(e, imagePath, prompt, maxTokens); }
         catch (const std::exception & error) {
-            if (!e.gpu || e.cancelled.load() ||
+            if ((!e.gpu && !e.visionGpu) || e.cancelled.load() ||
                 (!chroma::retryOnCpu(error.what()) && dynamic_cast<const std::bad_alloc *>(&error) == nullptr)) throw;
             e.gpuRejected = true;
             e.unload();
@@ -269,6 +423,7 @@ Java_com_cheng80_chromaanalysis_AnalysisEngine_nativeGenerate(JNIEnv * env, jobj
             prepare(e, e.modelPath, e.visionPath);
             output = generate(e, imagePath, prompt, maxTokens);
         }
+        if (e.memoryConstrained) e.unload();
         auto result = env->NewByteArray(static_cast<jsize>(output.size()));
         if (result) env->SetByteArrayRegion(result, 0, static_cast<jsize>(output.size()), reinterpret_cast<const jbyte *>(output.data()));
         return result;
