@@ -315,6 +315,8 @@ Qwen 본체와 vision projector는 앱 내 `modules/chroma-analysis/model-manife
 
 `ModelAssetStore`가 다운로드·부분 파일·검증·설치 경로를 한 곳에서 관리한다. 완성 파일은 계정 데이터와 분리한 백업 제외 `Application Support/chroma-models`에 저장하고 추론은 이 경로만 사용한다. llama.cpp 준비 스크립트는 라이브러리·헤더와 두 JSON을 준비하며 Qwen 가중치를 복사하지 않는다. Informative Drawings `style1`의 컴파일된 선화 모델 약 8.6MB만 앱에 내장한다.
 
+Android 저장 위치는 `noBackupFilesDir/chroma-models/<sha256>/`이다. 추론을 위한 파일 검사는 전역 다운로드 상태를 변경하지 않으며, 실제 설치·다운로드 작업이 없는 사진 선택기 백그라운드 전환은 준비 완료 상태를 유지한다. 같은 프로세스에서 검증한 안정된 파일은 장치·inode·크기·나노초 수정/변경 시각으로 재사용한다. 최근 수정·설치와 미래 시각, API 27 미만 또는 메타데이터 조회 불가, 파일 변경·프로세스 재시작은 전체 SHA-256 검사를 유지한다. 엔진의 메모리 준비와 파일 설치 상태는 구분한다.
+
 출력 품질 승인과 iOS/Android 호환성은 별도 게이트다. Mac에서 실행된다는 이유로 ONNX/ExecuTorch/Core ML/LiteRT가 자동 지원한다고 쓰지 않는다. 변환·양자화가 허용되는지와 학습을 요구하는지를 확인하고, 형식 변환 후 동일 사진군을 다시 비교한다.
 
 ## 11. 검증 연결과 이번 미실행 범위

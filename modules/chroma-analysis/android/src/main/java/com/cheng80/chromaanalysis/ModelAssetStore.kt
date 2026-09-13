@@ -1,6 +1,8 @@
 package com.cheng80.chromaanalysis
 
 import android.content.Context
+import android.os.Build
+import android.system.Os
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.ByteArrayOutputStream
@@ -25,6 +27,8 @@ class ModelAssetStore internal constructor(
   private val emit: (Map<String, Any?>) -> Unit,
   private val connect: (URL) -> HttpsURLConnection = { it.openConnection() as HttpsURLConnection },
   private val availableBytes: (File) -> Long = { it.usableSpace },
+  private val verificationInput: (File) -> InputStream = { it.inputStream() },
+  private val fileStamp: (File) -> FileStamp? = ::androidFileStamp,
 ) {
   constructor(context: Context, emit: (Map<String, Any?>) -> Unit) : this(
     File(context.noBackupFilesDir, "chroma-models"),
@@ -43,9 +47,16 @@ class ModelAssetStore internal constructor(
   private var connection: HttpsURLConnection? = null
   private var state = State()
   private var lastEmitted: Map<String, Any?>? = null
-  // Only io owns manifest, installed and filesystem operations; gate owns lifecycle and events.
+  // Only io owns manifest, installed, receipts and filesystem operations; gate owns lifecycle and events.
   private var manifest: Manifest? = null
   private val installed = mutableSetOf<String>()
+  private val verified = mutableMapOf<File, FileStamp>()
+
+  internal data class FileStamp(
+    val device: Long, val inode: Long, val bytes: Long,
+    val modifiedSeconds: Long, val modifiedNanos: Long,
+    val changedSeconds: Long, val changedNanos: Long,
+  )
 
   private data class State(
     val status: String = "checking", val downloadedBytes: Long = 0, val totalBytes: Long = 0,
@@ -57,15 +68,17 @@ class ModelAssetStore internal constructor(
     )
   }
 
-  /** Hashes local bytes first, without ever consulting a remote catalog. */
+  /** Checks local bytes first, reusing unchanged files verified by this store; never needs a catalog. */
   fun getStatus(): Map<String, Any?> {
     synchronized(gate) { if (active || closed) return state.map() }
     return io.withLock {
       val token = synchronized(gate) {
         if (active || closed) return state.map()
+        active = true
         generation
       }
       try { loadManifest(token); inspect(token) } catch (error: Exception) { fail(token, error) }
+      finally { synchronized(gate) { if (generation == token) active = false } }
       synchronized(gate) { state.map() }
     }
   }
@@ -105,6 +118,8 @@ class ModelAssetStore internal constructor(
     val old: HttpsURLConnection?
     val result: Map<String, Any?>
     synchronized(gate) {
+      // A native photo picker backgrounds the Activity too. Only actual setup work is pausable.
+      if (!active) return state.map()
       ++generation
       active = false
       old = connection
@@ -131,8 +146,8 @@ class ModelAssetStore internal constructor(
         if (active) throw Failure("analysis_model_missing")
         generation
       }
-      loadManifest(token, emitChanges = false)
-      inspect(token, emitChanges = false)
+      loadManifest(token, publishState = false)
+      inspect(token, publishState = false)
       synchronized(gate) {
         checkCurrent(token)
         if (installed.size != ROLES.size) {
@@ -154,12 +169,14 @@ class ModelAssetStore internal constructor(
     if (closed || generation != token) throw Failure("analysis_cancelled")
   }
 
-  private fun update(token: Long, emitChanges: Boolean = true, change: (State) -> State) = synchronized(gate) {
+  private fun update(token: Long, publishState: Boolean = true, change: (State) -> State) = synchronized(gate) {
     checkCurrent(token)
+    // Internal inference validation must not even transiently change the shared setup snapshot.
+    if (!publishState) return@synchronized
     val next = change(state)
     state = next.copy(downloadedBytes = next.downloadedBytes.coerceIn(0, next.totalBytes))
     if (next.status == "ready") active = false
-    if (emitChanges) emitLocked()
+    emitLocked()
   }
 
   private fun emitLocked() {
@@ -181,10 +198,10 @@ class ModelAssetStore internal constructor(
     emitLocked()
   }
 
-  private fun loadManifest(token: Long, emitChanges: Boolean = true) {
+  private fun loadManifest(token: Long, publishState: Boolean = true) {
     checkCurrent(token)
     if (manifest != null) {
-      update(token, emitChanges) { it.copy(totalBytes = manifest!!.files.values.sumOf { file -> file.bytes }) }
+      update(token, publishState) { it.copy(totalBytes = manifest!!.files.values.sumOf { file -> file.bytes }) }
       return
     }
     val parsed = try {
@@ -192,23 +209,23 @@ class ModelAssetStore internal constructor(
     } catch (_: Exception) { throw Failure("model_manifest_invalid") }
     ensureDirectory(root)
     manifest = parsed
-    update(token, emitChanges) { it.copy(totalBytes = parsed.files.values.sumOf { file -> file.bytes }) }
+    update(token, publishState) { it.copy(totalBytes = parsed.files.values.sumOf { file -> file.bytes }) }
   }
 
-  private fun inspect(token: Long, emitChanges: Boolean = true) {
+  private fun inspect(token: Long, publishState: Boolean = true) {
     val previous = synchronized(gate) { state }
     installed.clear()
     for (role in ROLES) {
       checkCurrent(token)
       val file = destination(role)
       if (!regular(file) || file.length() != spec(role).bytes) continue
-      update(token, emitChanges) { it.copy(status = "checking", currentFile = role, errorCode = null) }
+      update(token, publishState) { it.copy(status = "checking", currentFile = role, errorCode = null) }
       try { verify(file, spec(role), token); installed.add(role) }
       catch (error: Failure) { if (error.message != "model_integrity_failed") throw error }
     }
     val partialRole = ROLES.firstOrNull { it !in installed && resume(it) != null }
     val bytes = installedBytes() + (partialRole?.let { partial(it).length() } ?: 0)
-    update(token, emitChanges) {
+    update(token, publishState) {
       val status = when {
         installed.size == 2 -> "ready"
         previous.status == "failed" -> "failed"
@@ -327,6 +344,8 @@ class ModelAssetStore internal constructor(
       checkCurrent(token)
       // Same-directory rename is atomic on Android; no copy or second full-size allocation.
       if (!partial(role).renameTo(destination(role))) throw Failure("model_storage_failed")
+      verified.remove(partial(role))
+      verified.remove(destination(role))
       installed.add(role)
       remove(metadata(role))
     }
@@ -334,10 +353,14 @@ class ModelAssetStore internal constructor(
 
   private fun verify(path: File, file: AssetFile, token: Long) {
     if (!regular(path) || path.length() != file.bytes) throw Failure("model_integrity_failed")
+    val before = fileStamp(path)
+    checkCurrent(token)
+    if (before != null && verified[path] == before) return
+    verified.remove(path)
     val modified = path.lastModified()
     val digest = MessageDigest.getInstance("SHA-256")
     var count = 0L
-    path.inputStream().use { input ->
+    verificationInput(path).use { input ->
       val buffer = ByteArray(BUFFER_SIZE)
       while (true) {
         checkCurrent(token)
@@ -349,9 +372,15 @@ class ModelAssetStore internal constructor(
       }
     }
     checkCurrent(token)
+    val after = fileStamp(path)
     val actual = digest.digest().joinToString("") { "%02x".format(it) }
     if (count != file.bytes || path.length() != count || path.lastModified() != modified || !regular(path)
-      || actual != file.sha256) throw Failure("model_integrity_failed")
+      || before != after || actual != file.sha256) throw Failure("model_integrity_failed")
+    // Android can report the exact same nanosecond timestamp for multiple writes in one clock
+    // tick. Never retain a receipt from that fresh-write window (or a future wall-clock time).
+    // A just-installed file may therefore need one more SHA pass before becoming reusable.
+    if (after != null && after.modifiedSeconds < System.currentTimeMillis() / 1000 - 1
+      && after.changedSeconds < System.currentTimeMillis() / 1000 - 1) verified[path] = after
   }
 
   private fun <T> request(url: URL, token: Long, offset: Long = 0, etag: String? = null,
@@ -421,6 +450,7 @@ class ModelAssetStore internal constructor(
   }
   private fun resetPartial(role: String) { remove(partial(role)); remove(metadata(role)) }
   private fun remove(file: File) {
+    verified.remove(file)
     safePath(file)
     if (file.exists() && !file.delete()) throw Failure("model_storage_failed")
   }
@@ -490,6 +520,16 @@ class ModelAssetStore internal constructor(
     val RANGE = Regex("bytes (0|[1-9][0-9]*)-(0|[1-9][0-9]*)/(0|[1-9][0-9]*)")
     const val JSON_LIMIT = 64 * 1024
     const val BUFFER_SIZE = 256 * 1024
+
+    fun androidFileStamp(file: File): FileStamp? {
+      // Nanosecond mtime/ctime are public from API 27. Older devices still perform full SHA-256.
+      if (Build.VERSION.SDK_INT < 27) return null
+      return try {
+        val stat = Os.lstat(file.path)
+        FileStamp(stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtim.tv_sec, stat.st_mtim.tv_nsec,
+          stat.st_ctim.tv_sec, stat.st_ctim.tv_nsec)
+      } catch (_: Exception) { null }
+    }
 
     fun secureURL(raw: String): URL {
       try {

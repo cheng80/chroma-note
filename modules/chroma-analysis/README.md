@@ -56,6 +56,10 @@ Android SDK·NDK·CMake 3.22.1 환경에서 앱 Gradle 빌드가 JNI 라이브�
 
 Android `ModelAssetStore`는 `noBackupFilesDir/chroma-models/<sha256>/`에 모델을 저장한다. 상태 조회와 다운로드 시작은 원격 조회보다 로컬 크기·SHA-256 검사를 먼저 수행한다(hash-first). 두 파일이 정상이면 NAS 없이 재사용하며, 추론 경로를 반환하기 전에도 검증한다. 필요한 파일만 받을 때 최신 NAS JSON을 조회하고 HTTP 404에만 번들 주소를 사용한다. HTTPS 위반·잘못된 JSON·다른 서버 오류는 실패로 처리한다.
 
+Android의 추론용 내부 검사는 다운로드 상태와 이벤트를 변경하지 않는다. 사진 선택기가 Activity를 백그라운드로 보내도 실제 설치·다운로드 작업이 없으면 `pause()`는 완료 상태와 진행 중인 내부 검사를 유지한다. 같은 store에서 SHA-256을 통과한 파일은 장치·inode·크기·수정/변경 시각이 같으면 전체 해시를 반복하지 않는다. [Android `StructStat`](https://developer.android.com/reference/android/system/StructStat)의 나노초 필드는 API 27 이상에서 사용하며, 정확한 메타데이터가 없으면 전체 해시를 수행한다. 같은 파일시스템 시계 틱의 변경을 놓치지 않도록 최근 1~2초 내 수정·설치 파일과 미래 시각은 재사용 확인 대상으로 보관하지 않는다. 새 설치 파일은 안정된 시점의 검사가 한 번 더 필요할 수 있고, 앱 프로세스 재시작·파일 변경 시에는 다시 해시한다.
+
+`python3 modules/chroma-analysis/tests/android/run-model-assets-tests.py`는 실제 Kotlin store를 호스트에서 검사한다. `--device <adb serial>`은 API 27 이상 Android의 ART와 실제 `Os.lstat`으로 같은 검사를 실행한다. 23개 시나리오에는 사진 선택기와 같은 백그라운드 중단, 검증 재사용, 크기·mtime을 유지한 손상, 동일한 시각의 연속 변경, 이어받기와 종료 경합을 포함한다. Android 검사는 자체 임시 폴더만 쓰고 삭제하며 설치된 앱·모델·계정 자료나 NAS 전송을 사용하지 않는다.
+
 다운로드는 `HttpsURLConnection`을 사용한다. 일시 정지·백그라운드 진입 시 전송을 멈추고 같은 저장 폴더의 `incoming.part`와 `resume.json`에 부분 파일·URL·ETag·고정 크기/해시를 보존한다. 재시도는 Range와 가능한 경우 If-Range로 이어받으며, URL 변경·유효하지 않은 이어받기 정보·ETag 불일치·서버의 전체 응답에는 해당 파일을 처음부터 받는다. 완성된 다른 파일은 재사용한다. 크기·SHA-256 검증 후 같은 폴더에서 rename으로 설치하고, 미검증 부분 파일은 추론에 전달하지 않는다. 남은 다운로드 크기 외에 64MiB 여유 공간을 요구한다.
 
 JNI는 Vulkan을 포함해 빌드한다. Vulkan 1.2 이상에서 고정 llama.cpp가 지원하는 GPU를 찾고, CPU 장치와 `llvmpipe`·`lavapipe`·`SwiftShader` 등 소프트웨어 GPU를 제외한다. 선택된 같은 GPU에 모델 전체 레이어, vision과 KV 연산을 연결한다. 지원 GPU가 없으면 CPU를 사용하며 GPU 준비 또는 추론의 복구 가능한 실패에는 메모리를 해제하고 CPU로 한 번 재시도한다. 취소·입력 오류는 GPU 재시도 대상이 아니다. 드라이버의 프로세스 종료·OS 메모리 강제 종료까지 복구한다고 보장하지 않는다. 이미지 최대 256토큰·문맥 2048토큰을 사용하며, 직렬 작업 큐에서 엔진을 재사용하고 취소·유휴 해제를 제공한다. Android 입력은 앱 `filesDir`·`cacheDir`·`noBackupFilesDir` 하위의 로컬 `file:` JPEG/PNG이며 30MiB 이하로 제한한다. 앱은 선화 실행 전에 기존 `unloadPhotoAnalysis()`로 VLM 메모리를 해제한다.

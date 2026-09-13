@@ -8,6 +8,9 @@ import java.io.InputStream
 import java.io.RandomAccessFile
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.FileTime
 import java.security.MessageDigest
 import java.security.cert.Certificate
 import java.util.concurrent.CopyOnWriteArrayList
@@ -22,6 +25,13 @@ private fun hash(data: ByteArray) = MessageDigest.getInstance("SHA-256").digest(
 private val hashes = mapOf("model" to hash(model), "vision" to hash(vision))
 private val files = mapOf("model" to model, "vision" to vision)
 private const val ETAG = "\"fixture-one\""
+private fun hostFileStamp(file: File): ModelAssetStore.FileStamp? = try {
+  val attributes = Files.readAttributes(file.toPath(), "unix:dev,ino,size,lastModifiedTime,ctime", LinkOption.NOFOLLOW_LINKS)
+  val modified = (attributes.getValue("lastModifiedTime") as FileTime).toInstant()
+  val changed = (attributes.getValue("ctime") as FileTime).toInstant()
+  ModelAssetStore.FileStamp(attributes.getValue("dev") as Long, attributes.getValue("ino") as Long,
+    attributes.getValue("size") as Long, modified.epochSecond, modified.nano.toLong(), changed.epochSecond, changed.nano.toLong())
+} catch (_: IOException) { null }
 private fun manifest() = JSONObject().put("delivery", JSONObject().put("catalog_url", "https://models.invalid/catalog"))
   .put("files", JSONObject().also { entries ->
     files.forEach { (role, bytes) -> entries.put(role, JSONObject().put("key", role).put("name", "$role.gguf")
@@ -68,16 +78,30 @@ private class Fixture : AutoCloseable {
     return Reply(if (offset > 0) 206 else 200, data.copyOfRange(offset, data.size), headers)
   }
   fun store(storageRoot: File = root, available: (File) -> Long = { space },
-    observer: (Map<String, Any?>) -> Unit = {}): ModelAssetStore = ModelAssetStore(storageRoot, {
-    ByteArrayInputStream(if (it == "model-manifest.json") manifestBytes else bundled)
-  }, { value ->
-    val downloaded = value["downloadedBytes"] as Long
-    check(downloaded in 0..(value["totalBytes"] as Long))
-    check(value.keys == setOf("status", "downloadedBytes", "totalBytes", "currentFile", "errorCode"))
-    check(value.values.none { it is String && (it.contains("https:") || it.contains(root.path)) })
-    states.add(value)
-    observer(value)
-  }, { url -> FixtureConnection(url) { request -> requests.add(request); handler(request) } }, available).also { stores.add(it) }
+    verificationInput: (File) -> InputStream = { it.inputStream() },
+    fileStamp: ((File) -> ModelAssetStore.FileStamp?)? =
+      if (System.getProperty("java.vm.name") == "Dalvik") null else ::hostFileStamp,
+    observer: (Map<String, Any?>) -> Unit = {}): ModelAssetStore {
+    val asset: (String) -> InputStream = {
+      ByteArrayInputStream(if (it == "model-manifest.json") manifestBytes else bundled)
+    }
+    val emit: (Map<String, Any?>) -> Unit = { value ->
+      val downloaded = value["downloadedBytes"] as Long
+      check(downloaded in 0..(value["totalBytes"] as Long))
+      check(value.keys == setOf("status", "downloadedBytes", "totalBytes", "currentFile", "errorCode"))
+      check(value.values.none { it is String && (it.contains("https:") || it.contains(root.path)) })
+      states.add(value)
+      observer(value)
+    }
+    val connect: (URL) -> HttpsURLConnection = { url ->
+      FixtureConnection(url) { request -> requests.add(request); handler(request) }
+    }
+    // ART runs the production Os.lstat reader; the host supplies equivalent local filesystem metadata.
+    return if (fileStamp == null) ModelAssetStore(storageRoot, asset, emit, connect, available, verificationInput)
+      .also { stores.add(it) }
+    else ModelAssetStore(storageRoot, asset, emit, connect, available, verificationInput, fileStamp)
+      .also { stores.add(it) }
+  }
   fun target(role: String) = File(root, "${hashes.getValue(role)}/$role.gguf")
   fun part(role: String) = File(root, "${hashes.getValue(role)}/incoming.part")
   fun seed(role: String, bytes: ByteArray, url: String = "https://models.invalid/$role", etag: String? = ETAG) {
@@ -88,6 +112,11 @@ private class Fixture : AutoCloseable {
       .put("sha256", hashes.getValue(role)).toString())
   }
   fun installed(role: String) { target(role).parentFile!!.mkdirs(); target(role).writeBytes(files.getValue(role)) }
+  fun awaitStableFiles() {
+    // Receipt tests need files outside Android's coarse filesystem-clock write window.
+    val started = System.currentTimeMillis() / 1000
+    while (System.currentTimeMillis() / 1000 <= started + 1) Thread.sleep(10)
+  }
   fun waitFor(status: String): Map<String, Any?> {
     val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(8)
     while (System.nanoTime() < deadline) {
@@ -126,6 +155,7 @@ private class HeldStream(private val prefix: ByteArray) : InputStream() {
 }
 
 fun main(args: Array<String>) {
+  Thread.setDefaultUncaughtExceptionHandler { _, error -> error.printStackTrace(); kotlin.system.exitProcess(1) }
   var passed = 0
   fun test(name: String, body: () -> Unit) { body(); passed++; println("PASS $name") }
   test("bundled production manifest stays unchanged, supports >2GB sizes, and stays offline") {
@@ -357,6 +387,135 @@ fun main(args: Array<String>) {
       check(f.states.last()["status"] == "required" && f.requests.isEmpty())
     }
   }
+  test("photo picker background during internal validation keeps completed setup ready") {
+    Fixture().use { f ->
+      f.installed("model"); f.installed("vision")
+      var enterBackground = false
+      lateinit var store: ModelAssetStore
+      store = f.store(verificationInput = { file ->
+        if (enterBackground) {
+          enterBackground = false
+          // The module's OnActivityEntersBackground calls pause while prepare reads this file.
+          val snapshot = store.pause()
+          check(snapshot["status"] == "ready") { "Photo picker changed completed setup: $snapshot" }
+        }
+        file.inputStream()
+      })
+      check(store.getStatus()["status"] == "ready")
+      f.states.clear()
+      // Replacing with identical bytes forces real validation even when receipts are reused.
+      check(f.target("model").delete()); f.installed("model")
+      enterBackground = true
+      check(store.verifiedPaths() == (f.target("model").canonicalFile to f.target("vision").canonicalFile))
+      check(!enterBackground && f.states.isEmpty() && f.requests.isEmpty())
+    }
+  }
+  test("stable verified files avoid rehashing for prepare and analysis; restart hashes again") {
+    for (download in listOf(false, true)) Fixture().use { f ->
+      val reads = mutableListOf<File>()
+      val input: (File) -> InputStream = { reads.add(it); it.inputStream() }
+      val store = f.store(verificationInput = input)
+      if (download) f.download(store)
+      else {
+        f.installed("model"); f.installed("vision")
+        f.awaitStableFiles()
+        check(store.getStatus()["status"] == "ready")
+      }
+      check(reads.size == 2)
+      if (download) {
+        f.awaitStableFiles()
+        store.verifiedPaths() // Fresh installation becomes reusable after one stable validation.
+        check(reads.size == 4)
+      }
+      val verifiedReads = reads.size
+      f.states.clear(); f.requests.clear()
+      repeat(3) {
+        store.verifiedPaths() // prepare, analyze and generate all use this boundary.
+        check(store.pause()["status"] == "ready")
+      }
+      check(reads.size == verifiedReads) { "Unchanged models were hashed again: $reads" }
+      check(f.states.isEmpty() && f.requests.isEmpty())
+      f.stop(store)
+      check(f.store(verificationInput = input).getStatus()["status"] == "ready")
+      check(reads.size == verifiedReads + 2 && f.requests.isEmpty())
+    }
+  }
+  test("same-size corruption with restored mtime and atomic replacement invalidate receipts") {
+    for (replace in listOf(false, true)) Fixture().use { f ->
+      f.installed("model"); f.installed("vision")
+      f.awaitStableFiles()
+      var reads = 0
+      val store = f.store(verificationInput = { reads++; it.inputStream() })
+      check(store.getStatus()["status"] == "ready" && reads == 2)
+      val target = f.target("model").toPath()
+      val modified = Files.getLastModifiedTime(target)
+      val corrupt = model.copyOf().also { it[17]++ }
+      if (replace) {
+        val replacement = File(f.root, "replacement.gguf").toPath()
+        Files.write(replacement, corrupt)
+        Files.setLastModifiedTime(replacement, modified)
+        Files.move(replacement, target, StandardCopyOption.REPLACE_EXISTING)
+      } else {
+        Files.write(target, corrupt)
+        Files.setLastModifiedTime(target, modified)
+      }
+      check(Files.getLastModifiedTime(target) == modified)
+      assertError("analysis_model_corrupt") { store.verifiedPaths() }
+      assertError("analysis_model_corrupt") { store.verifiedPaths() }
+      check(reads == 4 && f.requests.isEmpty()) // Failed hashes never become reusable receipts.
+    }
+  }
+  test("fresh and future identical timestamps never hide same-size corruption") {
+    for (futureSeconds in listOf(0L, 60L)) Fixture().use { f ->
+      f.installed("model"); f.installed("vision")
+      val changed = System.currentTimeMillis() / 1000 + futureSeconds
+      val store = f.store(fileStamp = { file ->
+        // Force the identical metadata observed for Android writes within one clock tick.
+        ModelAssetStore.FileStamp(1, if (file.name == "model.gguf") 1 else 2, file.length(), changed, 0, changed, 0)
+      })
+      check(store.getStatus()["status"] == "ready")
+      f.states.clear()
+      f.target("model").writeBytes(model.copyOf().also { it[17]++ })
+      assertError("analysis_model_corrupt") { store.verifiedPaths() }
+      check(f.states.isEmpty() && f.requests.isEmpty())
+    }
+  }
+  test("unavailable precise file identity safely falls back to SHA on every validation") {
+    Fixture().use { f ->
+      f.installed("model"); f.installed("vision")
+      var reads = 0
+      val store = f.store(verificationInput = { reads++; it.inputStream() }, fileStamp = { null })
+      check(store.getStatus()["status"] == "ready")
+      repeat(2) { store.verifiedPaths() }
+      check(reads == 6)
+      f.target("model").writeBytes(model.copyOf().also { it[17]++ })
+      assertError("analysis_model_corrupt") { store.verifiedPaths() }
+      check(f.requests.isEmpty())
+    }
+  }
+  test("startup checking remains pausable and close still cancels internal validation") {
+    Fixture().use { f ->
+      f.installed("model"); f.installed("vision")
+      var pauseOnce = true
+      var closeOnRead = false
+      lateinit var store: ModelAssetStore
+      store = f.store(verificationInput = { file ->
+        if (closeOnRead) store.close()
+        file.inputStream()
+      }, observer = {
+        if (pauseOnce && it["status"] == "checking" && it["currentFile"] == "model") {
+          pauseOnce = false
+          check(store.pause()["status"] == "paused")
+        }
+      })
+      check(store.getStatus()["status"] == "paused")
+      check(store.getStatus()["status"] == "ready")
+      check(f.target("model").delete()); f.installed("model")
+      closeOnRead = true
+      assertError("analysis_cancelled") { store.verifiedPaths() }
+      check(f.requests.isEmpty())
+    }
+  }
   test("replacement store waits for the closing writer on the same canonical root") {
     Fixture().use { f ->
       val beforeWrite = CountDownLatch(1)
@@ -390,5 +549,5 @@ fun main(args: Array<String>) {
       } finally { releaseWrite.countDown() }
     }
   }
-  println("$passed ModelAssetStore JVM scenarios passed (96 MiB heap; no Gradle or NAS transfer).")
+  println("$passed ModelAssetStore scenarios passed (${System.getProperty("java.vm.name")}; 96 MiB heap; no NAS transfer).")
 }
