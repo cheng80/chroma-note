@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { Buffer } from 'node:buffer';
+import { mkdtempSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { registerHooks } from 'node:module';
@@ -43,14 +44,14 @@ const modules = {
     export async function openDatabaseAsync() { return api; }
   `),
   'expo-file-system': mock(`
-    import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
+    import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
     import { fileURLToPath } from 'node:url';
     import { join } from 'node:path';
     export const __testing = { root: ${JSON.stringify(root)}, downloads: 0, waitDownload: null, downloadStarted: null };
     const pathFor = (value) => value.startsWith('file:') ? fileURLToPath(value) : value;
-    export const Paths = { document: __testing.root };
+    export const Paths = { document: { uri: 'file://' + __testing.root } };
     export class Directory {
-      constructor(...parts) { this.path = join(...parts.map((part) => part instanceof Directory ? part.path : pathFor(part))); this.uri = pathToUri(this.path); }
+      constructor(...parts) { this.path = join(...parts.map((part) => part instanceof Directory ? part.path : pathFor(part.uri ?? part))); this.uri = pathToUri(this.path); }
       get exists() { return existsSync(this.path); }
       create() { mkdirSync(this.path, { recursive: true }); }
       delete() { rmSync(this.path, { recursive: true, force: true }); }
@@ -61,9 +62,11 @@ const modules = {
       get exists() { return existsSync(this.path); }
       get size() { return this.exists ? statSync(this.path).size : 0; }
       async bytes() { return new Uint8Array(readFileSync(this.path)); }
-      async move(destination, options = {}) { mkdirSync(join(destination.path, '..'), { recursive: true }); if (options.overwrite) rmSync(destination.path, { force: true }); renameSync(this.path, destination.path); }
+      async copy(destination) { copyFileSync(this.path, destination.path); }
+      async move(destination, options = {}) { mkdirSync(join(destination.path, '..'), { recursive: true }); if (options.overwrite) rmSync(destination.path, { force: true }); renameSync(this.path, destination.path); this.path = destination.path; this.uri = destination.uri; }
       delete() { rmSync(this.path, { force: true }); }
-      static async downloadFileAsync(_uri, destination) {
+      static async downloadFileAsync(uri, destination) {
+        if (!uri.startsWith('https://')) throw new Error('only remote images may be downloaded');
         __testing.downloadStarted?.();
         if (__testing.waitDownload) await __testing.waitDownload;
         mkdirSync(join(destination.path, '..'), { recursive: true });
@@ -79,8 +82,8 @@ const modules = {
 registerHooks({
   resolve(specifier, context, nextResolve) {
     if (modules[specifier]) return { url: modules[specifier], shortCircuit: true };
-    if (specifier === './record-cache-core' && context.parentURL === new URL('record-cache.ts', serviceDirectory).href) {
-      return { url: new URL('record-cache-core.ts', serviceDirectory).href, format: 'module-typescript', shortCircuit: true };
+    if (['./record-cache-core', './records-core'].includes(specifier) && context.parentURL === new URL('record-cache.ts', serviceDirectory).href) {
+      return { url: new URL(`${specifier}.ts`, serviceDirectory).href, format: 'module-typescript', shortCircuit: true };
     }
     return nextResolve(specifier, context);
   },
@@ -149,7 +152,43 @@ try {
 
   await cache.cacheRecordImage(owner, record('record-2'));
   assert.equal(target('record-2').exists, true, 'the next generation can cache after logout cleanup');
-  console.log('record-cache.native.check passed: actual service source serializes failed cleanup, writer, and logout generations');
+
+  const before = filesystem.__testing.downloads;
+  const remote = { ...record('record-2'), version: 2, fields: { ...record().fields, user_note: 'Latest note', is_favorite: true } };
+  const [preferred] = await cache.preferCachedRecordImages(owner, [remote]);
+  assert.equal(preferred.stamp.local_uri, target('record-2').uri);
+  assert.deepEqual(preferred.fields, remote.fields, 'local image must keep fresh server metadata');
+  assert.equal(preferred.version, 2);
+  assert.equal(preferred.stamp.image_headers, undefined);
+  await cache.cacheReadyRecords(owner, [remote], {});
+  await cache.cacheReadyRecords(owner, [preferred], {});
+  assert.equal(filesystem.__testing.downloads, before, 'reopening and refreshing cached images never redownloads');
+  assert.equal((await cache.readRecordCache(owner, {}))[0].fields.user_note, 'Latest note', 'offline metadata is refreshed on a cache hit');
+  await cache.cacheReadyRecords(owner, [record('record-2')], {});
+  assert.equal((await cache.readRecordCache(owner, {}))[0].version, 2, 'late older cache work cannot roll offline metadata back');
+  await assert.rejects(cache.preferCachedRecordImages('owner-b', [remote]), 'another account cannot resolve this image');
+
+  target('record-2').delete();
+  assert.strictEqual((await cache.preferCachedRecordImages(owner, [remote]))[0], remote, 'missing local image falls back to remote');
+  await Promise.all([cache.cacheRecordImage(owner, remote), cache.cacheRecordImage(owner, remote)]);
+  assert.equal(filesystem.__testing.downloads, before + 1, 'overlapping list/detail misses share one download');
+  writeFileSync(target('record-2').path, Buffer.from([0]));
+  assert.strictEqual((await cache.preferCachedRecordImages(owner, [remote]))[0], remote, 'truncated file falls back to remote');
+  await cache.cacheRecordImage(owner, remote);
+  assert.equal(filesystem.__testing.downloads, before + 2);
+
+  const draftDirectory = join(root, 'chroma-drafts', owner);
+  mkdirSync(draftDirectory, { recursive: true });
+  const draftPath = join(draftDirectory, 'lineart-00000000-0000-4000-8000-000000000001.png');
+  const png = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10, 99]);
+  writeFileSync(draftPath, png);
+  const saved = await cache.cacheRecordImage(owner, record('new-record'), undefined, `file://${draftPath}`);
+  assert.equal(saved.stamp.local_uri, target('new-record').uri);
+  assert.deepEqual(await target('new-record').bytes(), new Uint8Array(png));
+  assert.equal(filesystem.__testing.downloads, before + 2, 'save copies the existing generated result without downloading it');
+  rmSync(draftPath);
+  assert.equal(target('new-record').exists, true, 'draft cleanup does not remove the saved image');
+  console.log('record-cache.native.check passed: local reuse, fresh metadata, deduplicated misses, missing/truncated fallback, saved copy, account isolation, cleanup and logout races');
 } finally {
   rmSync(root, { recursive: true, force: true });
 }

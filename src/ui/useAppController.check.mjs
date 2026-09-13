@@ -139,7 +139,9 @@ function controllerHarness(initialState, records = {}, restore = {}, cache = {},
       setFavorite: noOp,
     },
     '../services/record-cache': {
-      cacheReadyRecords: cache.cacheReadyRecords ?? noOp, clearRecordCache: cache.clearRecordCache ?? noOp, pruneCachedRecords: noOp, queueRecordDeletion: cache.queueRecordDeletion ?? noOp,
+      preferCachedRecordImages: cache.preferCachedRecordImages ?? (async (_owner, records) => records),
+      cacheRecordImage: cache.cacheRecordImage ?? (async (_owner, record) => record),
+      cacheReadyRecords: cache.cacheReadyRecords ?? (async (_owner, records) => records), clearRecordCache: cache.clearRecordCache ?? noOp, pruneCachedRecords: noOp, queueRecordDeletion: cache.queueRecordDeletion ?? noOp,
       readRecordCache: async () => [], readRecordDeletions: cache.readRecordDeletions ?? (async () => []), removeCachedRecord: cache.removeCachedRecord ?? noOp, removeRecordDeletion: cache.removeRecordDeletion ?? noOp,
     },
     '../services/photo-input': { photoInputFailure: () => ({ message: { ko: '', en: '' } }), pickPhoto: async () => null, removeWorkingPhoto: restore.removeWorkingPhoto ?? (() => undefined) },
@@ -203,6 +205,61 @@ function controllerHarness(initialState, records = {}, restore = {}, cache = {},
 }
 
 const settle = () => new Promise((resolve) => setImmediate(resolve));
+
+for (const cacheFails of [false, true]) {
+  const initial = { ...savingState(), dialog: null, route: 'summary' };
+  const attempt = initial.save_attempt;
+  const remote = { source: 'supabase', id: attempt.record_id, user_id: attempt.owner_id, status: 'ready', version: 1, created_at: '2026-09-13T00:00:00Z', ...attempt.payload_snapshot, stamp: { ...attempt.payload_snapshot.stamp, source: 'supabase', local_uri: 'https://example.test/saved.png' } };
+  const copy = deferred();
+  let sourceUri;
+  const harness = controllerHarness(initial, { saveRecord: async () => remote }, {}, {
+    cacheRecordImage: async (owner, record, _signal, uri) => {
+      assert.equal(owner, initial.session.owner_id);
+      assert.equal(record, remote);
+      sourceUri = uri;
+      return copy.promise;
+    },
+  });
+  let controller = harness.render();
+  controller.send({ type: 'retry-save' });
+  await settle();
+  controller = harness.render();
+  assert.equal(sourceUri, initial.save_attempt.payload_snapshot.stamp.local_uri, 'save gives the cache the existing generated file');
+  assert.ok(controller.state.drafts.new, 'draft stays available while its result is copied');
+  const local = { ...remote, stamp: { ...remote.stamp, local_uri: 'file:///cache/saved.png', image_headers: undefined } };
+  if (cacheFails) copy.reject(new Error('disk full'));
+  else copy.resolve(local);
+  await settle();
+  controller = harness.render();
+  assert.equal(controller.state.save_attempt.state, 'saved', 'cache failure must not turn a confirmed save into a failure');
+  assert.equal(controller.state.drafts.new, null);
+  assert.equal(controller.state.records[0].stamp.local_uri, cacheFails ? remote.stamp.local_uri : local.stamp.local_uri);
+}
+
+{
+  const initial = savingState('edit');
+  const record = initial.records[0];
+  initial.drafts.edit.selected_candidate = { ...initial.drafts.edit.selected_candidate, source: 'supabase', local_uri: 'https://example.test/stamp.png' };
+  const local = { ...record, stamp: { ...record.stamp, local_uri: 'file:///cache/existing.png', image_headers: undefined } };
+  const remote = { ...record, id: 'remote-record', stamp: { ...record.stamp, local_uri: 'https://example.test/stamp.png', image_headers: { Authorization: 'old' } } };
+  let listener;
+  const harness = controllerHarness({ ...initial, records: [local, remote] }, {}, {
+    client: { auth: {
+      getSession: () => new Promise(() => {}),
+      onAuthStateChange: callback => { listener = callback; return { data: { subscription: { unsubscribe() {} } } }; },
+    } },
+  });
+  harness.render();
+  harness.runEffects();
+  listener('TOKEN_REFRESHED', { user: { id: initial.session.owner_id }, access_token: 'new-test-token' });
+  await settle();
+  const records = harness.render().state.records;
+  assert.equal(records[0], local, 'token refresh must preserve local source identity without adding credentials');
+  assert.equal(records[1].stamp.image_headers.Authorization, 'Bearer new-test-token', 'remote images still receive refreshed authentication');
+  assert.equal(harness.render().draft.selected_candidate.local_uri, local.stamp.local_uri, 'restored edit draft uses its record local image instead of an unauthenticated server URL');
+  harness.unmount();
+}
+console.log('useAppController.check passed: save copies before draft cleanup, disk failure preserves confirmed save, token refresh keeps local sources');
 
 {
   const availableAt = Date.now() + 73_000;

@@ -5,6 +5,7 @@ import { randomUUID } from 'expo-crypto';
 
 import type { BookFilter, DemoOwnerId, DemoRecord } from '../domain/record';
 import { cacheRecordSnapshot, cachedRecord, evictedRecordIds, filterCachedRecords, recordCacheFileName } from './record-cache-core';
+import { isGeneratedLineArtUri } from './records-core';
 
 type CacheRow = {
   record_id: string;
@@ -56,6 +57,7 @@ const dbPromise = SQLite.openDatabaseAsync('chroma-note-record-cache.db').then(a
 });
 
 const activeRecordCacheClears = new Map<DemoOwnerId, Promise<void>>();
+const activeImageWrites = new Map<string, Promise<DemoRecord>>();
 
 function cacheDirectory(ownerId: DemoOwnerId) {
   recordCacheFileName(ownerId, 'cache');
@@ -86,6 +88,40 @@ async function prepareDirectory(ownerId: DemoOwnerId) {
 
 function safeCachedUri(ownerId: DemoOwnerId, recordId: string, uri: string | null) {
   return uri === cacheFile(ownerId, recordId).uri ? uri : null;
+}
+
+function availableImageUri(ownerId: DemoOwnerId, row?: Pick<CacheRow, 'record_id' | 'image_uri' | 'image_bytes'>) {
+  if (!row) return null;
+  const uri = safeCachedUri(ownerId, row.record_id, row.image_uri);
+  if (!uri || row.image_bytes < 8) return null;
+  try {
+    const file = new File(uri);
+    return file.exists && file.size === row.image_bytes ? uri : null;
+  } catch { return null; }
+}
+
+function snapshotForWrite(ownerId: DemoOwnerId, record: DemoRecord, previous?: string) {
+  if (previous) {
+    try {
+      const cached = cachedRecord(ownerId, JSON.parse(previous), '');
+      if (cached && cached.id === record.id && cached.version > record.version) return JSON.stringify(cacheRecordSnapshot(ownerId, cached));
+    } catch { /* Replace an invalid snapshot with the verified server record. */ }
+  }
+  return JSON.stringify(cacheRecordSnapshot(ownerId, record));
+}
+
+/** Keeps fresh server fields while resolving only images from this account's existing files. Never downloads. */
+export async function preferCachedRecordImages(ownerId: DemoOwnerId, records: DemoRecord[], signal?: AbortSignal): Promise<DemoRecord[]> {
+  throwIfAborted(signal);
+  const db = await dbPromise;
+  const rows = await db.getAllAsync<CacheRow>('SELECT * FROM record_cache WHERE owner_id = ?', ownerId);
+  throwIfAborted(signal);
+  const byId = new Map(rows.map(row => [row.record_id, row]));
+  return records.map(record => {
+    const snapshot = cacheRecordSnapshot(ownerId, record);
+    const uri = availableImageUri(ownerId, byId.get(record.id));
+    return uri ? cachedRecord(ownerId, snapshot, uri) ?? record : record;
+  });
 }
 
 function throwIfAborted(signal?: AbortSignal) {
@@ -160,10 +196,10 @@ export async function cacheRecords(ownerId: DemoOwnerId, records: DemoRecord[], 
     throwIfAborted(signal);
     if (!await isCurrentGeneration(transaction, ownerId, generation)) return;
     for (const record of records) {
-      const snapshot = JSON.stringify(cacheRecordSnapshot(ownerId, record));
-      const previous = await transaction.getFirstAsync<Pick<CacheRow, 'image_uri' | 'image_bytes' | 'accessed_at'>>(
-        'SELECT image_uri, image_bytes, accessed_at FROM record_cache WHERE owner_id = ? AND record_id = ?', ownerId, record.id,
+      const previous = await transaction.getFirstAsync<Pick<CacheRow, 'snapshot' | 'image_uri' | 'image_bytes' | 'accessed_at'>>(
+        'SELECT snapshot, image_uri, image_bytes, accessed_at FROM record_cache WHERE owner_id = ? AND record_id = ?', ownerId, record.id,
       );
+      const snapshot = snapshotForWrite(ownerId, record, previous?.snapshot);
       const imageUri = safeCachedUri(ownerId, record.id, previous?.image_uri ?? null);
       await transaction.runAsync(
         `INSERT OR REPLACE INTO record_cache (owner_id, record_id, snapshot, image_uri, image_bytes, fetched_at, accessed_at)
@@ -184,7 +220,7 @@ export async function readRecordCache(ownerId: DemoOwnerId, filter: BookFilter):
   for (const row of rows) {
     const uri = safeCachedUri(ownerId, row.record_id, row.image_uri);
     try {
-      const localUri = uri && new File(uri).exists ? uri : '';
+      const localUri = availableImageUri(ownerId, row) ?? '';
       if (!localUri && uri) await db.runAsync('UPDATE record_cache SET image_uri = NULL, image_bytes = 0 WHERE owner_id = ? AND record_id = ?', ownerId, row.record_id);
       const record = cachedRecord(ownerId, JSON.parse(row.snapshot), localUri);
       if (!record) throw new Error('Invalid cached record.');
@@ -201,32 +237,69 @@ export async function readRecordCache(ownerId: DemoOwnerId, filter: BookFilter):
   );
 }
 
-/** Downloads one authenticated ready image, then commits its credential-free record snapshot. */
-export async function cacheRecordImage(ownerId: DemoOwnerId, record: DemoRecord, signal?: AbortSignal): Promise<DemoRecord> {
+/** Reuses a ready image, copies a newly saved result, or downloads a missing image once per account/record. */
+export async function cacheRecordImage(ownerId: DemoOwnerId, record: DemoRecord, signal?: AbortSignal, savedImageUri?: string): Promise<DemoRecord> {
   await activeRecordCacheClears.get(ownerId);
   throwIfAborted(signal);
-  const snapshot = cacheRecordSnapshot(ownerId, record);
+  cacheRecordSnapshot(ownerId, record);
   const generation = await cacheGeneration(ownerId);
+  const key = `${ownerId}/${recordCacheFileName(ownerId, record.id)}`;
+  const previous = activeImageWrites.get(key);
+  const write = (async () => {
+    await previous?.catch(() => undefined);
+    throwIfAborted(signal);
+    if (!await isCurrentGeneration(await dbPromise, ownerId, generation)) return record;
+    return writeRecordImage(ownerId, record, generation, signal, savedImageUri);
+  })();
+  activeImageWrites.set(key, write);
+  try { return await write; }
+  finally { if (activeImageWrites.get(key) === write) activeImageWrites.delete(key); }
+}
+
+async function writeRecordImage(ownerId: DemoOwnerId, record: DemoRecord, generation: number, signal?: AbortSignal, savedImageUri?: string): Promise<DemoRecord> {
+  const snapshot = cacheRecordSnapshot(ownerId, record);
+  const db = await dbPromise;
+  let existingUri: string | null = null;
+  let current = false;
+  await db.withExclusiveTransactionAsync(async transaction => {
+    throwIfAborted(signal);
+    if (!await isCurrentGeneration(transaction, ownerId, generation)) return;
+    current = true;
+    const previous = await transaction.getFirstAsync<CacheRow>('SELECT * FROM record_cache WHERE owner_id = ? AND record_id = ?', ownerId, record.id);
+    existingUri = availableImageUri(ownerId, previous ?? undefined);
+    if (existingUri) await transaction.runAsync('UPDATE record_cache SET snapshot = ?, fetched_at = ?, accessed_at = ? WHERE owner_id = ? AND record_id = ?', snapshotForWrite(ownerId, record, previous?.snapshot), Date.now(), Date.now(), ownerId, record.id);
+  });
+  if (!current) return record;
+  if (existingUri) return cachedRecord(ownerId, snapshot, existingUri) ?? record;
   const directory = await prepareDirectory(ownerId);
   const target = cacheFile(ownerId, record.id);
   const temporary = new File(directory, `${recordCacheFileName(ownerId, record.id)}.${randomUUID()}.tmp`);
   let movedTarget = false;
   try {
-    const file = await File.downloadFileAsync(record.stamp.local_uri, temporary, { headers: record.stamp.image_headers, signal });
+    const localUri = savedImageUri ?? record.stamp.local_uri;
+    let file: File;
+    if (isGeneratedLineArtUri(localUri, ownerId, Paths.document.uri) && new File(localUri).exists) {
+      await new File(localUri).copy(temporary);
+      file = temporary;
+    } else {
+      if (!/^https?:\/\//.test(record.stamp.local_uri)) throw new Error('Cached image is unavailable.');
+      file = await File.downloadFileAsync(record.stamp.local_uri, temporary, { headers: record.stamp.image_headers, signal });
+    }
     const imageBytes = await pngBytes(file);
     const now = Date.now();
-    const db = await dbPromise;
     let committed = false;
     await db.withExclusiveTransactionAsync(async (transaction) => {
       throwIfAborted(signal);
       if (!await isCurrentGeneration(transaction, ownerId, generation)) return;
       await transaction.runAsync('UPDATE record_cache_owner SET generation = generation WHERE owner_id = ?', ownerId);
       movedTarget = true;
-      await file.move(target, { overwrite: true });
+      // Expo move changes the File instance URI. Keep the temporary handle pointing at its old path.
+      await new File(file.uri).move(target, { overwrite: true });
+      const latest = await transaction.getFirstAsync<Pick<CacheRow, 'snapshot'>>('SELECT snapshot FROM record_cache WHERE owner_id = ? AND record_id = ?', ownerId, record.id);
       await transaction.runAsync(
         `INSERT OR REPLACE INTO record_cache (owner_id, record_id, snapshot, image_uri, image_bytes, fetched_at, accessed_at)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        ownerId, record.id, JSON.stringify(snapshot), target.uri, imageBytes, now, now,
+        ownerId, record.id, snapshotForWrite(ownerId, record, latest?.snapshot), target.uri, imageBytes, now, now,
       );
       committed = true;
     });
@@ -254,7 +327,7 @@ export async function cacheRecordImage(ownerId: DemoOwnerId, record: DemoRecord,
   }
 }
 
-/** Caches a ready page for a later offline view. Downloads run sequentially to avoid a burst of authenticated requests. */
+/** Caches missing images sequentially and reuses existing files for online and offline views. */
 export async function cacheReadyRecords(ownerId: DemoOwnerId, records: DemoRecord[], filter: BookFilter, signal?: AbortSignal) {
   await cacheRecords(ownerId, records, signal);
   const cached: DemoRecord[] = [];

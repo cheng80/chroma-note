@@ -112,6 +112,7 @@ iOS에서는 인증 응답과 Authorization 헤더가 HTTP 디스크 캐시에 �
 - 단계 전환·payload 스냅샷·outbox 등록은 SQLite 트랜잭션. 파일은 temp 작성→닫기/검증→rename→DB 참조 순서로 확보한다. DB 실패 시 원래 초안은 유지하고 미참조 파일만 정리한다.
 - outbox는 operation_id, owner_id, record_id, kind(create/edit/delete), payload snapshot/hash, base_version, attempts, next_retry_at, status를 보존한다.
 - record cache는 서버 ready 데이터의 사본이며 version과 fetched_at을 저장한다. outbox/초안은 캐시와 분리해 캐시 삭제로 유실되지 않게 한다.
+- 결과 이미지는 계정별 로컬 캐시를 먼저 사용한다. 저장 성공 시 기기의 생성 결과를 복사한 뒤 초안을 정리하고, 로컬 파일이 없거나 크기가 맞지 않을 때만 인증된 서버 이미지로 복구한다. 목록·상세·즐겨찾기의 최신 메타데이터 조회와 세션 갱신은 정상 로컬 이미지 주소를 바꾸지 않는다. 로컬 재표시는 로딩 스켈레톤·페이드 없이 수행하며 새 결과의 완료 모션은 유지한다. 기존 200MiB LRU 상한·계정 격리·로그아웃 정리 규칙을 유지한다.
 - 앱 재실행 시 실행 중이던 추론은 interrupted로 되돌린다. 이전 단계 결과와 사용자 편집값은 그대로 유지한다.
 - 초안 개수 제한은 **계정·기기별**이다. 두 기기의 각 로컬 초안은 독립적이며 계정 전체에 하나의 서버 초안을 예약하지 않는다.
 - Book 초안 삭제는 확인창에 고정한 `draft_id`와 현재 소유자를 검증하고 기존 `writeDraftState`를 거친다. SQLite 반영 후 화면에서 제거하고, 남은 초안/저장 스냅샷이 참조하지 않는 작업 파일만 기존 `draft_cleanup`에서 정리한다. 일반 초안은 서버 호출 없이 삭제하며, 대상에 연결된 저장 실패/결과 불명확 상태는 기존 abort/fetch 경로로 처리한다. 다른 초안의 `save_attempt`와 저장된 Record는 보존한다.

@@ -59,8 +59,10 @@ export function useAppController() {
 
   const draft = state.active_draft_kind ? state.drafts[state.active_draft_kind] : state.drafts.new ?? state.drafts.edit;
   const record = state.records.find(item => item.id === state.selected_record_id);
-  const authenticatedImage = state.records.find(item => item.id === draft?.record_id)?.stamp.image_headers ?? state.records[0]?.stamp.image_headers;
-  const displayDraft = draft?.selected_candidate?.source === 'supabase' ? { ...draft, selected_candidate: { ...draft.selected_candidate, image_headers: authenticatedImage } } : draft;
+  const draftRecordImage = state.records.find(item => item.id === draft?.record_id)?.stamp;
+  const authenticatedImage = draftRecordImage?.image_headers ?? state.records[0]?.stamp.image_headers;
+  const displayDraft = draft?.selected_candidate?.source === 'supabase' ? { ...draft, selected_candidate: { ...draft.selected_candidate,
+    ...(draftRecordImage ? { local_uri: draftRecordImage.local_uri, image_headers: draftRecordImage.image_headers } : { image_headers: authenticatedImage }) } } : draft;
   return { state, send, images: demoImages, assets: demoAssets, visibleRecords: state.records, draft: displayDraft, record,
     pendingDeletions: collection.pendingDeletions, hasMore: collection.hasMore, refreshing: collection.refreshing, pullRefreshing: collection.pullRefreshing,
     canSaveBeforeLogout: collection.online && Object.values(state.drafts).filter(d => d !== null).every(isSaveableDraft) && !['conflict', 'failed'].includes(state.save_attempt?.state ?? ''),

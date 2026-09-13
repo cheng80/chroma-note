@@ -168,7 +168,27 @@ check('source or auth change creates a fresh loading instance', () => {
   assert.equal(refreshed.skeleton, true);
   const replaced = render({ source: { uri: 'file:///replacement.png' } });
   assert.notEqual(replaced.key, refreshed.key);
-  assert.equal(replaced.skeleton, true);
+  assert.equal(replaced.skeleton, false, 'local replacement is visible without a loading animation');
+});
+check('each local detail mount is immediately visible without either fade or skeleton', () => {
+  for (const source of [42, { uri: 'file:///cached.png' }, [{ uri: 'file:///cached.png' }]]) {
+    for (let visit = 0; visit < 3; visit++) {
+      const render = mount({ source });
+      const view = render();
+      assert.equal(nodes(view.initialTree)[1].props.style.at(-1).opacity, 1);
+      assert.equal(view.image.props.fadeDuration, 0);
+      assert.equal(view.skeleton, false);
+      view.image.props.onError({ nativeEvent: { error: 'missing file' } });
+      assert.equal(render().all.some(node => node.type === 'AppIcon'), true, 'missing-file fallback remains available');
+    }
+  }
+});
+check('newly generated local result still reveals and shows its completion badge', () => {
+  const render = mount({ source: { uri: 'file:///new-result.png' }, reveal: 'pop', completionLabel: '완료' });
+  assert.equal(render().skeleton, true);
+  render().image.props.onLoad({ nativeEvent: {} });
+  assert.equal(render().skeleton, false);
+  assert.equal(render().all.some(node => node.type === 'SemanticText'), true);
 });
 assert.equal(failures.length, 0, `StampImage.check failed: ${failures.join('; ')}`);
 console.log('StampImage.check passed');

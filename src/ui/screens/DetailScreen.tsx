@@ -23,7 +23,8 @@ export function DetailScreen({ locale, images: _images, record, sheet, image_mis
   const copy = getBasicCopy(locale);
   const [imageOpen, setImageOpen] = useState(false);
   const [imageAttempt, setImageAttempt] = useState(0);
-  const [failedImageUri, setFailedImageUri] = useState<string | null>(null);
+  // A recovered cache file can have the same URI; scope failures to the supplied image instance.
+  const [failedImage, setFailedImage] = useState<typeof record.stamp | null>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const pendingExport = useRef(false);
   const openExport = () => {
@@ -40,9 +41,9 @@ export function DetailScreen({ locale, images: _images, record, sheet, image_mis
   const { dialogRef: viewerRef, onShow: onViewerShow } = useModalA11y({ visible: imageOpen, initialFocusRef: viewerCloseRef, restoreFocusRef: imageButtonRef });
   const imageSource = sourceFor(record.stamp.local_uri, designStamp, record.stamp.image_headers);
   const imageLabel = locale === 'ko' ? '기록의 컬러 스케치 이미지' : 'Record color sketch image';
-  const imageFailed = image_missing || !record.stamp.local_uri || failedImageUri === record.stamp.local_uri;
+  const imageFailed = image_missing || !record.stamp.local_uri || failedImage === record.stamp;
   const retryImage = () => {
-    setFailedImageUri(null);
+    setFailedImage(null);
     setImageAttempt((attempt) => attempt + 1);
     onRetryImage();
   };
@@ -50,7 +51,7 @@ export function DetailScreen({ locale, images: _images, record, sheet, image_mis
     <View style={styles.flex}>
       <ScrollView contentContainerStyle={styles.content} bounces={false} showsVerticalScrollIndicator={false}>
         <View style={styles.header}><IconButton label={copy.back} onPress={onBack}><AppIcon name="arrow-left" size={20} color={theme.colors.ink} /></IconButton><SemanticText accessibilityRole="header" style={styles.headerTitle}>{copy.record}</SemanticText><IconButton ref={actionsTriggerRef} label={copy.actions} onPress={onOpenActions}><AppIcon name="ellipsis" size={20} color={theme.colors.ink} /></IconButton></View>
-        {imageFailed ? <><Notice message={copy.imageMissing} tone="error" /><Button label={copy.retryImage} onPress={retryImage} tone="secondary" /></> : null}<RecordArtwork imageMissing={imageFailed} key={imageAttempt} fields={record.fields} source={imageSource} locale={locale} aspectRatio={record.stamp.width / record.stamp.height} imageButtonRef={imageButtonRef} onImagePress={imageFailed ? undefined : () => setImageOpen(true)} onImageError={() => setFailedImageUri(record.stamp.local_uri)} />
+        {imageFailed ? <><Notice message={copy.imageMissing} tone="error" /><Button label={copy.retryImage} onPress={retryImage} tone="secondary" /></> : null}<RecordArtwork imageMissing={imageFailed} key={imageAttempt} fields={record.fields} source={imageSource} locale={locale} aspectRatio={record.stamp.width / record.stamp.height} imageButtonRef={imageButtonRef} onImagePress={imageFailed ? undefined : () => setImageOpen(true)} onImageError={() => setFailedImage(record.stamp)} />
         <View style={styles.favorite}><IconButton label={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} onPress={onToggleFavorite}><FavoriteIcon key={record.id} selected={record.fields.is_favorite} /></IconButton><SemanticText style={styles.body}>{copy.favorite}</SemanticText></View>
       </ScrollView>
       {sheet?.kind === 'read' ? <ReadSheet locale={locale} record={record} onClose={onRequestCloseSheet} restoreFocusRef={actionsTriggerRef} /> : null}

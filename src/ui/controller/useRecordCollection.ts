@@ -1,6 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { deleteRecord, fetchRecord, listRecords, setFavorite } from '../../services/records';
-import { cacheReadyRecords, pruneCachedRecords, queueRecordDeletion, readRecordCache, readRecordDeletions, removeCachedRecord, removeRecordDeletion } from '../../services/record-cache';
+import { cacheReadyRecords, preferCachedRecordImages, pruneCachedRecords, queueRecordDeletion, readRecordCache, readRecordDeletions, removeCachedRecord, removeRecordDeletion } from '../../services/record-cache';
+import type { BookFilter, DemoRecord } from '../../domain/record';
 import { bookState } from '../app-state';
 import { demoReducer, type DemoAction } from '../demo-state';
 import type { ControllerStore } from './controller-store';
@@ -17,6 +18,19 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
   const [pendingDeletions, setPendingDeletions] = useState<string[]>([]);
   const [refreshKind, setRefreshKind] = useState<'pull' | 'background' | null>(null);
   const [hasMore, setHasMore] = useState(false);
+
+  const cacheImages = useCallback(async (request: NonNullable<ReturnType<RecordOperations['request']>>, records: DemoRecord[], filter: BookFilter) => {
+    const cached = await cacheReadyRecords(request.session.owner_id, records, filter, request.signal);
+    await enqueue(async () => {
+      if (!operations.accepts(request)) return;
+      const s = getState();
+      const next = s.records.map(record => {
+        const local = cached.find(item => item.id === record.id && item.version === record.version && item.stamp.local_uri.startsWith('file://'));
+        return local && local.stamp.local_uri !== record.stamp.local_uri ? { ...record, stamp: local.stamp } : record;
+      });
+      if (next.some((record, index) => record !== s.records[index])) await apply({ ...s, records: next }, false);
+    });
+  }, [apply, enqueue, getState, operations]);
 
   const refresh = useCallback(async (more = false, fromGesture = false) => {
     const snapshot = getState();
@@ -63,6 +77,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
       }
       const page = await listRecords(session.owner_id, snapshot.book_filter, more ? cursor.current ?? undefined : undefined);
       const pageRequest = request;
+      const pageRecords = await preferCachedRecordImages(session.owner_id, page.records, pageRequest.signal).catch(() => page.records);
       await enqueue(async () => {
         if (!operations.accepts(pageRequest)) return;
         const pending = await readRecordDeletions(session.owner_id);
@@ -72,9 +87,9 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
         setPendingDeletions(pending.map(item => item.record_id));
         cursor.current = page.cursor;
         setHasMore(Boolean(page.cursor));
-        const records = more ? [...s.records, ...page.records.filter(r => !s.records.some(old => old.id === r.id))] : page.records;
+        const records = more ? [...s.records, ...pageRecords.filter(r => !s.records.some(old => old.id === r.id))] : pageRecords;
         await apply(bookState({ ...s, records }), false);
-        void cacheReadyRecords(session.owner_id, records, snapshot.book_filter, pageRequest.signal).then(async () => {
+        void cacheImages(pageRequest, records, snapshot.book_filter).then(async () => {
           if (!page.cursor && !Object.values(snapshot.book_filter).some(Boolean) && !pageRequest.signal.aborted) await pruneCachedRecords(session.owner_id, records.map(record => record.id), pageRequest.signal);
         }).catch(() => undefined);
       });
@@ -89,7 +104,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
         await apply({ ...cachedState, book_state: cachedState.book_state === 'ready' ? 'partial-cache' : cachedState.book_state }, false);
       });
     } finally { if (isMounted() && request && operations.isLatest(request)) setRefreshKind(null); }
-  }, [apply, enqueue, getState, isCurrent, isMounted, notice, operations, rejectSession]);
+  }, [apply, cacheImages, enqueue, getState, isCurrent, isMounted, notice, operations, rejectSession]);
 
   const sessionChanged = useCallback((refreshRecords: boolean) => {
     const session = getState().session;
@@ -111,25 +126,36 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
     const s = getState();
     const session = s.session;
     if (!session) return false;
-    if (action.type === 'retry-book' || action.type === 'retry-image' || action.type === 'load-more') {
+    const detailId = action.type === 'open-detail' ? action.recordId : action.type === 'retry-image' && s.route === 'detail' ? s.selected_record_id : null;
+    if (action.type === 'retry-image' && detailId) {
+      operations.invalidate();
+      await removeCachedRecord(session.owner_id, detailId).catch(() => undefined);
+      if (!isCurrent(session)) return true;
+    }
+    if (action.type === 'retry-book' || (action.type === 'retry-image' && !detailId) || action.type === 'load-more') {
       void refresh(action.type === 'load-more', action.type === 'retry-book');
       return true;
     }
-    if (action.type === 'open-detail') {
-      await apply(demoReducer(s, action));
+    if (detailId) {
+      await apply(demoReducer(getState(), { type: 'open-detail', recordId: detailId }));
       const request = operations.request(session);
       if (!request) return true;
-      const relevant = () => operations.accepts(request) && getState().route === 'detail' && getState().selected_record_id === action.recordId;
-      void fetchRecord(session.owner_id, action.recordId).then(record => enqueue(async () => {
+      const relevant = () => operations.accepts(request) && getState().route === 'detail' && getState().selected_record_id === detailId;
+      void fetchRecord(session.owner_id, detailId).then(async remote => {
         if (!relevant()) return;
-        if (record) await apply({ ...getState(), records: getState().records.map(r => r.id === record.id ? record : r) }, false);
-        else {
-          await removeCachedRecord(session.owner_id, action.recordId);
+        const record = remote ? (await preferCachedRecordImages(session.owner_id, [remote], request.signal).catch(() => [remote]))[0] : null;
+        await enqueue(async () => {
           if (!relevant()) return;
-          await apply(bookState({ ...getState(), route: 'book', selected_record_id: null, records: getState().records.filter(r => r.id !== action.recordId) }), false);
-          notice('서버에서 삭제된 기록이에요.', 'This record was deleted on the server.');
-        }
-      })).catch(async error => {
+          if (record) await apply({ ...getState(), records: getState().records.map(r => r.id === record.id ? record : r) }, false);
+          else {
+            await removeCachedRecord(session.owner_id, detailId);
+            if (!relevant()) return;
+            await apply(bookState({ ...getState(), route: 'book', selected_record_id: null, records: getState().records.filter(r => r.id !== detailId) }), false);
+            notice('서버에서 삭제된 기록이에요.', 'This record was deleted on the server.');
+          }
+        });
+        if (record && relevant()) void cacheImages(request, [record], { start_date: null, end_date: null, semantic_tag: null, favorite_only: false }).catch(() => undefined);
+      }).catch(async error => {
         if (!relevant() || await rejectSession(error, session, relevant)) return;
         notice('최신 기록을 확인하지 못했어요. 기기에 보관한 내용을 표시합니다.', 'Could not check the latest record. Showing the copy kept on this device.');
       });
@@ -150,7 +176,8 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
     } catch (error) { release(); throw error; }
     void (async () => {
       try {
-        const updated = action.type === 'toggle-favorite' ? await setFavorite(record) : (await deleteRecord(session.owner_id, record.id, record.version), null);
+        const remote = action.type === 'toggle-favorite' ? await setFavorite(record) : (await deleteRecord(session.owner_id, record.id, record.version), null);
+        const updated = remote ? (await preferCachedRecordImages(session.owner_id, [remote]).catch(() => [remote]))[0] : null;
         if (!updated) {
           await removeCachedRecord(session.owner_id, record.id);
           await removeRecordDeletion(session.owner_id, record.id);
@@ -166,7 +193,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
       } finally { if (release()) void refresh(); }
     })();
     return true;
-  }, [apply, enqueue, getState, isCurrent, notice, operations, refresh, rejectSession]);
+  }, [apply, cacheImages, enqueue, getState, isCurrent, notice, operations, refresh, rejectSession]);
 
   return { handle, refresh, sessionChanged, online, pendingDeletions, refreshing: refreshKind !== null, pullRefreshing: refreshKind === 'pull', hasMore };
 }

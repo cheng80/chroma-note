@@ -20,12 +20,14 @@ export function StampImage(props: StampImageProps) {
 }
 
 function ImageContent({ source, accessibilityLabel, style, processing = false, reveal = 'fade', completionLabel, onLoad, onLoadStart, onError, ...props }: StampImageProps) {
+  const local = typeof source === 'number' || (Array.isArray(source) ? source.length > 0 && source.every(item => item.uri?.startsWith('file://')) : source.uri?.startsWith('file://'));
+  const immediate = reveal === 'none' || (reveal === 'fade' && local);
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
   const reduceMotion = useLiveReduceMotion();
   const appearance = useSharedValue(0);
   const scale = useSharedValue(1);
   const badge = useSharedValue(0);
-  const animated = reveal !== 'none' && !reduceMotion;
+  const animated = !immediate && !reduceMotion;
   useEffect(() => {
     cancelAnimation(appearance);
     cancelAnimation(scale);
@@ -44,17 +46,17 @@ function ImageContent({ source, accessibilityLabel, style, processing = false, r
     }
     return () => { cancelAnimation(appearance); cancelAnimation(scale); cancelAnimation(badge); };
   }, [animated, appearance, badge, processing, reveal, scale, status]);
-  const imageStyle = useAnimatedStyle(() => ({ opacity: processing || reveal === 'none' ? 1 : appearance.value }));
+  const imageStyle = useAnimatedStyle(() => ({ opacity: processing || immediate ? 1 : appearance.value }));
   const revealStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   const badgeStyle = useAnimatedStyle(() => ({ opacity: badge.value }));
-  const loading = reveal !== 'none' && status !== 'error' && (processing || status === 'loading');
+  const loading = reveal !== 'none' && status !== 'error' && (processing || (!immediate && status === 'loading'));
   return (
     <Animated.View style={[styles.image, style as StyleProp<ViewStyle>, revealStyle]}>
       <Animated.View style={[StyleSheet.absoluteFill, imageStyle]}>
       <Image
         {...props}
         source={source}
-        fadeDuration={reveal === 'none' ? 0 : props.fadeDuration}
+        fadeDuration={immediate ? 0 : props.fadeDuration}
         accessible={Boolean(accessibilityLabel)}
         accessibilityRole="image"
         accessibilityLabel={accessibilityLabel}

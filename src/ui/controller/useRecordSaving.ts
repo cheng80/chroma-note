@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { randomUUID } from 'expo-crypto';
 import { abortSave, fetchRecord, saveRecord } from '../../services/records';
+import { cacheRecordImage } from '../../services/record-cache';
 import { acceptSavedRecord, bookState } from '../app-state';
 import { demoReducer, discardSaveMode, isSaveableDraft, type DemoAction } from '../demo-state';
 import { recordWriting } from '../record-writing';
@@ -21,7 +22,9 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
     if (!release) return false;
     let saved = false;
     try {
-      const record = await saveRecord(attempt, () => isCurrent(session));
+      const remote = await saveRecord(attempt, () => isCurrent(session));
+      if (!isCurrent(session)) return false;
+      const record = await cacheRecordImage(session.owner_id, remote, undefined, attempt.payload_snapshot.stamp.local_uri).catch(() => remote);
       await enqueue(async () => {
         if (!isCurrent(session)) return;
         const next = acceptSavedRecord(getState(), attempt.operation_id, record);

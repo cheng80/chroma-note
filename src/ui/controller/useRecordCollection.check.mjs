@@ -7,7 +7,7 @@ import * as app from '../app-state.ts';
 const source = readFileSync(new URL('./useRecordCollection.ts', import.meta.url), 'utf8');
 const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
 const tick = () => new Promise(resolve => setImmediate(resolve));
-const record = { id: 'record-a', version: 1, fields: { is_favorite: false } };
+const record = { id: 'record-a', version: 1, stamp: { local_uri: 'https://example.test/stamp.png' }, fields: { is_favorite: false } };
 let state = { ...demo.initialDemoState(), route: 'book', book_state: 'ready', records: [record],
   session: { owner_id: 'owner-a', generation: 1, source: 'supabase' } };
 let index = 0, revision = 0, queue = Promise.resolve(), collection;
@@ -35,10 +35,11 @@ const store = {
 };
 const latest = request => request.revision === revision && store.isCurrent(request.session);
 const operations = {
-  request: session => ({ session, revision: ++revision, signal: new AbortController().signal }),
+  request: (session, replace = false) => ({ session, revision: replace ? ++revision : revision, signal: new AbortController().signal }),
   accepts: latest,
   isLatest: latest,
   reset: () => { revision++; },
+  invalidate: () => { revision++; },
   acquire: session => { revision++; return () => store.isCurrent(session); },
 };
 const mocks = {
@@ -50,7 +51,8 @@ const mocks = {
   '../../services/record-cache': {
     readRecordDeletions: async () => [],
     readRecordCache: async () => state.records,
-    cacheReadyRecords: async () => {},
+    preferCachedRecordImages: async (_owner, records) => records,
+    cacheReadyRecords: async (_owner, records) => records,
     pruneCachedRecords: async () => {},
   },
 };
@@ -118,6 +120,57 @@ failed.reject(new Error('offline'));
 await flush();
 flags(false, false, 'current request failure also clears both flags');
 assert.equal(state.records[0].fields.is_favorite, true);
+
+const localize = value => ({ ...value, stamp: { ...value.stamp, local_uri: `file:///cache/${value.id}.png`, image_headers: undefined } });
+const cacheMock = mocks['../../services/record-cache'];
+const recordMock = mocks['../../services/records'];
+cacheMock.preferCachedRecordImages = async (_owner, records) => records.map(localize);
+await finish(await start(() => collection.refresh()), [{ ...record, fields: { is_favorite: true, user_note: 'Server note' } }]);
+assert.equal(state.records[0].stamp.local_uri, 'file:///cache/record-a.png', 'online list resolves existing local images before rendering');
+recordMock.fetchRecord = async () => ({ ...record, version: 2, fields: { is_favorite: true, user_note: 'New note' } });
+await collection.handle({ type: 'open-detail', recordId: record.id });
+assert.equal(state.records[0].stamp.local_uri, 'file:///cache/record-a.png', 'detail opens immediately with the displayed local image');
+await flush();
+assert.equal(state.records[0].version, 2);
+assert.equal(state.records[0].fields.user_note, 'New note', 'detail still refreshes metadata');
+assert.equal(state.records[0].stamp.local_uri, 'file:///cache/record-a.png', 'detail refresh never replaces a local hit with a server image URL');
+
+recordMock.setFavorite = async value => ({ ...value, version: value.version + 1, stamp: record.stamp, fields: { ...value.fields, is_favorite: !value.fields.is_favorite } });
+await collection.handle({ type: 'toggle-favorite', recordId: record.id });
+await flush();
+assert.equal(state.records[0].stamp.local_uri, 'file:///cache/record-a.png', 'favorite response also preserves the local image');
+await finish(requests.at(-1));
+
+state = { ...state, route: 'book', selected_record_id: null };
+cacheMock.preferCachedRecordImages = async (_owner, records) => records;
+const warmups = [];
+cacheMock.cacheReadyRecords = (_owner, records) => new Promise(resolve => warmups.push({ records, resolve }));
+await finish(await start(() => collection.refresh()), [record]);
+recordMock.fetchRecord = async () => ({ ...record, version: 4, fields: { is_favorite: true, user_note: 'Newest note' } });
+await collection.handle({ type: 'open-detail', recordId: record.id });
+await flush();
+assert.equal(warmups.length, 2, 'list and detail can warm concurrently');
+warmups[0].resolve(warmups[0].records.map(localize));
+await flush();
+assert.equal(state.records[0].version, 4, 'late list cache completion cannot restore older metadata');
+assert.equal(state.records[0].fields.user_note, 'Newest note');
+warmups[1].resolve(warmups[1].records.map(localize));
+await flush();
+assert.equal(state.records[0].stamp.local_uri, 'file:///cache/record-a.png', 'newly downloaded image reaches the active detail');
+
+let invalidated = null;
+cacheMock.removeCachedRecord = async (_owner, id) => { invalidated = id; };
+cacheMock.cacheReadyRecords = async (_owner, records) => records;
+const listsBeforeImageRetry = requests.length;
+let retriedDetail = null;
+recordMock.fetchRecord = async (_owner, id) => { retriedDetail = id; return state.records.find(r => r.id === id); };
+await collection.handle({ type: 'retry-image' });
+await flush();
+assert.equal(invalidated, record.id, 'failed image retry removes only the selected cached record before fetching again');
+assert.equal(retriedDetail, record.id, 'image retry fetches the selected record even when it came from a later page');
+assert.equal(requests.length, listsBeforeImageRetry, 'image retry must not discard loaded pages or the selected detail');
+assert.equal(state.selected_record_id, record.id);
+state = { ...state, route: 'book' };
 const pending = await start(() => collection.handle({ type: 'retry-book' }), true);
 state = { ...state, session: null, records: [] };
 collection.sessionChanged(false);

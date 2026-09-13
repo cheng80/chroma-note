@@ -44,7 +44,7 @@ export function useSessionWorkflow(store: ControllerStore, state: DemoState, eve
       }
       if (s.session?.owner_id === session.user.id) {
         const image_headers = { Authorization: `Bearer ${session.access_token}`, apikey: process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? '' };
-        await apply({ ...s, records: s.records.map(r => ({ ...r, stamp: { ...r.stamp, image_headers } })) }, false);
+        await apply({ ...s, records: s.records.map(r => /^https?:\/\//.test(r.stamp.local_uri) ? { ...r, stamp: { ...r.stamp, image_headers } } : r) }, false);
         finish('complete');
         events.changed(refreshRecords);
         return;
