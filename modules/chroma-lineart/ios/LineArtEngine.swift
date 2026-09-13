@@ -41,7 +41,7 @@ public enum LineArtError: String, Error, LocalizedError, Equatable {
         switch self {
         case .invalidOptions: "선화 변환 옵션이 올바르지 않습니다."
         case .invalidInput: "입력 이미지를 읽을 수 없습니다."
-        case .inputTooLarge: "입력 이미지는 30MiB 이하여야 합니다."
+        case .inputTooLarge: "입력 이미지는 약 31.5MB 이하여야 합니다."
         case .imageTooLarge: "입력 이미지는 5천만 픽셀 이하여야 합니다."
         case .imageTooSmall: "변환할 이미지의 각 축은 16픽셀 이상이어야 합니다."
         case .decodeFailed: "입력 이미지를 디코딩하지 못했습니다."
@@ -49,7 +49,7 @@ public enum LineArtError: String, Error, LocalizedError, Equatable {
         case .invalidPrediction: "선화 모델이 올바르지 않은 결과를 반환했습니다."
         case .invalidOutput: "출력 위치를 사용할 수 없습니다."
         case .outputExists: "출력 파일이 이미 존재합니다."
-        case .outputTooLarge: "출력 PNG는 5MiB 이하여야 합니다."
+        case .outputTooLarge: "출력 PNG는 약 5.2MB 이하여야 합니다."
         case .cancelled: "선화 변환이 취소되었습니다."
         }
     }
