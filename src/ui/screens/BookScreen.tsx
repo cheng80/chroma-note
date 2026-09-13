@@ -64,7 +64,9 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
   const gridWidth = measuredGridWidth || Math.max(0, width - 40);
   const compact = fontScale >= 1.5 || gridWidth < 320;
   const columns = compact ? 1 : gridWidth >= 720 ? Math.min(4, Math.max(3, Math.floor((gridWidth + 12) / 240))) : 2;
-  const cardWidth = (gridWidth - 12 * (columns - 1)) / columns;
+  // Android onLayout can round the container up to a physical pixel. Keep each
+  // card inside the available row so that fractional density never wraps it.
+  const cardWidth = Math.floor((gridWidth - 12 * (columns - 1)) / columns);
   const filterSheet = sheet?.kind === 'filter' ? sheet : null;
   const isActive = activeFilter(filter);
   const allFilterRef = useRef<React.ElementRef<typeof FilterChip>>(null);
