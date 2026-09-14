@@ -11,19 +11,20 @@ interface ReadRequest {
 export function createRecordOperations(store: ControllerStore) {
   let revision = 0;
   let read = new AbortController();
-  let mutation: { session: DemoSession } | null = null;
+  let mutation: { session: DemoSession; kind: 'exclusive' | 'favorite' } | null = null;
   let logout: { session: DemoSession } | null = null;
   const busy = () => Boolean(mutation && store.isCurrent(mutation.session));
   const savingForLogout = () => Boolean(logout && store.isCurrent(logout.session));
   const invalidate = () => { revision += 1; read.abort(); read = new AbortController(); };
   return {
     busy,
+    allowsPhotoWork: () => busy() && mutation?.kind === 'favorite' && !savingForLogout(),
     savingForLogout,
     invalidate,
     reset() { invalidate(); mutation = null; logout = null; },
-    acquire(session: DemoSession) {
+    acquire(session: DemoSession, kind: 'exclusive' | 'favorite' = 'exclusive') {
       if (!store.isCurrent(session) || busy()) return null;
-      const lease = { session };
+      const lease = { session, kind };
       mutation = lease;
       invalidate();
       return () => {

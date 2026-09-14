@@ -35,6 +35,7 @@ export function useAppController() {
       if (await sessionAction(action)) return;
       if (!store.getState().session) return;
       if (operations.busy()) {
+        if (operations.allowsPhotoWork() && await photoAction(action)) return;
         store.notice('서버 처리 결과를 확인하고 있어요. 잠시만 기다려 주세요.', 'Checking the server result. Please wait.');
         return;
       }

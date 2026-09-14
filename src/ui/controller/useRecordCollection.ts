@@ -164,7 +164,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
     if (action.type !== 'toggle-favorite' && action.type !== 'delete-confirm') return false;
     const record = s.records.find(r => r.id === (action.type === 'toggle-favorite' ? action.recordId : s.selected_record_id));
     if (!record) return true;
-    const release = operations.acquire(session);
+    const release = operations.acquire(session, action.type === 'toggle-favorite' ? 'favorite' : 'exclusive');
     if (!release) return true;
     try {
       if (action.type === 'delete-confirm') {

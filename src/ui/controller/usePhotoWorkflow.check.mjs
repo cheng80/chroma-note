@@ -208,7 +208,12 @@ for (const stale of [false, true]) {
 {
   let unloaded = 0;
   const pending = deferred();
-  const h = harness({ ...photoState(), model_status: 'unprepared' }, { prepare: () => pending.promise, unload: async () => { unloaded++; return true; } });
+  const steps = [];
+  const initial = { ...photoState(), model_status: 'unprepared' };
+  const h = harness(initial, { prepare: () => pending.promise, unload: async () => { unloaded++; return true; }, process: async (_photo, job) => {
+    steps.push(job.step);
+    return job.step === 'colors' ? { step: 'colors', colors } : job.step === 'analysis' ? { step: 'analysis', analysis } : { step: 'stamp', stamp };
+  } });
   await h.flush();
   assert.equal(h.store.getState().model_status, 'preparing');
   h.memory();
@@ -219,10 +224,17 @@ for (const stale of [false, true]) {
   assert.equal(h.store.getState().model_status, 'ready');
   h.memory();
   await h.flush();
-  assert.equal(unloaded, 1);
-  assert.equal(h.store.getState().model_status, 'failed');
+  assert.equal(unloaded, 0, 'an iOS memory warning must not unload ready photo analysis');
+  assert.equal(h.store.getState().model_status, 'ready');
+  assert.deepEqual(h.notices, [], 'a memory warning alone must not report an analysis failure');
+  assert.deepEqual(h.store.getState().drafts, initial.drafts, 'memory warnings must preserve the photo and writing');
+  await h.send({ type: 'continue-photo' });
+  await h.flush();
+  assert.deepEqual(steps, ['colors', 'analysis', 'stamp'], 'photo analysis must remain usable after a memory warning');
+  assert.equal(h.store.getState().route, 'compare');
   assert.equal(await h.send({ type: 'retry-model' }), true);
   await h.flush();
+  assert.equal(unloaded, 1, 'explicit model retry must still release and prepare the engine');
   assert.equal(h.store.getState().model_status, 'ready');
   h.unmount();
 }

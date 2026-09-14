@@ -136,7 +136,7 @@ function controllerHarness(initialState, records = {}, restore = {}, cache = {},
       saveRecord: records.saveRecord ?? (async () => { throw new Error('unexpected save'); }),
       deleteRecord: records.deleteRecord ?? noOp,
       listRecords: records.listRecords ?? (async () => new Promise(() => undefined)),
-      setFavorite: noOp,
+      setFavorite: records.setFavorite ?? noOp,
     },
     '../services/record-cache': {
       preferCachedRecordImages: cache.preferCachedRecordImages ?? (async (_owner, records) => records),
@@ -144,7 +144,7 @@ function controllerHarness(initialState, records = {}, restore = {}, cache = {},
       cacheReadyRecords: cache.cacheReadyRecords ?? (async (_owner, records) => records), clearRecordCache: cache.clearRecordCache ?? noOp, pruneCachedRecords: noOp, queueRecordDeletion: cache.queueRecordDeletion ?? noOp,
       readRecordCache: async () => [], readRecordDeletions: cache.readRecordDeletions ?? (async () => []), removeCachedRecord: cache.removeCachedRecord ?? noOp, removeRecordDeletion: cache.removeRecordDeletion ?? noOp,
     },
-    '../services/photo-input': { photoInputFailure: () => ({ message: { ko: '', en: '' } }), pickPhoto: async () => null, removeWorkingPhoto: restore.removeWorkingPhoto ?? (() => undefined) },
+    '../services/photo-input': { photoInputFailure: () => ({ message: { ko: '', en: '' } }), pickPhoto: restore.pickPhoto ?? (async () => null), removeWorkingPhoto: restore.removeWorkingPhoto ?? (() => undefined) },
     './demo-assets': { demoAssets: {}, demoImages: {} },
     '../services/photo-processing': { processPhotoStep: noOp },
     '../../modules/chroma-analysis': { generatePhotoNote: noOp, preparePhotoAnalysis: noOp, unloadPhotoAnalysis: async () => false },
@@ -312,7 +312,7 @@ console.log('useAppController.check passed: save copies before draft cleanup, di
   await settle();
   const subscribedEvents = nativeSubscriptions.map(item => item.event);
   assert.ok(subscribedEvents.includes('change'), 'the root must subscribe to app lifecycle changes');
-  assert.ok(subscribedEvents.includes('memoryWarning'), 'the photo workflow must subscribe to memory warnings');
+  assert.ok(!subscribedEvents.includes('memoryWarning'), 'an iOS memory warning must not disable photo analysis');
   for (let render = 0; render < 3; render += 1) {
     controller = harness.render();
     harness.runEffects();
@@ -968,3 +968,48 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
   }
   console.log('useAppController.check passed: Book resumes every draft in both locales, all list states, zero/one/two drafts and reversed order');
 }
+
+for (const outcome of ['success', 'failure']) {
+  const saved = savingState('edit');
+  const initial = { ...saved, route: 'book', dialog: null, save_attempt: null, drafts: { new: null, edit: null }, active_draft_kind: null, active_job: null };
+  const record = initial.records[0];
+  const pending = deferred();
+  const alerts = [];
+  let picks = 0, favorites = 0;
+  const harness = controllerHarness(initial, {
+    setFavorite: () => { favorites++; return pending.promise; },
+  }, {
+    pickPhoto: async (_owner, revision) => { picks++; return { source: 'device', local_uri: 'file:///selected.jpg', width: 640, height: 480, input_revision: revision }; },
+    writeDraftState: async () => undefined,
+  }, {}, alerts);
+  let controller = harness.render();
+  controller.send({ type: 'toggle-favorite', recordId: record.id });
+  await settle();
+  assert.equal(favorites, 1);
+  controller.send({ type: 'start-record' });
+  await settle();
+  await settle();
+  controller = harness.render();
+  assert.equal(picks, 1, 'a pending favorite must not block the photo picker');
+  assert.equal(controller.state.route, 'photo');
+  assert.equal(controller.state.drafts.new.photo.local_uri, 'file:///selected.jpg');
+  assert.deepEqual(alerts, [], 'independent photo input must not show the server-wait alert');
+  const draft = controller.state.drafts.new;
+  controller.send({ type: 'continue-photo' });
+  await settle();
+  controller = harness.render();
+  assert.equal(controller.state.route, 'processing', 'photo processing starts while the favorite response is pending');
+  controller.send({ type: 'toggle-favorite', recordId: record.id });
+  await settle();
+  assert.equal(favorites, 1, 'server mutations must remain serialized');
+  if (outcome === 'success') pending.resolve({ ...record, version: record.version + 1, fields: { ...record.fields, is_favorite: !record.fields.is_favorite } });
+  else pending.reject(new Error('network failure'));
+  await settle();
+  await settle();
+  controller = harness.render();
+  assert.equal(controller.state.route, 'processing', 'late favorite completion must preserve the current photo screen');
+  assert.equal(controller.state.drafts.new.draft_id, draft.draft_id);
+  assert.deepEqual(controller.state.drafts.new.photo, draft.photo);
+  harness.unmount();
+}
+console.log('useAppController.check passed: pending favorites allow photo import/processing, retain mutation ordering, and preserve new drafts on completion/failure');

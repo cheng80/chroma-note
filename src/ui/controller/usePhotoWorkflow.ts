@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { AppState } from 'react-native';
 import { randomUUID } from 'expo-crypto';
 import { photoInputFailure, pickPhoto, removeWorkingPhoto } from '../../services/photo-input';
 import { processPhotoStep } from '../../services/photo-processing';
@@ -51,22 +50,6 @@ export function usePhotoWorkflow(store: ControllerStore, state: DemoState) {
       }
     }));
   }, [apply, enqueue, getState, isCurrent, state.model_status, state.session]);
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('memoryWarning', () => {
-      // Running jobs retain their engine until cancellation/finish; release idle models only.
-      void enqueue(async () => {
-        if (processing.current || caption.current || getState().model_status === 'preparing') return;
-        const session = getState().session;
-        let released = false;
-        try { released = await unloadPhotoAnalysis(); } catch { return; }
-        if (!released || !session || !isCurrent(session)) return;
-        await apply({ ...getState(), model_status: 'failed' }, false);
-        notice('메모리 확보를 위해 사진 분석을 잠시 내려놓았어요. 다시 변환하면 준비를 이어갑니다.', 'Photo analysis was released to free memory. It will prepare again when you convert a photo.');
-      });
-    });
-    return () => subscription.remove();
-  }, [apply, enqueue, getState, isCurrent, notice]);
 
   // The parent already owns the serial queue. Only detached service completions enqueue work.
   const handle = useCallback(async (action: DemoAction): Promise<boolean> => {
