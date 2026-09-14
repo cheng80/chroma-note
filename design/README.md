@@ -9,15 +9,16 @@
 | 영역 | 내용 |
 |---|---|
 | 00 Foundations | 종이/잉크/행동/상태 색, 역할별 글자, 간격, 터치·이미지 확대 원칙 |
-| 01 Components | 버튼, 입력, 아이콘 버튼, 필터 칩, 기록 카드, 팔레트, 안내, 확인 선택, 글 영역, 시스템 상태바, 처리 단계, 확인 대화상자, 이미지 비교, 요약 행 — 기존 15개 재사용 components 기준 |
+| 01 Components | 버튼, 입력, 아이콘 버튼, 필터 칩, 기록 카드, 팔레트, 안내, 확인 선택, 글 영역, 시스템 상태바, 처리 단계, 확인 대화상자, 이미지 비교, 요약 행, 색 선택 칩 — 전체 16개 재사용 components 기준 |
 | 02 Image fixtures | 디자인용 사진·선화와 품질 근거로 사용하지 않는다는 안내 |
 | 03 States | 인증·사진·모델·Book·저장·삭제의 오류/복구 카드 18개 |
 | 04 Confirmations | 초안 폐기, 사진 교체, 재인증 후 계정 영구 삭제 |
 | 05 Interaction states | 기본·초점·눌림·비활성·처리 중, 입력 오류, 즐겨찾기 선택과 팝 모션 |
 | 06 Mobile flow | 비교→요약, 영역별 시트, 중앙 모달, 필수 safe area·키보드 계약 |
 | 07 Startup flow | 스플래시 유지와 시작 파일 검사, 다운로드·이어받기·검증·오류 복구, 요청 처리 중 버튼 |
+| 08 Color search | 기본색·팔레트 선택, 유사 범위와 비중, 전체 해제, 공통 색 칩 |
 
-현재 Pen은 루트 63개(보드 8개, 재사용 기록 컴포넌트 1개, 화면 54개), 재사용 컴포넌트 15개다.
+현재 Pen은 루트 68개(보드 9개, 재사용 기록 컴포넌트 1개, 화면 58개), 재사용 컴포넌트 16개다.
 
 | 번호 | 화면 |
 |---|---|
@@ -32,6 +33,7 @@
 | 36–39 | 사진 작업 시트, 글 읽기 시트, 기록 더보기 시트, 통합 문구 편집+키보드 안전영역 |
 | 44–47 | 선화 확대 1×·4×·320폭, 전체 기록 읽기 |
 | 48–51 | 이미지 내보내기·권한·저장 상태 |
+| 52–55 | 팔레트 유사색 필터, 상세 추출색 탐색, 유사 범위·복합 필터, 유사색 검색 결과 |
 | 00s, 06a–06g | 스플래시, AI 다운로드 안내·진행·일시 정지·검증, 연결 오류·저장 공간 부족·파일 손상 |
 
 폰 기본은 390×844이며 360×800·320×640 변형을 포함한다. 비교와 요약을 두 단계로 나누고, AI 문구·내 메모·태그는 하나의 문구 편집 시트에서 함께 다루며 날짜/장소·대표색은 별도 바텀시트로 연다. 삭제는 중앙 확인 모달이다. 시트의 “초안에 적용”과 서버의 “저장하기/변경 저장”을 구분한다.
@@ -51,13 +53,13 @@ Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이�
 ## 미리보기와 검증
 
 - [파운데이션](previews/VqCCu.png) · [컴포넌트](previews/wlBIi.png)
-- [Book](previews/ePGw7.png) · [결과 확인](previews/yhiki.png)
+- [Book](previews/color-search/ePGw7.png) · [결과 확인](previews/yhiki.png)
 - [태블릿 비교](previews/H4nbI.png) · [영문 인증](previews/Op9oz.png)
 - [빈 Book](previews/qr9tS.png) · [기록 상세](previews/QPxep.png)
 - [Book 320](previews/dDLpN.png) · [Book 200%](previews/JfE7z.png)
 - [기록 요약](previews/iZ6vL.png) · [메모 시트](previews/L844KQ.png) · [키보드 안전영역](previews/hGZdL.png)
 - [날짜·장소](previews/h2C6Iq.png) · [AI 글·태그](previews/ZT1he.png)
-- [필터 시트](previews/oIDLE.png) · [삭제 모달](previews/trgbv.png) · [모바일 흐름](previews/JlJfV.png)
+- [필터 시트](previews/color-search/oIDLE.png) · [삭제 모달](previews/trgbv.png) · [모바일 흐름](previews/JlJfV.png)
 
 2026-09-10 Pen 수정·저장 완료: 루트 60개, 재사용 컴포넌트 15개. 문구 71곳·선화 이미지 51곳 갱신, 기존 도장 문구 0개, placeholder 0개. 인증·Book·비교·상세·태블릿·320폭·다운로드 7개 화면을 시각 확인하고 대표 미리보기 19개를 갱신했다. 정적 검사에서 비활성 텍스트 11개와 의도된 스크롤/확대 영역 8개의 clipping을 구별했다. 새 문구의 비의도적 잘림은 관찰하지 않았다.
 
@@ -86,3 +88,12 @@ Pen의 본문은 Noto Sans KR, 브랜드/전시 문구는 Libre Baskerville이�
 2026-09-13 즐겨찾기 동기화: `coral-500 #EF5268` → `favorite-solid`를 추가하고 파운데이션의 즐겨찾기 색 견본을 앱과 맞췄다. 기존 Interaction states에 Lucide 하트의 선택 전·1.6배 확대 순간·선택 완료 시안을 배치했다. 180ms 확대와 스프링 복귀, 파동·입자 7개의 700ms 확산, 해제·복원 규칙을 함께 기록했다. Pen 앱에서 저장했고 루트 63개·재사용 15개·placeholder 0개와 변경 영역의 잘림·겹침 0개를 확인했다. 시안은 정지된 단계 표현이며 실제 모션 검증은 프로젝트 현황을 따른다.
 
 - [즐겨찾기 색상](previews/favorite/VqCCu.png) · [즐겨찾기 모션 시안](previews/favorite/D7PEO.png) · [검증 결과](previews/favorite/validation.json)
+
+
+2026-09-14 색 탐색 동기화: Book의 색 진입과 선택 색 견본, 12개 기본색·직접 찍는 팔레트, 유사 범위 3단계·사진 속 비중 3단계, 결과 카드의 비슷한 색 비중, 상세의 실제 추출색을 반영했다. 기본색과 임의색은 같은 검색이며 12계열로 배타 분류하지 않는다. 기본은 “비슷하게”와 “10% 이상”이다. Book의 “전체”는 모든 필터를 즉시 해제하고 목록을 다시 불러온다. 필터 창의 변경은 적용 때 확정하고 취소하면 이전 조건을 유지한다.
+
+- [색 검색 보드](previews/color-search/NreGP.png), [기본색 필터](previews/color-search/oIDLE.png), [팔레트](previews/color-search/bYEpI.png)
+- [상세 추출색](previews/color-search/rwDih.png), [복합 필터](previews/color-search/tZ0bx.png), [검색 결과](previews/color-search/PNXAk.png)
+- [앱 한글 결과](previews/color-search/app-ko-results.png), [앱 영문 팔레트](previews/color-search/app-en-palette.png), [전체 해제 후 7개 기록](previews/color-search/app-ko-all-reset.png)
+
+Pencil 저장·시각 확인, 루트 68개·재사용 16개·placeholder 0개와 변경 영역의 비의도적 잘림·루트 겹침 0개를 확인했다. 의도된 스크롤 영역은 구별했다. iPhone 17 Pro / iOS 26.5 Simulator에서 기본색·임의색·상세색의 실제 서버 검색과 적용·취소·전체 복원을 확인했다. 기존 기록과 추출색을 변경하지 않았다. 시안의 비중과 사진은 예시이며 실제 앱 캡처와 구별한다. 후속 요청으로 iPhone 14 Pro Max 최종 Release 설치와 기본색·임의색 검색·전체 복원도 확인했다. 빠른 색상 띠→명도 영역 연속 입력은 최근 선택 색을 즉시 사용하도록 수정했다. 영속 파일 13개와 분석 모델 2,950,511,680바이트를 보존했다. Android 화면 검증은 이번 범위에 포함하지 않는다. [검증 결과](previews/color-search/validation.json)

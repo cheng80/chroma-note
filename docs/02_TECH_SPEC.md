@@ -1,6 +1,6 @@
 # Chroma Note 기술 명세
 
-> 2026-09-12 · [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 목표 계약과 적용된 DB 제약을 구분하며, 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
+> 2026-09-14 · [제품 명세](01_PRODUCT_SPEC.md)의 SR-FR 계약을 구현 가능하게 구체화한다. 목표 계약과 적용된 DB 제약을 구분하며, 모델 후보·벤치마크는 [AI 검증 계획](05_AI_VALIDATION_PLAN.md), 작업/실측 상태는 [현황](03_PROJECT_STATUS.md)에 둔다.
 
 ## 1. 현재 코드와 목표 구조
 
@@ -165,7 +165,7 @@ source_revision은 이 초안의 비식별 증가 정수다. 색·VLM(또는 ski
 
 모든 text는 Unicode NFC, 길이는 Unicode code point 기준으로 서버·클라이언트를 맞춘다. 사용자 메모의 본문 줄바꿈은 보존하고 정규화가 내용을 의미상 바꾸지 않게 한다. JSON은 필수 키/자료형/배열 상한/유한수/허용 key/전체 16KiB 상한을 서버에서 재검사한다.
 
-기본 인덱스: (user_id, status, diary_date DESC, created_at DESC, id DESC). 날짜/단일 태그 필터가 느린 근거가 생기면 GIN을 추가한다. 페이지 cursor는 날짜·서버 created_at·id 세 값을 함께 사용한다. 원격 실시간 구독·완전한 오프라인 검색 index는 Phase 1 제외다.
+기본 인덱스: (user_id, status, diary_date DESC, created_at DESC, id DESC). 유사색 검색은 §4의 읽기 전용 RPC로 수행한다. 단일 태그용 추가 인덱스는 조회 성능 근거에 따라 판단한다. 페이지 cursor는 날짜·서버 created_at·id 세 값을 함께 사용한다. 원격 실시간 구독·완전한 오프라인 검색 index는 Phase 1 제외다.
 
 ### 날짜
 
@@ -181,7 +181,35 @@ EXIF에 유효한 날짜만 있고 offset이 없으면 그 문자열의 달력 �
 6. color_tags 항목은 hex, rgb[3], weight, optional color_name_key. 1~5개 전체 weight 합은 1±0.001, 각각 0보다 크고 1 이하. 유효 픽셀이 없으면 실패다.
 7. 화면 퍼센트는 정수 반올림 잔여를 큰 소수 부분 순으로 배분해 합계 100을 만든다. 저장한 weight를 UI 반올림값으로 덮지 않는다.
 
-픽셀 바이트와 JPEG/PNG 압축 바이트는 구별한다. crop/resize API만으로 decode가 구현됐다고 판단하지 않는다. 색 이름이 필요하면 자체 사전과 고정 perceptual distance를 사용하며 분류/표시 보조로만 취급한다. 실제 색의 Lab 변환은 D65/sRGB 규약과 변환 버전을 고정한다.
+픽셀 바이트와 JPEG/PNG 압축 바이트는 구별한다. crop/resize API만으로 decode가 구현됐다고 판단하지 않는다. 색 이름은 표시 보조이며 원본 색 값이나 동일성 키를 대체하지 않는다. 유사색 검색의 변환은 아래 D65/sRGB → OKLab 계약에 고정한다.
+
+### 유사색 검색 계약
+
+2026-09-14 후속 사용자 결정에 따른 검색 정본은 [src/domain/color-search.ts](../src/domain/color-search.ts)다. `BookFilter.color?: ColorSearch | null`을 사용하고 미지정·null은 색 조건 없음이다. 조건은 날짜 범위·단일 태그·즐겨찾기와 AND로 결합한다.
+
+```ts
+interface ColorSearch {
+  hex: string; // 기준색, 정규형 #RRGGBB
+  range: 'close' | 'similar' | 'wide';
+  minWeight: 0.05 | 0.1 | 0.25;
+}
+```
+
+`COLOR_PRESETS`의 12개 기본색은 기준 HEX를 고르는 단축 선택이며 배타적인 색 분류가 아니다. 팔레트의 hue strip·명도/채도 사각형에서 고른 임의색도 같은 `ColorSearch`를 만든다. `normalizeHex`는 3/6자리 RGB HEX를 받아 대문자 `#RRGGBB`로 정규화하며, RPC에는 6자리 정규형을 전달한다. 표시 모드 전환은 검색 조건을 변경하지 않는다. 색상 띠와 명도·채도 영역의 연속 입력은 마지막으로 선택한 hue를 즉시 참조하며 React 렌더 완료를 기다리지 않는다. Book의 `clear-book-filter`는 모든 조건을 초기화하고 열린 필터 시트를 닫은 뒤 첫 페이지를 다시 조회한다. 이전 조회의 결과·cursor는 최신 요청으로 무효화한다. FilterSheet의 변경은 임시값이며 적용 시 확정하고 취소 시 이전 조건을 유지한다. 선택된 기본색 재탭·색 선택 해제는 색 조건만 null로 만든다. Detail의 실제 색 견본·비중 칩은 해당 HEX로 기준색만 교체해 Book으로 이동한다. 이전 `range`·`minWeight`와 다른 필터를 보존하고, 이전 색 검색이 없으면 `similar`·0.1을 사용한다.
+
+기준색과 각 대표색 RGB를 0..1 sRGB로 정규화한 뒤 채널값 `c <= 0.04045`이면 `c / 12.92`, 그 외에는 `((c + 0.055) / 1.055) ** 2.4`로 선형화한다. `rgbToOklab`는 Ottosson의 2021-01-25 행렬과 D65 기준으로 OKLab을 계산한다. 색 차이는 `ΔEOK = sqrt(ΔL² + Δa² + Δb²)`이며 별도의 백분율로 변환하지 않는다. 변환 근거는 [Oklab 원문](https://bottosson.github.io/posts/oklab/), 거리 정의는 [W3C CSS Color 4의 ΔEOK](https://www.w3.org/TR/css-color-4/#color-difference-OK)를 따른다.
+
+| range | 표시 | ΔEOK 상한 |
+|---|---|---|
+| close | 가깝게 | 0.06 |
+| similar | 비슷하게, 기본 | 0.10 |
+| wide | 넓게 | 0.16 |
+
+상한은 제품의 초기 조절값이며 보편적인 지각적 동등성이나 유사도 백분율을 뜻하지 않는다. `minWeight`는 5%·10%(기본)·25% 이상의 대표색 근사 비중이다. `colorMatchWeight`는 기준색과의 거리가 선택한 상한 이내인 모든 대표색의 원본 weight를 합하고, `matchesColorSearch`는 그 합이 `minWeight` 이상인지 판정한다. 범위 안의 6%와 8%는 합계 14%로 10% 조건을 충족하며 25% 조건에는 미달한다. 이는 정확한 픽셀 일치 비율이 아니다. 화면용 정수 반올림값으로 판정하지 않으며 RGB·HEX·weight를 수정하거나 사진을 재분석하지 않는다. 거리 비교는 `distance <= radius + 1e-12`, 비중 비교는 `weight >= minWeight - 1e-12`로 TS·SQL의 부동소수 경계 오차만 흡수한다. 행렬·연산 순서·허용값을 양쪽에서 일치시킨다.
+
+[유사색 검색 migration](../supabase/migrations/20260914014458_add_record_color_search.sql)은 내부 immutable 함수 `app_private.rgb_to_oklab_v1`·`app_private.color_match_weight_v1`과 `public.search_stamp_records_by_color(p_hex text, p_radius double precision, p_min_weight double precision)` RPC를 정의한다. RPC는 `SETOF public.stamp_records`를 반환하는 읽기 전용 `STABLE SECURITY INVOKER` 함수다. 사용자 RLS·소유자 격리·계정 잠금을 유지하고 호출자의 ready 기록만 대상으로 한다. 인증 없는 호출과 허용 HEX·범위·비중 밖의 입력은 거부한다. 색 검색용 generated column·GIN 인덱스는 두지 않으며 기존 팔레트·version·시각·쓰기 payload를 변경하지 않는다.
+
+[목록 API](../src/services/records.ts)의 `listRecords`는 색 조건이 있으면 해당 RPC를 GET으로 호출하고, 반환 관계에 기존 날짜·태그·즐겨찾기·cursor 조건을 AND로 적용한다. 모든 검색 조건을 페이지 분할 전에 적용하며 기록 날짜·생성 시각·ID 내림차순, 30개 페이지와 다음 페이지 확인 규칙을 유지한다. 색 거리순 최근접 순위 검색은 범위 밖이다. 받은 한 페이지만 클라이언트에서 색으로 걸러 페이지를 구성하지 않는다. 오프라인은 해당 계정의 보유 캐시 전체에 같은 `matchesColorSearch`를 적용하고 캐시 범위와 서버 전체 결과를 구별한다. 서버 색 검색을 사용하기 전에 migration 적용이 필요하다. 이 문서 갱신에서 원격 적용은 실행하지 않았으며 적용·검증 상태는 현황에서 관리한다.
 
 ## 5. VLM·선화 작업 계약
 
@@ -328,7 +356,7 @@ Android 저장 위치는 `noBackupFilesDir/chroma-models/<sha256>/`이다. 추�
 - SR-AC-001: 실제 OTP 수신·verify·세션 재실행·만료·다른 사용자. 탈퇴 중 요청은 후순위.
 - SR-AC-002~005: 방향/프로필/손상/단색/전체 투명/한계 크기, VLM schema/프롬프트 주입/생략, 선화 품질·취소·사진 revision, 메모 보존.
 - SR-AC-006: 로컬 파일 rename/DB 실패, begin/upload/finalize 각 경계에서 중단, 응답 유실, hash 불일치, 계정 전환, 원본/EXIF/로그/OS 백업 비유출.
-- SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체. 계정 탈퇴/재가입은 후순위.
+- SR-AC-007~008: 31개 pagination, 동일 날짜 tie, 기본색/임의색의 동일 검색·범위 3종과 비중 3종의 합산 경계·색 조건 적용 후 pagination·기존 조건 AND·시간 정렬·TS/SQL OKLab 검색 일치·기존 팔레트 보존, 오프라인 캐시, 두 기기 CAS 충돌/삭제, 다른 UID의 DB/Storage/RPC 접근, 정리 경합·고아 객체. 계정 탈퇴/재가입은 후순위.
 - SR-AC-009: 실제 네이티브 기기·폰/태블릿·한/영·일반 화면 동작·메모리·발열. 기준 시간/기기 게이트는 AI 계획을 따른다.
 
 2026-09-11 실제 개발 DB의 migration·RLS·Storage를 적용/대조하고 SQL 제약 및 A/B/미인증 Storage·Data API 테스트를 수행했다. SDK 57 문서와 [Supabase changelog](https://supabase.com/changelog)를 다시 확인했다. 서버 저장 API, 앱 OTP/DB 연결, 복구·CAS·탈퇴 전체 흐름과 원본 비유출 검증은 남아 있다. 개별 결과와 재실행 방법은 현황에 기록한다.

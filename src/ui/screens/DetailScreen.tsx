@@ -5,6 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { Button, IconButton, Notice } from '../primitives';
 import { RecordExportModal } from '../components/RecordExportModal';
 import { RecordArtwork } from '../components/RecordArtwork';
+import { RecordColors } from '../components/RecordColors';
 import { imageSource as sourceFor } from '../record-copy';
 import { demoImages } from '../demo-assets';
 import { AppIcon } from '../components/AppIcon';
@@ -19,7 +20,7 @@ import type { DetailScreenProps } from '../contract';
 
 const designStamp = demoImages.stamp;
 
-export function DetailScreen({ locale, images: _images, record, sheet, image_missing, onBack, onOpenRead: _onOpenRead, onOpenActions, onRequestCloseSheet, onEdit, onRequestDelete, onToggleFavorite, onRetryImage, actionsTriggerRef }: DetailScreenProps) {
+export function DetailScreen({ locale, images: _images, record, sheet, image_missing, onBack, onOpenRead: _onOpenRead, onOpenActions, onRequestCloseSheet, onEdit, onRequestDelete, onToggleFavorite, onRetryImage, onExploreColor, actionsTriggerRef }: DetailScreenProps) {
   const copy = getBasicCopy(locale);
   const [imageOpen, setImageOpen] = useState(false);
   const [imageAttempt, setImageAttempt] = useState(0);
@@ -52,6 +53,7 @@ export function DetailScreen({ locale, images: _images, record, sheet, image_mis
       <ScrollView contentContainerStyle={styles.content} bounces={false} showsVerticalScrollIndicator={false}>
         <View style={styles.header}><IconButton label={copy.back} onPress={onBack}><AppIcon name="arrow-left" size={20} color={theme.colors.ink} /></IconButton><SemanticText accessibilityRole="header" style={styles.headerTitle}>{copy.record}</SemanticText><IconButton ref={actionsTriggerRef} label={copy.actions} onPress={onOpenActions}><AppIcon name="ellipsis" size={20} color={theme.colors.ink} /></IconButton></View>
         {imageFailed ? <><Notice message={copy.imageMissing} tone="error" /><Button label={copy.retryImage} onPress={retryImage} tone="secondary" /></> : null}<RecordArtwork imageMissing={imageFailed} key={imageAttempt} fields={record.fields} source={imageSource} locale={locale} aspectRatio={record.stamp.width / record.stamp.height} imageButtonRef={imageButtonRef} onImagePress={imageFailed ? undefined : () => setImageOpen(true)} onImageError={() => setFailedImage(record.stamp)} />
+        <RecordColors tags={record.color_tags} locale={locale} onSelect={onExploreColor} />
         <View style={styles.favorite}><IconButton label={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} onPress={onToggleFavorite}><FavoriteIcon key={record.id} selected={record.fields.is_favorite} /></IconButton><SemanticText style={styles.body}>{copy.favorite}</SemanticText></View>
       </ScrollView>
       {sheet?.kind === 'read' ? <ReadSheet locale={locale} record={record} onClose={onRequestCloseSheet} restoreFocusRef={actionsTriggerRef} /> : null}

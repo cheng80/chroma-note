@@ -1,0 +1,109 @@
+{
+  "date": "2026-09-14",
+  "feature": "12 preset and arbitrary palette color similarity search",
+  "contract": {
+    "colorSpace": "OKLab",
+    "ranges": {
+      "close": 0.06,
+      "similar": 0.1,
+      "wide": 0.16
+    },
+    "minWeights": [
+      0.05,
+      0.1,
+      0.25
+    ],
+    "default": {
+      "range": "similar",
+      "minWeight": 0.1
+    },
+    "coverage": "Sum saved representative color weights within the distance threshold; approximate photo share, not similarity percentage",
+    "all": "Immediately clear every condition and query the first page; discard stale filtered responses"
+  },
+  "pencil": {
+    "path": "design/chroma-note.pen",
+    "roots": 68,
+    "reusable": 16,
+    "placeholders": 0,
+    "rootOverlaps": 0,
+    "unexpectedLayoutProblemsInChangedRoots": 0,
+    "intentionalScrollingExcluded": true,
+    "changedRoots": [
+      "NreGP",
+      "ePGw7",
+      "oIDLE",
+      "bYEpI",
+      "QPxep",
+      "rwDih",
+      "tZ0bx",
+      "PNXAk"
+    ]
+  },
+  "checks": {
+    "typescript": "pass",
+    "changedFilesLint": "pass",
+    "colorDomainServicesCache": "pass",
+    "actualSqlPGlite": "pass",
+    "rgbParityCases": 14101,
+    "distanceAndCoverageCases": 1128,
+    "sqlPagination": "30+6",
+    "controllerAndColorExploration": "pass",
+    "allResetFetchAndLateResponse": "pass",
+    "detailSemanticWrapPaletteWeights": "pass",
+    "rapidHueThenShadeWithoutRender": "pass"
+  },
+  "developmentServer": {
+    "project": "chroma-note-dev",
+    "migration": "20260914014458_add_record_color_search",
+    "applied": true,
+    "recordsBefore": 11,
+    "recordsAfter": 11,
+    "wholeRecordAggregateHashUnchanged": true,
+    "authenticatedAppSearch": "pass"
+  },
+  "simulator": {
+    "device": "iPhone 17 Pro",
+    "os": "iOS 26.5",
+    "baseRecordCount": 7,
+    "greenResultCount": 3,
+    "customPaletteDifferentResultCount": 3,
+    "detailOriginalColorResultCount": 3,
+    "allResetRecordCount": 7,
+    "cancelPreservesAppliedFilter": true,
+    "localesViewed": [
+      "ko",
+      "en"
+    ],
+    "finalLocale": "ko",
+    "finalFilter": "all"
+  },
+  "preservation": {
+    "existingRecordsAndPalettes": "unchanged",
+    "photoReanalysis": false,
+    "recordWritesDuringColorValidation": false
+  },
+  "limits": [
+    "Distance cutoffs are initial product settings, not universal perceptual equivalence thresholds.",
+    "Android UI verification was not repeated for color search.",
+    "This is targeted color-search regression validation, not a repeat of the entire E2E suite."
+  ],
+  "sources": [
+    "https://bottosson.github.io/posts/oklab/",
+    "https://www.w3.org/TR/css-color-4/#color-difference-OK"
+  ],
+  "actualIPhone": {
+    "device": "iPhone 14 Pro Max",
+    "configuration": "Release",
+    "updatedInstall": true,
+    "signatureValid": true,
+    "latestEmbeddedJSVerified": true,
+    "rapidHueThenShade": "pass",
+    "greenPresetResultCount": 3,
+    "customBrownResultCount": 4,
+    "allResetRecordCount": 7,
+    "finalFilter": "all",
+    "persistentFilesCompared": 13,
+    "missingOrChanged": 0,
+    "modelBytes": 2950511680
+  }
+}

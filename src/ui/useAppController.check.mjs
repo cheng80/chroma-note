@@ -7,6 +7,7 @@ import React from 'react';
 import { getBasicCopy } from './basic-copy.ts';
 import { demoReducer, initialDemoState } from './demo-state.ts';
 import * as recordWriting from './record-writing.ts';
+import * as colorSearch from '../domain/color-search.ts';
 
 const appSource = readFileSync(new URL('./AppDemo.tsx', import.meta.url), 'utf8');
 if (!appSource.includes("sessionRestoreStatus !== 'complete'")) throw new Error('auth entry must stay locked until session restore completes');
@@ -769,6 +770,36 @@ for (const path of ['detail', 'save-conflict', 'abort-conflict', 'discard-edit']
   }
 }
 
+{
+  const saved = savingState('edit');
+  const initial = { ...saved, route: 'book', dialog: null, save_attempt: null,
+    book_filter: { start_date: '2026-09-12', end_date: '2026-09-14', semantic_tag: '카페', favorite_only: true, color: colorSearch.createColorSearch('#609867') } };
+  const oldPage = deferred();
+  const calls = [];
+  const other = { ...saved.records[0], id: 'outside-old-filter' };
+  const allRecords = [...saved.records, other];
+  const harness = controllerHarness(initial, { listRecords: async (_owner, filter, cursor) => {
+    calls.push({ filter, cursor });
+    return calls.length === 1 ? oldPage.promise : { records: allRecords, cursor: null };
+  } });
+  let controller = harness.render();
+  controller.send({ type: 'retry-book' });
+  await settle();
+  controller.send({ type: 'clear-book-filter' });
+  await settle();
+  await settle();
+  assert.equal(calls.length, 2, 'All fetches the full collection even with a filtered request pending');
+  assert.ok(!Object.values(calls[1].filter).some(Boolean), 'the new query has no color/date/tag/favorite conditions');
+  assert.equal(calls[1].cursor, undefined, 'All restarts pagination from the beginning');
+  oldPage.resolve({ records: [], cursor: 'old-filter-cursor' });
+  await settle();
+  controller = harness.render();
+  assert.deepEqual(controller.state.records.map(record => record.id), allRecords.map(record => record.id), 'a late filtered response cannot overwrite All');
+  assert.equal(controller.hasMore, false, 'a late filtered cursor cannot restore old pagination');
+  assert.equal(controller.state.book_state, 'ready');
+  assert.deepEqual(controller.state.drafts, initial.drafts, 'resetting filters preserves saved draft fields');
+}
+
 for (const supersededBy of ['refresh', 'another-detail', 'back-book', 'mutation']) {
   const saved = savingState('edit');
   const other = { ...saved.records[0], id: 'other-record' };
@@ -913,6 +944,7 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
     'react-native-safe-area-context': { SafeAreaView: 'SafeAreaView' },
     '../primitives': { Button: 'Button', IconButton: 'IconButton', Notice: 'Notice', StampImage: 'StampImage' },
     '../components/FilterChip': { FilterChip: 'FilterChip' },
+    '../../domain/color-search': colorSearch,
     '../components/RecordCard': { RecordCard: 'RecordCard' },
     '../components/AppIcon': { AppIcon: 'AppIcon' },
     '../components/SemanticText': { SemanticText: 'SemanticText' },
@@ -936,6 +968,17 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
   const initial = savingState('edit');
   const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
   const editDraft = initial.drafts.edit;
+  for (const locale of ['ko', 'en']) {
+    let cleared = 0;
+    let opened = 0;
+    const rendered = nodes(exports.BookScreen({ locale, list_state: 'filter-empty', drafts: [], records: [],
+      filter: { color: colorSearch.createColorSearch('#609867'), favorite_only: true }, save_attempt: null,
+      onClearFilter: () => { cleared += 1; }, onOpenFilter: () => { opened += 1; },
+    }));
+    rendered.find(node => node.type === 'FilterChip' && node.props.label === getBasicCopy(locale).all).props.onPress();
+    assert.equal(cleared, 1, 'All invokes the immediate reset in both locales');
+    assert.equal(opened, 0, 'All does not open the filter editor');
+  }
   for (const locale of ['ko', 'en']) {
     for (const list_state of ['empty', 'ready', 'filter-empty', 'loading', 'error', 'partial-cache']) {
       for (const drafts of [[], [newDraft], [editDraft], [newDraft, editDraft], [editDraft, newDraft]]) {

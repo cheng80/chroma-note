@@ -157,6 +157,7 @@ export interface DemoRecord {
 }
 
 export interface BookFilter {
+  color?: import('./color-search').ColorSearch | null;
   start_date: string | null;
   end_date: string | null;
   semantic_tag: string | null;

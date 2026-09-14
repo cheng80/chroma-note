@@ -1,4 +1,5 @@
 import type { BookFilter, DemoOwnerId, DemoRecord } from '../domain/record';
+import { isColorSearch, matchesColorSearch } from '../domain/color-search.ts';
 
 export const RECORD_CACHE_LIMIT_BYTES = 200 * 1024 * 1024;
 
@@ -39,10 +40,12 @@ export function evictedRecordIds(rows: { record_id: string; image_bytes: number;
 }
 
 export function filterCachedRecords(records: DemoRecord[], filter: BookFilter) {
+  if (filter.color != null && !isColorSearch(filter.color)) throw new Error('Invalid color search.');
   return records.filter((record) =>
     (!filter.start_date || record.fields.diary_date >= filter.start_date)
     && (!filter.end_date || record.fields.diary_date <= filter.end_date)
     && (!filter.favorite_only || record.fields.is_favorite)
+    && (!filter.color || matchesColorSearch(record.color_tags, filter.color))
     && (!filter.semantic_tag || [...record.fields.semantic_tags, ...record.fields.mood_tags].includes(filter.semantic_tag)),
   );
 }

@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
 import type { BookFilter, ColorTag, DemoOwnerId, DemoRecord, RecordFields, SaveAttempt, StampCandidate } from '../domain/record';
+import { COLOR_SEARCH_RANGES, isColorSearch, normalizeHex } from '../domain/color-search.ts';
 import { boundedFetch } from './network';
 import { getSupabase } from './supabase';
 import { analysisModifiedFields, canonicalJson, decodeCursor, durationMilliseconds, encodeCursor, errorCode, isGeneratedLineArtUri, RecordError, retryAfterMilliseconds, retryDelayMilliseconds, sessionIdFromAccessToken, validCreateSelection, type RecordCursor } from './records-core';
@@ -346,9 +347,16 @@ async function prepareCreate(attempt: SaveAttempt): Promise<PreparedCreate> {
 }
 
 export async function listRecords(ownerId: DemoOwnerId, filter: BookFilter, cursor?: string): Promise<{ records: DemoRecord[]; cursor: string | null }> {
+  if (filter.color != null && !isColorSearch(filter.color)) throw new RecordError('validation');
+  const color = filter.color ? { ...filter.color } : null;
   const context = await sessionFor(ownerId);
   return onceAfterRefresh(context, async (activeContext) => {
-    let query = activeContext.client.from('stamp_records').select('*').eq('status', 'ready').order('diary_date', { ascending: false }).order('created_at', { ascending: false }).order('id', { ascending: false }).limit(PAGE_SIZE + 1);
+    const source = color ? activeContext.client.rpc('search_stamp_records_by_color', {
+      p_hex: normalizeHex(color.hex),
+      p_radius: COLOR_SEARCH_RANGES.find(({ id }) => id === color.range)!.threshold,
+      p_min_weight: color.minWeight,
+    }, { get: true }) : activeContext.client.from('stamp_records').select('*');
+    let query = source.eq('status', 'ready').order('diary_date', { ascending: false }).order('created_at', { ascending: false }).order('id', { ascending: false }).limit(PAGE_SIZE + 1);
     if (filter.start_date) query = query.gte('diary_date', filter.start_date);
     if (filter.end_date) query = query.lte('diary_date', filter.end_date);
     if (filter.semantic_tag) {

@@ -47,6 +47,6 @@ export function useLocalActions(store: ControllerStore, cancelCaption: () => voi
     if (action.type === 'sheet-cancel' || action.type === 'sheet-discard-confirm' || action.type === 'sheet-apply') cancelCaption();
     await apply(next);
     if (action.type === 'locale') void secureSessionStorage.setItem(localePreferenceKey, action.value).catch(() => notice('언어 설정을 저장하지 못했어요.', 'Could not save the language setting.'));
-    if (action.type === 'back-book' || action.type === 'back-settings' || (action.type === 'sheet-apply' && s.sheet?.kind === 'filter')) void refresh();
+    if (action.type === 'clear-book-filter' || action.type === 'explore-color' || action.type === 'back-book' || action.type === 'back-settings' || (action.type === 'sheet-apply' && s.sheet?.kind === 'filter')) void refresh();
   }, [apply, cancelCaption, getState, notice, refresh]);
 }

@@ -3,6 +3,7 @@ import { ImageSourcePropType, RefreshControl, ScrollView, StyleSheet, Text, useW
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, IconButton, Notice, StampImage } from '../primitives';
 import { FilterChip } from '../components/FilterChip';
+import { COLOR_PRESETS, colorMatchWeight } from '../../domain/color-search';
 import { RecordCard } from '../components/RecordCard';
 import { AppIcon } from '../components/AppIcon';
 import { FilterSheet } from '../sheets/FilterSheet';
@@ -55,9 +56,9 @@ function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord
   </SafeAreaView>;
 }
 
-function activeFilter(filter: BookFilter) { return Boolean(filter.start_date || filter.end_date || filter.semantic_tag || filter.favorite_only); }
+function activeFilter(filter: BookFilter) { return Boolean(filter.start_date || filter.end_date || filter.semantic_tag || filter.favorite_only || filter.color); }
 
-export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, pending_deletions = [], model_status: _modelStatus, save_attempt, sheet, has_more, refreshing, pullRefreshing, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry, importTriggerRef }: BookScreenProps) {
+export function BookScreen({ locale, session: _session, images, records, drafts, filter, list_state, pending_deletions = [], model_status: _modelStatus, save_attempt, sheet, has_more, refreshing, pullRefreshing, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onOpenRecord, onToggleFavorite, onOpenFilter, onClearFilter, onChangeSheet, onApplySheet, onCancelSheet, onRequestCloseSheet, onLoadMore, onRetry, importTriggerRef }: BookScreenProps) {
   const copy = getBasicCopy(locale);
   const { width, fontScale } = useWindowDimensions();
   const [measuredGridWidth, setMeasuredGridWidth] = useState(0);
@@ -69,6 +70,8 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
   const cardWidth = Math.floor((gridWidth - 12 * (columns - 1)) / columns);
   const filterSheet = sheet?.kind === 'filter' ? sheet : null;
   const isActive = activeFilter(filter);
+  const selectedColor = COLOR_PRESETS.find(preset => preset.hex === filter.color?.hex);
+  const colorFilterRef = useRef<React.ElementRef<typeof FilterChip>>(null);
   const allFilterRef = useRef<React.ElementRef<typeof FilterChip>>(null);
   const dateFilterRef = useRef<React.ElementRef<typeof FilterChip>>(null);
   const activeFilterRef = useRef<React.ElementRef<typeof FilterChip>>(null);
@@ -87,7 +90,7 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
     : <><View onLayout={event => setMeasuredGridWidth(event.nativeEvent.layout.width)} style={[styles.grid, columns === 1 && styles.singleColumn]}>{records.map((record) => {
       const date = displayDate(record.fields.diary_date) || '—';
       const title = recordTitle(record, locale);
-      return <RecordCard key={record.id} width={cardWidth} date={date} title={title} source={sourceFor(record.stamp.local_uri, designStamp, record.stamp.image_headers)} imageMissing={!record.stamp.local_uri} onPress={() => onOpenRecord(record.id)} onToggleFavorite={() => onToggleFavorite(record.id)} isFavorite={record.fields.is_favorite} favoriteLabel={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} accessibilityLabel={`${copy.record}, ${date}, ${title}`} />;
+      return <RecordCard colorCoverageLabel={filter.color ? (locale === 'ko' ? `비슷한 색 ${Math.round(colorMatchWeight(record.color_tags, filter.color) * 100)}%` : `Similar colors ${Math.round(colorMatchWeight(record.color_tags, filter.color) * 100)}%`) : undefined} key={record.id} width={cardWidth} date={date} title={title} source={sourceFor(record.stamp.local_uri, designStamp, record.stamp.image_headers)} imageMissing={!record.stamp.local_uri} onPress={() => onOpenRecord(record.id)} onToggleFavorite={() => onToggleFavorite(record.id)} isFavorite={record.fields.is_favorite} favoriteLabel={record.fields.is_favorite ? copy.favoriteOn : copy.favorite} accessibilityLabel={`${copy.record}, ${date}, ${title}`} />;
     })}</View>{list_state === 'partial-cache' ? <SemanticText style={styles.caption}>{copy.partial}</SemanticText> : null}{has_more ? <Button label={copy.more} onPress={onLoadMore} tone="secondary" disabled={refreshing} /> : null}</>;
 
   return <SafeAreaView edges={['top', 'right', 'bottom', 'left']} style={styles.page}>
@@ -95,7 +98,7 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
       <ScrollView refreshControl={<RefreshControl refreshing={Boolean(pullRefreshing)} onRefresh={onRetry} />} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.brandHeader}><SemanticText accessibilityRole="header" style={styles.brand}>{compact ? 'Book' : copy.brand}</SemanticText><View style={styles.filters}><IconButton label={copy.settings} onPress={onOpenSettings}><AppIcon name="settings" size={20} color={theme.colors.ink} /></IconButton>{compact ? <IconButton ref={activeFilterRef} label={copy.filter} accessibilityHint={isActive ? locale === 'ko' ? '필터가 적용되어 있어요.' : 'Filters are applied.' : undefined} onPress={() => openFilterFrom(activeFilterRef)}><AppIcon name="sliders-horizontal" size={20} color={isActive ? theme.colors.accent : theme.colors.ink} /></IconButton> : null}</View></View>
         {!compact ? <><View style={styles.intro}><SemanticText accessibilityRole="header" style={styles.heading}>{copy.bookHeading}</SemanticText><SemanticText style={styles.bodyMuted}>{copy.bookLead}</SemanticText></View>
-        <View style={styles.filters}><FilterChip ref={allFilterRef} label={copy.all} selected={!isActive} onPress={() => openFilterFrom(allFilterRef)} /><FilterChip ref={dateFilterRef} label={copy.date} selected={Boolean(filter.start_date || filter.end_date)} onPress={() => openFilterFrom(dateFilterRef)} /><FilterChip ref={activeFilterRef} label={copy.filter} selected={isActive} onPress={() => openFilterFrom(activeFilterRef)} /></View></> : null}
+        <View style={styles.filters}><FilterChip ref={allFilterRef} label={copy.all} selected={!isActive} onPress={onClearFilter} /><FilterChip ref={dateFilterRef} label={copy.date} selected={Boolean(filter.start_date || filter.end_date)} onPress={() => openFilterFrom(dateFilterRef)} /><FilterChip ref={colorFilterRef} color={filter.color?.hex} label={filter.color ? selectedColor?.label[locale] ?? (locale === 'ko' ? '고른 색' : 'Custom color') : locale === 'ko' ? '색' : 'Color'} selected={Boolean(filter.color)} onPress={() => openFilterFrom(colorFilterRef)} /><FilterChip ref={activeFilterRef} label={copy.filter} selected={isActive} onPress={() => openFilterFrom(activeFilterRef)} /></View></> : null}
         {showRecordCount ? <Text style={styles.month}>{recordCountLabel(records.length, locale)}</Text> : null}
         {content}
         {pending_deletions.length ? <Notice message={locale === 'ko' ? `삭제 대기 중인 기록 ${pending_deletions.length}개가 있어요. 연결을 확인하면 삭제를 이어갑니다.` : `Waiting for a connection to delete ${pending_deletions.length} ${pending_deletions.length === 1 ? 'record' : 'records'}.`} tone="warning" /> : null}

@@ -1121,6 +1121,22 @@
                       "fontFamily": "$font-body",
                       "fontSize": "$type-body",
                       "fontWeight": "500"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Os0aO",
+                      "x": 0,
+                      "y": 0,
+                      "name": "일치한 색의 비중",
+                      "enabled": false,
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": 140,
+                      "content": "비슷한 색 31%",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2418,6 +2434,17 @@
                   }
                 },
                 {
+                  "id": "hPfCc",
+                  "type": "ref",
+                  "ref": "ssGLv",
+                  "name": "Filter / 색",
+                  "descendants": {
+                    "R1feeN": {
+                      "content": "색"
+                    }
+                  }
+                },
+                {
                   "id": "QV3rL",
                   "type": "ref",
                   "ref": "ssGLv",
@@ -2440,7 +2467,7 @@
               "fill": "$text-primary",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "2026년 9월 · 2개의 기록",
+              "content": "2개의 기록",
               "lineHeight": 1.5,
               "fontFamily": "$font-body",
               "fontSize": "$type-small",
@@ -4019,6 +4046,141 @@
                           "lineHeight": 1.5714
                         }
                       }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C4ST5Y",
+                      "name": "Record colors / 유사색 탐색",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        0,
+                        0,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "rPbBP",
+                          "name": "사진에서 찾은 색",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "사진에서 찾은 색",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "M0U15u",
+                          "name": "상세 색 탐색 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "색을 누르면 비슷한 색이 담긴 기록을 모아 볼 수 있어요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tiMVT",
+                          "name": "추출색 행 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "LjNnb",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #BCA28A",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#BCA28A"
+                                },
+                                "wUJ00": {
+                                  "content": "31%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "fREDb",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #35533D",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#35533D"
+                                },
+                                "wUJ00": {
+                                  "content": "26%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "rUYpo",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #C2774D",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#C2774D"
+                                },
+                                "wUJ00": {
+                                  "content": "20%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "i48U78",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #A3C3D0",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#A3C3D0"
+                                },
+                                "wUJ00": {
+                                  "content": "14%"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "x53ax",
+                          "name": "추출색 행 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "EtKC6",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #E5D8BC",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#E5D8BC"
+                                },
+                                "wUJ00": {
+                                  "content": "9%"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     },
                     {
                       "type": "frame",
@@ -7826,6 +7988,17 @@
                       }
                     },
                     {
+                      "id": "i1JDIc",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 색",
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "색"
+                        }
+                      }
+                    },
+                    {
                       "id": "o8Mds",
                       "type": "ref",
                       "ref": "ssGLv",
@@ -7848,7 +8021,7 @@
                   "fill": "$text-primary",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "2026년 9월 · 2개의 기록",
+                  "content": "2개의 기록",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-body",
                   "fontSize": "$type-small",
@@ -8012,10 +8185,10 @@
           "type": "frame",
           "id": "Al2e4",
           "x": 0,
-          "y": 164,
+          "y": 120,
           "name": "Sheet / 필터",
           "width": 390,
-          "height": 680,
+          "height": 724,
           "fill": "$bg-surface",
           "cornerRadius": [
             24,
@@ -8034,9 +8207,8 @@
             "blur": 28
           },
           "layout": "vertical",
-          "gap": 12,
           "padding": [
-            16,
+            0,
             20,
             34,
             20
@@ -8047,9 +8219,23 @@
               "id": "BascK",
               "name": "App header",
               "width": "fill_container",
+              "height": 72,
               "gap": 12,
               "alignItems": "center",
               "children": [
+                {
+                  "type": "text",
+                  "id": "FtT45",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "필터",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
                 {
                   "id": "dHw19",
                   "type": "ref",
@@ -8060,251 +8246,509 @@
                       "icon": "x"
                     }
                   }
-                },
-                {
-                  "type": "text",
-                  "id": "FtT45",
-                  "name": "Screen title",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "기록 필터",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$font-body",
-                  "fontSize": "$type-heading",
-                  "fontWeight": "600"
                 }
               ]
             },
             {
-              "id": "d6Vv6I",
-              "type": "ref",
-              "ref": "uyBqq",
-              "name": "Field / 시작 날짜",
-              "width": "fill_container",
-              "descendants": {
-                "DeUAO": {
-                  "content": "시작 날짜"
-                },
-                "tux95": {
-                  "stroke": "$border-control"
-                },
-                "ES1XO": {
-                  "content": "2026. 09. 01"
-                },
-                "ZL2eD": {
-                  "content": "",
-                  "enabled": false,
-                  "fill": "$text-secondary",
-                  "width": 300
-                }
-              }
-            },
-            {
               "type": "frame",
-              "id": "d10Calendar",
-              "name": "Native calendar / 시작 날짜 펼침",
+              "id": "wEllE",
+              "name": "Scroll viewport / 색과 기존 필터",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical"
+              },
+              "clip": true,
               "width": "fill_container",
-              "fill": "$bg-page",
-              "cornerRadius": 12,
-              "stroke": "$border-control",
-              "strokeWidth": 1,
-              "layout": "vertical",
-              "gap": 8,
-              "padding": 12,
+              "height": "fill_container",
+              "layout": "none",
               "children": [
                 {
                   "type": "frame",
-                  "id": "d10CalendarHeader",
-                  "name": "Calendar header",
-                  "width": "fill_container",
-                  "gap": 8,
-                  "alignItems": "center",
+                  "id": "oCnnX",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Scroll content / 색과 기존 필터",
+                  "width": 350,
+                  "layout": "vertical",
+                  "gap": 12,
                   "children": [
                     {
-                      "id": "d10Prev",
-                      "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "이전 달",
-                      "descendants": {
-                        "QbEcD": {
-                          "icon": "chevron-left"
-                        }
-                      }
-                    },
-                    {
                       "type": "text",
-                      "id": "d10Month",
-                      "name": "선택 중인 달",
+                      "id": "L9W0gO",
+                      "name": "색으로 모아보기",
                       "fill": "$text-primary",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "2026년 9월",
+                      "content": "색으로 모아보기",
                       "lineHeight": 1.5,
-                      "textAlign": "center",
                       "fontFamily": "$font-body",
                       "fontSize": 14,
                       "fontWeight": "600"
                     },
                     {
-                      "id": "d10Next",
+                      "type": "frame",
+                      "id": "iqdwj",
+                      "name": "색 선택 방식",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "ROCFV",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 기본색",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "기본색",
+                              "fill": "$accent-solid"
+                            }
+                          }
+                        },
+                        {
+                          "id": "e2tDhP",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 팔레트",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "팔레트",
+                              "fill": "$text-primary"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "bCauU",
+                      "name": "기본색 12개",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "YlgGA",
+                          "name": "기본색 행 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "wsi8K",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 빨강",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-red"
+                                },
+                                "wUJ00": {
+                                  "content": "빨강"
+                                }
+                              }
+                            },
+                            {
+                              "id": "tNmu6",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 주황",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-orange"
+                                },
+                                "wUJ00": {
+                                  "content": "주황"
+                                }
+                              }
+                            },
+                            {
+                              "id": "l6yiSI",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 노랑",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-yellow"
+                                },
+                                "wUJ00": {
+                                  "content": "노랑"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "dQhcb",
+                          "name": "기본색 행 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "Gnf8b",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 초록",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-green"
+                                },
+                                "wUJ00": {
+                                  "content": "초록"
+                                }
+                              }
+                            },
+                            {
+                              "id": "SLNKL",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 청록",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-cyan"
+                                },
+                                "wUJ00": {
+                                  "content": "청록"
+                                }
+                              }
+                            },
+                            {
+                              "id": "BV68D",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 파랑",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-blue"
+                                },
+                                "wUJ00": {
+                                  "content": "파랑"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "a7NWtw",
+                          "name": "기본색 행 3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "MZ5KA",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 보라",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-purple"
+                                },
+                                "wUJ00": {
+                                  "content": "보라"
+                                }
+                              }
+                            },
+                            {
+                              "id": "p5COt",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 분홍",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-pink"
+                                },
+                                "wUJ00": {
+                                  "content": "분홍"
+                                }
+                              }
+                            },
+                            {
+                              "id": "lyo6X",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 갈색",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-brown"
+                                },
+                                "wUJ00": {
+                                  "content": "갈색"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gDznq",
+                          "name": "기본색 행 4",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "D9ICBC",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 흰색",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-white"
+                                },
+                                "wUJ00": {
+                                  "content": "흰색"
+                                }
+                              }
+                            },
+                            {
+                              "id": "R32iwy",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 회색",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-gray"
+                                },
+                                "wUJ00": {
+                                  "content": "회색"
+                                }
+                              }
+                            },
+                            {
+                              "id": "vpiZr",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "기본색 / 검정",
+                              "width": "fill_container",
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "$family-black"
+                                },
+                                "wUJ00": {
+                                  "content": "검정"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Zr6ql",
+                      "name": "유사색 안내",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "기본색이나 팔레트에서 고른 색과 비슷한 색을 찾아요.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "d6Vv6I",
                       "type": "ref",
-                      "ref": "OYxj6",
-                      "name": "다음 달",
+                      "ref": "uyBqq",
+                      "name": "Field / 시작 날짜",
+                      "width": "fill_container",
                       "descendants": {
-                        "QbEcD": {
-                          "icon": "chevron-right"
+                        "DeUAO": {
+                          "content": "시작 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "id": "Hzct3",
+                      "type": "ref",
+                      "ref": "uyBqq",
+                      "name": "Field / 마지막 날짜",
+                      "width": "fill_container",
+                      "descendants": {
+                        "DeUAO": {
+                          "content": "마지막 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "ummJE",
+                      "name": "의미 태그 · 하나 선택",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "의미 태그 하나 선택",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lLoEh",
+                      "name": "Single tag choices",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "vrEup",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 전체",
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 2,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "전체"
+                            }
+                          }
+                        },
+                        {
+                          "id": "fLgga",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 카페",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "카페"
+                            }
+                          }
+                        },
+                        {
+                          "id": "snB85",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 골목",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "골목"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "r3vMn",
+                      "type": "ref",
+                      "ref": "Od8VW",
+                      "name": "Favorites only",
+                      "descendants": {
+                        "rp5UL": {
+                          "content": "즐겨찾기만 보기"
                         }
                       }
                     }
                   ]
-                },
-                {
-                  "type": "text",
-                  "id": "d10Days",
-                  "name": "달력 날짜 · 1일 선택",
-                  "fill": "$text-primary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "일   월   화   수   목   금   토\n30   31   [1]   2    3    4    5\n 6    7    8    9   10   11   12",
-                  "lineHeight": 1.8,
-                  "textAlign": "center",
-                  "fontFamily": "$font-body",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
                 }
               ]
-            },
-            {
-              "id": "Hzct3",
-              "type": "ref",
-              "ref": "uyBqq",
-              "name": "Field / 마지막 날짜",
-              "width": "fill_container",
-              "descendants": {
-                "DeUAO": {
-                  "content": "마지막 날짜"
-                },
-                "tux95": {
-                  "stroke": "$border-control"
-                },
-                "ES1XO": {
-                  "content": "2026. 09. 30"
-                },
-                "ZL2eD": {
-                  "content": "",
-                  "enabled": false,
-                  "fill": "$text-secondary",
-                  "width": 300
-                }
-              }
-            },
-            {
-              "type": "text",
-              "id": "ummJE",
-              "name": "의미 태그 · 하나 선택",
-              "fill": "$text-primary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "의미 태그 · 하나 선택",
-              "lineHeight": 1.5,
-              "fontFamily": "$font-body",
-              "fontSize": "$type-small",
-              "fontWeight": "normal"
             },
             {
               "type": "frame",
-              "id": "lLoEh",
-              "name": "Single tag choices",
+              "id": "mChMA",
+              "name": "Fixed footer / 적용과 취소",
               "width": "fill_container",
+              "layout": "vertical",
               "gap": 8,
-              "alignItems": "center",
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
               "children": [
                 {
-                  "id": "vrEup",
+                  "id": "O2cJ2S",
                   "type": "ref",
-                  "ref": "ssGLv",
-                  "name": "Filter / 전체",
-                  "fill": "$accent-subtle",
-                  "stroke": "$accent-solid",
-                  "strokeWidth": 2,
+                  "ref": "okVIz",
+                  "name": "Button / 필터 적용",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "height": 48,
                   "descendants": {
-                    "R1feeN": {
-                      "content": "전체"
+                    "uTrwf": {
+                      "content": "필터 적용",
+                      "fill": "$text-inverse"
                     }
                   }
                 },
                 {
-                  "id": "fLgga",
+                  "id": "Wz7YO",
                   "type": "ref",
-                  "ref": "ssGLv",
-                  "name": "Filter / 카페",
+                  "ref": "okVIz",
+                  "name": "Button / 취소",
+                  "width": "fill_container",
                   "fill": "$bg-surface",
                   "stroke": "$border-control",
                   "strokeWidth": 1,
+                  "height": 48,
                   "descendants": {
-                    "R1feeN": {
-                      "content": "카페"
-                    }
-                  }
-                },
-                {
-                  "id": "snB85",
-                  "type": "ref",
-                  "ref": "ssGLv",
-                  "name": "Filter / 골목",
-                  "fill": "$bg-surface",
-                  "stroke": "$border-control",
-                  "strokeWidth": 1,
-                  "descendants": {
-                    "R1feeN": {
-                      "content": "골목"
+                    "uTrwf": {
+                      "content": "취소",
+                      "fill": "$text-primary"
                     }
                   }
                 }
               ]
-            },
-            {
-              "id": "r3vMn",
-              "type": "ref",
-              "ref": "Od8VW",
-              "name": "Favorites only",
-              "descendants": {
-                "rp5UL": {
-                  "content": "즐겨찾기만 보기"
-                }
-              }
-            },
-            {
-              "id": "O2cJ2S",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 필터 적용",
-              "width": "fill_container",
-              "fill": "$accent-solid",
-              "strokeWidth": 0,
-              "descendants": {
-                "uTrwf": {
-                  "content": "필터 적용",
-                  "fill": "$text-inverse"
-                }
-              }
-            },
-            {
-              "id": "Wz7YO",
-              "type": "ref",
-              "ref": "okVIz",
-              "name": "Button / 필터 초기화",
-              "width": "fill_container",
-              "fill": "$bg-surface",
-              "stroke": "$border-control",
-              "strokeWidth": 1,
-              "descendants": {
-                "uTrwf": {
-                  "content": "필터 초기화",
-                  "fill": "$text-primary"
-                }
-              }
             }
           ]
         }
@@ -16995,6 +17439,19 @@
           "fontFamily": "$font-body",
           "fontSize": 14,
           "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "orUJh",
+          "name": "Color search flow / 유사색 검색",
+          "fill": "$text-primary",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Book의 색 → 기본색 또는 팔레트 → 유사 범위와 최소 비중 → 필터 적용. 상세 추출색을 누르면 해당 HEX로 Book을 엽니다. 기존 날짜·태그·즐겨찾기 조건은 유지합니다.\n기본: 비슷하게(OKLab 거리 0.10), 비중 10% 이상. 가깝게 0.06 / 넓게 0.16, 최소 비중 5% / 10% / 25%. 같은 범위에 든 대표색 비중을 합산하며 원본 대표색 기반 추정값입니다. 수치는 제품 초기 조절값입니다.",
+          "lineHeight": 1.5,
+          "fontFamily": "$font-body",
+          "fontSize": 14,
+          "fontWeight": "normal"
         }
       ]
     },
@@ -23122,6 +23579,3389 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "bYEpI",
+      "x": 4070,
+      "y": 3300,
+      "name": "Phone / 52 · 팔레트 유사색 필터",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-002",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "NZaWY",
+          "x": 0,
+          "y": 0,
+          "name": "Context / inactive Book",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-002",
+            "locale": "ko",
+            "fixture": true
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "z9A9I",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "To5WT",
+              "name": "Screen content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "n2ZuL7",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lX5t5",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Chroma Note",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-display",
+                      "fontSize": "$type-heading",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "i6wuV",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "설정",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "settings"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JQ1vB",
+                  "name": "Book introduction / 기억을 모은 책",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QDvWU",
+                      "name": "Book intro",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "다시 펼쳐 보는 순간",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-title",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "PRtuD",
+                      "name": "같은 장소도, 새로운 기억이 돼요.",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "사진 한 장, 오래 남길 이야기.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "nkUfX",
+                  "name": "Book filters",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "Ml4WW",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 전체",
+                      "fill": "$accent-subtle",
+                      "stroke": "$accent-solid",
+                      "strokeWidth": 2,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "전체"
+                        }
+                      }
+                    },
+                    {
+                      "id": "dHGwb",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 날짜",
+                      "fill": "$bg-surface",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "날짜"
+                        }
+                      }
+                    },
+                    {
+                      "id": "UED7I",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 색",
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "색"
+                        }
+                      }
+                    },
+                    {
+                      "id": "WgG3h",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 필터",
+                      "fill": "$bg-surface",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "필터"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "D5f6d",
+                  "name": "2026년 9월",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2개의 기록",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "dr2am",
+                  "name": "Line art grid",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "m8Q2kn",
+                      "type": "ref",
+                      "ref": "oYbGg",
+                      "name": "Record 09. 09",
+                      "width": "fill_container",
+                      "padding": 0,
+                      "descendants": {
+                        "sLdCL": {
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "GNWKu": {
+                          "content": "09. 09"
+                        },
+                        "bZ8bN": {
+                          "content": "햇살이 머문 곳",
+                          "fontSize": 14
+                        }
+                      }
+                    },
+                    {
+                      "id": "Q8XTc1",
+                      "type": "ref",
+                      "ref": "oYbGg",
+                      "name": "Record 09. 07",
+                      "width": "fill_container",
+                      "padding": 0,
+                      "descendants": {
+                        "sLdCL": {
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "GNWKu": {
+                          "content": "09. 07"
+                        },
+                        "bZ8bN": {
+                          "content": "느린 오후",
+                          "fontSize": 14
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "Q3Khph",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 사진 가져오기",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "사진 가져오기",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "E3WMTH",
+                  "name": "초안 이어쓰기와 삭제",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "GXIG2",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 초안 1개 이어서 만들기",
+                      "width": "fill_container",
+                      "fill": "$bg-sunken",
+                      "stroke": "$border-control",
+                      "strokeWidth": 0,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "초안 1개 이어서 만들기",
+                          "fill": "$text-primary",
+                          "fontSize": "$type-small",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "textAlign": "center"
+                        }
+                      }
+                    },
+                    {
+                      "id": "dA3e6",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "새 초안 삭제",
+                      "width": 48,
+                      "height": 48,
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "trash-2",
+                          "fill": "$danger-solid"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "LCorf",
+                  "name": "완성된 기록은 나만 볼 수 있어요.",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "완성된 기록은 나만 볼 수 있어요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "N1Rde4",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim",
+          "fill": "#29282366",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "XmE6y",
+          "x": 0,
+          "y": 120,
+          "name": "Sheet / 필터",
+          "width": 390,
+          "height": 724,
+          "fill": "$bg-surface",
+          "cornerRadius": [
+            24,
+            24,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
+          "layout": "vertical",
+          "padding": [
+            0,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "p5Tvj",
+              "name": "App header",
+              "width": "fill_container",
+              "height": 72,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "pRuI3",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "필터",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "ktvDl",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "필터 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "L0rNsp",
+              "name": "Scroll viewport / 색과 기존 필터",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical"
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "e8W03C",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Scroll content / 색과 기존 필터",
+                  "width": 350,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Vw4P6",
+                      "name": "색으로 모아보기",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "색으로 모아보기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N52kjr",
+                      "name": "색 선택 방식",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "nDO3Y",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 기본색",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "기본색",
+                              "fill": "$text-primary"
+                            }
+                          }
+                        },
+                        {
+                          "id": "T5kEuk",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 팔레트",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "팔레트",
+                              "fill": "$accent-solid"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wzWXf",
+                      "name": "팔레트 직접 선택",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "amMvn",
+                          "name": "팔레트 사용 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "아래에서 색을 고르고, 위에서 밝기와 진하기를 골라요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XzzMV",
+                          "name": "명도와 채도 선택",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 148,
+                          "fill": [
+                            {
+                              "type": "gradient",
+                              "gradientType": "linear",
+                              "enabled": true,
+                              "rotation": 270,
+                              "size": {
+                                "height": 1
+                              },
+                              "colors": [
+                                {
+                                  "color": "#FFFFFF",
+                                  "position": 0
+                                },
+                                {
+                                  "color": "#00FF70",
+                                  "position": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "gradient",
+                              "gradientType": "linear",
+                              "enabled": true,
+                              "rotation": 180,
+                              "size": {
+                                "height": 1
+                              },
+                              "colors": [
+                                {
+                                  "color": "#00000000",
+                                  "position": 0
+                                },
+                                {
+                                  "color": "#000000",
+                                  "position": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "nw8Yx",
+                              "x": 210,
+                              "y": 55,
+                              "name": "선택한 명도와 채도",
+                              "width": 20,
+                              "height": 20,
+                              "stroke": "#FFFFFF",
+                              "strokeWidth": 3
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LQ60U",
+                          "name": "색상 선택",
+                          "width": "fill_container",
+                          "height": 48,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 12,
+                              "id": "s20cv",
+                              "x": 0,
+                              "y": 12,
+                              "name": "색상 띠",
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "enabled": true,
+                                "rotation": 270,
+                                "size": {
+                                  "height": 1
+                                },
+                                "colors": [
+                                  {
+                                    "color": "#FF0000",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "#FFFF00",
+                                    "position": 0.16666666666666666
+                                  },
+                                  {
+                                    "color": "#00FF00",
+                                    "position": 0.3333333333333333
+                                  },
+                                  {
+                                    "color": "#00FFFF",
+                                    "position": 0.5
+                                  },
+                                  {
+                                    "color": "#0000FF",
+                                    "position": 0.6666666666666666
+                                  },
+                                  {
+                                    "color": "#FF00FF",
+                                    "position": 0.8333333333333334
+                                  },
+                                  {
+                                    "color": "#FF0000",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "width": 350,
+                              "height": 24
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 6,
+                              "id": "q2PsOT",
+                              "x": 145,
+                              "y": 8,
+                              "name": "선택한 색상 위치",
+                              "width": 12,
+                              "height": 32,
+                              "stroke": "#FFFFFF",
+                              "strokeWidth": 3
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cOZIT",
+                      "name": "유사 범위와 사진 속 비중",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "F3l5K",
+                          "name": "선택색 확인과 해제",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "qMQg7",
+                              "name": "선택한 임의 색",
+                              "fill": "#479C76",
+                              "width": 28,
+                              "height": 28,
+                              "stroke": "$border-control",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "zi9cR",
+                              "name": "선택한 색 안내",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "이 색과 비슷한 색 찾기",
+                              "lineHeight": 1.5,
+                              "fontFamily": "$font-body",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "nYhP3",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 해제",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "해제",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "w7cdkq",
+                          "name": "유사 범위",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "유사 범위",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CET5y",
+                          "name": "유사 범위 선택",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "fTOgp",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 가깝게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "가깝게",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            },
+                            {
+                              "id": "mYq7y",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 비슷하게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$accent-subtle",
+                              "stroke": "$accent-solid",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "비슷하게",
+                                  "fill": "$accent-solid"
+                                }
+                              }
+                            },
+                            {
+                              "id": "FFAa4",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 넓게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "넓게",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZMrB0",
+                          "name": "사진 속 비중",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "사진 속 비중",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "cVMov",
+                          "name": "최소 비중 선택",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "aAleV",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 5% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "5% 이상",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            },
+                            {
+                              "id": "uQpZv",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 10% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$accent-subtle",
+                              "stroke": "$accent-solid",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "10% 이상",
+                                  "fill": "$accent-solid"
+                                }
+                              }
+                            },
+                            {
+                              "id": "tQ3AA",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 25% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "25% 이상",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "sQCGz",
+                          "name": "비중 합산 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "비슷한 대표색의 비중을 합쳐요. 저장된 대표색을 바탕으로 한 추정값이에요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "WS9pE",
+                      "type": "ref",
+                      "ref": "uyBqq",
+                      "name": "Field / 시작 날짜",
+                      "width": "fill_container",
+                      "descendants": {
+                        "DeUAO": {
+                          "content": "시작 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "id": "z7YJU",
+                      "type": "ref",
+                      "ref": "uyBqq",
+                      "name": "Field / 마지막 날짜",
+                      "width": "fill_container",
+                      "descendants": {
+                        "DeUAO": {
+                          "content": "마지막 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "zQCiD",
+                      "name": "의미 태그 · 하나 선택",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "의미 태그 하나 선택",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CPDDk",
+                      "name": "Single tag choices",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "DRJMP",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 전체",
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 2,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "전체"
+                            }
+                          }
+                        },
+                        {
+                          "id": "WkC2e",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 카페",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "카페"
+                            }
+                          }
+                        },
+                        {
+                          "id": "CuWdk",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 골목",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "골목"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "xQQ5t",
+                      "type": "ref",
+                      "ref": "Od8VW",
+                      "name": "Favorites only",
+                      "descendants": {
+                        "rp5UL": {
+                          "content": "즐겨찾기만 보기"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "vDCj4",
+              "name": "Fixed footer / 적용과 취소",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "id": "Q0Q5zs",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 필터 적용",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "height": 48,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "필터 적용",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                },
+                {
+                  "id": "VaID6",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 취소",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "height": 48,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "취소",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "rwDih",
+      "x": 4540,
+      "y": 3300,
+      "name": "Phone / 53 · 상세 추출색으로 모아보기",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-006",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "VIRpC",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "xlBai",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            8,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "wYuCL",
+              "name": "App header",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "dRSiR",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "뒤로",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "arrow-left"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "l0VYIT",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "기록",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "y2v2rt",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "기록 더보기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "ellipsis"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": "AoHAo",
+              "type": "ref",
+              "ref": "DOjki",
+              "name": "Notice / Book에 저장했어요",
+              "width": 350,
+              "fill": "$success-subtle",
+              "padding": [
+                12,
+                16
+              ],
+              "enabled": false,
+              "descendants": {
+                "h4vaXF": {
+                  "icon": "check",
+                  "fill": "$success-text"
+                },
+                "HZd7j": {
+                  "content": "Book에 저장했어요",
+                  "fill": "$success-text"
+                },
+                "t3y1jD": {
+                  "content": "완성된 컬러 스케치와 기록을 계정에 보관했어요.",
+                  "fill": "$success-text",
+                  "enabled": false,
+                  "width": 280
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "TSMbM",
+              "name": "Scroll viewport / 저장된 전체 기록",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical",
+                "showsFullRecord": true,
+                "longText": true,
+                "tagWrap": true
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "mfPN5",
+                  "x": 0,
+                  "y": -457,
+                  "name": "Scroll content / 저장된 전체 기록",
+                  "width": 350,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "l0g4d",
+                      "type": "ref",
+                      "ref": "u5MzP4",
+                      "name": "RecordArtwork / 저장된 상세 전체 읽기",
+                      "width": "fill_container",
+                      "fill": "$bg-page",
+                      "gap": 14,
+                      "descendants": {
+                        "u77MqE": {
+                          "name": "RecordArtwork line art / large contain center",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          },
+                          "cornerRadius": 0,
+                          "strokeWidth": 0
+                        },
+                        "y6IMki": {
+                          "fontFamily": "$font-body",
+                          "fontSize": 21,
+                          "lineHeight": 1.4286
+                        },
+                        "ABY43": {
+                          "content": "2026. 09. 09",
+                          "fontSize": 14
+                        },
+                        "mrXQR": {
+                          "enabled": false,
+                          "width": 310
+                        },
+                        "diVY1": {
+                          "content": "햇살이 머문 작은 카페.\n다음에는 창가에 조금 더 오래 앉아 있고 싶다.\n\n낮은 지붕 아래 초록 문이 조용히 빛났다. 오래된 나무 의자와 작은 화분 사이로 오후의 햇살이 번지고, 골목을 걷던 시간까지 한 장의 선화에 고요하게 남았다.",
+                          "fontSize": 16,
+                          "lineHeight": 1.625
+                        },
+                        "PywXB": {
+                          "enabled": false,
+                          "width": 310
+                        },
+                        "P0HMXt": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "svAoy": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "uU2gy": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "Bqfby": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "GsYal": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "m22XK": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "Cy7Iz": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "z2KK01": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "XfWoY": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "lR1yF": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "H5Hx5": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "S9iDZZ": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "g1MSLt": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "Y6nCQH": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "TW7A2": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "t3bWo": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "inOAG": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "AFhah": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "HETWw": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "jr577": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        },
+                        "GyJBy": {
+                          "fill": "#00000000",
+                          "padding": 0,
+                          "cornerRadius": 0
+                        },
+                        "Y022eg": {
+                          "fill": "$text-secondary",
+                          "fontSize": 14,
+                          "fontWeight": "normal",
+                          "lineHeight": 1.5714
+                        }
+                      }
+                    },
+                    {
+                      "type": "frame",
+                      "id": "i3js8",
+                      "name": "Record colors / 유사색 탐색",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        0,
+                        0,
+                        0
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hbhBG",
+                          "name": "사진에서 찾은 색",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "사진에서 찾은 색",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "FPk2P",
+                          "name": "상세 색 탐색 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "색을 누르면 비슷한 색이 담긴 기록을 모아 볼 수 있어요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "gGq7q",
+                          "name": "추출색 행 1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "vixVt",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #BCA28A",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#BCA28A"
+                                },
+                                "wUJ00": {
+                                  "content": "31%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "XNTWC",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #35533D",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#35533D"
+                                },
+                                "wUJ00": {
+                                  "content": "26%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "u0Zck",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #C2774D",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#C2774D"
+                                },
+                                "wUJ00": {
+                                  "content": "20%"
+                                }
+                              }
+                            },
+                            {
+                              "id": "jFNYW",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #A3C3D0",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#A3C3D0"
+                                },
+                                "wUJ00": {
+                                  "content": "14%"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zZo1F",
+                          "name": "추출색 행 2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "rFUnS",
+                              "type": "ref",
+                              "ref": "h2uwZf",
+                              "name": "추출색 #E5D8BC",
+                              "width": 76,
+                              "descendants": {
+                                "AmRvw": {
+                                  "fill": "#E5D8BC"
+                                },
+                                "wUJ00": {
+                                  "content": "9%"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Vl12K",
+                      "name": "Favorite action / 전체 기록 아래",
+                      "metadata": {
+                        "type": "interaction",
+                        "role": "button",
+                        "action": "toggle-favorite",
+                        "minTarget": 48
+                      },
+                      "width": "fill_container",
+                      "height": 48,
+                      "gap": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "qitaD",
+                          "name": "Favorite icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "heart",
+                          "library": "lucide",
+                          "fill": "$text-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Wxcws",
+                          "name": "Favorite label",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "즐겨찾기",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": "$type-small",
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "gVjVR",
+          "x": 0,
+          "y": 746,
+          "name": "Safe footer / 기록 편집",
+          "enabled": false,
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": 390,
+          "layout": "vertical",
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "Nei3j",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 기록 편집",
+              "width": "fill_container",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "descendants": {
+                "uTrwf": {
+                  "content": "기록 편집",
+                  "fill": "$text-inverse"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "tZ0bx",
+      "x": 5010,
+      "y": 3300,
+      "name": "Phone / 54 · 유사 범위와 복합 필터",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-002",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "IHD7V",
+          "x": 0,
+          "y": 0,
+          "name": "Context / inactive Book",
+          "metadata": {
+            "type": "screen",
+            "requirement": "SR-SCREEN-002",
+            "locale": "ko",
+            "fixture": true
+          },
+          "clip": true,
+          "width": 390,
+          "height": 844,
+          "fill": "$bg-page",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "children": [
+            {
+              "id": "qFHUe",
+              "type": "ref",
+              "ref": "T6p8dZ",
+              "name": "System status bar",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "aDjh5",
+              "name": "Screen content",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                8,
+                20,
+                34,
+                20
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "skMOm",
+                  "name": "App header",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "m4wrb6",
+                      "name": "Screen title",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Chroma Note",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-display",
+                      "fontSize": "$type-heading",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "id": "PxOV2",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "설정",
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "settings"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JRhwv",
+                  "name": "Book introduction / 기억을 모은 책",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zlD7Q",
+                      "name": "Book intro",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "다시 펼쳐 보는 순간",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-title",
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "uKEhS",
+                      "name": "같은 장소도, 새로운 기억이 돼요.",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "사진 한 장, 오래 남길 이야기.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZPnqU",
+                  "name": "Book filters",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "wUGvH",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 전체",
+                      "fill": "$accent-subtle",
+                      "stroke": "$accent-solid",
+                      "strokeWidth": 2,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "전체"
+                        }
+                      }
+                    },
+                    {
+                      "id": "TLlIx",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 날짜",
+                      "fill": "$bg-surface",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "날짜"
+                        }
+                      }
+                    },
+                    {
+                      "id": "D99E5",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 색",
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "색"
+                        }
+                      }
+                    },
+                    {
+                      "id": "f5oHI4",
+                      "type": "ref",
+                      "ref": "ssGLv",
+                      "name": "Filter / 필터",
+                      "fill": "$bg-surface",
+                      "stroke": "$border-control",
+                      "strokeWidth": 1,
+                      "descendants": {
+                        "R1feeN": {
+                          "content": "필터"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "Uo7Xg",
+                  "name": "2026년 9월",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "2개의 기록",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "fdArk",
+                  "name": "Line art grid",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "NrWHB",
+                      "type": "ref",
+                      "ref": "oYbGg",
+                      "name": "Record 09. 09",
+                      "width": "fill_container",
+                      "padding": 0,
+                      "descendants": {
+                        "sLdCL": {
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "GNWKu": {
+                          "content": "09. 09"
+                        },
+                        "bZ8bN": {
+                          "content": "햇살이 머문 곳",
+                          "fontSize": 14
+                        }
+                      }
+                    },
+                    {
+                      "id": "jJ4rg",
+                      "type": "ref",
+                      "ref": "oYbGg",
+                      "name": "Record 09. 07",
+                      "width": "fill_container",
+                      "padding": 0,
+                      "descendants": {
+                        "sLdCL": {
+                          "height": 162,
+                          "name": "Line art image",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/lineart-style1-source-rgb.png",
+                            "mode": "fit"
+                          }
+                        },
+                        "GNWKu": {
+                          "content": "09. 07"
+                        },
+                        "bZ8bN": {
+                          "content": "느린 오후",
+                          "fontSize": 14
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "J22MJL",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 사진 가져오기",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "사진 가져오기",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "QCFr4",
+                  "name": "초안 이어쓰기와 삭제",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "id": "C0S0D",
+                      "type": "ref",
+                      "ref": "okVIz",
+                      "name": "Button / 초안 1개 이어서 만들기",
+                      "width": "fill_container",
+                      "fill": "$bg-sunken",
+                      "stroke": "$border-control",
+                      "strokeWidth": 0,
+                      "padding": [
+                        14,
+                        16
+                      ],
+                      "descendants": {
+                        "uTrwf": {
+                          "content": "초안 1개 이어서 만들기",
+                          "fill": "$text-primary",
+                          "fontSize": "$type-small",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "textAlign": "center"
+                        }
+                      }
+                    },
+                    {
+                      "id": "eW3LS",
+                      "type": "ref",
+                      "ref": "OYxj6",
+                      "name": "새 초안 삭제",
+                      "width": 48,
+                      "height": 48,
+                      "descendants": {
+                        "QbEcD": {
+                          "icon": "trash-2",
+                          "fill": "$danger-solid"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "JeO4u",
+                  "name": "완성된 기록은 나만 볼 수 있어요.",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "완성된 기록은 나만 볼 수 있어요.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-caption",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "BuEfK",
+          "x": 0,
+          "y": 0,
+          "name": "Modal scrim",
+          "fill": "#29282366",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "frame",
+          "id": "VzbmS",
+          "x": 0,
+          "y": 120,
+          "name": "Sheet / 필터",
+          "width": 390,
+          "height": 724,
+          "fill": "$bg-surface",
+          "cornerRadius": [
+            24,
+            24,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#29282338",
+            "offset": {
+              "x": 0,
+              "y": 12
+            },
+            "blur": 28
+          },
+          "layout": "vertical",
+          "padding": [
+            0,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "LkOIa",
+              "name": "App header",
+              "width": "fill_container",
+              "height": 72,
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eNDyi",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "필터",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "i5mDDN",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "필터 닫기",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "x"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "c7Quf",
+              "name": "Scroll viewport / 색과 기존 필터",
+              "metadata": {
+                "type": "scroll-view",
+                "axis": "vertical"
+              },
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QevEm",
+                  "x": 0,
+                  "y": -360,
+                  "name": "Scroll content / 색과 기존 필터",
+                  "width": 350,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TNVTT",
+                      "name": "색으로 모아보기",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "색으로 모아보기",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wQo1A",
+                      "name": "색 선택 방식",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "id": "L2vIo",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 기본색",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "기본색",
+                              "fill": "$text-primary"
+                            }
+                          }
+                        },
+                        {
+                          "id": "fjMEF",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 팔레트",
+                          "height": 48,
+                          "padding": [
+                            10,
+                            14
+                          ],
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "팔레트",
+                              "fill": "$accent-solid"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tAhXf",
+                      "name": "팔레트 직접 선택",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "jFZOi",
+                          "name": "팔레트 사용 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "아래에서 색을 고르고, 위에서 밝기와 진하기를 골라요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "j83NAV",
+                          "name": "명도와 채도 선택",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 148,
+                          "fill": [
+                            {
+                              "type": "gradient",
+                              "gradientType": "linear",
+                              "enabled": true,
+                              "rotation": 270,
+                              "size": {
+                                "height": 1
+                              },
+                              "colors": [
+                                {
+                                  "color": "#FFFFFF",
+                                  "position": 0
+                                },
+                                {
+                                  "color": "#00FF70",
+                                  "position": 1
+                                }
+                              ]
+                            },
+                            {
+                              "type": "gradient",
+                              "gradientType": "linear",
+                              "enabled": true,
+                              "rotation": 180,
+                              "size": {
+                                "height": 1
+                              },
+                              "colors": [
+                                {
+                                  "color": "#00000000",
+                                  "position": 0
+                                },
+                                {
+                                  "color": "#000000",
+                                  "position": 1
+                                }
+                              ]
+                            }
+                          ],
+                          "cornerRadius": 12,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "YW23I",
+                              "x": 210,
+                              "y": 55,
+                              "name": "선택한 명도와 채도",
+                              "width": 20,
+                              "height": 20,
+                              "stroke": "#FFFFFF",
+                              "strokeWidth": 3
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "u8abb5",
+                          "name": "색상 선택",
+                          "width": "fill_container",
+                          "height": 48,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 12,
+                              "id": "Zzetd",
+                              "x": 0,
+                              "y": 12,
+                              "name": "색상 띠",
+                              "fill": {
+                                "type": "gradient",
+                                "gradientType": "linear",
+                                "enabled": true,
+                                "rotation": 270,
+                                "size": {
+                                  "height": 1
+                                },
+                                "colors": [
+                                  {
+                                    "color": "#FF0000",
+                                    "position": 0
+                                  },
+                                  {
+                                    "color": "#FFFF00",
+                                    "position": 0.16666666666666666
+                                  },
+                                  {
+                                    "color": "#00FF00",
+                                    "position": 0.3333333333333333
+                                  },
+                                  {
+                                    "color": "#00FFFF",
+                                    "position": 0.5
+                                  },
+                                  {
+                                    "color": "#0000FF",
+                                    "position": 0.6666666666666666
+                                  },
+                                  {
+                                    "color": "#FF00FF",
+                                    "position": 0.8333333333333334
+                                  },
+                                  {
+                                    "color": "#FF0000",
+                                    "position": 1
+                                  }
+                                ]
+                              },
+                              "width": 350,
+                              "height": 24
+                            },
+                            {
+                              "type": "rectangle",
+                              "cornerRadius": 6,
+                              "id": "c0RQ9",
+                              "x": 145,
+                              "y": 8,
+                              "name": "선택한 색상 위치",
+                              "width": 12,
+                              "height": 32,
+                              "stroke": "#FFFFFF",
+                              "strokeWidth": 3
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O3wAG",
+                      "name": "유사 범위와 사진 속 비중",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jl9iC",
+                          "name": "선택색 확인과 해제",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "pU2en",
+                              "name": "선택한 임의 색",
+                              "fill": "#479C76",
+                              "width": 28,
+                              "height": 28,
+                              "stroke": "$border-control",
+                              "strokeWidth": 1
+                            },
+                            {
+                              "type": "text",
+                              "id": "Q0TWGC",
+                              "name": "선택한 색 안내",
+                              "fill": "$text-primary",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "이 색과 비슷한 색 찾기",
+                              "lineHeight": 1.5,
+                              "fontFamily": "$font-body",
+                              "fontSize": 14,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "id": "MoEAo",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 해제",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "해제",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "I4PrTb",
+                          "name": "유사 범위",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "유사 범위",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Kon9X",
+                          "name": "유사 범위 선택",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "saHpG",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 가깝게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "가깝게",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            },
+                            {
+                              "id": "JyOfq",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 비슷하게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$accent-subtle",
+                              "stroke": "$accent-solid",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "비슷하게",
+                                  "fill": "$accent-solid"
+                                }
+                              }
+                            },
+                            {
+                              "id": "Wan5A",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 넓게",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "넓게",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "Wy4ul",
+                          "name": "사진 속 비중",
+                          "fill": "$text-primary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "사진 속 비중",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "K23myF",
+                          "name": "최소 비중 선택",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "children": [
+                            {
+                              "id": "U2CYlq",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 5% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "5% 이상",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            },
+                            {
+                              "id": "GSExF",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 10% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$accent-subtle",
+                              "stroke": "$accent-solid",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "10% 이상",
+                                  "fill": "$accent-solid"
+                                }
+                              }
+                            },
+                            {
+                              "id": "dSBdi",
+                              "type": "ref",
+                              "ref": "ssGLv",
+                              "name": "Filter / 25% 이상",
+                              "height": 48,
+                              "padding": [
+                                10,
+                                14
+                              ],
+                              "fill": "$bg-surface",
+                              "stroke": "$border-control",
+                              "strokeWidth": 1,
+                              "descendants": {
+                                "R1feeN": {
+                                  "content": "25% 이상",
+                                  "fill": "$text-primary"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "kj8jr",
+                          "name": "비중 합산 안내",
+                          "fill": "$text-secondary",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "비슷한 대표색의 비중을 합쳐요. 저장된 대표색을 바탕으로 한 추정값이에요.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$font-body",
+                          "fontSize": 14,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "qsRkM",
+                      "type": "ref",
+                      "ref": "uyBqq",
+                      "name": "Field / 시작 날짜",
+                      "width": "fill_container",
+                      "descendants": {
+                        "DeUAO": {
+                          "content": "시작 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "id": "wtuqI",
+                      "type": "ref",
+                      "ref": "uyBqq",
+                      "name": "Field / 마지막 날짜",
+                      "width": "fill_container",
+                      "descendants": {
+                        "DeUAO": {
+                          "content": "마지막 날짜"
+                        },
+                        "tux95": {
+                          "stroke": "$border-control"
+                        },
+                        "ES1XO": {
+                          "content": "날짜 선택"
+                        },
+                        "ZL2eD": {
+                          "content": "",
+                          "enabled": false,
+                          "fill": "$text-secondary",
+                          "width": 300
+                        }
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "id": "N1Nwa",
+                      "name": "의미 태그 · 하나 선택",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "의미 태그 하나 선택",
+                      "lineHeight": 1.5,
+                      "fontFamily": "$font-body",
+                      "fontSize": "$type-small",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "catoP",
+                      "name": "Single tag choices",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "id": "r9s1LQ",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 전체",
+                          "fill": "$accent-subtle",
+                          "stroke": "$accent-solid",
+                          "strokeWidth": 2,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "전체"
+                            }
+                          }
+                        },
+                        {
+                          "id": "UaDUv",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 카페",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "카페"
+                            }
+                          }
+                        },
+                        {
+                          "id": "Dlcm1",
+                          "type": "ref",
+                          "ref": "ssGLv",
+                          "name": "Filter / 골목",
+                          "fill": "$bg-surface",
+                          "stroke": "$border-control",
+                          "strokeWidth": 1,
+                          "descendants": {
+                            "R1feeN": {
+                              "content": "골목"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "id": "Pg9yO",
+                      "type": "ref",
+                      "ref": "Od8VW",
+                      "name": "Favorites only",
+                      "descendants": {
+                        "rp5UL": {
+                          "content": "즐겨찾기만 보기"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d1piP5",
+              "name": "Fixed footer / 적용과 취소",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "id": "r6Lg6Y",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 필터 적용",
+                  "width": "fill_container",
+                  "fill": "$accent-solid",
+                  "strokeWidth": 0,
+                  "height": 48,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "필터 적용",
+                      "fill": "$text-inverse"
+                    }
+                  }
+                },
+                {
+                  "id": "i0aTA",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 취소",
+                  "width": "fill_container",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "height": 48,
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "취소",
+                      "fill": "$text-primary"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "PNXAk",
+      "x": 5480,
+      "y": 3300,
+      "name": "Phone / 55 · 유사색 검색 결과",
+      "metadata": {
+        "type": "screen",
+        "requirement": "SR-SCREEN-002",
+        "locale": "ko",
+        "fixture": true
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-page",
+      "cornerRadius": 24,
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "ACz0p",
+          "type": "ref",
+          "ref": "T6p8dZ",
+          "name": "System status bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ThqgN",
+          "name": "Screen content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            8,
+            20,
+            12,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "xOyEj",
+              "name": "App header",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "As8ZV",
+                  "name": "Screen title",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Chroma Note",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-display",
+                  "fontSize": "$type-heading",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "VYseL",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "설정",
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "settings"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sFmLf",
+              "name": "Book introduction / 기억을 모은 책",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d2qPEe",
+                  "name": "Book intro",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "다시 펼쳐 보는 순간",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-title",
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Gsb0L",
+                  "name": "같은 장소도, 새로운 기억이 돼요.",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "사진 한 장, 오래 남길 이야기.",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$font-body",
+                  "fontSize": "$type-small",
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GzYsq",
+              "name": "Book filters",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "TmHEh",
+                  "type": "ref",
+                  "ref": "ssGLv",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "name": "Filter / 전체",
+                  "strokeWidth": 2,
+                  "descendants": {
+                    "R1feeN": {
+                      "content": "전체"
+                    }
+                  }
+                },
+                {
+                  "id": "eF4o3",
+                  "type": "ref",
+                  "ref": "ssGLv",
+                  "name": "Filter / 날짜",
+                  "fill": "$bg-surface",
+                  "stroke": "$border-control",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "R1feeN": {
+                      "content": "날짜"
+                    }
+                  }
+                },
+                {
+                  "id": "RQrmP",
+                  "type": "ref",
+                  "ref": "h2uwZf",
+                  "name": "Filter / 고른 색",
+                  "width": "fit_content",
+                  "fill": "$accent-subtle",
+                  "stroke": "$accent-solid",
+                  "descendants": {
+                    "AmRvw": {
+                      "fill": "#479C76"
+                    },
+                    "wUJ00": {
+                      "content": "고른 색",
+                      "fill": "$accent-solid"
+                    },
+                    "E918B": {
+                      "enabled": true
+                    }
+                  }
+                },
+                {
+                  "id": "Mwepe",
+                  "type": "ref",
+                  "ref": "ssGLv",
+                  "fill": "$accent-subtle",
+                  "stroke": "$accent-solid",
+                  "name": "Filter / 필터",
+                  "strokeWidth": 1,
+                  "descendants": {
+                    "R1feeN": {
+                      "content": "필터"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "QZzFD",
+              "name": "2026년 9월",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "2개의 기록",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-small",
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "P27tF",
+              "name": "Line art grid",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "qXmBA",
+                  "type": "ref",
+                  "ref": "oYbGg",
+                  "name": "Record 09. 09",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "sLdCL": {
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "GNWKu": {
+                      "content": "09. 09"
+                    },
+                    "bZ8bN": {
+                      "content": "햇살이 머문 곳",
+                      "fontSize": 14
+                    },
+                    "Os0aO": {
+                      "enabled": true,
+                      "content": "비슷한 색 31%"
+                    }
+                  }
+                },
+                {
+                  "id": "aG1qk",
+                  "type": "ref",
+                  "ref": "oYbGg",
+                  "name": "Record 09. 07",
+                  "width": "fill_container",
+                  "padding": 0,
+                  "descendants": {
+                    "sLdCL": {
+                      "height": 162,
+                      "name": "Line art image",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/lineart-style1-source-rgb.png",
+                        "mode": "fit"
+                      }
+                    },
+                    "GNWKu": {
+                      "content": "09. 07"
+                    },
+                    "bZ8bN": {
+                      "content": "느린 오후",
+                      "fontSize": 14
+                    },
+                    "Os0aO": {
+                      "enabled": true,
+                      "content": "비슷한 색 26%"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ymQag",
+          "name": "Safe footer / 사진 가져오기",
+          "metadata": {
+            "type": "safe-area",
+            "edge": "bottom",
+            "inset": 34
+          },
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            12,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "id": "p5xCL",
+              "type": "ref",
+              "ref": "okVIz",
+              "name": "Button / 사진 가져오기",
+              "width": "fill_container",
+              "fill": "$accent-solid",
+              "strokeWidth": 0,
+              "descendants": {
+                "uTrwf": {
+                  "content": "사진 가져오기",
+                  "fill": "$text-inverse"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "Y5Tq4A",
+              "name": "초안 이어쓰기와 삭제",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "id": "Vhnxm",
+                  "type": "ref",
+                  "ref": "okVIz",
+                  "name": "Button / 초안 1개 이어서 만들기",
+                  "width": "fill_container",
+                  "fill": "$bg-sunken",
+                  "stroke": "$border-control",
+                  "strokeWidth": 0,
+                  "padding": [
+                    14,
+                    16
+                  ],
+                  "descendants": {
+                    "uTrwf": {
+                      "content": "초안 1개 이어서 만들기",
+                      "fill": "$text-primary",
+                      "fontSize": "$type-small",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "textAlign": "center"
+                    }
+                  }
+                },
+                {
+                  "id": "Zcfnf",
+                  "type": "ref",
+                  "ref": "OYxj6",
+                  "name": "새 초안 삭제",
+                  "width": 48,
+                  "height": 48,
+                  "descendants": {
+                    "QbEcD": {
+                      "icon": "trash-2",
+                      "fill": "$danger-solid"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "m554U",
+              "name": "완성된 기록은 나만 볼 수 있어요.",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "완성된 기록은 나만 볼 수 있어요.",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": "$type-caption",
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "NreGP",
+      "x": 6980,
+      "y": 0,
+      "name": "08 · Color search / 팔레트와 유사색 탐색",
+      "width": 1300,
+      "fill": "$bg-page",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 40,
+      "children": [
+        {
+          "type": "text",
+          "id": "oS122",
+          "name": "Color browsing heading",
+          "fill": "$text-primary",
+          "content": "색으로 모아보기",
+          "lineHeight": 1.5,
+          "fontFamily": "$font-body",
+          "fontSize": 20,
+          "fontWeight": "600"
+        },
+        {
+          "type": "text",
+          "id": "LPaTe",
+          "name": "Color browsing contract",
+          "fill": "$text-primary",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "12색과 팔레트의 직접 선택 모두 같은 유사색 검색. 가깝게 / 비슷하게 / 넓게, 비중 5% / 10% / 25% 이상. 날짜·태그·즐겨찾기와 함께 적용합니다. Book의 전체는 모든 조건을 즉시 해제하고 목록을 다시 불러옵니다.",
+          "lineHeight": 1.5,
+          "fontFamily": "$font-body",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "h2uwZf",
+          "name": "Color chip / 색 선택",
+          "reusable": true,
+          "width": 110,
+          "height": 48,
+          "fill": "$bg-surface",
+          "cornerRadius": 24,
+          "stroke": "$border-control",
+          "strokeWidth": 1,
+          "gap": 6,
+          "padding": 10,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "AmRvw",
+              "name": "Color swatch",
+              "fill": "$family-green",
+              "width": 18,
+              "height": 18,
+              "stroke": "$border-control",
+              "strokeWidth": 1
+            },
+            {
+              "type": "text",
+              "id": "wUJ00",
+              "name": "Color label",
+              "fill": "$text-primary",
+              "content": "초록",
+              "lineHeight": 1.5,
+              "fontFamily": "$font-body",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "icon",
+              "id": "E918B",
+              "x": 0,
+              "y": 0,
+              "name": "Selected check",
+              "enabled": false,
+              "width": 16,
+              "height": 16,
+              "icon": "check",
+              "library": "lucide",
+              "fill": "$accent-solid"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VJEVW",
+          "name": "Color family specimens 1",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "id": "b6QAKa",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 빨강",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-red"
+                },
+                "wUJ00": {
+                  "content": "빨강"
+                }
+              }
+            },
+            {
+              "id": "TXLsy",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 주황",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-orange"
+                },
+                "wUJ00": {
+                  "content": "주황"
+                }
+              }
+            },
+            {
+              "id": "DqTKe",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 노랑",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-yellow"
+                },
+                "wUJ00": {
+                  "content": "노랑"
+                }
+              }
+            },
+            {
+              "id": "icaAx",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 초록",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-green"
+                },
+                "wUJ00": {
+                  "content": "초록"
+                }
+              }
+            },
+            {
+              "id": "b2GcX5",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 청록",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-cyan"
+                },
+                "wUJ00": {
+                  "content": "청록"
+                }
+              }
+            },
+            {
+              "id": "M6wVBK",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 파랑",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-blue"
+                },
+                "wUJ00": {
+                  "content": "파랑"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "y2UUN3",
+          "name": "Color family specimens 2",
+          "width": "fill_container",
+          "gap": 8,
+          "children": [
+            {
+              "id": "BNtID",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 보라",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-purple"
+                },
+                "wUJ00": {
+                  "content": "보라"
+                }
+              }
+            },
+            {
+              "id": "VKhYU",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 분홍",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-pink"
+                },
+                "wUJ00": {
+                  "content": "분홍"
+                }
+              }
+            },
+            {
+              "id": "V3DlZ",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 갈색",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-brown"
+                },
+                "wUJ00": {
+                  "content": "갈색"
+                }
+              }
+            },
+            {
+              "id": "VxaSH",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 흰색",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-white"
+                },
+                "wUJ00": {
+                  "content": "흰색"
+                }
+              }
+            },
+            {
+              "id": "d123i",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 회색",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-gray"
+                },
+                "wUJ00": {
+                  "content": "회색"
+                }
+              }
+            },
+            {
+              "id": "y0lpB",
+              "type": "ref",
+              "ref": "h2uwZf",
+              "name": "Color / 검정",
+              "width": 140,
+              "descendants": {
+                "AmRvw": {
+                  "fill": "$family-black"
+                },
+                "wUJ00": {
+                  "content": "검정"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "zzyp1",
+          "type": "ref",
+          "ref": "h2uwZf",
+          "name": "Color / 초록 선택",
+          "width": 140,
+          "fill": "$accent-subtle",
+          "stroke": "$accent-solid",
+          "descendants": {
+            "wUJ00": {
+              "fill": "$accent-solid",
+              "fontWeight": "700"
+            },
+            "E918B": {
+              "enabled": true
+            }
+          }
+        }
+      ]
     }
   ],
   "variables": {
@@ -23352,6 +27192,54 @@
     "favorite-solid": {
       "type": "color",
       "value": "$coral-500"
+    },
+    "family-red": {
+      "type": "color",
+      "value": "#D94848"
+    },
+    "family-orange": {
+      "type": "color",
+      "value": "#E58A3A"
+    },
+    "family-yellow": {
+      "type": "color",
+      "value": "#E2C64A"
+    },
+    "family-green": {
+      "type": "color",
+      "value": "#5D9665"
+    },
+    "family-cyan": {
+      "type": "color",
+      "value": "#45A9B0"
+    },
+    "family-blue": {
+      "type": "color",
+      "value": "#527BC1"
+    },
+    "family-purple": {
+      "type": "color",
+      "value": "#9164B7"
+    },
+    "family-pink": {
+      "type": "color",
+      "value": "#DD8EAB"
+    },
+    "family-brown": {
+      "type": "color",
+      "value": "#98704D"
+    },
+    "family-white": {
+      "type": "color",
+      "value": "#F4F2ED"
+    },
+    "family-gray": {
+      "type": "color",
+      "value": "#929292"
+    },
+    "family-black": {
+      "type": "color",
+      "value": "#242424"
     }
   },
   "fileToken": "86340261-019e-4da0-a687-5bf51771ebb3"

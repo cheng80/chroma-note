@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import ts from 'typescript';
 import * as recordsCore from './records-core.ts';
+import * as colorSearch from '../domain/color-search.ts';
 
 const { analysisModifiedFields, canonicalJson, decodeCursor, durationMilliseconds, encodeCursor, errorCode, isGeneratedLineArtUri, RecordError, retryAfterMilliseconds, retryDelayMilliseconds, sessionIdFromAccessToken, validCreateSelection } = recordsCore;
 
@@ -67,7 +68,7 @@ const row = {
 
 function recordReads(responses: { status: number; body: unknown }[]) {
   let session = { user: { id: 'owner-a' }, access_token: initialToken, refresh_token: 'refresh-1' };
-  const calls = { refresh: 0, authorization: [] as (string | null)[] };
+  const calls = { refresh: 0, authorization: [] as (string | null)[], urls: [] as URL[] };
   const auth = {
     getSession: async () => ({ data: { session }, error: null }),
     getUser: async () => ({ data: { user: session.user }, error: null }),
@@ -78,8 +79,9 @@ function recordReads(responses: { status: number; body: unknown }[]) {
     },
   };
   const fetchResponse: typeof fetch = async (input, init) => {
-    equal(new URL(String(input)).pathname, '/rest/v1/stamp_records');
+    equal(['/rest/v1/stamp_records', '/rest/v1/rpc/search_stamp_records_by_color'].includes(new URL(String(input)).pathname), true);
     equal(init?.method, 'GET');
+    calls.urls.push(new URL(String(input)));
     calls.authorization.push(new Headers(init?.headers).get('Authorization'));
     const response = responses[calls.authorization.length - 1];
     if (!response) throw new Error('unexpected extra query');
@@ -88,7 +90,7 @@ function recordReads(responses: { status: number; body: unknown }[]) {
   };
   const modules: Record<string, unknown> = {
     'expo-crypto': {}, 'expo-file-system': {}, 'react-native': { AppState: { currentState: 'active' } },
-    '@supabase/supabase-js': { createClient }, './records-core': recordsCore,
+    '@supabase/supabase-js': { createClient }, './records-core': recordsCore, '../domain/color-search.ts': colorSearch,
     './supabase': { getSupabase: () => ({ auth }) }, './network': { boundedFetch: fetchResponse },
   };
   const records = {} as Pick<typeof import('./records'), 'listRecords' | 'fetchRecord'>;
@@ -151,6 +153,48 @@ for (const method of ['listRecords', 'fetchRecord'] as const) {
 }
 console.log('records.check passed: existing contracts and both PostgREST read paths, HTTP status, single refresh, reauthentication');
 
+// Filters must reach PostgREST together with the keyset and limit, not be applied
+// to the returned page. An older match beyond the unfiltered page is checked in SQL.
+{
+  const rows = Array.from({ length: 31 }, (_, i) => ({ ...row, id: `record-${i}`, color_tags: [{ hex: '#FF0000', rgb: [255, 0, 0], weight: 1 }] }));
+  const { records, calls } = recordReads([{ status: 200, body: rows }, { status: 200, body: [rows[30]] }]);
+  const filter = { start_date: '2026-09-01', end_date: '2026-09-30', semantic_tag: '산책', favorite_only: true, color: colorSearch.createColorSearch('#f00') };
+  const first = await records.listRecords('owner-a', filter);
+  equal(first.records.length, 30);
+  equal(decodeCursor(first.cursor!), { diary_date: row.diary_date, created_at: row.created_at, id: 'record-29' });
+  const next = await records.listRecords('owner-a', filter, first.cursor!);
+  equal(next.records.map(({ id }) => id), ['record-30']);
+  equal(next.cursor, null);
+  for (const url of calls.urls) {
+    equal(url.pathname, '/rest/v1/rpc/search_stamp_records_by_color');
+    equal(url.searchParams.get('p_hex'), '#FF0000');
+    equal(url.searchParams.get('p_radius'), '0.1');
+    equal(url.searchParams.get('p_min_weight'), '0.1');
+    equal(url.searchParams.get('status'), 'eq.ready');
+    equal(url.searchParams.get('order'), 'diary_date.desc,created_at.desc,id.desc');
+    equal(url.searchParams.get('limit'), '31');
+    equal(url.searchParams.getAll('diary_date'), ['gte.2026-09-01', 'lte.2026-09-30']);
+    equal(url.searchParams.get('is_favorite'), 'eq.true');
+    equal(url.searchParams.getAll('or')[0], '(semantic_tags.cs.{"산책"},mood_tags.cs.{"산책"})');
+  }
+  equal(calls.urls[1].searchParams.getAll('or').length, 2, 'tag OR and cursor OR both preserved');
+  const legacy = recordReads([{ status: 200, body: [] }, { status: 200, body: [] }]);
+  await legacy.records.listRecords('owner-a', { ...filter, color: undefined });
+  await legacy.records.listRecords('owner-a', { ...filter, color: null });
+  equal(legacy.calls.urls.map((url) => url.pathname), ['/rest/v1/stamp_records', '/rest/v1/stamp_records']);
+  for (const color of [{ hex: '#FF0000', range: 'unknown', minWeight: 0.1 }, { hex: '#GG0000', range: 'similar', minWeight: 0.1 }, { hex: '#FF0000', range: 'similar', minWeight: 0.2 }]) {
+    const invalid = recordReads([]);
+    const badFilter = { ...filter, color } as unknown as Parameters<typeof records.listRecords>[1];
+    await rejects(invalid.records.listRecords('owner-a', badFilter), 'validation', 'invalid search must fail before HTTP');
+    equal(invalid.calls.urls.length, 0);
+  }
+  const refresh = recordReads([expired, { status: 200, body: [] }]);
+  await refresh.records.listRecords('owner-a', filter);
+  equal(refresh.calls.refresh, 1);
+  equal(refresh.calls.urls.map((url) => url.pathname), ['/rest/v1/rpc/search_stamp_records_by_color', '/rest/v1/rpc/search_stamp_records_by_color']);
+  console.log('records color query passed: SDK serialization, combined filters, cursor pages, legacy filters');
+}
+
 // Real SDK auth/session storage, local HTTP, and a pause before SDK refresh entry.
 for (const phase of ['user', 'record', 'refresh-entry', 'refresh-inflight'] as const) {
   const transitions = phase.startsWith('refresh') ? ['owner-b'] as const : ['owner-b', 'new-session', 'signed-out', 'expired'] as const;
@@ -202,7 +246,7 @@ for (const phase of ['user', 'record', 'refresh-entry', 'refresh-inflight'] as c
     }
     const modules: Record<string, unknown> = {
       'expo-crypto': {}, 'expo-file-system': {}, 'react-native': { AppState: { currentState: 'active' } },
-      '@supabase/supabase-js': { createClient }, './records-core': recordsCore,
+      '@supabase/supabase-js': { createClient }, './records-core': recordsCore, '../domain/color-search.ts': colorSearch,
       './supabase': { getSupabase: () => client }, './network': { boundedFetch: fetchResponse },
     };
     const records = {} as Pick<typeof import('./records'), 'listRecords'>;

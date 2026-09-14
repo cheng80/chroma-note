@@ -21,7 +21,7 @@ const mocks = {
   '../theme': { theme: { colors: {}, spacing: {} } },
   '../components/modalA11y': { useModalA11y: () => ({}) },
 };
-for (const name of ['RecordExportModal', 'RecordArtwork', 'AppIcon', 'FavoriteIcon', 'ZoomableImage', 'SemanticText']) mocks[`../components/${name}`] = { [name]: name };
+for (const name of ['RecordExportModal', 'RecordArtwork', 'RecordColors', 'AppIcon', 'FavoriteIcon', 'ZoomableImage', 'SemanticText']) mocks[`../components/${name}`] = { [name]: name };
 for (const name of ['ReadSheet', 'RecordActionsSheet']) mocks[`../sheets/${name}`] = { [name]: name };
 const output = ts.transpileModule(readFileSync(new URL('./DetailScreen.tsx', import.meta.url), 'utf8'), {
   compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 },

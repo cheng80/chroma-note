@@ -214,6 +214,7 @@ export interface BookScreenProps {
   onOpenRecord: (record_id: string) => void;
   onToggleFavorite: (record_id: string) => void;
   onOpenFilter: () => void;
+  onClearFilter: () => void;
   onChangeSheet: (change: SheetChange) => void;
   onApplySheet: () => void;
   onCancelSheet: () => void;
@@ -237,6 +238,7 @@ export interface DetailScreenProps {
   onRequestDelete: () => void;
   onToggleFavorite: () => void;
   onRetryImage: () => void;
+  onExploreColor: (hex: string) => void;
   actionsTriggerRef?: RefObject<View | null>;
 }
 

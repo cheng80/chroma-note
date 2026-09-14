@@ -17,6 +17,7 @@ import {
 } from './contract.ts';
 
 import { recordWriting } from './record-writing.ts';
+import { colorMatchWeight, createColorSearch, isColorSearch, normalizeHex } from '../domain/color-search.ts';
 
 export { DEMO_CODE };
 
@@ -91,6 +92,8 @@ export type DemoAction =
   | { type: 'toggle-favorite'; recordId: string }
   | { type: 'retry-image' }
   | { type: 'open-filter' }
+  | { type: 'clear-book-filter' }
+  | { type: 'explore-color'; hex: string }
   | { type: 'load-more' }
   | { type: 'retry-book' }
   | { type: 'open-settings' }
@@ -141,11 +144,11 @@ function withBookState(state: DemoState): DemoState {
   if (state.scenario === 'book-error') return { ...state, book_state: 'error' };
   if (state.scenario === 'empty-book') return { ...state, book_state: 'empty' };
   const filtered = filterRecords(state.records, state.book_filter);
-  return { ...state, book_state: filtered.length ? state.scenario === 'partial-cache' ? 'partial-cache' : 'ready' : state.book_filter.semantic_tag || state.book_filter.favorite_only || state.book_filter.start_date || state.book_filter.end_date ? 'filter-empty' : 'empty' };
+  return { ...state, book_state: filtered.length ? state.scenario === 'partial-cache' ? 'partial-cache' : 'ready' : Object.values(state.book_filter).some(Boolean) ? 'filter-empty' : 'empty' };
 }
 
 export function filterRecords(records: DemoRecord[], filter: BookFilter) {
-  return records.filter((record) => (!filter.start_date || record.fields.diary_date >= filter.start_date) && (!filter.end_date || record.fields.diary_date <= filter.end_date) && (!filter.semantic_tag || [...record.fields.semantic_tags, ...record.fields.mood_tags].includes(filter.semantic_tag)) && (!filter.favorite_only || record.fields.is_favorite));
+  return records.filter((record) => (!filter.start_date || record.fields.diary_date >= filter.start_date) && (!filter.end_date || record.fields.diary_date <= filter.end_date) && (!filter.semantic_tag || [...record.fields.semantic_tags, ...record.fields.mood_tags].includes(filter.semantic_tag)) && (!filter.favorite_only || record.fields.is_favorite) && (!filter.color || colorMatchWeight(record.color_tags, filter.color) >= filter.color.minWeight - 1e-12));
 }
 
 function currentDraft(state: DemoState): Draft | null {
@@ -173,7 +176,7 @@ function isCalendarDate(value: string | null): value is string {
 }
 
 function isValidFilter(filter: BookFilter) {
-  return (!filter.start_date || isCalendarDate(filter.start_date)) && (!filter.end_date || isCalendarDate(filter.end_date)) && (!filter.start_date || !filter.end_date || filter.start_date <= filter.end_date);
+  return (!filter.start_date || isCalendarDate(filter.start_date)) && (!filter.end_date || isCalendarDate(filter.end_date)) && (!filter.start_date || !filter.end_date || filter.start_date <= filter.end_date) && (filter.color == null || isColorSearch(filter.color));
 }
 
 function isValidText(value: string, maximum: number) {
@@ -306,6 +309,8 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'toggle-favorite': { const records = state.records.map((record) => record.id === action.recordId ? { ...record, fields: { ...record.fields, is_favorite: !record.fields.is_favorite } } : record); return withBookState({ ...state, records }); }
     case 'retry-image': return { ...state, scenario: 'normal' };
     case 'open-filter': return { ...state, sheet: { kind: 'filter', initial: state.book_filter, working: { ...state.book_filter }, error: null } };
+    case 'clear-book-filter': return withBookState({ ...state, book_filter: emptyFilter(), sheet: state.sheet?.kind === 'filter' ? null : state.sheet });
+    case 'explore-color': return normalizeHex(action.hex) ? withBookState({ ...state, route: 'book', selected_record_id: null, active_draft_kind: null, sheet: null, book_filter: { ...state.book_filter, color: { ...createColorSearch(action.hex), ...(state.book_filter.color ? { range: state.book_filter.color.range, minWeight: state.book_filter.color.minWeight } : {}) } } }) : state;
     case 'load-more': return { ...state, page_size: state.page_size + 6 };
     case 'retry-book': return withBookState({ ...state, scenario: 'normal' });
     case 'open-settings': return { ...state, route: 'settings', sheet: null };
