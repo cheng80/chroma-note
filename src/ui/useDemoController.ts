@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'react';
-import { assertDemoInvariants, demoReducer, filterRecords, initialDemoState } from './demo-state';
+import { currentDraft, assertDemoInvariants, demoReducer, filterRecords, initialDemoState } from './demo-state';
 import type { DemoAction } from './demo-state';
 import { demoAssets, demoImages } from './demo-assets';
 
@@ -7,7 +7,7 @@ export function useDemoController() {
   const [state, dispatch] = useReducer(demoReducer, undefined, initialDemoState);
   const send = useCallback((action: DemoAction) => dispatch(action), []);
   const visibleRecords = useMemo(() => filterRecords(state.records, state.book_filter).slice(0, state.page_size), [state.records, state.book_filter, state.page_size]);
-  const draft = state.active_draft_kind ? state.drafts[state.active_draft_kind] : state.drafts.new ?? state.drafts.edit;
+  const draft = currentDraft(state);
   const record = state.records.find((item) => item.id === state.selected_record_id);
 
   useEffect(() => {

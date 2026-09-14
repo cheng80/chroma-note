@@ -11,6 +11,7 @@ import { SemanticText } from '../components/SemanticText';
 
 type DatePlaceSheetProps = {
   locale: DisplayLocale;
+  applyLabel?: string;
   sheet: Extract<NonNullable<SheetState>, { kind: 'datePlace' }>;
   onChangeSheet: (change: SheetChange) => void;
   onApply: () => void;
@@ -18,7 +19,7 @@ type DatePlaceSheetProps = {
   onClose: () => void;
 };
 
-export function DatePlaceSheet({ locale, sheet, onChangeSheet, onApply, onCancel, onClose, restoreFocusRef }: DatePlaceSheetProps & { restoreFocusRef?: React.RefObject<unknown | null> }) {
+export function DatePlaceSheet({ applyLabel, locale, sheet, onChangeSheet, onApply, onCancel, onClose, restoreFocusRef }: DatePlaceSheetProps & { restoreFocusRef?: React.RefObject<unknown | null> }) {
   const copy = recordCopy[locale];
   const working = useRef(sheet.working);
   const [dateExpanded, setDateExpanded] = useState(false);
@@ -30,7 +31,7 @@ export function DatePlaceSheet({ locale, sheet, onChangeSheet, onApply, onCancel
     updateWorking({ diary_date, date_source: 'user' });
   };
 
-  const footer = <><Button label={copy.apply} onPress={onApply} /><Button label={copy.cancel} onPress={onCancel} tone="secondary" /></>;
+  const footer = <><Button label={applyLabel ?? copy.apply} onPress={onApply} /><Button label={copy.cancel} onPress={onCancel} tone="secondary" /></>;
   const error = sheet.error ? <Notice message={copy.invalid} tone="error" /> : null;
 
   return (

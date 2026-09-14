@@ -63,6 +63,8 @@ function harness(initial = photoState(), overrides = {}) {
     'react-native': { AppState: { addEventListener: (event, listener) => { listeners.set(event, listener); return { remove: () => listeners.delete(event) }; } } },
     'expo-crypto': { randomUUID: () => 'photo-job' },
     '../../services/photo-input': { pickPhoto: overrides.pick ?? (async () => null), photoInputFailure: () => ({ message: { ko: '입력 실패', en: 'input failed' } }), removeWorkingPhoto: (owner, photo) => removed.push([owner, photo.local_uri]) },
+    '../../services/record-cache': { cacheRecordImage: async () => { throw new Error('unused cache'); } },
+    '../../services/records': { fetchRecord: async () => { throw new Error('unused record'); } },
     '../../services/photo-processing': { processPhotoStep: overrides.process ?? (async () => { throw new Error('unused step'); }) },
     '../../../modules/chroma-analysis': { preparePhotoAnalysis: overrides.prepare ?? (async () => undefined), unloadPhotoAnalysis: overrides.unload ?? (async () => true), generatePhotoNote: overrides.caption ?? (async () => { throw new Error('unused caption'); }) },
     '../demo-state': demo, '../app-state': app, '../processing-state': processing, '../sheets/date-place': dates,
@@ -161,8 +163,8 @@ for (const changed of [false, true]) {
   await h.flush();
   const s = h.store.getState();
   if (changed) {
-    assert.equal(s.sheet.working.user_note, '생성 중 새로 쓴 글');
-    assert.equal(s.sheet.caption_status, 'idle');
+    assert.equal(s.sheet.working.user_note, '생성 중 새로 쓴 글\n\n햇빛을 머금은 고요한 풍경');
+    assert.equal(s.sheet.caption_status, 'success');
   } else {
     const next = app.preserveAdoptedCaption(s, demo.demoReducer(s, { type: 'sheet-apply' }));
     assert.equal(next.drafts.new.fields.ai_field_note, '햇빛을 머금은 고요한 풍경');

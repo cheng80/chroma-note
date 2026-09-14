@@ -58,18 +58,29 @@ if (state.save_attempt?.operation_id !== secondOperation || state.records.length
 state = demoReducer(state, { type: 'save-result', operationId: secondOperation, outcome: 'success' });
 if (state.records.length !== 2 || state.records[0].id === state.records[1].id) throw new Error('two saves should keep unique records');
 
+state = finishNew(state);
+state = demoReducer(state, { type: 'cancel-record' });
+const newDraftBeforeEdit = state.drafts.new;
 state = demoReducer(state, { type: 'open-detail', recordId: firstRecordId });
 state = demoReducer(state, { type: 'edit-record' });
-const editDraftId = state.drafts.edit?.draft_id;
-if (!editDraftId) throw new Error('edit should create an edit draft');
-state = demoReducer(state, { type: 'start-record' });
-if (!state.drafts.edit || !state.drafts.new) throw new Error('new and edit drafts should coexist');
-state = demoReducer(state, { type: 'cancel-record' });
-if (!state.drafts.edit || !state.drafts.new || state.route !== 'book') throw new Error('cancel should preserve drafts and return to Book');
-state = demoReducer(state, { type: 'resume-draft', draftId: editDraftId });
-if (state.route !== 'summary' || state.active_draft_kind !== 'edit') throw new Error('resume-draft should select the requested draft');
+if (!state.drafts.edits[firstRecordId]?.transient_edit || state.drafts.new !== newDraftBeforeEdit) throw new Error('existing-record editing must be temporary and independent of the new photo draft');
 state = demoReducer(state, { type: 'summary-back' });
-if (state.route !== 'detail') throw new Error('edit summary back should return to detail');
+if (state.route !== 'detail' || state.drafts.edits[firstRecordId]) throw new Error('unchanged editing must end immediately');
+state = demoReducer(state, { type: 'edit-record' });
+state = demoReducer(state, { type: 'open-summary-sheet', kind: 'analysis' });
+state = demoReducer(state, { type: 'sheet-change', change: { kind: 'analysis', working: { ...analysisSheet(state).working, user_note: 'temporary edit' } } });
+state = demoReducer(state, { type: 'sheet-apply' });
+state = demoReducer(state, { type: 'cancel-record' });
+if (state.dialog?.kind !== 'discard-record-edit' || state.route !== 'summary') throw new Error('leaving modified editing must ask for discard confirmation');
+state = demoReducer(state, { type: 'discard-record-edit-cancel' });
+if (state.dialog || state.drafts.edits[firstRecordId]?.fields.user_note !== 'temporary edit') throw new Error('keep editing must retain the temporary writing');
+state = demoReducer(state, { type: 'cancel-record' });
+state = demoReducer(state, { type: 'discard-record-edit-confirm' });
+if (state.route !== 'book' || state.drafts.edits[firstRecordId] || state.drafts.new !== newDraftBeforeEdit) throw new Error('confirmed exit must clear only the temporary edit');
+state = demoReducer(state, { type: 'open-detail', recordId: firstRecordId });
+state = demoReducer(state, { type: 'edit-record' });
+if (state.drafts.edits[firstRecordId]?.fields.user_note !== '') throw new Error('reopening must use the saved record');
+state = demoReducer(state, { type: 'summary-back' });
 
 state = demoReducer(state, { type: 'resume-draft', draftId: state.drafts.new!.draft_id });
 state = demoReducer(state, { type: 'open-summary-sheet', kind: 'datePlace' });

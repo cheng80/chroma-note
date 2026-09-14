@@ -1,7 +1,8 @@
+import { listDrafts } from '../domain/draft-collection';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { drainDraftCleanup } from '../services/draft-store';
-import { initialDemoState, isSaveableDraft, type DemoAction } from './demo-state';
+import { currentDraft, initialDemoState, isSaveableDraft, type DemoAction } from './demo-state';
 import { demoAssets, demoImages } from './demo-assets';
 import { useControllerStore } from './controller/controller-store';
 import { createRecordOperations } from './controller/record-operations';
@@ -58,15 +59,19 @@ export function useAppController() {
     return () => { listener.remove(); cancel(); operations.reset(); };
   }, [background, cancel, operations, refresh, store]);
 
-  const draft = state.active_draft_kind ? state.drafts[state.active_draft_kind] : state.drafts.new ?? state.drafts.edit;
+  const draft = currentDraft(state);
   const record = state.records.find(item => item.id === state.selected_record_id);
-  const draftRecordImage = state.records.find(item => item.id === draft?.record_id)?.stamp;
-  const authenticatedImage = draftRecordImage?.image_headers ?? state.records[0]?.stamp.image_headers;
-  const displayDraft = draft?.selected_candidate?.source === 'supabase' ? { ...draft, selected_candidate: { ...draft.selected_candidate,
-    ...(draftRecordImage ? { local_uri: draftRecordImage.local_uri, image_headers: draftRecordImage.image_headers } : { image_headers: authenticatedImage }) } } : draft;
-  return { state, send, images: demoImages, assets: demoAssets, visibleRecords: state.records, draft: displayDraft, record,
+  const displayDrafts = listDrafts(state.drafts).map(item => {
+    if (item.selected_candidate?.source !== 'supabase') return item;
+    const recordImage = state.records.find(record => record.id === item.record_id)?.stamp;
+    const headers = recordImage?.image_headers ?? state.records[0]?.stamp.image_headers;
+    return { ...item, selected_candidate: { ...item.selected_candidate,
+      ...(recordImage ? { local_uri: recordImage.local_uri, image_headers: recordImage.image_headers } : { image_headers: headers }) } };
+  });
+  const displayDraft = displayDrafts.find(item => item.draft_id === draft?.draft_id) ?? draft;
+  return { state, send, images: demoImages, assets: demoAssets, visibleRecords: state.records, draft: displayDraft, displayDrafts, record,
     pendingDeletions: collection.pendingDeletions, hasMore: collection.hasMore, refreshing: collection.refreshing, pullRefreshing: collection.pullRefreshing,
-    canSaveBeforeLogout: collection.online && Object.values(state.drafts).filter(d => d !== null).every(isSaveableDraft) && !['conflict', 'failed'].includes(state.save_attempt?.state ?? ''),
+    canSaveBeforeLogout: collection.online && listDrafts(state.drafts).every(isSaveableDraft) && !['conflict', 'failed'].includes(state.save_attempt?.state ?? ''),
     sessionRestoreStatus: session.sessionRestoreStatus, retrySessionRestore: session.retrySessionRestore,
     beginSessionReauthentication: session.beginSessionReauthentication, resendSeconds: session.resendSeconds };
 }

@@ -1,3 +1,4 @@
+import { listDrafts, putDraft, removeDraft } from '../domain/draft-collection.ts';
 import {
   DEMO_CODE,
   DEMO_IMAGE_HEIGHT,
@@ -86,6 +87,8 @@ export type DemoAction =
   | { type: 'open-read' }
   | { type: 'open-actions' }
   | { type: 'edit-record' }
+  | { type: 'discard-record-edit-confirm' }
+  | { type: 'discard-record-edit-cancel' }
   | { type: 'request-delete-record' }
   | { type: 'delete-confirm' }
   | { type: 'delete-cancel' }
@@ -132,12 +135,40 @@ function demoCandidate(revision: number, suffix = 'a'): StampCandidate {
 }
 
 function makeDraft(kind: DraftKind, record?: DemoRecord): Draft {
-  if (record) return { draft_id: `edit-${record.id}`, owner_id: record.user_id, record_id: record.id, kind: 'edit', input_revision: record.stamp.input_revision, stage: 'summary', photo: { local_uri: DEMO_PHOTO_URI, width: DEMO_IMAGE_WIDTH, height: DEMO_IMAGE_HEIGHT, input_revision: record.stamp.input_revision, source: 'demo' }, colors: { source: 'demo', source_revision: record.stamp.input_revision, tags: record.color_tags }, analysis: null, selected_candidate: record.stamp, confirmation: { input_revision: record.stamp.input_revision, candidate_id: record.stamp.candidate_id }, fields: { ...record.fields, semantic_tags: [...record.fields.semantic_tags], mood_tags: [...record.fields.mood_tags] }, base_record_version: record.version };
+  if (record) return { draft_id: `edit-${record.id}`, owner_id: record.user_id, record_id: record.id, kind: 'edit', transient_edit: true, input_revision: record.stamp.input_revision, stage: 'summary', photo: { local_uri: DEMO_PHOTO_URI, width: DEMO_IMAGE_WIDTH, height: DEMO_IMAGE_HEIGHT, input_revision: record.stamp.input_revision, source: 'demo' }, colors: { source: 'demo', source_revision: record.stamp.input_revision, tags: record.color_tags }, analysis: null, selected_candidate: record.stamp, confirmation: { input_revision: record.stamp.input_revision, candidate_id: record.stamp.candidate_id }, fields: { ...record.fields, semantic_tags: [...record.fields.semantic_tags], mood_tags: [...record.fields.mood_tags] }, base_record_version: record.version, edit_initial_fields: { ...record.fields, semantic_tags: [...record.fields.semantic_tags], mood_tags: [...record.fields.mood_tags] } };
   return { draft_id: nextId('new-draft'), owner_id: 'demo-a', record_id: nextId('record'), kind, input_revision: 1, stage: 'photo_ready', photo: demoPhoto(), colors: null, analysis: null, selected_candidate: null, confirmation: null, fields: initialFields() };
 }
 
+function editHasChanges(state: DemoState, draft: Draft) {
+  const initial = draft.edit_initial_fields ?? state.records.find(record => record.id === draft.record_id)?.fields;
+  return !initial || JSON.stringify(initial) !== JSON.stringify(draft.fields);
+}
+
+function beginRecordEdit(state: DemoState, record: DemoRecord): DemoState {
+  const previous = state.drafts.edits[record.id];
+  const draft = previous ? { ...previous, transient_edit: true, edit_initial_fields: previous.edit_initial_fields ?? { ...record.fields } } : makeDraft('edit', record);
+  return { ...state, route: 'summary', sheet: null, dialog: null, active_draft_kind: 'edit', selected_record_id: record.id,
+    drafts: putDraft(state.drafts, draft) };
+}
+
+function leaveRecordEdit(state: DemoState, draft: Draft, destination: 'detail' | 'book'): DemoState {
+  const pending = state.save_attempt?.draft_id === draft.draft_id && !['saved', 'demo_saved'].includes(state.save_attempt.state);
+  return { ...state, route: destination, sheet: null, dialog: null, active_draft_kind: null,
+    selected_record_id: destination === 'detail' ? draft.record_id : null,
+    drafts: pending ? state.drafts : removeDraft(state.drafts, draft) };
+}
+
+function requestLeaveRecordEdit(state: DemoState, destination: 'detail' | 'book'): DemoState {
+  const draft = currentDraft(state);
+  if (!draft || draft.kind !== 'edit') return state;
+  const pending = state.save_attempt?.draft_id === draft.draft_id && !['saved', 'demo_saved'].includes(state.save_attempt.state);
+  return !pending && editHasChanges(state, draft)
+    ? { ...state, dialog: { kind: 'discard-record-edit', draft_id: draft.draft_id, destination } }
+    : leaveRecordEdit(state, draft, destination);
+}
+
 export function initialDemoState(systemLocale?: string): DemoState {
-  return { route: 'email', locale_preference: 'system', locale: displayLocale('system', systemLocale), scenario: 'normal', email: '', code: '', auth: { request_id: null, email: '', status: 'idle' }, session: null, model_status: 'unprepared', records: [], drafts: { new: null, edit: null }, active_draft_kind: null, selected_record_id: null, book_filter: emptyFilter(), book_state: 'empty', page_size: 6, comparison_tab: 'photo', active_job: null, sheet: null, dialog: null, save_attempt: null, account_deletion: 'idle' };
+  return { route: 'email', locale_preference: 'system', locale: displayLocale('system', systemLocale), scenario: 'normal', email: '', code: '', auth: { request_id: null, email: '', status: 'idle' }, session: null, model_status: 'unprepared', records: [], drafts: { new: null, edits: {} }, active_draft_kind: null, selected_record_id: null, book_filter: emptyFilter(), book_state: 'empty', page_size: 6, comparison_tab: 'photo', active_job: null, sheet: null, dialog: null, save_attempt: null, account_deletion: 'idle' };
 }
 
 function withBookState(state: DemoState): DemoState {
@@ -151,12 +182,14 @@ export function filterRecords(records: DemoRecord[], filter: BookFilter) {
   return records.filter((record) => (!filter.start_date || record.fields.diary_date >= filter.start_date) && (!filter.end_date || record.fields.diary_date <= filter.end_date) && (!filter.semantic_tag || [...record.fields.semantic_tags, ...record.fields.mood_tags].includes(filter.semantic_tag)) && (!filter.favorite_only || record.fields.is_favorite) && (!filter.color || colorMatchWeight(record.color_tags, filter.color) >= filter.color.minWeight - 1e-12));
 }
 
-function currentDraft(state: DemoState): Draft | null {
-  return (state.active_draft_kind && state.drafts[state.active_draft_kind]) || state.drafts.new || state.drafts.edit;
+export function currentDraft(state: DemoState): Draft | null {
+  if (state.active_draft_kind === 'new') return state.drafts.new;
+  if (state.active_draft_kind === 'edit') return state.selected_record_id ? state.drafts.edits[state.selected_record_id] ?? null : null;
+  return state.drafts.new ?? listDrafts(state.drafts)[0] ?? null;
 }
 
 function setDraft(state: DemoState, draft: Draft): DemoState {
-  return { ...state, drafts: { ...state.drafts, [draft.kind]: draft }, active_draft_kind: draft.kind };
+  return { ...state, drafts: putDraft(state.drafts, draft), active_draft_kind: draft.kind };
 }
 
 function resetAfterPhotoChange(draft: Draft): Draft {
@@ -219,11 +252,11 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'continue-photo': return state.drafts.new ? { ...state, route: 'processing', active_draft_kind: 'new', model_status: 'preparing', active_job: { job_id: nextId('job'), owner_id: state.session?.owner_id ?? 'demo-a', generation: state.session?.generation ?? 1, input_revision: state.drafts.new.input_revision, step: 'prepare', status: 'running' }, drafts: { ...state.drafts, new: { ...state.drafts.new, stage: 'preparing', error_code: undefined } } } : state;
     case 'resume-draft': {
       let source = state;
-      let draft = Object.values(state.drafts).find((item) => item?.draft_id === action.draftId);
+      let draft = listDrafts(state.drafts).find((item) => item?.draft_id === action.draftId);
       if (!draft) return state;
       if (state.save_attempt?.state === 'failed' && state.save_attempt.draft_id === draft.draft_id) {
         draft = { ...draft, stage: 'summary', operation_id: undefined };
-        source = { ...state, save_attempt: null, drafts: { ...state.drafts, [draft.kind]: draft } };
+        source = { ...state, save_attempt: null, drafts: putDraft(state.drafts, draft) };
       }
       if (draft.kind === 'edit') return { ...source, route: 'summary', active_draft_kind: 'edit', selected_record_id: draft.record_id, sheet: null, dialog: null };
       const route = draft.stage === 'photo_ready' ? 'photo' : draft.stage === 'compare' ? 'compare' : draft.stage === 'summary' || draft.stage === 'save_pending' ? 'summary' : 'processing';
@@ -247,7 +280,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     }
     case 'retry-processing': return state.drafts.new ? { ...state, active_job: { ...(state.active_job ?? { job_id: nextId('job'), owner_id: state.session?.owner_id ?? 'demo-a', generation: state.session?.generation ?? 1, input_revision: state.drafts.new.input_revision, step: 'prepare' }), status: 'running', error_code: undefined, step: 'prepare' }, route: 'processing', active_draft_kind: 'new', model_status: 'preparing', drafts: { ...state.drafts, new: { ...state.drafts.new, stage: 'preparing', error_code: undefined } } } : state;
     case 'skip-analysis': return state.drafts.new && state.active_job ? { ...state, active_job: { ...state.active_job, step: 'stamp', status: 'running' }, drafts: { ...state.drafts, new: { ...state.drafts.new, stage: 'stamp', analysis: { ...baseAnalysis(state.drafts.new.input_revision), status: 'skipped', scene: null, semantic_tags: [], mood: [], ai_field_note: '', ai_field_note_edited: null } } } } : state;
-    case 'cancel-record': return { ...state, route: 'book', active_job: null, active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null };
+    case 'cancel-record': return state.active_draft_kind === 'edit' ? requestLeaveRecordEdit(state, 'book') : { ...state, route: 'book', active_job: null, active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null };
     case 'replace-photo': return currentDraft(state) ? { ...state, dialog: { kind: 'replace-photo', step: 'discard' } } : state;
     case 'replace-photo-confirm': { const draft = currentDraft(state); return draft ? setDraft({ ...state, route: 'photo', dialog: null, active_job: null }, resetAfterPhotoChange(draft)) : state; }
     case 'replace-photo-cancel': return { ...state, dialog: null };
@@ -262,7 +295,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       if (!sheet || sheet.kind !== action.change.kind) return state;
       return { ...state, sheet: { ...sheet, working: action.change.working, error: null } as DemoState['sheet'] };
     }
-    case 'sheet-apply': { const draft = currentDraft(state); const sheet = state.sheet; if (!sheet) return state; if (sheet.kind === 'filter') return isValidFilter(sheet.working) ? withBookState({ ...state, book_filter: sheet.working, sheet: null }) : { ...state, sheet: { ...sheet, error: 'date-range-invalid' } }; if (!draft || sheet.kind === 'colors' || sheet.kind === 'read' || sheet.kind === 'actions') return { ...state, sheet: null }; if (sheet.kind === 'datePlace' && (!isCalendarDate(sheet.working.diary_date) || (sheet.working.place_name !== null && !isValidText(sheet.working.place_name, 120)))) return { ...state, sheet: { ...sheet, error: 'date-or-place-invalid' } }; if (sheet.kind === 'analysis' && (!isValidText(sheet.working.user_note, 2000) || !isValidAnalysisFields({ ...draft.fields, ...sheet.working }))) return { ...state, sheet: { ...sheet, error: 'analysis-invalid' } }; const fields = sheet.kind === 'datePlace' ? { ...draft.fields, ...sheet.working } : { ...draft.fields, scene: sheet.working.scene, semantic_tags: [...sheet.working.semantic_tags], mood_tags: [...sheet.working.mood_tags], ai_field_note_edited: '', user_note: sheet.working.user_note }; return { ...state, sheet: null, drafts: { ...state.drafts, [draft.kind]: { ...draft, fields } } }; }
+    case 'sheet-apply': { const draft = currentDraft(state); const sheet = state.sheet; if (!sheet) return state; if (sheet.kind === 'filter') return isValidFilter(sheet.working) ? withBookState({ ...state, book_filter: sheet.working, sheet: null }) : { ...state, sheet: { ...sheet, error: 'date-range-invalid' } }; if (!draft || sheet.kind === 'colors' || sheet.kind === 'read' || sheet.kind === 'actions') return { ...state, sheet: null }; if (sheet.kind === 'datePlace' && (!isCalendarDate(sheet.working.diary_date) || (sheet.working.place_name !== null && !isValidText(sheet.working.place_name, 120)))) return { ...state, sheet: { ...sheet, error: 'date-or-place-invalid' } }; if (sheet.kind === 'analysis' && (!isValidText(sheet.working.user_note, 2000) || !isValidAnalysisFields({ ...draft.fields, ...sheet.working }))) return { ...state, sheet: { ...sheet, error: 'analysis-invalid' } }; const fields = sheet.kind === 'datePlace' ? { ...draft.fields, ...sheet.working } : { ...draft.fields, scene: sheet.working.scene, semantic_tags: [...sheet.working.semantic_tags], mood_tags: [...sheet.working.mood_tags], ai_field_note_edited: '', user_note: sheet.working.user_note }; return { ...state, sheet: null, drafts: putDraft(state.drafts, { ...draft, fields }) }; }
     case 'sheet-cancel': return { ...state, sheet: null };
     case 'sheet-close': return sheetDirty(state) ? { ...state, dialog: { kind: 'discard-draft' } } : { ...state, sheet: null };
     case 'sheet-discard-confirm': return { ...state, sheet: null, dialog: null };
@@ -276,13 +309,13 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       if (!isValidText(writing, 2000)) return { ...state, sheet: { ...sheet, caption_status: 'error', caption_request_id: null } };
       return { ...state, sheet: { ...sheet, working: { ...sheet.working, user_note: writing, ai_field_note_edited: '' }, error: null, caption_status: 'success', caption_suggestion: action.value, caption_request_id: null } };
     }
-    case 'save': { const draft = currentDraft(state); if (!draft || !isSaveableDraft(draft) || state.save_attempt?.state === 'pending') return state; const operationId = nextId('operation'); const attempt: SaveAttempt = { operation_id: operationId, draft_id: draft.draft_id, record_id: draft.record_id, owner_id: state.session?.owner_id ?? draft.owner_id, base_version: draft.base_record_version, payload_snapshot: snapshotFor(draft), state: 'pending' }; return { ...state, save_attempt: attempt, drafts: { ...state.drafts, [draft.kind]: { ...draft, stage: 'save_pending', operation_id: operationId } } }; }
-    case 'save-result': { const attempt = state.save_attempt; const draft = attempt ? Object.values(state.drafts).find((item) => item?.draft_id === attempt.draft_id) : null; if (!attempt || !draft || attempt.operation_id !== action.operationId || attempt.state !== 'pending') return state; if (action.outcome !== 'success') return { ...state, save_attempt: { ...attempt, state: action.outcome } }; const snapshot = attempt.payload_snapshot; const existing = state.records.find((item) => item.id === attempt.record_id); const record: DemoRecord = { source: 'demo', id: attempt.record_id, user_id: attempt.owner_id, status: 'ready', version: (existing?.version ?? 0) + 1, stamp: { ...snapshot.stamp }, color_tags: snapshot.color_tags.map((tag) => ({ ...tag, rgb: [...tag.rgb] as [number, number, number] })), fields: { ...snapshot.fields, semantic_tags: [...snapshot.fields.semantic_tags], mood_tags: [...snapshot.fields.mood_tags] }, created_at: existing?.created_at ?? new Date().toISOString() }; const records = existing ? state.records.map((item) => item.id === record.id ? record : item) : [...state.records, record]; return withBookState({ ...state, route: 'book', records, drafts: { ...state.drafts, [draft.kind]: null }, active_draft_kind: null, selected_record_id: null, save_attempt: { ...attempt, state: 'demo_saved' }, sheet: null }); }
+    case 'save': { const draft = currentDraft(state); if (!draft || !isSaveableDraft(draft) || state.save_attempt?.state === 'pending') return state; const operationId = nextId('operation'); const attempt: SaveAttempt = { operation_id: operationId, draft_id: draft.draft_id, record_id: draft.record_id, owner_id: state.session?.owner_id ?? draft.owner_id, base_version: draft.base_record_version, payload_snapshot: snapshotFor(draft), state: 'pending' }; return { ...state, save_attempt: attempt, drafts: putDraft(state.drafts, { ...draft, stage: 'save_pending', operation_id: operationId }) }; }
+    case 'save-result': { const attempt = state.save_attempt; const draft = attempt ? listDrafts(state.drafts).find((item) => item?.draft_id === attempt.draft_id) : null; if (!attempt || !draft || attempt.operation_id !== action.operationId || attempt.state !== 'pending') return state; if (action.outcome !== 'success') return { ...state, save_attempt: { ...attempt, state: action.outcome } }; const snapshot = attempt.payload_snapshot; const existing = state.records.find((item) => item.id === attempt.record_id); const record: DemoRecord = { source: 'demo', id: attempt.record_id, user_id: attempt.owner_id, status: 'ready', version: (existing?.version ?? 0) + 1, stamp: { ...snapshot.stamp }, color_tags: snapshot.color_tags.map((tag) => ({ ...tag, rgb: [...tag.rgb] as [number, number, number] })), fields: { ...snapshot.fields, semantic_tags: [...snapshot.fields.semantic_tags], mood_tags: [...snapshot.fields.mood_tags] }, created_at: existing?.created_at ?? new Date().toISOString() }; const records = existing ? state.records.map((item) => item.id === record.id ? record : item) : [...state.records, record]; return withBookState({ ...state, ...(state.active_draft_kind !== null && currentDraft(state)?.draft_id === draft.draft_id ? { route: 'book' as const, active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null } : {}), records, drafts: removeDraft(state.drafts, draft), save_attempt: { ...attempt, state: 'demo_saved' } }); }
     case 'retry-save': return state.save_attempt && state.save_attempt.state !== 'pending' && state.save_attempt.state !== 'demo_saved' ? { ...state, scenario: state.scenario === 'save-failed' || state.scenario === 'save-uncertain' || state.scenario === 'save-conflict' ? 'normal' : state.scenario, save_attempt: { ...state.save_attempt, state: 'pending', error_code: undefined } } : state;
     case 'request-discard-save':
     case 'request-delete-draft': {
       const id = action.type === 'request-delete-draft' ? action.draftId : state.save_attempt?.draft_id;
-      const draft = Object.values(state.drafts).find(item => item?.draft_id === id);
+      const draft = listDrafts(state.drafts).find(item => item?.draft_id === id);
       const attempt = state.save_attempt?.draft_id === id ? state.save_attempt : null;
       if (!draft || draft.owner_id !== state.session?.owner_id || (state.active_job?.status === 'running' && draft.kind === 'new') || (attempt && !discardSaveMode(attempt, draft))) return state;
       return { ...state, dialog: { kind: 'discard-save', draft_id: draft.draft_id } };
@@ -291,20 +324,30 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'discard-save-cancel': return { ...state, dialog: null };
     case 'discard-save-result': {
       const attempt = state.save_attempt;
-      const draft = Object.values(state.drafts).find(item => item?.draft_id === action.draftId);
+      const draft = listDrafts(state.drafts).find(item => item?.draft_id === action.draftId);
       const matchingAttempt = attempt?.draft_id === action.draftId ? attempt : null;
       if (!draft || draft.owner_id !== state.session?.owner_id || (state.active_job?.status === 'running' && draft.kind === 'new') || matchingAttempt?.operation_id !== action.operationId || (matchingAttempt && !discardSaveMode(matchingAttempt, draft))) return state;
       if (action.outcome === 'failed') return { ...state, dialog: null };
-      return { ...state, route: 'book', drafts: { ...state.drafts, [draft.kind]: null }, active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null, active_job: draft.kind === 'new' ? null : state.active_job, save_attempt: matchingAttempt ? null : state.save_attempt };
+      return { ...state, route: 'book', drafts: removeDraft(state.drafts, draft), active_draft_kind: null, selected_record_id: null, sheet: null, dialog: null, active_job: draft.kind === 'new' ? null : state.active_job, save_attempt: matchingAttempt ? null : state.save_attempt };
     }
     case 'open-detail': return state.records.some((record) => record.id === action.recordId) ? { ...state, route: 'detail', selected_record_id: action.recordId, active_draft_kind: null, sheet: null } : state;
     case 'back-book': return { ...state, route: 'book', selected_record_id: null, active_draft_kind: null, sheet: null };
-    case 'summary-back': { const draft = currentDraft(state); return draft?.kind === 'new' ? { ...state, route: 'compare', active_draft_kind: 'new', sheet: null } : draft?.kind === 'edit' ? { ...state, route: 'detail', active_draft_kind: 'edit', selected_record_id: draft.record_id, sheet: null } : { ...state, route: 'book', active_draft_kind: null, sheet: null }; }
+    case 'summary-back': return state.active_draft_kind === 'edit' ? requestLeaveRecordEdit(state, 'detail') : { ...state, route: 'compare', active_draft_kind: 'new', sheet: null };
     case 'open-read': return state.selected_record_id ? { ...state, sheet: { kind: 'read', record_id: state.selected_record_id } } : state;
     case 'open-actions': return state.selected_record_id ? { ...state, sheet: { kind: 'actions', record_id: state.selected_record_id } } : state;
-    case 'edit-record': { const record = state.records.find((item) => item.id === state.selected_record_id); return record ? { ...state, route: 'summary', sheet: null, active_draft_kind: 'edit', drafts: { ...state.drafts, edit: makeDraft('edit', record) } } : state; }
+    case 'edit-record': {
+      const record = state.records.find(item => item.id === state.selected_record_id);
+      return record ? beginRecordEdit(state, record) : state;
+    }
+    case 'discard-record-edit-cancel': return { ...state, dialog: null };
+    case 'discard-record-edit-confirm': {
+      const dialog = state.dialog;
+      if (dialog?.kind !== 'discard-record-edit') return state;
+      const draft = currentDraft(state);
+      return draft?.kind === 'edit' && draft.draft_id === dialog.draft_id ? leaveRecordEdit(state, draft, dialog.destination) : state;
+    }
     case 'request-delete-record': return { ...state, dialog: state.selected_record_id ? { kind: 'delete-record', record_id: state.selected_record_id } : null, sheet: null };
-    case 'delete-confirm': { const id = state.selected_record_id; return id ? withBookState({ ...state, route: 'book', selected_record_id: null, dialog: null, records: state.records.filter((record) => record.id !== id) }) : state; }
+    case 'delete-confirm': { const id = state.selected_record_id; return id ? withBookState({ ...state, route: 'book', selected_record_id: null, dialog: null, records: state.records.filter((record) => record.id !== id), active_draft_kind: null, drafts: state.drafts.edits[id] ? removeDraft(state.drafts, state.drafts.edits[id]) : state.drafts }) : state; }
     case 'delete-cancel': return { ...state, dialog: null };
     case 'toggle-favorite': { const records = state.records.map((record) => record.id === action.recordId ? { ...record, fields: { ...record.fields, is_favorite: !record.fields.is_favorite } } : record); return withBookState({ ...state, records }); }
     case 'retry-image': return { ...state, scenario: 'normal' };
@@ -317,7 +360,7 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
     case 'back-settings': return { ...state, route: 'book' };
     case 'locale': { const locale = displayLocale(action.value, action.systemLocale); return { ...state, locale_preference: action.value, locale, session: state.session ? { ...state.session, locale } : state.session }; }
     case 'scenario': return withBookState({ ...state, scenario: action.value });
-    case 'logout': return state.drafts.new || state.drafts.edit ? { ...state, dialog: { kind: 'logout', step: 'discard' } } : { ...initialDemoState(), locale_preference: state.locale_preference, locale: state.locale };
+    case 'logout': return listDrafts(state.drafts).length ? { ...state, dialog: { kind: 'logout', step: 'discard' } } : { ...initialDemoState(), locale_preference: state.locale_preference, locale: state.locale };
     case 'logout-confirm': return { ...initialDemoState(), locale_preference: state.locale_preference, locale: state.locale };
     case 'logout-cancel': return { ...state, dialog: null };
     case 'delete-account-request': return { ...state, dialog: { kind: 'delete-account' } };
@@ -328,9 +371,9 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
 }
 
 export function assertDemoInvariants(state: DemoState) {
-  for (const draft of Object.values(state.drafts)) if (draft?.confirmation && (!draft.selected_candidate || draft.confirmation.input_revision !== draft.input_revision || draft.confirmation.candidate_id !== draft.selected_candidate.candidate_id || draft.selected_candidate.input_revision !== draft.input_revision)) throw new Error('confirmation must match the selected candidate and input revision');
-  if (state.active_draft_kind && !state.drafts[state.active_draft_kind]) throw new Error('active draft must exist');
+  for (const draft of listDrafts(state.drafts)) if (draft?.confirmation && (!draft.selected_candidate || draft.confirmation.input_revision !== draft.input_revision || draft.confirmation.candidate_id !== draft.selected_candidate.candidate_id || draft.selected_candidate.input_revision !== draft.input_revision)) throw new Error('confirmation must match the selected candidate and input revision');
+  if (state.active_draft_kind && !currentDraft(state)) throw new Error('active draft must exist');
   if (!state.session && !['email', 'otp'].includes(state.route)) throw new Error('protected routes require a demo session');
-  if (state.save_attempt?.state === 'pending' && !Object.values(state.drafts).some((draft) => draft?.draft_id === state.save_attempt?.draft_id)) throw new Error('pending save must retain its draft');
+  if (state.save_attempt?.state === 'pending' && !listDrafts(state.drafts).some((draft) => draft?.draft_id === state.save_attempt?.draft_id)) throw new Error('pending save must retain its draft');
   if (state.save_attempt?.state === 'demo_saved' && state.records.filter((record) => record.id === state.save_attempt?.record_id).length !== 1) throw new Error('a saved operation must converge to one record');
 }

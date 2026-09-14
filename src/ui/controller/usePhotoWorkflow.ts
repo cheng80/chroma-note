@@ -1,9 +1,11 @@
+import { cacheRecordImage } from '../../services/record-cache';
+import { fetchRecord } from '../../services/records';
 import { useCallback, useEffect, useRef } from 'react';
 import { randomUUID } from 'expo-crypto';
 import { photoInputFailure, pickPhoto, removeWorkingPhoto } from '../../services/photo-input';
 import { processPhotoStep } from '../../services/photo-processing';
 import { generatePhotoNote, preparePhotoAnalysis, unloadPhotoAnalysis } from '../../../modules/chroma-analysis';
-import { demoReducer } from '../demo-state';
+import { currentDraft, demoReducer } from '../demo-state';
 import type { DemoAction } from '../demo-state';
 import type { DemoState } from '../contract';
 import { acceptCaptionResult, replaceDraftPhoto } from '../app-state';
@@ -116,32 +118,37 @@ export function usePhotoWorkflow(store: ControllerStore, state: DemoState) {
       return true;
     }
     if (action.type === 'request-caption') {
-      const draft = s.active_draft_kind ? s.drafts[s.active_draft_kind] : null;
+      const draft = s.active_draft_kind ? currentDraft(s) : null;
       if (!draft || s.sheet?.kind !== 'analysis' || s.sheet.caption_status === 'pending') return true;
-      if (draft.kind !== 'new' || draft.photo.source !== 'device') {
-        notice('저장 후에는 원본 사진을 보관하지 않아 새 AI 문구를 만들 수 없어요. 기존 글과 메모는 직접 수정할 수 있어요.', 'The original photo is removed after saving, so new AI writing is unavailable. You can still edit existing writing and notes.');
-        return true;
-      }
       const next = demoReducer(s, action);
       if (next.sheet?.kind !== 'analysis') return true;
       const requestId = next.sheet.caption_request_id;
       if (!requestId) return true;
-      const requestedWriting = next.sheet.working.user_note;
       cancelCaption();
       const controller = new AbortController();
       caption.current = controller;
       await apply(next, false);
       void (async () => {
         try {
-          const result = await generatePhotoNote({ uri: draft.photo.local_uri, inputRevision: draft.input_revision, locale: s.locale }, controller.signal);
+          let uri = draft.photo.local_uri;
+          if (draft.kind === 'edit') {
+            const record = s.records.find(item => item.id === draft.record_id) ?? await fetchRecord(session.owner_id, draft.record_id);
+            if (!record || record.user_id !== session.owner_id || record.id !== draft.record_id) throw new Error('Record image is unavailable.');
+            const cached = await cacheRecordImage(session.owner_id, record, controller.signal);
+            uri = cached.stamp.local_uri;
+          } else if (draft.photo.source !== 'device') {
+            throw new Error('A device photo is required.');
+          }
+          if (!isCurrent(session) || controller.signal.aborted) return;
+          const result = await generatePhotoNote({ uri, inputRevision: draft.input_revision, locale: s.locale }, controller.signal);
           await enqueue(async () => {
             const latest = getState();
             if (!isCurrent(session)) return;
-            await apply(acceptCaptionResult(latest, requestId, result.inputRevision, requestedWriting, controller.signal.aborted ? 'failure' : 'success', result.text), false);
+            await apply(acceptCaptionResult(latest, requestId, result.inputRevision, controller.signal.aborted ? 'failure' : 'success', result.text), false);
           });
         } catch {
           await enqueue(async () => {
-            if (isCurrent(session)) await apply(acceptCaptionResult(getState(), requestId, draft.input_revision, requestedWriting, 'failure'), false);
+            if (isCurrent(session)) await apply(acceptCaptionResult(getState(), requestId, draft.input_revision, 'failure'), false);
           });
         } finally { if (caption.current === controller) caption.current = null; }
       })();

@@ -75,7 +75,7 @@ export function RecordSummaryScreen({ locale, images, draft, sheet, save_attempt
         <SummaryRow ref={datePlaceRef} label={t.datePlace} value={<OneLine>{datePlace}</OneLine>} onPress={canEdit ? () => openSheet('datePlace', datePlaceRef) : undefined} />
         <SummaryRow ref={colorsRef} label={t.colors} value={<OneLine>{draft.colors ? fillCount(t.colorsValue, draft.colors.tags.length) : t.colorsEmpty}</OneLine>} onPress={canEdit && draft.colors ? () => openSheet('colors', colorsRef) : undefined} />
       </Screen>
-      <SummarySheet restoreFocusRef={sheetRestoreRef} locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} onRequestCaption={onRequestCaption} />
+      <SummarySheet captionSource={draft.kind === 'edit' ? 'sketch' : 'photo'} restoreFocusRef={sheetRestoreRef} locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} onRequestCaption={onRequestCaption} />
     </>
   );
 }

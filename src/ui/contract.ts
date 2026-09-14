@@ -1,3 +1,4 @@
+import type { DraftCollection } from '../domain/draft-collection';
 import type { ImageSourcePropType, View } from 'react-native';
 import type { RefObject } from 'react';
 import type {
@@ -78,6 +79,7 @@ export type SheetChange =
 export type DialogState =
   | null
   | { kind: 'discard-draft' }
+  | { kind: 'discard-record-edit'; draft_id: string; destination: 'detail' | 'book' }
   | { kind: 'discard-save'; draft_id: string }
   | { kind: 'replace-photo'; step: 'keep' | 'discard' }
   | { kind: 'adopt-candidate'; candidate_id: string }
@@ -143,7 +145,7 @@ export interface DemoState {
   session: DemoSession | null;
   model_status: ModelStatus;
   records: DemoRecord[];
-  drafts: Record<DraftKind, Draft | null>;
+  drafts: DraftCollection;
   active_draft_kind: DraftKind | null;
   selected_record_id: string | null;
   book_filter: BookFilter;

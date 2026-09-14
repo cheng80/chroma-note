@@ -5,6 +5,7 @@ import { Button, IconButton, Notice, StampImage } from '../primitives';
 import { FilterChip } from '../components/FilterChip';
 import { COLOR_PRESETS, colorMatchWeight } from '../../domain/color-search';
 import { RecordCard } from '../components/RecordCard';
+import { NewRecordDraftActions } from '../components/NewRecordDraftActions';
 import { AppIcon } from '../components/AppIcon';
 import { FilterSheet } from '../sheets/FilterSheet';
 import { getBasicCopy } from '../basic-copy';
@@ -24,20 +25,17 @@ function recordCountLabel(count: number, locale: DisplayLocale) {
   return locale === 'ko' ? `${count}개의 기록` : `${count} record${count === 1 ? '' : 's'}`;
 }
 
-function SaveAttemptNotice({ locale, attempt }: { locale: DisplayLocale; attempt: SaveAttempt | null }) {
+function SaveAttemptNotice({ locale, attempt, drafts, onResumeDraft }: Pick<BookScreenProps, 'locale' | 'drafts' | 'onResumeDraft'> & { attempt: SaveAttempt | null }) {
+  const recovery = drafts.find(draft => draft.kind === 'edit' && draft.draft_id === attempt?.draft_id);
+  if (recovery && attempt && attempt.state !== 'saved' && attempt.state !== 'demo_saved') return <View style={styles.intro}>
+    <Notice message={locale === 'ko' ? '완료되지 않은 저장 요청이 있어요. 저장 결과를 확인해 주세요.' : 'A save request is unfinished. Check its result.'} tone="warning" />
+    <Button label={locale === 'ko' ? '저장 결과 확인' : 'Check save result'} tone="secondary" onPress={() => onResumeDraft(recovery.draft_id)} />
+  </View>;
   if (attempt?.state === 'pending' || attempt?.state === 'uploading' || attempt?.state === 'finalizing') return <Notice message={locale === 'ko' ? '저장 결과를 확인하는 중이에요.' : 'Checking the save result.'} tone="info" busy />;
   if (attempt?.state === 'uncertain') return <Notice message={locale === 'ko' ? '저장 결과를 확인하지 못했어요. 초안은 보관했어요.' : 'The save result could not be confirmed. Your draft is kept.'} tone="warning" />;
   if (attempt?.state === 'conflict') return <Notice message={locale === 'ko' ? '다른 기기에서 변경된 기록이에요. 초안을 열어 최신 내용과 다시 확인해 주세요.' : 'This record changed on another device. Open the draft to review the latest version.'} tone="warning" />;
   if (attempt?.state === 'failed') return <Notice message={locale === 'ko' ? '저장하지 못한 초안을 보관했어요. 초안을 열어 다시 확인해 주세요.' : 'The unsaved draft is kept. Open it to review and try again.'} tone="warning" />;
   return null;
-}
-
-function DraftActions({ locale, drafts, onResumeDraft, onDeleteDraft }: Pick<BookScreenProps, 'locale' | 'drafts' | 'onResumeDraft' | 'onDeleteDraft'>) {
-  const copy = getBasicCopy(locale);
-  return <>{drafts.map(draft => <View key={draft.draft_id} style={styles.draftActions}>
-    <Button style={styles.flex} label={drafts.length === 1 ? copy.resume(drafts.length) : draft.kind === 'new' ? copy.resumeNew : copy.resumeEdit} onPress={() => onResumeDraft(draft.draft_id)} tone="subtle" />
-    <IconButton label={locale === 'ko' ? draft.kind === 'new' ? '새 초안 삭제' : '편집 초안 삭제' : draft.kind === 'new' ? 'Delete new draft' : 'Delete edit draft'} onPress={() => onDeleteDraft(draft.draft_id)}><AppIcon name="trash-2" color={theme.colors.danger} /></IconButton>
-  </View>)}</>;
 }
 
 function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord, onResumeDraft, onDeleteDraft, onRetry, pullRefreshing, importTriggerRef }: Pick<BookScreenProps, 'locale' | 'drafts' | 'save_attempt' | 'onOpenSettings' | 'onStartRecord' | 'onResumeDraft' | 'onDeleteDraft' | 'onRetry' | 'pullRefreshing' | 'importTriggerRef'>) {
@@ -48,9 +46,9 @@ function EmptyBook({ locale, drafts, save_attempt, onOpenSettings, onStartRecord
       <View style={styles.emptyExample}><StampImage source={designStamp} accessibilityLabel={copy.designExample} style={styles.emptyImage} /><SemanticText style={styles.emptyCaption}>{copy.designExample}</SemanticText></View>
       <SemanticText accessibilityRole="header" style={styles.emptyHeading}>{copy.emptyTitle}</SemanticText>
       <SemanticText style={styles.emptyBody}>{copy.emptyBody}</SemanticText>
-      <SaveAttemptNotice locale={locale} attempt={save_attempt} />
+      <SaveAttemptNotice locale={locale} attempt={save_attempt} drafts={drafts} onResumeDraft={onResumeDraft} />
       <Button ref={importTriggerRef} label={copy.importPhoto} onPress={onStartRecord} />
-      <DraftActions locale={locale} drafts={drafts} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} />
+      <NewRecordDraftActions locale={locale} drafts={drafts} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} />
       <SemanticText style={styles.caption}>{copy.emptyHint}</SemanticText>
     </ScrollView>
   </SafeAreaView>;
@@ -102,9 +100,9 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
         {showRecordCount ? <Text style={styles.month}>{recordCountLabel(records.length, locale)}</Text> : null}
         {content}
         {pending_deletions.length ? <Notice message={locale === 'ko' ? `삭제 대기 중인 기록 ${pending_deletions.length}개가 있어요. 연결을 확인하면 삭제를 이어갑니다.` : `Waiting for a connection to delete ${pending_deletions.length} ${pending_deletions.length === 1 ? 'record' : 'records'}.`} tone="warning" /> : null}
-        <SaveAttemptNotice locale={locale} attempt={save_attempt} />
+        <SaveAttemptNotice locale={locale} attempt={save_attempt} drafts={drafts} onResumeDraft={onResumeDraft} />
       </ScrollView>
-      <View style={styles.footer}><Button ref={importTriggerRef} label={copy.importPhoto} onPress={onStartRecord} /><DraftActions locale={locale} drafts={drafts} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} /><SemanticText style={styles.caption}>{copy.privateBook}</SemanticText></View>
+      <View style={styles.footer}><Button ref={importTriggerRef} label={copy.importPhoto} onPress={onStartRecord} /><NewRecordDraftActions locale={locale} drafts={drafts} onResumeDraft={onResumeDraft} onDeleteDraft={onDeleteDraft} /><SemanticText style={styles.caption}>{copy.privateBook}</SemanticText></View>
       {filterSheet ? <FilterSheet locale={locale} sheet={filterSheet} records={records} onChangeSheet={onChangeSheet} onApply={onApplySheet} onCancel={onCancelSheet} onClose={onRequestCloseSheet} restoreFocusRef={filterRestoreRef} /> : null}
     </View>
   </SafeAreaView>;
@@ -113,6 +111,5 @@ export function BookScreen({ locale, session: _session, images, records, drafts,
 export function updateFilter(sheet: Extract<SheetState, { kind: 'filter' }>, change: SheetChange) { return change.kind === 'filter' ? { ...sheet.working, ...change.working } : sheet.working; }
 
 const styles = StyleSheet.create({
-  draftActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   flex: { flex: 1 }, page: { flex: 1, backgroundColor: theme.colors.bgPage }, content: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 12, gap: 16 }, emptyContent: { width: '100%', maxWidth: theme.contentMaxWidth, alignSelf: 'center', flexGrow: 1, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16, gap: 16 }, brandHeader: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, brand: { color: theme.colors.ink, fontFamily: theme.typography.displayFamily, fontSize: 20, lineHeight: 30 }, intro: { gap: 8 }, heading: { color: theme.colors.ink, fontSize: 28, lineHeight: 38, fontWeight: '600' }, emptyHeading: { color: theme.colors.ink, fontSize: 28, lineHeight: 38, fontWeight: '600' }, emptyBody: { color: theme.colors.inkSecondary, fontSize: 16, lineHeight: 24 }, bodyMuted: { color: theme.colors.inkSecondary, fontSize: 14, lineHeight: 21 }, filters: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 }, month: { color: theme.colors.ink, fontSize: 16, lineHeight: 24 }, grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }, singleColumn: { flexDirection: 'column' }, emptyState: { gap: 16, paddingVertical: 32 }, emptyStateTitle: { color: theme.colors.ink, fontSize: 24, lineHeight: 32, fontWeight: '600' }, footer: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 12, gap: 8 }, emptyExample: { backgroundColor: theme.colors.bgSurface, borderRadius: theme.radii.card, paddingHorizontal: 28, paddingVertical: 24, gap: 12, ...theme.shadows.low }, emptyImage: { height: 176, minHeight: 0, borderWidth: 0, backgroundColor: 'transparent' }, emptyCaption: { color: theme.colors.inkSecondary, fontSize: 12, lineHeight: 18, textAlign: 'center' }, caption: { color: theme.colors.inkSecondary, fontSize: 12, lineHeight: 18 },
 });

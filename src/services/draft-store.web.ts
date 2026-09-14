@@ -1,7 +1,8 @@
-import type { Draft, DemoOwnerId, SaveAttempt } from '../domain/record';
+import type { DemoOwnerId, SaveAttempt } from '../domain/record';
+import { listDrafts, normalizeDraftCollection, persistedDraftCollection, type DraftCollection } from '../domain/draft-collection';
 
 export interface DraftState {
-  drafts: { new: Draft | null; edit: Draft | null };
+  drafts: DraftCollection;
   save_attempt: SaveAttempt | null;
 }
 
@@ -27,7 +28,7 @@ function stripImageCredentials(value: unknown): unknown {
 
 function recover(state: DraftState): DraftState {
   const drafts = clone(state.drafts);
-  for (const draft of Object.values(drafts)) {
+  for (const draft of listDrafts(drafts)) {
     if (draft && ['preparing', 'colors', 'analysis', 'stamp', 'processing'].includes(draft.stage)) {
       draft.stage = 'interrupted';
       draft.error_code = 'interrupted';
@@ -42,7 +43,7 @@ function recover(state: DraftState): DraftState {
 }
 
 function belongsTo(ownerId: DemoOwnerId, state: DraftState) {
-  return Object.values(state.drafts).every((draft) => !draft || draft.owner_id === ownerId)
+  return listDrafts(state.drafts).every((draft) => !draft || draft.owner_id === ownerId)
     && (!state.save_attempt || state.save_attempt.owner_id === ownerId);
 }
 
@@ -55,7 +56,15 @@ export async function readDraftState(ownerId: DemoOwnerId): Promise<DraftState |
     const raw = storage()?.getItem(`${prefix}${ownerId}`);
     if (!raw) return null;
     const state = JSON.parse(raw) as DraftState;
-    return state?.drafts && belongsTo(ownerId, state) ? recover(state) : null;
+    const normalized = { ...state, drafts: normalizeDraftCollection(state?.drafts) };
+    if (!belongsTo(ownerId, normalized)) return null;
+    const recovered = recover(normalized);
+    if (JSON.stringify(state.drafts) !== JSON.stringify(normalized.drafts)) {
+      try {
+        storage()?.setItem(`${prefix}${ownerId}`, JSON.stringify(stripImageCredentials(recovered)));
+      } catch { /* Migration is best effort: return recovered drafts and preserve the old snapshot for retry. */ }
+    }
+    return recovered;
   } catch {
     return null;
   }
@@ -63,8 +72,10 @@ export async function readDraftState(ownerId: DemoOwnerId): Promise<DraftState |
 
 export async function writeDraftState(ownerId: DemoOwnerId, state: DraftState): Promise<void> {
   const safe = clone(state);
+  safe.drafts = normalizeDraftCollection(safe.drafts);
   if (!belongsTo(ownerId, safe)) throw new Error('Draft state belongs to another account.');
   if (safe.save_attempt && ['saved', 'demo_saved'].includes(safe.save_attempt.state)) safe.save_attempt = null;
+  safe.drafts = persistedDraftCollection(safe.drafts, safe.save_attempt);
   const target = storage();
   if (!target) throw new Error('Web draft storage is unavailable.');
   target.setItem(`${prefix}${ownerId}`, JSON.stringify(stripImageCredentials(safe)));

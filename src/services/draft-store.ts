@@ -3,11 +3,12 @@ import { Directory, File, Paths } from 'expo-file-system';
 import { requireOptionalNativeModule } from 'expo';
 import { Platform } from 'react-native';
 
-import type { Draft, DemoOwnerId, SaveAttempt } from '../domain/record';
+import type { DemoOwnerId, SaveAttempt } from '../domain/record';
+import { listDrafts, normalizeDraftCollection, persistedDraftCollection, type DraftCollection } from '../domain/draft-collection';
 import { workingFileName } from './draft-path';
 
 export interface DraftState {
-  drafts: { new: Draft | null; edit: Draft | null };
+  drafts: DraftCollection;
   save_attempt: SaveAttempt | null;
 }
 
@@ -28,7 +29,7 @@ function clone<T>(value: T): T {
 function stripImageCredentials(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(stripImageCredentials);
   if (!value || typeof value !== 'object') return value;
-  const result: Record<string, unknown> = {};
+  const result: Record<string, unknown> = Object.create(null);
   for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
     if (key === 'image_headers' || key === 'signed_url' || key === 'signedUrl') continue;
     if (key === 'local_uri' && typeof child === 'string' && /[?&](token|signature|expires)=/i.test(child)) continue;
@@ -39,7 +40,7 @@ function stripImageCredentials(value: unknown): unknown {
 
 function recover(state: DraftState): DraftState {
   const drafts = clone(state.drafts);
-  for (const draft of Object.values(drafts)) {
+  for (const draft of listDrafts(drafts)) {
     if (draft && ['preparing', 'colors', 'analysis', 'stamp', 'processing'].includes(draft.stage)) {
       draft.stage = 'interrupted';
       draft.error_code = 'interrupted';
@@ -58,7 +59,7 @@ function rehomeWorkingFiles(ownerId: string, state: DraftState): DraftState {
   const directory = new Directory(Paths.document, 'chroma-drafts', ownerId);
   directory.create({ intermediates: true, idempotent: true });
   const rehome = (image: { source: string; local_uri: string } | null | undefined) => {
-    if (!image || image.source !== 'device' || image.local_uri.startsWith(directory.uri)) return;
+    if (!image || image.source !== 'device' || typeof image.local_uri !== 'string' || image.local_uri.startsWith(directory.uri)) return;
     const name = workingFileName(ownerId, image.local_uri);
     if (!name) return;
     try {
@@ -68,7 +69,7 @@ function rehomeWorkingFiles(ownerId: string, state: DraftState): DraftState {
       if (target.exists) image.local_uri = target.uri;
     } catch { /* Keep the old URI so recovery never discards a draft reference. */ }
   };
-  for (const draft of Object.values(next.drafts)) {
+  for (const draft of listDrafts(next.drafts)) {
     if (!draft) continue;
     rehome(draft.photo);
     rehome(draft.selected_candidate);
@@ -79,21 +80,23 @@ function rehomeWorkingFiles(ownerId: string, state: DraftState): DraftState {
 }
 
 function belongsTo(ownerId: DemoOwnerId, state: DraftState) {
-  return Object.values(state.drafts).every((draft) => !draft || draft.owner_id === ownerId)
+  return listDrafts(state.drafts).every((draft) => !draft || draft.owner_id === ownerId)
     && (!state.save_attempt || state.save_attempt.owner_id === ownerId);
 }
 
-function workingFiles(ownerId: string, state: DraftState): Set<string> {
+function workingFiles(ownerId: string, snapshot: DraftState): Set<string> {
+  const state = { ...snapshot, drafts: normalizeDraftCollection(snapshot.drafts) };
+  if (!belongsTo(ownerId, state)) throw new Error('Draft state belongs to another account.');
   const root = new Directory(Paths.document, 'chroma-drafts', ownerId).uri.replace(/\/$/, '') + '/';
   const files = new Set<string>();
-  for (const draft of Object.values(state.drafts)) {
+  for (const draft of listDrafts(state.drafts)) {
     if (!draft) continue;
     for (const image of [draft.photo, draft.selected_candidate, draft.pending_candidate]) {
-      if (image?.source === 'device' && image.local_uri.startsWith(root)) files.add(image.local_uri);
+      if (image?.source === 'device' && typeof image.local_uri === 'string' && image.local_uri.startsWith(root)) files.add(image.local_uri);
     }
   }
   const stamp = state.save_attempt?.payload_snapshot.stamp;
-  if (stamp?.source === 'device' && stamp.local_uri.startsWith(root)) files.add(stamp.local_uri);
+  if (stamp?.source === 'device' && typeof stamp.local_uri === 'string' && stamp.local_uri.startsWith(root)) files.add(stamp.local_uri);
   return files;
 }
 
@@ -122,11 +125,15 @@ export async function readDraftState(ownerId: DemoOwnerId): Promise<DraftState |
   if (!row) return null;
   try {
     const value = JSON.parse(row.snapshot) as DraftState;
-    if (!value || !value.drafts || !('new' in value.drafts) || !('edit' in value.drafts) || !belongsTo(ownerId, value)) return null;
-    const recovered = recover(value);
+    const normalized = { ...value, drafts: normalizeDraftCollection(value?.drafts) };
+    if (!belongsTo(ownerId, normalized)) return null;
+    const recovered = recover(normalized);
     const rehomed = rehomeWorkingFiles(ownerId, recovered);
-    if (JSON.stringify(rehomed) !== JSON.stringify(recovered)) {
-      await db.runAsync('UPDATE draft_state SET snapshot = ? WHERE owner_id = ?', JSON.stringify(stripImageCredentials(rehomed)), ownerId);
+    if (JSON.stringify(value.drafts) !== JSON.stringify(normalized.drafts)
+      || JSON.stringify(rehomed) !== JSON.stringify(recovered)) {
+      try {
+        await db.runAsync('UPDATE draft_state SET snapshot = ? WHERE owner_id = ?', JSON.stringify(stripImageCredentials(rehomed)), ownerId);
+      } catch { /* Migration is best effort: return recovered drafts and preserve the old snapshot for retry. */ }
     }
     return rehomed;
   } catch {
@@ -136,8 +143,10 @@ export async function readDraftState(ownerId: DemoOwnerId): Promise<DraftState |
 
 export async function writeDraftState(ownerId: DemoOwnerId, state: DraftState): Promise<void> {
   const safe = clone(state);
+  safe.drafts = normalizeDraftCollection(safe.drafts);
   if (!belongsTo(ownerId, safe)) throw new Error('Draft state belongs to another account.');
   if (safe.save_attempt && ['saved', 'demo_saved'].includes(safe.save_attempt.state)) safe.save_attempt = null;
+  safe.drafts = persistedDraftCollection(safe.drafts, safe.save_attempt);
   const snapshot = JSON.stringify(stripImageCredentials(safe));
   const db = await dbPromise;
   await db.withExclusiveTransactionAsync(async (transaction) => {

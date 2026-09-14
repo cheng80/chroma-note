@@ -140,6 +140,8 @@ export interface Draft {
   confirmation: CandidateConfirmation | null;
   fields: RecordFields;
   base_record_version?: number;
+  edit_initial_fields?: RecordFields;
+  transient_edit?: boolean;
   operation_id?: string;
   error_code?: DemoErrorCode;
 }

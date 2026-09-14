@@ -1,3 +1,4 @@
+import { removeDraft } from '../../domain/draft-collection';
 import { useCallback, useRef, useState } from 'react';
 import { deleteRecord, fetchRecord, listRecords, setFavorite } from '../../services/records';
 import { cacheReadyRecords, preferCachedRecordImages, pruneCachedRecords, queueRecordDeletion, readRecordCache, readRecordDeletions, removeCachedRecord, removeRecordDeletion } from '../../services/record-cache';
@@ -185,7 +186,7 @@ export function useRecordCollection(store: ControllerStore, operations: RecordOp
         await enqueue(async () => {
           if (!isCurrent(session)) return;
           const next = getState();
-          await apply(bookState({ ...next, records: updated ? next.records.map(r => r.id === updated.id ? updated : r) : next.records.filter(r => r.id !== record.id), ...(updated ? {} : { route: 'book' as const, selected_record_id: null, drafts: { ...next.drafts, edit: next.drafts.edit?.record_id === record.id ? null : next.drafts.edit } }) }));
+          await apply(bookState({ ...next, records: updated ? next.records.map(r => r.id === updated.id ? updated : r) : next.records.filter(r => r.id !== record.id), ...(updated ? {} : { route: 'book' as const, selected_record_id: null, active_draft_kind: null, drafts: next.drafts.edits[record.id] ? removeDraft(next.drafts, next.drafts.edits[record.id]) : next.drafts }) }));
         });
       } catch (error) {
         if (!isCurrent(session) || await rejectSession(error, session)) return;

@@ -1,3 +1,4 @@
+import { listDrafts } from '../domain/draft-collection.ts';
 import { readFileSync, realpathSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -148,7 +149,7 @@ function controllerHarness(initialState, records = {}, restore = {}, cache = {},
     '../services/photo-input': { photoInputFailure: () => ({ message: { ko: '', en: '' } }), pickPhoto: restore.pickPhoto ?? (async () => null), removeWorkingPhoto: restore.removeWorkingPhoto ?? (() => undefined) },
     './demo-assets': { demoAssets: {}, demoImages: {} },
     '../services/photo-processing': { processPhotoStep: noOp },
-    '../../modules/chroma-analysis': { generatePhotoNote: noOp, preparePhotoAnalysis: noOp, unloadPhotoAnalysis: async () => false },
+    '../../modules/chroma-analysis': { generatePhotoNote: restore.generatePhotoNote ?? noOp, preparePhotoAnalysis: noOp, unloadPhotoAnalysis: async () => false },
   };
   const entry = fileURLToPath(new URL('./useAppController.ts', import.meta.url));
   const overrides = new Map(Object.entries(mocks).map(([id, value]) => [id.startsWith('.') ? resolveLocalModule(id, entry) : id, value]));
@@ -240,7 +241,7 @@ for (const cacheFails of [false, true]) {
 {
   const initial = savingState('edit');
   const record = initial.records[0];
-  initial.drafts.edit.selected_candidate = { ...initial.drafts.edit.selected_candidate, source: 'supabase', local_uri: 'https://example.test/stamp.png' };
+  initial.drafts.edits[initial.records[0].id].selected_candidate = { ...initial.drafts.edits[initial.records[0].id].selected_candidate, source: 'supabase', local_uri: 'https://example.test/stamp.png' };
   const local = { ...record, stamp: { ...record.stamp, local_uri: 'file:///cache/existing.png', image_headers: undefined } };
   const remote = { ...record, id: 'remote-record', stamp: { ...record.stamp, local_uri: 'https://example.test/stamp.png', image_headers: { Authorization: 'old' } } };
   let listener;
@@ -402,7 +403,7 @@ console.log('useAppController.check passed: save copies before draft cleanup, di
   await settle();
   await settle();
   controller = harness.render();
-  assert.equal(controller.state.drafts.edit, null, 'uncertain edit discard must remove only the local edit draft');
+  assert.equal(controller.state.drafts.edits[initial.records[0].id], undefined, 'uncertain edit discard must remove only the local edit draft');
   assert.equal(controller.state.records.find((record) => record.id === refreshed.id)?.version, refreshed.version, 'uncertain edit discard must refresh the existing record');
 }
 
@@ -413,7 +414,7 @@ console.log('useAppController.check passed: save copies before draft cleanup, di
   const initial = {
     ...conflicted,
     save_attempt: { ...conflicted.save_attempt, state: 'conflict' },
-    drafts: { ...conflicted.drafts, edit: { ...conflicted.drafts.edit, fields: { ...conflicted.drafts.edit.fields, user_note: localNote } } },
+    drafts: { ...conflicted.drafts, edits: { [record.id]: { ...conflicted.drafts.edits[record.id], fields: { ...conflicted.drafts.edits[record.id].fields, user_note: localNote } } } },
   };
   const latestRecord = { ...record, version: record.version + 1, stamp: { ...record.stamp, local_uri: 'https://example.test/latest.png' }, fields: { ...record.fields, user_note: '서버 최신 메모' } };
   const alerts = [];
@@ -435,9 +436,9 @@ console.log('useAppController.check passed: save copies before draft cleanup, di
   await settle();
   controller = harness.render();
   assert.equal(controller.state.records[0].fields.user_note, latestRecord.fields.user_note, 'the visible record must use the latest server values');
-  assert.equal(controller.state.drafts.edit.fields.user_note, localNote, 'the local edit must survive conflict review');
-  assert.equal(controller.state.drafts.edit.base_record_version, latestRecord.version, 'the preserved edit must rebase on the latest server version');
-  assert.equal(controller.state.drafts.edit.selected_candidate.local_uri, latestRecord.stamp.local_uri, 'immutable record data must refresh with the latest server record');
+  assert.equal(controller.state.drafts.edits[record.id].fields.user_note, localNote, 'the local edit must survive conflict review');
+  assert.equal(controller.state.drafts.edits[record.id].base_record_version, latestRecord.version, 'the preserved edit must rebase on the latest server version');
+  assert.equal(controller.state.drafts.edits[record.id].selected_candidate.local_uri, latestRecord.stamp.local_uri, 'immutable record data must refresh with the latest server record');
   assert.equal(controller.state.save_attempt, null, 'the conflicting operation must be cleared before creating a reviewed retry');
   controller.send({ type: 'save' });
   await settle();
@@ -450,7 +451,7 @@ console.log('useAppController.check passed: save copies before draft cleanup, di
 {
   const editing = savingState('edit');
   const record = editing.records[0];
-  const detail = { ...editing, route: 'detail', active_draft_kind: null, drafts: { new: null, edit: null }, save_attempt: null, selected_record_id: record.id };
+  const detail = { ...editing, route: 'detail', active_draft_kind: null, drafts: { new: null, edits: {} }, save_attempt: null, selected_record_id: record.id };
   const restarted = { ...detail, route: 'book', selected_record_id: null };
   const queued = [];
   let deleteCalls = 0;
@@ -845,7 +846,7 @@ console.log('useAppController.check passed: all four record lookups reauthentica
       getSession: () => new Promise(() => {}),
       onAuthStateChange: callback => { authListener = callback; return { data: { subscription: { unsubscribe() {} } } }; },
     } },
-    readDraftState: async owner => owner === ownerB ? { drafts: { new: draftB, edit: null }, save_attempt: attemptB } : null,
+    readDraftState: async owner => owner === ownerB ? { drafts: { new: draftB, edits: {} }, save_attempt: attemptB } : null,
   });
   let controller = harness.render();
   harness.runEffects();
@@ -886,7 +887,7 @@ for (const kind of ['new', 'edit']) {
   const initial = savingState('edit');
   const newState = savingState();
   const otherKind = kind === 'new' ? 'edit' : 'new';
-  const drafts = { new: { ...newState.drafts.new, stage: 'photo_ready' }, edit: initial.drafts.edit };
+  const drafts = { new: { ...newState.drafts.new, stage: 'photo_ready' }, edits: initial.drafts.edits };
   const pending = kind === 'new' ? initial.save_attempt : newState.save_attempt;
   const state = { ...initial, route: 'book', dialog: null, drafts, save_attempt: pending };
   const persisted = deferred();
@@ -897,25 +898,25 @@ for (const kind of ['new', 'edit']) {
     writeDraftState: async (owner, snapshot) => { writes.push({ owner, snapshot }); await persisted.promise; },
   });
   let controller = harness.render();
-  controller.send({ type: 'request-delete-draft', draftId: drafts[kind].draft_id });
+  controller.send({ type: 'request-delete-draft', draftId: listDrafts(drafts).find(draft => draft.kind === kind).draft_id });
   await settle();
   controller = harness.render();
-  assert.equal(controller.state.dialog.draft_id, drafts[kind].draft_id);
+  assert.equal(controller.state.dialog.draft_id, listDrafts(drafts).find(draft => draft.kind === kind).draft_id);
   controller.send({ type: 'discard-save-cancel' });
   await settle();
   assert.deepEqual(harness.render().state.drafts, drafts, 'cancel preserves both drafts');
-  controller.send({ type: 'request-delete-draft', draftId: drafts[kind].draft_id });
+  controller.send({ type: 'request-delete-draft', draftId: listDrafts(drafts).find(draft => draft.kind === kind).draft_id });
   await settle();
   controller.send({ type: 'discard-save-confirm' });
   await settle();
   assert.deepEqual(harness.render().state.drafts, drafts, 'do not hide a draft before persistence succeeds');
   assert.equal(writes.length, 1);
-  assert.equal(writes[0].snapshot.drafts[kind], null);
+  assert.equal(listDrafts(writes[0].snapshot.drafts).find(draft => draft.kind === kind), undefined);
   persisted.resolve();
   await settle();
   controller = harness.render();
-  assert.equal(controller.state.drafts[kind], null);
-  assert.deepEqual(controller.state.drafts[otherKind], drafts[otherKind], 'keep the other draft');
+  assert.equal(listDrafts(controller.state.drafts).find(draft => draft.kind === kind), undefined);
+  assert.deepEqual(listDrafts(controller.state.drafts).find(draft => draft.kind === otherKind), listDrafts(drafts).find(draft => draft.kind === otherKind), 'keep the other draft');
   assert.deepEqual(controller.state.save_attempt, pending, 'keep the other draft save identity');
   assert.deepEqual(controller.state.records, initial.records, 'keep all saved records');
   assert.equal(serverCalls, 0);
@@ -940,7 +941,7 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
   const bookSource = readFileSync(new URL('./screens/BookScreen.tsx', import.meta.url), 'utf8');
   const mocks = {
     react: { ...React, useRef: value => ({ current: value }), useState: value => [value, () => {}] },
-    'react-native': { View: 'View', Text: 'Text', ScrollView: 'ScrollView', RefreshControl: 'RefreshControl', StyleSheet: { create: value => value }, useWindowDimensions: () => ({ width: 390, fontScale: 1 }) },
+    'react-native': { View: 'View', Text: 'Text', Pressable: 'Pressable', ScrollView: 'ScrollView', RefreshControl: 'RefreshControl', StyleSheet: { create: value => value }, useWindowDimensions: () => ({ width: 390, fontScale: 1 }) },
     'react-native-safe-area-context': { SafeAreaView: 'SafeAreaView' },
     '../primitives': { Button: 'Button', IconButton: 'IconButton', Notice: 'Notice', StampImage: 'StampImage' },
     '../components/FilterChip': { FilterChip: 'FilterChip' },
@@ -950,10 +951,18 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
     '../components/SemanticText': { SemanticText: 'SemanticText' },
     '../sheets/FilterSheet': { FilterSheet: 'FilterSheet' },
     '../basic-copy': { getBasicCopy },
-    '../theme': { theme: { colors: {}, typography: {}, radii: {}, shadows: {} } },
-    '../record-copy': {}, '../record-writing': recordWriting,
+    '../theme': { theme: { colors: {}, spacing: {}, typography: {}, radii: {}, shadows: {} } },
+    '../record-copy': { displayDate: date => date, imageSource: uri => ({ uri }) }, '../record-writing': recordWriting,
     '../../../design/images/lineart-style1-source-rgb.png': 1,
   };
+  const draftActions = {};
+  const actionMocks = { ...mocks, react: React, './AppIcon': mocks['../components/AppIcon'] };
+  const actionOutput = ts.transpileModule(readFileSync(new URL('./components/NewRecordDraftActions.tsx', import.meta.url), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React, esModuleInterop: true } }).outputText;
+  new Function('require', 'exports', actionOutput)(id => {
+    assert.ok(id in actionMocks, `Unexpected new-draft action dependency: ${id}`);
+    return actionMocks[id];
+  }, draftActions);
+  mocks['../components/NewRecordDraftActions'] = draftActions;
   const output = ts.transpileModule(bookSource, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.React, esModuleInterop: true } }).outputText;
   const exports = {};
   new Function('require', 'exports', output)(id => {
@@ -967,7 +976,7 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
   }
   const initial = savingState('edit');
   const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
-  const editDraft = initial.drafts.edit;
+  const editDraft = initial.drafts.edits[initial.records[0].id];
   for (const locale of ['ko', 'en']) {
     let cleared = 0;
     let opened = 0;
@@ -981,40 +990,47 @@ console.log('useAppController.check passed: direct draft deletion preserves othe
   }
   for (const locale of ['ko', 'en']) {
     for (const list_state of ['empty', 'ready', 'filter-empty', 'loading', 'error', 'partial-cache']) {
-      for (const drafts of [[], [newDraft], [editDraft], [newDraft, editDraft], [editDraft, newDraft]]) {
+      for (const { drafts, attempt } of [
+        { drafts: [], attempt: null },
+        { drafts: [newDraft], attempt: null },
+        { drafts: [editDraft], attempt: null },
+        { drafts: [newDraft, editDraft], attempt: null },
+        { drafts: [newDraft, editDraft], attempt: initial.save_attempt },
+        { drafts: [editDraft], attempt: { ...initial.save_attempt, state: 'conflict' } },
+        { drafts: [editDraft], attempt: { ...initial.save_attempt, state: 'failed' } },
+        { drafts: [newDraft, editDraft], attempt: { ...initial.save_attempt, state: 'saved' } },
+      ]) {
         const snapshot = JSON.stringify(drafts);
         const resumed = [];
         const deleted = [];
-        const state = { ...initial, route: 'book', save_attempt: null, drafts: { new: newDraft, edit: editDraft } };
-        const rendered = nodes(exports.BookScreen({ locale, list_state, drafts, records: [], filter: {}, save_attempt: null,
-          onResumeDraft: draftId => resumed.push(demoReducer(state, { type: 'resume-draft', draftId })),
+        const state = { ...initial, route: 'book', active_draft_kind: null, selected_record_id: null, save_attempt: attempt,
+          drafts: { new: drafts.includes(newDraft) ? newDraft : null, edits: drafts.includes(editDraft) ? { [editDraft.record_id]: editDraft } : {} } };
+        const rendered = nodes(exports.BookScreen({ locale, list_state, drafts, records: [], filter: {}, save_attempt: attempt,
+          onOpenFilter() {}, onStartRecord() {}, onOpenSettings() {}, onRetry() {},
+          onResumeDraft: draftId => resumed.push({ draftId, state: demoReducer(state, { type: 'resume-draft', draftId }) }),
           onDeleteDraft: draftId => deleted.push(draftId),
         }));
-        const buttons = rendered.filter(node => node.type === 'Button' && node.props.tone === 'subtle');
-        const deleteButtons = rendered.filter(node => node.type === 'IconButton' && /초안 삭제|Delete .*draft/.test(node.props.label));
-        deleteButtons.forEach(button => button.props.onPress());
-        assert.deepEqual(deleted, drafts.map(draft => draft.draft_id), 'every visible draft has its own delete action');
-        assert.deepEqual(buttons.map(button => button.props.label), drafts.map(draft => drafts.length === 1
-          ? locale === 'ko' ? '초안 1개 이어서 만들기' : 'Continue 1 draft'
-          : locale === 'ko' ? draft.kind === 'new' ? '새 기록 이어가기' : '기록 편집 이어가기'
-            : draft.kind === 'new' ? 'Continue new record' : 'Continue editing record'));
-        buttons.forEach((button, index) => {
-          button.props.onPress();
-          assert.equal(resumed[index].active_draft_kind, drafts[index].kind);
-          assert.equal(resumed[index].route, drafts[index].kind === 'new' ? 'photo' : 'summary');
-          assert.equal(resumed[index].selected_record_id, drafts[index].kind === 'edit' ? drafts[index].record_id : null);
-          assert.deepEqual(resumed[index].drafts, state.drafts, 'resuming must preserve both drafts');
-        });
-        assert.equal(JSON.stringify(drafts), snapshot);
+        rendered.filter(node => ['Button', 'IconButton', 'Pressable'].includes(node.type)).forEach(node => node.props.onPress?.());
+        const expected = drafts.includes(newDraft) ? [newDraft.draft_id] : [];
+        if (attempt && ['uncertain', 'conflict', 'failed'].includes(attempt.state)) expected.push(attempt.draft_id);
+        assert.deepEqual(resumed.map(item => item.draftId).sort(), expected.sort(), `${locale}/${list_state}: Book resumes only a new photo or an unresolved save`);
+        assert.deepEqual(deleted, drafts.includes(newDraft) ? [newDraft.draft_id] : [], 'ordinary edit drafts have no Book delete/list actions');
+        for (const { draftId, state: resumedState } of resumed) {
+          assert.equal(resumedState.route, draftId === newDraft.draft_id ? 'photo' : 'summary');
+          assert.equal(resumedState.active_draft_kind, draftId === newDraft.draft_id ? 'new' : 'edit');
+          assert.equal(resumedState.selected_record_id, draftId === newDraft.draft_id ? null : editDraft.record_id);
+          assert.equal(resumedState.drafts.new?.draft_id, state.drafts.new?.draft_id, 'save recovery preserves the independent new photo');
+        }
+        assert.equal(JSON.stringify(drafts), snapshot, 'Book actions do not mutate the input collection');
       }
     }
   }
-  console.log('useAppController.check passed: Book resumes every draft in both locales, all list states, zero/one/two drafts and reversed order');
+  console.log('useAppController.check passed: Book shows only new-photo resume/delete and unresolved-save recovery in both locales and every list state');
 }
 
 for (const outcome of ['success', 'failure']) {
   const saved = savingState('edit');
-  const initial = { ...saved, route: 'book', dialog: null, save_attempt: null, drafts: { new: null, edit: null }, active_draft_kind: null, active_job: null };
+  const initial = { ...saved, route: 'book', dialog: null, save_attempt: null, drafts: { new: null, edits: {} }, active_draft_kind: null, active_job: null };
   const record = initial.records[0];
   const pending = deferred();
   const alerts = [];
@@ -1056,3 +1072,316 @@ for (const outcome of ['success', 'failure']) {
   harness.unmount();
 }
 console.log('useAppController.check passed: pending favorites allow photo import/processing, retain mutation ordering, and preserve new drafts on completion/failure');
+
+// Saved-record editing lives in the current screen; only a new photo remains a normal draft.
+for (const destination of ['book', 'detail']) {
+  for (const origin of ['clean', 'changed', 'legacy']) {
+    const saved = savingState('edit');
+    const record = saved.records[0];
+    const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
+    const legacy = { ...saved.drafts.edits[record.id], stage: 'summary', fields: { ...record.fields, user_note: '이전 버전에서 남은 편집' } };
+    delete legacy.transient_edit;
+    delete legacy.edit_initial_fields;
+    const initial = { ...saved, route: 'detail', active_draft_kind: null, selected_record_id: record.id, dialog: null, save_attempt: null,
+      drafts: { new: newDraft, edits: origin === 'legacy' ? { [record.id]: legacy } : {} } };
+    const alerts = [];
+    const harness = controllerHarness(initial, { fetchRecord: async () => record }, {}, {}, alerts);
+    async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+    const label = `${destination}/${origin}`;
+    try {
+      let controller = await send({ type: 'edit-record' });
+      assert.equal(controller.draft.transient_edit, true, `${label}: editing creates a runtime draft`);
+      assert.deepEqual(controller.draft.edit_initial_fields, record.fields, `${label}: original fields define the discard boundary`);
+      assert.deepEqual(controller.state.drafts.new, newDraft);
+      if (origin === 'changed') {
+        controller = await send({ type: 'open-summary-sheet', kind: 'analysis' });
+        await send({ type: 'sheet-change', change: { kind: 'analysis', working: { ...controller.state.sheet.working, user_note: '화면에서만 보관할 글' } } });
+        controller = await send({ type: 'sheet-apply' });
+      }
+      if (origin === 'legacy') assert.equal(controller.draft.fields.user_note, legacy.fields.user_note, 'legacy input is available for review, not silently replaced');
+      const before = structuredClone(controller.state);
+      const action = { type: destination === 'book' ? 'cancel-record' : 'summary-back' };
+      controller = await send(action);
+      if (origin !== 'clean') {
+        assert.equal(controller.state.route, 'summary', `${label}: changed input stays visible until a decision`);
+        assert.deepEqual(controller.state.dialog, { kind: 'discard-record-edit', draft_id: before.drafts.edits[record.id].draft_id, destination });
+        assert.deepEqual(controller.state.drafts, before.drafts);
+        controller = await send({ type: 'discard-record-edit-cancel' });
+        assert.equal(controller.state.dialog, null);
+        assert.equal(controller.state.route, 'summary');
+        assert.deepEqual(controller.state.drafts, before.drafts, `${label}: cancel keeps all input`);
+        await send(action);
+        controller = await send({ type: 'discard-record-edit-confirm' });
+      }
+      assert.equal(controller.state.route, destination, `${label}: clean/confirmed departure reaches its destination`);
+      assert.equal(controller.state.dialog, null);
+      assert.equal(controller.state.active_draft_kind, null);
+      assert.equal(controller.state.selected_record_id, destination === 'detail' ? record.id : null);
+      assert.deepEqual(controller.state.drafts.edits, {}, `${label}: departed edits are not kept as Book drafts`);
+      assert.deepEqual(controller.state.drafts.new, newDraft, `${label}: new photo draft is independent`);
+      assert.deepEqual(controller.state.records, initial.records, `${label}: discard never changes a saved record`);
+      if (destination === 'book') {
+        await send({ type: 'resume-draft', draftId: newDraft.draft_id });
+        controller = await send({ type: 'cancel-record' });
+        assert.equal(controller.state.route, 'book');
+        assert.equal(controller.state.dialog, null, 'leaving a new photo keeps its existing draft without an edit-discard dialog');
+        assert.deepEqual(controller.state.drafts.new, newDraft);
+        controller = await send({ type: 'open-detail', recordId: record.id });
+      }
+      if (controller.state.route === 'detail') {
+        controller = await send({ type: 'edit-record' });
+        assert.deepEqual(controller.draft.fields, record.fields, `${label}: reopening starts from saved fields`);
+      }
+      assert.equal(alerts.length, 0);
+    } finally { harness.unmount(); }
+  }
+}
+
+// Saving a runtime edit commits only that record and removes only its runtime draft.
+{
+  const saved = savingState('edit');
+  const recordA = saved.records[0];
+  const recordB = { ...recordA, id: 'transient-other-record', fields: { ...recordA.fields, user_note: '다른 기록 원문' } };
+  const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
+  const writes = [];
+  let submitted;
+  const harness = controllerHarness({ ...saved, route: 'detail', active_draft_kind: null, dialog: null, save_attempt: null,
+    records: [recordA, recordB], drafts: { new: newDraft, edits: {} } }, {
+    saveRecord: async attempt => { submitted = structuredClone(attempt); return { ...recordA, version: recordA.version + 1, fields: attempt.payload_snapshot.fields }; },
+  }, { writeDraftState: async (_owner, state) => writes.push(structuredClone(state)) });
+  async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+  try {
+    let controller = await send({ type: 'edit-record' });
+    controller = await send({ type: 'open-summary-sheet', kind: 'analysis' });
+    await send({ type: 'sheet-change', change: { kind: 'analysis', working: { ...controller.state.sheet.working, user_note: '서버에 저장할 수정 글' } } });
+    controller = await send({ type: 'sheet-apply' });
+    assert.equal(controller.draft.transient_edit, true);
+    assert.deepEqual(controller.state.records, [recordA, recordB], 'applying a sheet does not save the record');
+    controller = await send({ type: 'save' });
+    assert.equal(submitted.record_id, recordA.id);
+    assert.equal(submitted.payload_snapshot.fields.user_note, '서버에 저장할 수정 글');
+    const prepared = writes.find(state => state.save_attempt?.state === 'pending');
+    assert.equal(prepared.drafts.edits[recordA.id].draft_id, submitted.draft_id, 'the outbox receives its runtime draft before the server call');
+    assert.equal(prepared.drafts.edits[recordA.id].transient_edit, true);
+    assert.equal(controller.state.save_attempt.state, 'saved');
+    assert.deepEqual(controller.state.drafts.edits, {});
+    assert.deepEqual(controller.state.drafts.new, newDraft);
+    assert.deepEqual(controller.state.records.find(record => record.id === recordB.id), recordB);
+  } finally { harness.unmount(); }
+}
+
+// Unresolved saves retain only their recovery draft when leaving the editor.
+for (const destination of ['book', 'detail']) {
+  const initial = savingState('edit');
+  const record = initial.records[0];
+  const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
+  const attempt = structuredClone(initial.save_attempt);
+  const edit = structuredClone(initial.drafts.edits[record.id]);
+  const calls = [];
+  const harness = controllerHarness({ ...initial, dialog: null, drafts: { new: newDraft, edits: initial.drafts.edits } }, {
+    saveRecord: async value => { calls.push(structuredClone(value)); return { ...record, version: record.version + 1, fields: value.payload_snapshot.fields }; },
+  });
+  async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+  try {
+    let controller = await send({ type: destination === 'book' ? 'cancel-record' : 'summary-back' });
+    assert.equal(controller.state.route, destination);
+    assert.equal(controller.state.dialog, null, 'an unresolved save is kept for recovery rather than offered for local discard');
+    assert.deepEqual(controller.state.drafts.edits[record.id], edit);
+    assert.deepEqual(controller.state.save_attempt, attempt);
+    assert.deepEqual(controller.state.drafts.new, newDraft);
+    controller = await send({ type: 'resume-draft', draftId: attempt.draft_id });
+    assert.equal(controller.state.route, 'summary');
+    assert.equal(controller.draft.record_id, record.id);
+    controller = await send({ type: 'retry-save' });
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].operation_id, attempt.operation_id, 'recovery reuses the original operation');
+    assert.deepEqual(calls[0].payload_snapshot, attempt.payload_snapshot);
+    assert.equal(controller.state.save_attempt.state, 'saved');
+    assert.deepEqual(controller.state.drafts.edits, {});
+    assert.deepEqual(controller.state.drafts.new, newDraft);
+  } finally { harness.unmount(); }
+}
+
+// Failed local writes must keep visible input both before Save and during confirmed discard.
+for (const action of ['save', 'discard-record-edit-confirm']) {
+  const saved = savingState('edit');
+  const record = saved.records[0];
+  const newDraft = { ...savingState().drafts.new, stage: 'photo_ready' };
+  const edit = { ...saved.drafts.edits[record.id], stage: 'summary', fields: { ...record.fields, user_note: '디스크 오류에도 보존할 글' } };
+  const alerts = [];
+  let failWrite = false;
+  let saves = 0;
+  const harness = controllerHarness({ ...saved, dialog: null, save_attempt: null, drafts: { new: newDraft, edits: { [record.id]: edit } } }, {
+    saveRecord: async () => { saves += 1; throw new Error('failed outbox writes cannot submit'); },
+  }, { writeDraftState: async () => { if (failWrite) throw new Error('disk full'); } }, {}, alerts);
+  async function send(value) { harness.render().send(value); await settle(); await settle(); return harness.render(); }
+  try {
+    if (action === 'discard-record-edit-confirm') await send({ type: 'cancel-record' });
+    const before = structuredClone(harness.render().state);
+    failWrite = true;
+    const controller = await send({ type: action });
+    assert.deepEqual(controller.state, before, `${action}: persistence failure keeps the current screen, dialog and input`);
+    assert.deepEqual(controller.state.drafts.new, newDraft);
+    assert.equal(saves, 0);
+    assert.equal(alerts.length, 1, `${action}: persistence failure is visible`);
+  } finally { harness.unmount(); }
+}
+console.log('useAppController.check passed: transient edit departure/cancel/discard, legacy input, new-draft independence, explicit save/outbox recovery, and disk failures');
+
+for (const outcome of ['success', 'failure', 'newer-writing', 'different-record']) {
+  const saved = savingState('edit');
+  const record = saved.records[0];
+  const draft = { ...saved.drafts.edits[record.id], stage: 'summary', fields: { ...record.fields, user_note: '내가 쓴 글' } };
+  const initial = { ...saved, drafts: { ...saved.drafts, edits: { [record.id]: draft } }, dialog: null, save_attempt: null };
+  const result = deferred();
+  const cached = { ...record, stamp: { ...record.stamp, local_uri: 'file:///record-cache/saved-sketch.png' } };
+  let generationInput;
+  let cacheCalls = 0;
+  const harness = controllerHarness(initial, {}, {
+    generatePhotoNote: async input => { generationInput = input; return result.promise; },
+  }, { cacheRecordImage: async (owner, imageRecord) => {
+    assert.equal(owner, draft.owner_id); assert.equal(imageRecord.id, record.id); cacheCalls += 1; return cached;
+  } });
+  async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+  await send({ type: 'open-summary-sheet', kind: 'analysis' });
+  let controller = await send({ type: 'request-caption' });
+  assert.equal(controller.state.sheet.caption_status, 'pending', 'edit AI writing exposes progress');
+  assert.equal(generationInput.uri, cached.stamp.local_uri, 'saved editing analyzes its cached sketch, never the removed original');
+  assert.equal(cacheCalls, 1);
+  if (outcome === 'newer-writing') {
+    await send({ type: 'sheet-change', change: { kind: 'analysis', working: { ...controller.state.sheet.working, user_note: '생성 중에 내가 고친 글' } } });
+  } else if (outcome === 'different-record') {
+    await send({ type: 'sheet-cancel' });
+    await send({ type: 'cancel-record' });
+    await send({ type: 'discard-record-edit-confirm' });
+  }
+  if (outcome === 'failure') result.reject(new Error('model busy'));
+  else result.resolve({ text: '빛이 머문 자리', inputRevision: draft.input_revision });
+  await settle(); await settle(); controller = harness.render();
+  if (outcome === 'different-record') {
+    assert.equal(controller.state.route, 'book'); assert.equal(controller.state.sheet, null);
+  } else {
+    assert.equal(controller.state.sheet.working.user_note, outcome === 'success' ? '내가 쓴 글\n\n빛이 머문 자리' : outcome === 'newer-writing' ? '생성 중에 내가 고친 글\n\n빛이 머문 자리' : '내가 쓴 글');
+    assert.equal(controller.state.sheet.caption_status, outcome === 'failure' ? 'error' : 'success');
+    if (outcome === 'success') {
+      controller = await send({ type: 'sheet-apply' });
+      assert.equal(controller.draft.fields.user_note, '내가 쓴 글\n\n빛이 머문 자리');
+    }
+  }
+  assert.deepEqual(controller.state.records, initial.records, 'AI output changes no saved record until explicit Save');
+}
+{
+  const saved = savingState();
+  const photo = { ...saved.drafts.new.photo, source: 'device', local_uri: 'file:///chroma-drafts/new-photo.jpg' };
+  const initial = { ...saved, dialog: null, save_attempt: null, drafts: { ...saved.drafts, new: { ...saved.drafts.new, stage: 'summary', photo } } };
+  let input;
+  const harness = controllerHarness(initial, {}, { generatePhotoNote: async value => { input = value; return { text: '사진의 빛과 색', inputRevision: photo.input_revision }; } }, { cacheRecordImage: async () => { throw new Error('new photo does not use a saved sketch'); } });
+  harness.render().send({ type: 'open-summary-sheet', kind: 'analysis' }); await settle();
+  harness.render().send({ type: 'request-caption' }); await settle(); await settle();
+  assert.equal(input.uri, photo.local_uri);
+  assert.equal(harness.render().state.sheet.caption_status, 'success');
+}
+console.log('useAppController.check passed: saved-sketch AI writing, progress/retry, newer input and cancellation, original new-photo source');
+
+// Conflict review may only rebase the draft whose summary is still open without a sheet.
+{
+  for (const boundary of ['response', 'keep-click']) {
+    for (const destination of ['b-detail', 'a-sheet', 'book']) {
+      const initial = savingState('edit');
+      const recordA = initial.records[0];
+      const recordB = { ...recordA, id: 'conflict-race-b', fields: { ...recordA.fields, user_note: 'B 원래 글' } };
+      const draftA = structuredClone(initial.drafts.edits[recordA.id]);
+      const attemptA = { ...initial.save_attempt, state: 'conflict' };
+      const latestA = { ...recordA, version: recordA.version + 1, fields: { ...recordA.fields, user_note: 'A 서버 최신 글' } };
+      const response = deferred();
+      const alerts = [];
+      const writes = [];
+      let saves = 0;
+      const harness = controllerHarness({ ...initial, locale: 'ko', route: 'summary', dialog: null, records: [recordA, recordB], save_attempt: attemptA }, {
+        fetchRecord: async (_owner, id) => id === recordA.id ? response.promise : recordB,
+        saveRecord: async () => { saves += 1; throw new Error('Conflict review must not save automatically'); },
+      }, { writeDraftState: async (_owner, value) => writes.push(structuredClone(value)) }, {}, alerts);
+      async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+      const label = `${boundary}/${destination}`;
+      try {
+        await send({ type: 'retry-save' });
+        assert.equal(alerts.length, 0, `${label}: review waits for the server record`);
+        let keep;
+        if (boundary === 'keep-click') {
+          response.resolve(latestA);
+          await settle(); await settle();
+          assert.equal(alerts.length, 1, `${label}: relevant response opens the native review alert`);
+          assert.equal(alerts[0][0], '최신 기록에 내 편집을 적용할까요?');
+          assert.ok(alerts[0][1].includes(latestA.fields.user_note), `${label}: alert displays the fetched record`);
+          keep = alerts[0][2].find(button => button.text === '내 편집 유지');
+          assert.equal(typeof keep?.onPress, 'function', `${label}: exercise the real Keep callback`);
+        }
+        if (destination.startsWith('b-')) {
+          await send({ type: 'cancel-record' });
+          await send({ type: 'open-detail', recordId: recordB.id });
+        } else if (destination === 'book') {
+          await send({ type: 'cancel-record' });
+        }
+        if (destination.endsWith('-sheet')) {
+          const opened = await send({ type: 'open-summary-sheet', kind: 'analysis' });
+          await send({ type: 'sheet-change', change: { kind: 'analysis', working: { ...opened.state.sheet.working, user_note: `${destination} 아직 적용하지 않은 글` } } });
+        }
+        const before = structuredClone(harness.render().state);
+        const writeCount = writes.length;
+        if (boundary === 'response') response.resolve(latestA);
+        else keep.onPress();
+        await settle(); await settle();
+        const controller = harness.render();
+        assert.equal(alerts.length, boundary === 'response' ? 0 : 1, `${label}: stale review never opens another alert`);
+        assert.deepEqual(controller.state, before, `${label}: stale response/callback preserves selection, sheet input, drafts and attempt`);
+        assert.equal(writes.length, writeCount, `${label}: stale review must not persist a rebase`);
+        assert.equal(saves, 0, `${label}: stale review must not submit a save`);
+        assert.deepEqual(controller.state.drafts.edits[recordA.id], draftA, `${label}: A remains available for conflict recovery`);
+        assert.deepEqual(controller.state.save_attempt, attemptA);
+      } finally { harness.unmount(); }
+    }
+  }
+
+  // A relevant response must still allow Cancel and a subsequent explicit Keep review.
+  const initial = savingState('edit');
+  const record = initial.records[0];
+  const localDraft = structuredClone(initial.drafts.edits[record.id]);
+  const latest = { ...record, version: record.version + 1, fields: { ...record.fields, user_note: '충돌 후 최신 글' } };
+  const alerts = [];
+  const writes = [];
+  let saves = 0;
+  const harness = controllerHarness({ ...initial, locale: 'ko', route: 'summary', dialog: null, save_attempt: { ...initial.save_attempt, state: 'conflict' } }, {
+    fetchRecord: async () => latest,
+    saveRecord: async () => { saves += 1; throw new Error('Review must not save automatically'); },
+  }, { writeDraftState: async (_owner, value) => writes.push(structuredClone(value)) }, {}, alerts);
+  async function send(action) { harness.render().send(action); await settle(); await settle(); return harness.render(); }
+  try {
+    const before = structuredClone(harness.render().state);
+    await send({ type: 'retry-save' });
+    assert.equal(alerts.length, 1, 'the unchanged A summary can still review its conflict');
+    const cancel = alerts[0][2].find(button => button.text === '취소');
+    assert.equal(cancel?.style, 'cancel');
+    cancel.onPress?.();
+    await settle();
+    assert.deepEqual(harness.render().state, before, 'Cancel keeps the original conflict and local edits');
+    assert.equal(writes.length, 0, 'Cancel does not persist a rebase');
+    await send({ type: 'retry-save' });
+    assert.equal(alerts.length, 2, 'Cancel permits another explicit review');
+    const keep = alerts[1][2].find(button => button.text === '내 편집 유지');
+    assert.equal(typeof keep?.onPress, 'function');
+    keep.onPress();
+    await settle(); await settle();
+    const controller = harness.render();
+    assert.equal(controller.state.route, 'summary');
+    assert.equal(controller.state.selected_record_id, record.id);
+    assert.equal(controller.draft.draft_id, localDraft.draft_id);
+    assert.equal(controller.state.sheet, null);
+    assert.equal(controller.state.save_attempt, null, 'a relevant Keep clears only the reviewed conflict');
+    assert.equal(controller.draft.base_record_version, latest.version, 'Keep rebases on the fetched version');
+    assert.deepEqual(controller.draft.fields, localDraft.fields, 'Keep preserves all local writing');
+    assert.deepEqual(writes.at(-1).drafts.edits[record.id].fields, localDraft.fields);
+    assert.equal(writes.at(-1).drafts.edits[record.id].base_record_version, latest.version);
+    assert.equal(saves, 0, 'Keep still requires the user to save after review');
+  } finally { harness.unmount(); }
+}
+console.log('useAppController.check passed: conflict response/Keep races preserve B detail, Book and A sheet input, and retain valid Cancel/Keep review');

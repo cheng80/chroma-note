@@ -13,6 +13,7 @@ import { DatePlaceSheet } from './DatePlaceSheet';
 type SummarySheetProps = {
   locale: DisplayLocale;
   sheet: SheetState;
+  captionSource?: 'photo' | 'sketch';
   onChangeSheet: (change: SheetChange) => void;
   onApply: () => void;
   onCancel: () => void;
@@ -30,9 +31,10 @@ function TagField({ label, hint, value, onChange }: { label: string; hint: strin
   return <><Field label={label} value={draft} onChangeText={(text) => { setDraft(text); onChange(tags(text)); }} /><SemanticText style={styles.hint}>{hint}</SemanticText></>;
 }
 
-function AnalysisEditor({ locale, sheet, onChange, onRequestCaption }: {
+function AnalysisEditor({ locale, sheet, captionSource, onChange, onRequestCaption }: {
   locale: DisplayLocale;
   sheet: Extract<SheetState, { kind: 'analysis' }>;
+  captionSource: 'photo' | 'sketch';
   onChange: (change: SheetChange) => void;
   onRequestCaption: () => void;
 }) {
@@ -42,7 +44,7 @@ function AnalysisEditor({ locale, sheet, onChange, onRequestCaption }: {
       <Field label={t.memoField} value={sheet.working.user_note} onChangeText={(user_note) => onChange({ kind: 'analysis', working: { ...sheet.working, user_note } })} multiline style={styles.memoField} />
       <Text style={styles.hint}>{t.memoCount.replace('{count}', String([...sheet.working.user_note].length))}</Text>
       <SemanticText style={styles.auxiliary}>{t.memoHint}</SemanticText>
-      <SemanticText style={[styles.auxiliary, styles.aiDisclaimer]}>{t.aiWritingHint}</SemanticText>
+      <SemanticText style={[styles.auxiliary, styles.aiDisclaimer]}>{captionSource === 'sketch' ? t.aiSketchWritingHint : t.aiWritingHint}</SemanticText>
       {sheet.caption_status === 'error' ? <Notice message={t.suggestFailed} tone="error" /> : null}
       {sheet.caption_status === 'pending' ? <View style={styles.captionSkeleton}><LoadingSkeleton style={styles.skeletonLine} /><LoadingSkeleton style={[styles.skeletonLine, styles.shortLine]} /></View> : null}
       {sheet.caption_status === 'success' ? <Notice message={locale === 'ko' ? '글에 새 문구를 더했어요.' : 'Added a new caption to your writing.'} tone="success" /> : null}
@@ -63,17 +65,18 @@ function AnalysisEditor({ locale, sheet, onChange, onRequestCaption }: {
   </>;
 }
 
-export function SummarySheet({ locale, sheet, onChangeSheet, onApply, onCancel, onClose, onRequestCaption, restoreFocusRef }: SummarySheetProps) {
+export function SummarySheet({ locale, sheet, captionSource = 'photo', onChangeSheet, onApply, onCancel, onClose, onRequestCaption, restoreFocusRef }: SummarySheetProps) {
   const t = recordCopy[locale];
   if (!sheet) return null;
 
-  const footer = <><Button label={t.apply} onPress={onApply} /><Button label={t.cancel} onPress={onCancel} tone="secondary" /></>;
+  const applyLabel = captionSource === 'sketch' ? t.applyEdit : t.apply;
+  const footer = <><Button label={applyLabel} onPress={onApply} /><Button label={t.cancel} onPress={onCancel} tone="secondary" /></>;
 
-  if (sheet.kind === 'datePlace') return <DatePlaceSheet locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApply} onCancel={onCancel} onClose={onClose} restoreFocusRef={restoreFocusRef} />;
+  if (sheet.kind === 'datePlace') return <DatePlaceSheet applyLabel={applyLabel} locale={locale} sheet={sheet} onChangeSheet={onChangeSheet} onApply={onApply} onCancel={onCancel} onClose={onClose} restoreFocusRef={restoreFocusRef} />;
 
   if (sheet.kind === 'analysis') return (
     <Sheet title={t.analysisTitle} closeLabel={t.close} restoreFocusRef={restoreFocusRef} onRequestClose={onClose} footer={footer}>
-      <AnalysisEditor locale={locale} sheet={sheet} onChange={onChangeSheet} onRequestCaption={onRequestCaption} />
+      <AnalysisEditor locale={locale} sheet={sheet} captionSource={captionSource} onChange={onChangeSheet} onRequestCaption={onRequestCaption} />
     </Sheet>
   );
 

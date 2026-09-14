@@ -1,10 +1,11 @@
+import { listDrafts, putDraft } from '../../domain/draft-collection';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { randomUUID } from 'expo-crypto';
 import { abortSave, fetchRecord, saveRecord } from '../../services/records';
 import { cacheRecordImage } from '../../services/record-cache';
 import { acceptSavedRecord, bookState } from '../app-state';
-import { demoReducer, discardSaveMode, isSaveableDraft, type DemoAction } from '../demo-state';
+import { currentDraft, demoReducer, discardSaveMode, isSaveableDraft, type DemoAction } from '../demo-state';
 import { recordWriting } from '../record-writing';
 import type { ControllerStore } from './controller-store';
 import type { RecordOperations } from './record-operations';
@@ -49,7 +50,7 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
     const session = s.session;
     if (!session) return false;
     if (action.type === 'logout-save') {
-      const drafts = Object.values(s.drafts).filter(draft => draft !== null);
+      const drafts = listDrafts(s.drafts);
       if (!online || !drafts.length || !drafts.every(isSaveableDraft)) return true;
       const releaseBatch = operations.reserveLogout(session);
       if (!releaseBatch) return true;
@@ -63,7 +64,7 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
             let prepared = false;
             await enqueue(async () => {
               if (!isCurrent(session)) return;
-              const latest = { ...getState(), route: 'summary' as const, active_draft_kind: draft.kind };
+              const latest = { ...getState(), route: 'summary' as const, active_draft_kind: draft.kind, selected_record_id: draft.kind === 'edit' ? draft.record_id : null };
               const attempt = latest.save_attempt;
               if (attempt && !['saved', 'demo_saved'].includes(attempt.state) && attempt.draft_id === draft.draft_id) {
                 await apply({ ...latest, save_attempt: { ...attempt, state: 'pending' } });
@@ -83,7 +84,7 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
       return true;
     }
     if (action.type === 'logout' || action.type === 'logout-confirm') {
-      if (action.type === 'logout' && (s.drafts.new || s.drafts.edit)) {
+      if (action.type === 'logout' && listDrafts(s.drafts).length) {
         await apply({ ...s, dialog: { kind: 'logout', step: 'discard' } }, false);
         return true;
       }
@@ -93,7 +94,7 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
     }
     if (action.type === 'discard-save-confirm') {
       const id = s.dialog?.kind === 'discard-save' ? s.dialog.draft_id : null;
-      const draft = Object.values(s.drafts).find(item => item?.draft_id === id);
+      const draft = listDrafts(s.drafts).find(item => item?.draft_id === id);
       const attempt = s.save_attempt?.draft_id === id ? s.save_attempt : null;
       const mode = attempt ? discardSaveMode(attempt, draft) : 'local';
       if (!draft || !mode) return true;
@@ -139,9 +140,17 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
     }
     if (action.type !== 'save' && action.type !== 'retry-save') return false;
     if (s.save_attempt && !['saved', 'demo_saved'].includes(s.save_attempt.state)) {
+      if (currentDraft(s)?.draft_id !== s.save_attempt.draft_id) {
+        notice('다른 기록의 저장 결과를 먼저 확인해 주세요. 편집 중인 내용은 보관했어요.', 'Resolve the other record’s save first. Your edits are kept.');
+        return true;
+      }
       if (s.save_attempt.state === 'conflict' || (s.save_attempt.state === 'failed' && s.save_attempt.base_version !== undefined)) {
         const attempt = s.save_attempt;
-        const relevant = () => isCurrent(session) && getState().save_attempt?.operation_id === attempt.operation_id;
+        const relevant = () => {
+          const latest = getState();
+          return isCurrent(session) && latest.save_attempt?.operation_id === attempt.operation_id
+            && latest.route === 'summary' && currentDraft(latest)?.draft_id === attempt.draft_id && !latest.sheet;
+        };
         void fetchRecord(session.owner_id, attempt.record_id).then(record => {
           if (!relevant()) return;
           if (!record) { notice('삭제된 기록이라 저장할 수 없어요. 내 편집 초안은 유지됩니다.', 'This record was deleted. Your edit draft is kept.'); return; }
@@ -150,8 +159,9 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
             { text: ko ? '취소' : 'Cancel', style: 'cancel' },
             { text: ko ? '내 편집 유지' : 'Keep my edits', onPress: () => void enqueue(async () => {
               const latest = getState();
-              if (!relevant() || !latest.drafts.edit) return;
-              await apply({ ...latest, route: 'summary', active_draft_kind: 'edit', save_attempt: null, records: latest.records.map(r => r.id === record.id ? record : r), drafts: { ...latest.drafts, edit: { ...latest.drafts.edit, stage: 'summary', base_record_version: record.version, operation_id: undefined, selected_candidate: record.stamp } } });
+              const draft = latest.drafts.edits[attempt.record_id];
+              if (!relevant() || draft?.draft_id !== attempt.draft_id) return;
+              await apply({ ...latest, route: 'summary', active_draft_kind: 'edit', selected_record_id: record.id, sheet: null, save_attempt: null, records: latest.records.map(r => r.id === record.id ? record : r), drafts: putDraft(latest.drafts, { ...draft, stage: 'summary', base_record_version: record.version, operation_id: undefined, selected_candidate: record.stamp }) });
             }) },
           ]);
         }).catch(async error => {
@@ -165,8 +175,8 @@ export function useRecordSaving(store: ControllerStore, operations: RecordOperat
       const next = demoReducer(s, { type: 'save' });
       if (!next.save_attempt || next.save_attempt === s.save_attempt) return true;
       const operation_id = randomUUID();
-      const kind = next.active_draft_kind!;
-      await apply({ ...next, save_attempt: { ...next.save_attempt, operation_id, payload_snapshot: { ...next.save_attempt.payload_snapshot, locale: s.locale } }, drafts: { ...next.drafts, [kind]: { ...next.drafts[kind]!, operation_id } } });
+      const draft = currentDraft(next)!;
+      await apply({ ...next, save_attempt: { ...next.save_attempt, operation_id, payload_snapshot: { ...next.save_attempt.payload_snapshot, locale: s.locale } }, drafts: putDraft(next.drafts, { ...draft, operation_id }) });
     }
     void runSave();
     return true;

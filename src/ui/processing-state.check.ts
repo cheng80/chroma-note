@@ -7,7 +7,7 @@ const assert = { equal(actual: unknown, expected: unknown, message = 'unexpected
 let state: DemoState = demoReducer(initialDemoState(), { type: 'start-record' });
 state = { ...state, session: { source: 'supabase', owner_id: 'owner-a', generation: 2, email: '', locale: 'ko' },
   model_status: 'ready',
-  drafts: { new: { ...state.drafts.new!, owner_id: 'owner-a', photo: { source: 'device', local_uri: 'file:///photo.jpg', width: 100, height: 100, input_revision: 1 }, fields: { ...state.drafts.new!.fields, user_note: '사용자가 쓴 메모' } }, edit: null } };
+  drafts: { new: { ...state.drafts.new!, owner_id: 'owner-a', photo: { source: 'device', local_uri: 'file:///photo.jpg', width: 100, height: 100, input_revision: 1 }, fields: { ...state.drafts.new!.fields, user_note: '사용자가 쓴 메모' } }, edits: {} } };
 const preparing = beginPhotoProcessing({ ...state, model_status: 'unprepared' }, 'prepare');
 assert.equal(preparing.active_job?.step, 'prepare');
 assert.equal(preparing.drafts.new?.stage, 'preparing');
