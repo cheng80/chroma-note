@@ -61,12 +61,23 @@ std::string piece(const llama_vocab * vocab, llama_token token) {
 
 - (BOOL)loadWithCancellation:(CancelContext *)cancel error:(NSError **)error {
   if (_model && _vision) return YES;
-  llama_backend_init();
+  // Residency sets pin all mapped weights even while the app is idle. On iOS,
+  // let Metal make resources resident only for submitted work.
+  static dispatch_once_t backendOnce;
+  dispatch_once(&backendOnce, ^{
+#if TARGET_OS_IOS && !TARGET_OS_SIMULATOR
+    setenv("GGML_METAL_NO_RESIDENCY", "1", 1);
+#endif
+    llama_backend_init();
+  });
   llama_log_set(discardLog, nullptr);
   mtmd_helper_log_set(discardLog, nullptr);
   llama_model_params modelParams = llama_model_default_params();
   const bool useGPU = !TARGET_OS_SIMULATOR && llama_supports_gpu_offload();
-  modelParams.n_gpu_layers = useGPU ? INT_MAX : 0;
+  // Qwen3-VL 4B on the 6 GiB iPhone: 28 layers keep the measured Metal
+  // working set below full offload while preserving the complete model.
+  const bool constrainedMemory = TARGET_OS_IOS && NSProcessInfo.processInfo.physicalMemory <= 6ull * 1024 * 1024 * 1024;
+  modelParams.n_gpu_layers = useGPU ? (constrainedMemory ? 28 : INT_MAX) : 0;
   modelParams.progress_callback = keepLoading;
   modelParams.progress_callback_user_data = cancel;
   _model = llama_model_load_from_file(_modelPath.fileSystemRepresentation, modelParams);

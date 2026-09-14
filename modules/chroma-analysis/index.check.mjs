@@ -44,7 +44,7 @@ assert.match(nativeSource, /try modelAssets\.modelPaths\(isCancelled: isCancelle
 assert.doesNotMatch(nativeSource, /withExtension: "gguf"/);
 assert.match(podSource, /Resources\/\*\.json/);
 assert.doesNotMatch(podSource, /Resources\/\*\.gguf/);
-assert.match(nativeSource, /if self\.invalidatesEngine\(error\) \{ self\.engine = nil \}/);
+assert.match(nativeSource, /defer \{ self\.engine = nil \}/);
 assert.match(source, /analysis_timeout/);
 assert.match(storeSource, /ModelAssetManifest\(data: data\)/);
 assert.match(storeSource, /\.joined\(\) == file\.sha256/);

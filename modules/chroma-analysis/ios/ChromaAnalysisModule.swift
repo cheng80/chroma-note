@@ -60,19 +60,18 @@ public final class ChromaAnalysisModule: Module {
     }.runOnQueue(work)
 
     AsyncFunction("generateAsync") { (id: String, uri: String, prompt: String, maxTokens: Int) throws -> [String: Any] in
-      defer { self.lock.lock(); self.jobs.removeValue(forKey: id); self.lock.unlock() }
-      guard !self.cancelled(id) else { throw self.failure("analysis_cancelled") }
-      guard (8...128).contains(maxTokens), (1...1200).contains(prompt.count) else { throw self.failure("analysis_invalid_request") }
-      let input = try self.localURL(uri)
-      if self.engine == nil { try self.prepareEngine(isCancelled: { [weak self] in self?.cancelled(id) ?? true }) }
-      let started = Date()
-      do {
+      defer { self.finish(id) }
+      return try autoreleasepool {
+        // Release weights and temporary native buffers before accepting another job.
+        defer { self.engine = nil }
+        guard !self.cancelled(id) else { throw self.failure("analysis_cancelled") }
+        guard (8...128).contains(maxTokens), (1...1200).contains(prompt.count) else { throw self.failure("analysis_invalid_request") }
+        let input = try self.localURL(uri)
+        if self.engine == nil { try self.prepareEngine(isCancelled: { [weak self] in self?.cancelled(id) ?? true }) }
+        let started = Date()
         let text = try self.engine!.generate(forImagePath: input.path, prompt: prompt, maxTokens: maxTokens,
           isCancelled: { [weak self] in self?.cancelled(id) ?? true })
         return ["text": text, "durationMs": Int(Date().timeIntervalSince(started) * 1000)]
-      } catch {
-        if self.invalidatesEngine(error) { self.engine = nil }
-        throw error
       }
     }.runOnQueue(work)
 
@@ -136,12 +135,6 @@ public final class ChromaAnalysisModule: Module {
       identifier = UIApplication.shared.beginBackgroundTask(withName: "chroma.model-resume", expirationHandler: finish)
       self.modelAssets.pause { _ in DispatchQueue.main.async(execute: finish) }
     }
-  }
-
-  private func invalidatesEngine(_ error: Error) -> Bool {
-    let code = (error as NSError).localizedDescription
-    return ["analysis_model_load_failed", "analysis_out_of_memory",
-      "analysis_tokenize_failed", "analysis_image_eval_failed", "analysis_decode_failed"].contains(code)
   }
 
   private func localURL(_ raw: String) throws -> URL {

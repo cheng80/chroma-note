@@ -10,7 +10,6 @@ public final class ChromaLineArtModule: Module {
   private let work = DispatchQueue(label: "chroma.lineart", qos: .userInitiated)
   private let lock = NSLock()
   private var jobs: [String: Bool] = [:]
-  private var engine: LineArtEngine?
 
   public func definition() -> ModuleDefinition {
     Name("ChromaLineArt")
@@ -41,13 +40,14 @@ public final class ChromaLineArtModule: Module {
       guard attributes.isDirectory == true else { throw self.failure("lineart_output_directory_required") }
       try excludePrivateDirectoryFromBackup(folder, coveredBy: self.appContext?.config.documentDirectory)
       let output = folder.appendingPathComponent("lineart-\(id).png")
-      if self.engine == nil {
-        guard let model = self.modelURL() else { throw self.failure("lineart_model_missing") }
-        self.engine = try LineArtEngine(modelURL: model)
+      guard let model = self.modelURL() else { throw self.failure("lineart_model_missing") }
+      // Release Core ML resources before a later photo analysis starts.
+      let result = try autoreleasepool {
+        let engine = try LineArtEngine(modelURL: model)
+        return try engine.convert(inputURL: input, outputURL: output,
+          options: LineArtOptions(maxEdge: options.maxEdge, lineGain: options.lineGain),
+          isCancelled: { self.cancelled(id) })
       }
-      let result = try self.engine!.convert(inputURL: input, outputURL: output,
-        options: LineArtOptions(maxEdge: options.maxEdge, lineGain: options.lineGain),
-        isCancelled: { self.cancelled(id) })
       return ["uri": output.absoluteString, "width": result.width, "height": result.height,
               "bytes": result.bytes, "durationMs": result.durationMs]
     }.runOnQueue(work)

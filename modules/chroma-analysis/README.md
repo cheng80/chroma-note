@@ -29,6 +29,8 @@ iOS의 `ModelAssetStore`가 URLSession 다운로드, 크기·SHA-256 확인과 �
 
 공개 interface는 `preparePhotoAnalysis(signal?)`, `analyzePhoto({ uri, inputRevision, locale }, signal?)`, `generatePhotoNote(...)`, `unloadPhotoAnalysis()`다. 준비는 겹친 호출이 하나의 로드를 공유하고 실패·해제 뒤 다시 실행할 수 있다. 준비는 180초, 추론은 90초 뒤 `analysis_timeout`으로 끝나며 취소 신호는 `analysis_cancelled`로 끝난다. `unloadPhotoAnalysis()`는 유휴 엔진을 해제하면 `true`, 재빌드 전 네이티브 모듈처럼 API가 없으면 `false`를 반환한다.
 
+iOS는 Metal residency set의 선제 상주 고정을 끄고, 물리 메모리 6GiB 이하에서 현재 Qwen3-VL 4B의 GPU 배치를 28층으로 제한한다. GPU와 CPU가 같은 모델을 나누어 처리하며 모델 파일·양자화·프롬프트·출력 계약은 유지한다. 생성의 성공·오류·취소 뒤 엔진과 임시 native 객체를 해제하고 다음 요청 때 로컬 모델을 다시 준비한다. 6GB iPhone 14 Pro Max에서 측정한 메모리·시간과 검증 한계는 [현황 §6](../../docs/03_PROJECT_STATUS.md#6-검증-상태)을 따른다. Android 정책과 모델 설치 상태는 변경하지 않는다.
+
 iOS 입력은 앱 Documents/Cache 안의 `file:` 사진이어야 한다. Android 입력 경로는 아래를 따른다. 모델 파일의 크기와 SHA-256이 manifest와 다르면 `analysis_model_corrupt`, 없으면 `analysis_model_missing`이다. `analyzePhoto`는 Qwen JSON schema v1의 `scene`/`semantic_tags`/`mood`/빈 `ai_field_note`만 수용하고, 메모 생성은 `ai_field_note`만 수용한다. NFC·개수·길이·추가 키를 검증하며 구조가 틀리면 같은 사진으로 한 번만 보정 요청한 뒤 `schema_error`를 낸다. 같은 작업의 새 요청이 시작되면 먼저 시작한 늦은 결과는 `analysis_stale_result`로 거부한다. 사진 속 문자·QR은 데이터이며 사용자 메모는 어떤 분석 경로에서도 읽거나 변경하지 않는다.
 
 작은 계약 검사는 다음처럼 실행한다.

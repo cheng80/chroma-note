@@ -148,6 +148,59 @@ enum LineArtEngineTests {
             try expect(!FileManager.default.fileExists(atPath: lateOutput.path), "cancelled conversion wrote output")
         }
 
+        try run("fresh engines preserve pixels and release on success", &tests) {
+            for (width, height) in [(48, 36), (257, 193), (1024, 768)] {
+                let input = directory.appendingPathComponent("fresh-\(width)-input.png")
+                try makePattern(width: width, height: height).write(to: input)
+                let reference = directory.appendingPathComponent("fresh-\(width)-reference.png")
+                _ = try engine.convert(inputURL: input, outputURL: reference)
+                let expected = try pixels(reference)
+                for iteration in 0..<2 {
+                    weak var released: LineArtEngine?
+                    let output = directory.appendingPathComponent("fresh-\(width)-\(iteration).png")
+                    let result = try autoreleasepool {
+                        let fresh = try LineArtEngine(modelURL: modelURL)
+                        released = fresh
+                        return try fresh.convert(inputURL: input, outputURL: output)
+                    }
+                    try expect(released == nil, "engine retained after success")
+                    try expect(result.width == width && result.height == height, "fresh dimensions")
+                    try expect(try pixels(output) == expected, "fresh engine changed pixels at \(width)x\(height)")
+                }
+            }
+        }
+        try run("fresh engines release on failure and cancellation", &tests) {
+            for lateCancellation in [false, true] {
+                weak var released: LineArtEngine?
+                var checks = 0
+                let output = directory.appendingPathComponent("fresh-cancel-\(lateCancellation).png")
+                try expectError(.cancelled) {
+                    _ = try autoreleasepool {
+                        let fresh = try LineArtEngine(modelURL: modelURL)
+                        released = fresh
+                        return try fresh.convert(inputURL: source, outputURL: output, isCancelled: {
+                            checks += 1
+                            return !lateCancellation || checks == 5
+                        })
+                    }
+                }
+                try expect(checks == (lateCancellation ? 5 : 1), "unexpected cancellation stage")
+                try expect(released == nil, "engine retained after cancellation")
+                try expect(!FileManager.default.fileExists(atPath: output.path), "cancelled conversion wrote output")
+            }
+            weak var released: LineArtEngine?
+            let output = directory.appendingPathComponent("fresh-failed.png")
+            try expectError(.invalidInput) {
+                _ = try autoreleasepool {
+                    let fresh = try LineArtEngine(modelURL: modelURL)
+                    released = fresh
+                    return try fresh.convert(inputURL: directory.appendingPathComponent("missing.png"), outputURL: output)
+                }
+            }
+            try expect(released == nil, "engine retained after failure")
+            try expect(!FileManager.default.fileExists(atPath: output.path), "failed conversion wrote output")
+        }
+
         print("PASS \(tests) native tests")
     }
 }
