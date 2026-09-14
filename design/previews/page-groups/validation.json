@@ -1,0 +1,259 @@
+{
+  "date": "2026-09-14",
+  "scope": "Pencil page grouping only; existing screen-internal properties unchanged",
+  "rootPageGroups": 12,
+  "preservedPreviousRootItems": 69,
+  "preservedScreens": 59,
+  "preservedReferenceBoards": 9,
+  "preservedStandaloneReusableFrame": 1,
+  "reusableComponents": 16,
+  "nodeCountBefore": 1735,
+  "nodeCountAfter": 1747,
+  "existingSubtreesUnchangedExceptRootXY": true,
+  "dimensionsUnchanged": true,
+  "variablesUnchanged": true,
+  "rootOverlapCount": 0,
+  "childScreenOverlapCount": 0,
+  "screensOutsideGroups": 0,
+  "placeholderCount": 0,
+  "previewComparisons": [
+    {
+      "screen": "Book",
+      "size": [
+        185,
+        400
+      ],
+      "changedPixels": 0,
+      "totalPixels": 74000
+    },
+    {
+      "screen": "record_edit_caption",
+      "size": [
+        185,
+        400
+      ],
+      "changedPixels": 3,
+      "totalPixels": 74000
+    }
+  ],
+  "groups": [
+    {
+      "id": "CbyWU",
+      "name": "00 디자인 기준과 공통 컴포넌트",
+      "bounds": {
+        "x": 0,
+        "y": 0,
+        "width": 3010,
+        "height": 2242
+      },
+      "children": [
+        "OnSk3",
+        "D7PEO",
+        "u5MzP4",
+        "wlBIi",
+        "VqCCu"
+      ]
+    },
+    {
+      "id": "gArcK",
+      "name": "01 시작과 AI 파일 준비",
+      "bounds": {
+        "x": 3450,
+        "y": 0,
+        "width": 1830,
+        "height": 2231
+      },
+      "children": [
+        "K66JOY",
+        "KaNiR",
+        "aABgr",
+        "YZ1xk",
+        "L2tpcK",
+        "z8Hbv",
+        "a1JhB1",
+        "A75ol0",
+        "gUy2E"
+      ]
+    },
+    {
+      "id": "qf3lD",
+      "name": "02 로그인과 이메일 인증",
+      "bounds": {
+        "x": 6900,
+        "y": 0,
+        "width": 1330,
+        "height": 844
+      },
+      "children": [
+        "Op9oz",
+        "Go9um",
+        "yGaf5"
+      ]
+    },
+    {
+      "id": "P86EF",
+      "name": "03 Book과 새 사진 초안",
+      "bounds": {
+        "x": 0,
+        "y": 2542,
+        "width": 1800,
+        "height": 2096
+      },
+      "children": [
+        "JfE7z",
+        "dDLpN",
+        "Of3CT",
+        "IIEYf",
+        "wpuKY",
+        "qr9tS",
+        "ePGw7"
+      ]
+    },
+    {
+      "id": "lUQC5",
+      "name": "04 필터와 유사색 검색",
+      "bounds": {
+        "x": 3450,
+        "y": 2542,
+        "width": 2270,
+        "height": 1408
+      },
+      "children": [
+        "PNXAk",
+        "tZ0bx",
+        "rwDih",
+        "bYEpI",
+        "oIDLE",
+        "NreGP"
+      ]
+    },
+    {
+      "id": "acqZ5",
+      "name": "05 사진 입력과 처리",
+      "bounds": {
+        "x": 6900,
+        "y": 2542,
+        "width": 1330,
+        "height": 1828
+      },
+      "children": [
+        "tY8TR",
+        "vMQqz",
+        "Vz3E8",
+        "zrqEz",
+        "uSu5R",
+        "CzdfB"
+      ]
+    },
+    {
+      "id": "UT6Q5",
+      "name": "06 컬러 스케치 확인과 확대",
+      "bounds": {
+        "x": 0,
+        "y": 4938,
+        "width": 2534,
+        "height": 1828
+      },
+      "children": [
+        "sZ5fQ",
+        "Gczgk",
+        "V7aTM4",
+        "H4nbI",
+        "TfsRk",
+        "bmaVI",
+        "QTgIx",
+        "ZBEGg",
+        "yhiki"
+      ]
+    },
+    {
+      "id": "Bx4jW",
+      "name": "07 기록 요약과 편집",
+      "bounds": {
+        "x": 3450,
+        "y": 4938,
+        "width": 1800,
+        "height": 2812
+      },
+      "children": [
+        "BJTiZ",
+        "VLTPU",
+        "hGZdL",
+        "puDaB",
+        "ZT1he",
+        "h2C6Iq",
+        "D6HJ1",
+        "MOeWS",
+        "iZ6vL"
+      ]
+    },
+    {
+      "id": "Ld7Ua",
+      "name": "08 기록 상세와 삭제",
+      "bounds": {
+        "x": 6900,
+        "y": 4938,
+        "width": 1730,
+        "height": 844
+      },
+      "children": [
+        "trgbv",
+        "BL40U",
+        "gVbGw",
+        "QPxep"
+      ]
+    },
+    {
+      "id": "N85O8",
+      "name": "09 기록 이미지 내보내기",
+      "bounds": {
+        "x": 0,
+        "y": 8050,
+        "width": 1800,
+        "height": 844
+      },
+      "children": [
+        "A6cw5F",
+        "zrtUV",
+        "M8Y69T",
+        "pkZSW"
+      ]
+    },
+    {
+      "id": "YT2E8",
+      "name": "10 설정과 계정 관리",
+      "bounds": {
+        "x": 3450,
+        "y": 8050,
+        "width": 1330,
+        "height": 844
+      },
+      "children": [
+        "Smh7l",
+        "pV4T3",
+        "eJGZM"
+      ]
+    },
+    {
+      "id": "iHFJk",
+      "name": "11 공통 상태와 동작 기준",
+      "bounds": {
+        "x": 6900,
+        "y": 8050,
+        "width": 2580,
+        "height": 2941
+      },
+      "children": [
+        "JlJfV",
+        "U3j5Jp",
+        "O67oc2",
+        "RdXMo"
+      ]
+    }
+  ],
+  "notes": [
+    "Existing frame and component IDs are preserved. Only 12 wrapper frames and root-item parent/positions/order changed.",
+    "Preview Book pixels match; caption preview differs at 3 of 74000 pixels, with identical layout and content hashes.",
+    "The tool emitted fill_container notices during moves. Readback confirmed the named source nodes already have flex parents; their properties were preserved. No unrelated screen edits were made."
+  ]
+}

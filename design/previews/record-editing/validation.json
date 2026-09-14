@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-14",
+  "decision": "새 사진 초안만 영속 보관, 기존 기록 편집은 화면 수명 동안만 유지",
+  "roots": 69,
+  "reusable": 16,
+  "placeholders": 0,
+  "rootOverlaps": 0,
+  "previews": {
+    "book": "wpuKY.png",
+    "bookDefault": "ePGw7.png",
+    "savedRecordAi": "D6HJ1.png",
+    "discardEdit": "a0flR.png"
+  },
+  "intentionalClipping": [
+    "AI 문구 편집 시트의 태그와 선택 입력 안내는 스크롤 영역 아래에 배치됨"
+  ],
+  "unintendedClippingInChangedComponents": 0,
+  "fileSaved": true,
+  "simulator": "iPhone 17 Pro, iOS 26.5: Book, saved-record edit with new draft, keep/discard edits, original saved text and new draft preserved",
+  "physicalDevice": "iPhone 14 Pro Max: final Release installed; persistent files unchanged; Book, saved-record AI with concurrent input, temporary apply, keep/discard editing verified; 8 saved records preserved"
+}

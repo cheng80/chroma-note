@@ -65,7 +65,7 @@ SOLID는 클래스 개수나 파일 길이로 판정하지 않는다. 실제 변
 
 2026-09-11 사용자가 `style1` + 원본 RGB 선화를 확정했다. [앱 모듈](../modules/chroma-lineart/index.ts)의 `convertLineArt(input, options?, signal?)`은 로컬 사진 URI·초안 소유 출력 폴더·입력 revision을 받으며 PNG URI·크기·바이트·소요시간·실제 옵션을 반환한다. 기본값은 `maxEdge: 1024`, `lineGain: 1.8`; 긴 변 16~1536의 정수, 강도 0.1~4의 유한수만 허용한다. 축소 결과의 축이 16px 미만이면 실패한다. 옵션 변경은 새 변환 요청이며 호출자는 revision을 갱신하고 이전 확인을 무효화해야 한다. 옵션 편집 UI는 별도다.
 
-iOS Core ML 엔진이 EXIF 방향·sRGB 디코드, 종횡비 유지 축소, 4배수 reflection padding, `style1` 추론, 기존 ties-to-even 마스크 양자화·gain·원본 RGB/흰 배경 합성, PNG 저장을 담당한다. crop·upscale·색면·다른 스타일은 넣지 않는다. Expo 연결부는 앱 로컬 파일만 허용하고 직렬 백그라운드 큐에서 모델을 재사용한다. 출력은 백업 제외 폴더에 새 파일로 작성하며 원본·기존 결과를 덮어쓰지 않는다. 취소는 처리 단계 사이에서 확인하므로 실행 중인 Core ML 연산의 즉시 중단을 보장하지 않는다.
+iOS Core ML 엔진이 EXIF 방향·sRGB 디코드, 종횡비 유지 축소, 4배수 reflection padding, `style1` 추론, 기존 ties-to-even 마스크 양자화·gain·원본 RGB/흰 배경 합성, PNG 저장을 담당한다. crop·upscale·색면·다른 스타일은 넣지 않는다. Expo 연결부는 앱 로컬 파일만 허용하고 직렬 백그라운드 큐에서 변환한다. iOS는 변환마다 지역 Core ML 엔진과 autoreleasepool을 사용해 성공·오류·취소 뒤 모델을 해제하며, 다음 VLM 작업과 선화 모델이 계속 함께 남지 않도록 한다. 출력은 백업 제외 폴더에 새 파일로 작성하며 원본·기존 결과를 덮어쓰지 않는다. 취소는 처리 단계 사이에서 확인하므로 실행 중인 Core ML 연산의 즉시 중단을 보장하지 않는다.
 
 선화 모듈은 VLM·대표색·인증·서버 저장을 호출하지 않는다. 네이티브 빌드 또는 모델이 없으면 명시 오류를 반환하며 예제 이미지·클라우드로 대체하지 않는다. 모듈 사용법·빌드 준비는 [모듈 안내](../modules/chroma-lineart/README.md), 실제 검증·앱 호출 연결 상태는 현황을 따른다.
 
@@ -90,7 +90,8 @@ Phase 1의 사진 입력은 임포트 전용이다. 저장된 Record의 이미�
 | 사용자의 갤러리 원본 | OS 소유; 앱이 수정/삭제하지 않음 | 전송 안 함 |
 | 작업 사진·분석용 파생본 | 앱 전용 계정/초안 폴더; 초안/저장 대기 중 유지 | 전송 안 함 |
 | 미채택 선화 후보 | 활성 초안에 이전 유효 후보+현재 후보 최대 2개 | 전송 안 함 |
-| 채택 선화·편집 초안 | 로컬 영구 폴더+SQLite; 서버 확인 전 삭제 금지 | 확정 요청 시 전송 |
+| 새 사진 초안·채택 선화·미완료 저장 요청 | 로컬 영구 폴더+SQLite; 명시 폐기 또는 저장 확정 후 정리 | 확정 요청 시 전송 |
+| 기존 기록 수정값 | 편집 화면의 메모리; 미저장 이탈 확인 후 폐기 | 변경 저장 시 전송 |
 | 저장 완료 선화 캐시 | 재다운로드 가능, 계정별 LRU 200MiB 기본 | private bucket |
 | 내보내기 합성 PNG | 캡처용 임시 파일은 저장/실패 후 정리; 갤러리 사본은 사용자 소유 | 서버 업로드 없음 |
 | 모델 파일 | 계정 데이터와 분리, 무결성 확인 후 재사용 | 검증된 NAS 배포 위치에서 최초 다운로드 |
@@ -107,7 +108,7 @@ iOS에서는 인증 응답과 Authorization 헤더가 HTTP 디스크 캐시에 �
 
 ### 로컬 SQLite
 
-- draft는 계정 UID에 귀속하고 신규 draft 최대 1개/계정/기기. 기존 Record 편집본은 별도 kind로 최대 1개.
+- draft는 계정 UID에 귀속하고 신규 draft 최대 1개/계정/기기를 영속 보관한다. 기존 Record 편집본은 편집 화면의 메모리에만 유지한다. `edits[record_id]` 중 `transient_edit: true`인 항목은 일반 저장 스냅샷에서 제외하고, 미완료 `save_attempt`가 참조하는 편집본만 outbox 복구를 위해 보관한다. `edit_initial_fields`로 진입 시점과 수정값을 비교해 미저장 이탈을 확인한다. 기존 `{new, edit}`와 `{new, edits}`의 미표시 legacy 항목은 읽기 시 보존하고, 해당 기록을 열면 임시 편집으로 전환한다. 신규 초안은 영향을 받지 않는다.
 - 필드: draft_id(UUID), owner_id, kind(new/edit), record_id(생성부터 고정 UUID), input_revision(integer), stage, local relative paths, confirmed payload, last_successful_analysis, selected_candidate, base_record_version(edit만), operation_id, payload_hash, source_fingerprint(로컬만), created_at/updated_at, error_code.
 - 단계 전환·payload 스냅샷·outbox 등록은 SQLite 트랜잭션. 파일은 temp 작성→닫기/검증→rename→DB 참조 순서로 확보한다. DB 실패 시 원래 초안은 유지하고 미참조 파일만 정리한다.
 - outbox는 operation_id, owner_id, record_id, kind(create/edit/delete), payload snapshot/hash, base_version, attempts, next_retry_at, status를 보존한다.
@@ -115,6 +116,8 @@ iOS에서는 인증 응답과 Authorization 헤더가 HTTP 디스크 캐시에 �
 - 결과 이미지는 계정별 로컬 캐시를 먼저 사용한다. 저장 성공 시 기기의 생성 결과를 복사한 뒤 초안을 정리하고, 로컬 파일이 없거나 크기가 맞지 않을 때만 인증된 서버 이미지로 복구한다. 목록·상세·즐겨찾기의 최신 메타데이터 조회와 세션 갱신은 정상 로컬 이미지 주소를 바꾸지 않는다. 로컬 재표시는 로딩 스켈레톤·페이드 없이 수행하며 새 결과의 완료 모션은 유지한다. 기존 200MiB LRU 상한·계정 격리·로그아웃 정리 규칙을 유지한다.
 - 앱 재실행 시 실행 중이던 추론은 interrupted로 되돌린다. 이전 단계 결과와 사용자 편집값은 그대로 유지한다.
 - 초안 개수 제한은 **계정·기기별**이다. 두 기기의 각 로컬 초안은 독립적이며 계정 전체에 하나의 서버 초안을 예약하지 않는다.
+- 기존 기록의 AI 문구 생성은 선택한 `record_id`의 계정별 이미지 캐시를 확보한 뒤 기존 로컬 `generatePhotoNote`에 컬러 스케치를 전달한다. 신규 기록은 작업 원본을 유지한다. 완료 결과는 요청 ID와 입력 리비전을 검증하고 현재 입력창의 최신 글에 덧붙인다. 입력 중 타이핑은 차단하지 않으며, 취소/다른 입력창의 결과와 2,000자 초과 결과는 적용하지 않는다.
+- 편집 진입은 저장된 기록에서 임시 수정본을 만들거나 해당 `record_id`의 legacy 복구 내용을 임시 편집으로 전환한다. `active_draft_kind`와 `selected_record_id`로 현재 편집 대상을 결정한다. 저장 성공·확인한 편집 폐기는 해당 `draft_id`만 제거한다. 다른 기록을 편집하는 동안 이전 저장 결과가 도착해도 현재 화면과 미적용 입력을 유지한다. 미확정 `save_attempt`는 하나씩 복구하며, 다른 기록의 임시 편집은 허용하되 이전 결과가 미확정이면 새 서버 저장은 시작하지 않는다. 로그아웃 일괄 저장은 새 초안, 미완료 요청과 구형 보관분에만 적용한다.
 - Book 초안 삭제는 확인창에 고정한 `draft_id`와 현재 소유자를 검증하고 기존 `writeDraftState`를 거친다. SQLite 반영 후 화면에서 제거하고, 남은 초안/저장 스냅샷이 참조하지 않는 작업 파일만 기존 `draft_cleanup`에서 정리한다. 일반 초안은 서버 호출 없이 삭제하며, 대상에 연결된 저장 실패/결과 불명확 상태는 기존 abort/fetch 경로로 처리한다. 다른 초안의 `save_attempt`와 저장된 Record는 보존한다.
 - cleanup_jobs에는 owner_id, draft_id, 앱 내부 상대 경로, reason(server_ready/discard/logout), status, attempts를 둔다. 서버 ready 확인과 cleanup 등록을 같은 로컬 트랜잭션으로 기록한 뒤 파일을 제거한다. 재실행에서 참조·소유·경로를 다시 확인하고, 성공/이미 없는 파일은 완료 처리한다. 서버 결과가 불명확하면 등록하지 않는다.
 - 명시적 로그아웃의 폐기 확인은 outbox 보존의 예외다. 전송 worker를 중단하고 같은 계정의 outbox/초안/캐시를 삭제하며, 늦은 callback은 session_generation과 owner_id가 다르면 무시한다. 오프라인에서는 “서버 저장 후 나가기”를 비활성화하고 연결 후 저장·폐기 후 나가기·취소만 제공한다.
@@ -213,11 +216,13 @@ interface ColorSearch {
 
 ## 5. VLM·선화 작업 계약
 
-앱 시작 때 `ModelSetupGate`가 모델 파일 설치를 확인한다. `ready` 전에는 다운로드 안내를 표시하고 기존 앱 controller를 마운트하지 않는다. 파일 준비 후 기존 로그인·Book 흐름을 시작하며 엔진 메모리 로드는 `usePhotoWorkflow`의 별도 준비 상태를 따른다. 같은 프로세스에서는 준비된 인스턴스를 재사용하며 사진마다 가중치를 다시 로드하지 않는다.
+앱 시작 때 `ModelSetupGate`가 모델 파일 설치를 확인한다. `ready` 전에는 다운로드 안내를 표시하고 기존 앱 controller를 마운트하지 않는다. 파일 준비 후 기존 로그인·Book 흐름을 시작하며 엔진 메모리 로드는 `usePhotoWorkflow`의 별도 준비 상태를 따른다. iOS는 준비된 인스턴스를 첫 추론에 사용한 뒤, 각 네이티브 생성 작업의 성공·오류·취소 시 가중치와 임시 버퍼를 해제한다. 다음 요청과 JSON 보정 요청은 필요할 때 로컬 파일에서 다시 로드한다. 다운로드 완료 상태와 메모리 상주 상태는 구별한다.
 
-준비 상태는 `unprepared → preparing → ready`와 `failed`로 구분한다. 요청이 겹쳐도 같은 모델의 준비 작업은 하나만 실행한다. 준비 중 선택한 사진은 초안에 보존하고 사용자가 취소하지 않은 현재 요청만 준비 완료 뒤 실행한다. 재시도는 현재 사진의 revision을 확인한다. 같은 앱 실행 중 재사용을 기본으로 하되 OS 메모리 압박·백그라운드 중단·프로세스 종료로 해제되면 다시 준비한다. 사용자가 한 번 실행하면 영구히 로드된다고 보장하지 않는다.
+준비 상태는 `unprepared → preparing → ready`와 `failed`로 구분한다. 요청이 겹쳐도 같은 모델의 준비 작업은 하나만 실행한다. 준비 중 선택한 사진은 초안에 보존하고 사용자가 취소하지 않은 현재 요청만 준비 완료 뒤 실행한다. 재시도는 현재 사진의 revision을 확인한다. 플랫폼별 수명 정책에 따라 모델이 해제됐으면 다음 요청에서 다시 준비한다. 사용자가 한 번 실행하면 영구히 로드된다고 보장하지 않는다.
 
 iOS `AppState.memoryWarning`만으로 대기 중인 VLM을 해제하거나 `model_status`를 `failed`로 바꾸지 않는다. Android 4GB 이하 실측에 따른 모델 순차 로딩·GPU 예산·CPU 대체는 Android 네이티브 분석 모듈에서 관리하며 iOS에 공통 적용하지 않는다. 실제 추론 오류·취소·시간 초과의 처리와 선화 실행 전 `unloadPhotoAnalysis()` 대기는 유지한다.
+
+iOS는 Metal 초기화 전에 `GGML_METAL_NO_RESIDENCY=1`로 선제 상주 고정을 끈다. 실제 추론의 GPU 사용은 유지하며, 물리 메모리 6GiB 이하에서는 현재 고정 Qwen3-VL 4B의 `n_gpu_layers`를 28로 제한한다. 나머지 층은 CPU가 처리하고 모델·양자화·256 이미지 토큰·2048 context·비전 GPU·출력 계약은 유지한다. 더 큰 메모리 기기는 전체 GPU 배치를 유지한다. 이 상한은 6GB iPhone 14 Pro Max의 실측 조절값이며 4GB iPhone까지의 무종료 보장은 아니다. 작업 종료 시 autoreleasepool 안에서 엔진을 해제한 뒤 job 잠금을 풀며, UI의 모델 준비 실패로 취급하거나 사진 분석을 중지하지 않는다. 비교 수치와 실기기 확인 범위는 현황 §6을 따른다.
 
 `RecordOperations`는 즐겨찾기 요청과 독점이 필요한 저장·삭제 요청을 구별한다. 즐겨찾기 요청 중에는 `usePhotoWorkflow`의 로컬 사진 작업을 허용하되 서버 변경 잠금은 유지한다. 늦은 즐겨찾기 성공·실패는 현재 사진·초안·처리 화면을 보존하고, 계정이 바뀐 요청은 기존 소유권 검사로 폐기한다.
 
